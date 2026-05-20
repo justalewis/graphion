@@ -286,11 +286,31 @@ def read_article_metadata(article_path: Path) -> tuple[dict, str]:
     return fm, text[body_start:]
 
 
+# Fields that must remain single-line strings (no embedded newlines).
+_SINGLE_LINE_FIELDS = frozenset({
+    "title", "subtitle", "short-title", "short-authors", "footer",
+    "doi", "journal", "issn", "status", "copyright",
+})
+
+
+def _sanitize_scalar(s):
+    """Collapse interior whitespace in a string scalar so it serializes as a
+    plain single-line YAML value. Browsers and copy-paste can occasionally
+    introduce stray newlines or tabs into form values; if any reach
+    safe_dump in fields meant to be single-line, the resulting YAML can
+    parse ambiguously. Defensive normalization at the boundary."""
+    if not isinstance(s, str):
+        return s
+    return " ".join(s.split())
+
+
 def write_article_metadata(article_path: Path, fm: dict, body: str | None = None):
     """Write article.md with the given front matter and body. Snapshots first.
 
     If `body` is None, preserves the current body. Field order is canonical
     (title first, then authors, etc.) so files diff cleanly between saves.
+    Single-line scalar fields are sanitized (interior whitespace collapsed)
+    to avoid round-trip corruption.
     """
     import yaml
     if body is None:
@@ -299,14 +319,36 @@ def write_article_metadata(article_path: Path, fm: dict, body: str | None = None
     ordered: dict = {}
     for k in _FIELD_ORDER:
         if k in fm and fm[k] not in (None, "", []):
-            ordered[k] = fm[k]
+            v = fm[k]
+            if k in _SINGLE_LINE_FIELDS:
+                v = _sanitize_scalar(v)
+            ordered[k] = v
     for k, v in fm.items():
         if k not in ordered and v not in (None, "", []):
+            if k in _SINGLE_LINE_FIELDS:
+                v = _sanitize_scalar(v)
             ordered[k] = v
+
+    # Also sanitize author name/affiliation/orcid as single-line.
+    if "author" in ordered and isinstance(ordered["author"], list):
+        for a in ordered["author"]:
+            if isinstance(a, dict):
+                for k in ("name", "affiliation", "orcid", "email"):
+                    if k in a and isinstance(a[k], str):
+                        a[k] = _sanitize_scalar(a[k])
 
     yaml_text = yaml.safe_dump(
         ordered, sort_keys=False, allow_unicode=True, width=10_000, default_flow_style=False
     )
+
+    # Defensive round-trip check: if we cannot re-parse what we just wrote,
+    # something is wrong with the input dict, not the file. Raise so the
+    # caller can surface the issue rather than persist corrupt YAML.
+    try:
+        yaml.safe_load(yaml_text)
+    except yaml.YAMLError as exc:
+        raise ValueError(f"Refusing to write unparseable YAML: {exc}") from exc
+
     out_text = f"---\n{yaml_text}---\n\n{body.lstrip(chr(10))}"
 
     _snapshot_version(article_path)
@@ -419,3 +461,193 @@ def record_conversion(article_id: int, source_format: str, notes: str, success: 
         "VALUES (?, ?, ?, ?, ?)",
         (article_id, source_format, _pandoc_version(), notes, 1 if success else 0),
     )
+
+
+# ---------- issue assembly ----------
+
+def _pdf_page_count(pdf_path: Path) -> int:
+    import pypdfium2 as pdfium
+    doc = pdfium.PdfDocument(str(pdf_path))
+    try:
+        return len(doc)
+    finally:
+        doc.close()
+
+
+@dataclass
+class AssemblyResult:
+    article_pages: list  # list of (article_id, start_page, end_page)
+    issue_pdf_path: Path
+    total_pages: int
+    errors: list
+
+
+def assemble_issue(issue_id: int) -> AssemblyResult:
+    """Build the combined-issue PDF with continuous pagination.
+
+    For each article in order:
+      1. Write start-page into article.md YAML
+      2. Re-render the PDF (Typst start-page-val shifts the page counter)
+      3. Count the rendered pages, store start/end in DB
+
+    Then render the issue cover (issue.typ) and concatenate cover + articles
+    into issues/<slug>/issue.pdf.
+    """
+    import json
+    from pypdf import PdfWriter, PdfReader
+
+    issue = db.query_one(
+        "SELECT i.*, j.slug AS journal_slug, j.name AS journal_name, j.issn AS journal_issn "
+        "FROM issues i JOIN journals j ON i.journal_id = j.id WHERE i.id = ?",
+        (issue_id,),
+    )
+    if not issue:
+        raise ValueError(f"Issue {issue_id} not found")
+
+    articles = db.query_all(
+        "SELECT * FROM articles WHERE issue_id = ? "
+        "ORDER BY COALESCE(order_in_issue, 999999), updated_at",
+        (issue_id,),
+    )
+    if not articles:
+        raise ValueError("Issue has no articles to assemble")
+
+    errors: list = []
+    article_pages: list = []
+    cumulative = 0
+    article_pdf_paths: list = []
+    toc_entries: list = []
+
+    for art in articles:
+        apath = Path(art["project_path"])
+        start_page = cumulative + 1
+
+        fm, body = read_article_metadata(apath)
+        fm["start-page"] = start_page
+        write_article_metadata(apath, fm, body)
+
+        try:
+            pdf_path = render_pdf(apath, issue["journal_slug"])
+        except Exception as exc:
+            errors.append(f"render {art['slug']}: {type(exc).__name__}: {exc}")
+            continue
+
+        page_count = _pdf_page_count(pdf_path)
+        end_page = start_page + page_count - 1
+        db.execute(
+            "UPDATE articles SET start_page = ?, end_page = ?, updated_at = CURRENT_TIMESTAMP "
+            "WHERE id = ?",
+            (start_page, end_page, art["id"]),
+        )
+
+        article_pages.append((art["id"], start_page, end_page))
+        article_pdf_paths.append(pdf_path)
+        toc_entries.append({
+            "title": fm.get("title", art["title"]),
+            "authors": _authors_inline(fm.get("author", [])),
+            "start_page": start_page,
+            "end_page": end_page,
+        })
+        cumulative = end_page
+
+    issue_dir_path = issue_dir(issue["journal_slug"], issue_slug_for(issue["volume"], issue["issue_number"], issue["year"]))
+    (issue_dir_path / "issue-toc.json").write_text(
+        json.dumps(toc_entries, indent=2), encoding="utf-8"
+    )
+
+    cover_pdf = _render_issue_cover(issue, toc_entries, issue_dir_path)
+
+    issue_pdf = issue_dir_path / "issue.pdf"
+    writer = PdfWriter()
+    for pdf_path in [cover_pdf] + article_pdf_paths:
+        reader = PdfReader(str(pdf_path))
+        for page in reader.pages:
+            writer.add_page(page)
+    with issue_pdf.open("wb") as f:
+        writer.write(f)
+
+    return AssemblyResult(
+        article_pages=article_pages,
+        issue_pdf_path=issue_pdf,
+        total_pages=cumulative,
+        errors=errors,
+    )
+
+
+def _authors_inline(authors) -> str:
+    if not authors:
+        return ""
+    names: list = []
+    for a in authors:
+        if isinstance(a, dict):
+            names.append(a.get("name", ""))
+        else:
+            names.append(str(a))
+    names = [n for n in names if n]
+    if len(names) <= 2:
+        return ", ".join(names)
+    return ", ".join(names[:-1]) + ", and " + names[-1]
+
+
+def _render_issue_cover(issue, toc_entries: list, out_dir: Path) -> Path:
+    """Render the issue's title page + ToC as a standalone PDF."""
+    import typst as typst_lib
+
+    journal = issue["journal_name"]
+    title = issue["title"] or ""
+    vol = issue["volume"]
+    num = issue["issue_number"]
+    year = issue["year"]
+    issn = issue["journal_issn"] or ""
+
+    toc_typst = ""
+    for e in toc_entries:
+        t = (e["title"] or "").replace('"', '\\"')
+        a = (e["authors"] or "").replace('"', '\\"')
+        start = e["start_page"]
+        toc_typst += (
+            f'grid(columns: (1fr, auto), '
+            f'[#text(weight: 500, "{t}") \\\n  #text(style: "italic", fill: rgb("#4a4137"), "{a}")], '
+            f'align(right, text("{start}")))\n'
+            f'v(0.5em)\n'
+        )
+
+    cover_typst = f"""
+#set page(
+  paper: "us-letter",
+  width: 6in,
+  height: 9in,
+  margin: (top: 1in, bottom: 1in, left: 0.85in, right: 0.85in),
+  header: none,
+  footer: none,
+)
+#set text(font: ("EB Garamond", "Garamond", "Georgia"), size: 11pt, fill: rgb("#1a1612"))
+#set par(justify: false, leading: 0.65em)
+
+#align(center, {{
+  v(0.5in)
+  text(size: 22pt, weight: 500, "{journal.replace('"', '')}")
+  v(0.6em)
+  text(size: 14pt, style: "italic", fill: rgb("#4a4137"), "Volume {vol}, Number {num} · {year}")
+  v(0.6em)
+  {"text(size: 12pt, style: " + '"italic"' + ", fill: rgb(" + '"#4a4137"' + '), "' + title.replace('"', '\\"') + '")' if title else ''}
+  v(1em)
+  line(length: 40%, stroke: 0.5pt + rgb("#b6a98c"))
+  {f'v(0.5em); text(size: 9pt, tracking: 0.15em, fill: rgb("#4a4137"), "ISSN {issn}")' if issn else ''}
+}})
+
+#pagebreak()
+
+#align(center, text(size: 14pt, tracking: 0.18em, "CONTENTS"))
+#v(1.5em)
+
+#{{
+  {toc_typst}
+}}
+"""
+
+    cover_typ = out_dir / "_cover.typ"
+    cover_pdf = out_dir / "_cover.pdf"
+    cover_typ.write_text(cover_typst, encoding="utf-8")
+    typst_lib.compile(str(cover_typ), output=str(cover_pdf))
+    return cover_pdf

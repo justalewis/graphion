@@ -18,6 +18,7 @@
 #let short-title-val = "$short-title$"
 #let short-authors-val = "$short-authors$"
 #let footer-val = "$footer$"
+#let start-page-val = $if(start-page)$$start-page$$else$1$endif$
 
 // Drop cap helper. Typst doesn't natively wrap body text around a
 // floated initial (no shape-aware reflow), so this is a stylized
@@ -49,7 +50,7 @@
   margin: (top: 0.85in, bottom: 0.95in, left: 0.75in, right: 0.75in),
   header: context {
     let p = counter(page).at(here()).first()
-    if p <= 1 { return [] }
+    if p == start-page-val { return [] }
     if calc.even(p) {
       align(left, text(style: "italic", size: 9.5pt, fill: ink-soft, short-authors-val))
     } else {
@@ -58,12 +59,15 @@
   },
   footer: context {
     let p = counter(page).at(here()).first()
-    if p == 1 { return [] }
+    if p == start-page-val { return [] }
     let page-str = str(p)
     let label = if footer-val != "" { footer-val + "  ·  " + page-str } else { page-str }
     align(center, text(size: 9.5pt, fill: ink-soft, label))
   },
 )
+
+// Shift the page counter so the first page is labeled `start-page-val`.
+#counter(page).update(start-page-val)
 
 #set text(
   font: ("EB Garamond", "Garamond", "Georgia"),

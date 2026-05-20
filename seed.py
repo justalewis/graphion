@@ -28,8 +28,9 @@ def ensure_lics_journal():
         sys.exit(1)
 
     journal_id = db.execute(
-        "INSERT INTO journals (slug, name, issn, template_path) VALUES (?, ?, ?, ?)",
-        ("lics", "Literacy in Composition Studies", "2326-5620", str(tpl)),
+        "INSERT INTO journals (slug, name, issn, template_path, crossref_prefix, crossref_member_id) "
+        "VALUES (?, ?, ?, ?, ?, ?)",
+        ("lics", "Literacy in Composition Studies", "2326-5620", str(tpl), "10.21623", "1"),
     )
     print(f"  registered LiCS (id={journal_id})")
     return journal_id

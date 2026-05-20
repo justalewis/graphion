@@ -22,6 +22,8 @@ content/**/_unfiled/*/article.css
 # Issue-level artifacts
 content/**/issue.pdf
 content/**/issue-toc.json
+content/**/_cover.pdf
+content/**/_cover.typ
 # Hold-out article directories (uploads not yet committed; canonical article.md will be committed when ready)
 content/**/_unfiled/
 # Per-article PDF preview rasters

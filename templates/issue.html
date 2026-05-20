@@ -9,6 +9,13 @@
     &middot; <a href="{{ url_for('issue_metadata', issue_id=issue['id']) }}">Edit metadata</a>
     &middot; <a href="{{ url_for('journal_home', slug=issue['journal_slug']) }}">Back to {{ issue['journal_name'] }}</a>
   </p>
+  <nav class="action-row">
+    <form method="post" action="{{ url_for('issue_assemble', issue_id=issue['id']) }}" style="display:inline" onsubmit="this.querySelector('button').disabled=true; this.querySelector('button').textContent='Assembling...';">
+      <button type="submit" class="button" {% if not articles %}disabled title="Add at least one article first"{% endif %}>Assemble issue</button>
+    </form>
+    <a class="button ghost" href="{{ url_for('issue_pdf', issue_id=issue['id']) }}" target="_blank">View issue PDF</a>
+    <a class="button ghost" href="{{ url_for('issue_crossref_xml', issue_id=issue['id']) }}">Download CrossRef XML</a>
+  </nav>
 </section>
 
 <section class="card">

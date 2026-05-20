@@ -13,6 +13,7 @@ from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.utils import secure_filename
 
 import conversion
+import crossref
 import db
 from auth import User, login_manager
 from config import (
@@ -289,6 +290,42 @@ def register_routes(app: Flask):
         )
         flash(f"Removed {article['title']!r} from issue.", "success")
         return redirect(url_for("issue_home", issue_id=issue_id))
+
+    @app.route("/issues/<int:issue_id>/assemble", methods=["POST"])
+    @login_required
+    def issue_assemble(issue_id):
+        try:
+            result = conversion.assemble_issue(issue_id)
+        except ValueError as exc:
+            flash(str(exc), "error")
+            return redirect(url_for("issue_home", issue_id=issue_id))
+        if result.errors:
+            flash(
+                f"Assembled with issues: {'; '.join(result.errors)}",
+                "error",
+            )
+        else:
+            flash(
+                f"Assembled {result.total_pages} pages across {len(result.article_pages)} articles.",
+                "success",
+            )
+        return redirect(url_for("issue_home", issue_id=issue_id))
+
+    @app.route("/issues/<int:issue_id>/issue.pdf")
+    @login_required
+    def issue_pdf(issue_id):
+        issue = db.query_one(
+            "SELECT i.*, j.slug AS journal_slug FROM issues i "
+            "JOIN journals j ON i.journal_id = j.id WHERE i.id = ?",
+            (issue_id,),
+        )
+        if not issue:
+            abort(404)
+        islug = conversion.issue_slug_for(issue["volume"], issue["issue_number"], issue["year"])
+        target = conversion.issue_dir(issue["journal_slug"], islug) / "issue.pdf"
+        if not target.exists():
+            abort(404)
+        return send_from_directory(target.parent, "issue.pdf")
 
     @app.route("/issues/<int:issue_id>/reorder/<int:article_id>/<direction>", methods=["POST"])
     @login_required
@@ -589,6 +626,49 @@ def register_routes(app: Flask):
         if not article:
             abort(404)
         return send_from_directory(Path(article["project_path"]), filename)
+
+    # ---------- CrossRef ----------
+
+    @app.route("/articles/<int:article_id>/crossref.xml")
+    @login_required
+    def article_crossref_xml(article_id):
+        try:
+            xml = crossref.build_article_deposit_xml(
+                article_id, base_url=request.host_url.rstrip("/")
+            )
+        except ValueError as exc:
+            flash(str(exc), "error")
+            return redirect(url_for("article_home", article_id=article_id))
+        from flask import Response
+        article = db.query_one("SELECT slug FROM articles WHERE id = ?", (article_id,))
+        filename = f"{article['slug']}-crossref.xml" if article else f"article-{article_id}-crossref.xml"
+        return Response(
+            xml,
+            mimetype="application/xml",
+            headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+        )
+
+    @app.route("/issues/<int:issue_id>/crossref.xml")
+    @login_required
+    def issue_crossref_xml(issue_id):
+        try:
+            xml = crossref.build_issue_deposit_xml(
+                issue_id, base_url=request.host_url.rstrip("/")
+            )
+        except ValueError as exc:
+            flash(str(exc), "error")
+            return redirect(url_for("issue_home", issue_id=issue_id))
+        from flask import Response
+        issue = db.query_one("SELECT volume, issue_number, year FROM issues WHERE id = ?", (issue_id,))
+        filename = (
+            f"issue-v{issue['volume']}-n{issue['issue_number']}-{issue['year']}-crossref.xml"
+            if issue else f"issue-{issue_id}-crossref.xml"
+        )
+        return Response(
+            xml,
+            mimetype="application/xml",
+            headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+        )
 
     @app.route("/healthz")
     def healthz():
