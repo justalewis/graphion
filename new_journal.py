@@ -26,7 +26,7 @@ STARTER_JOURNAL_SLUG = "lics"
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Scaffold a new journal in Stylus.")
+    parser = argparse.ArgumentParser(description="Scaffold a new journal in Graphion.")
     parser.add_argument("slug", help="URL-safe identifier (e.g., 'mhrj')")
     parser.add_argument("name", help='Full journal name (e.g., "Modern Hispanic Review Journal")')
     parser.add_argument("--issn", help="ISSN (e.g., '2326-5620')", default=None)

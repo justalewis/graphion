@@ -5,7 +5,7 @@ A walkthrough of the codebase for anyone extending it.
 ## Code organization
 
 ```
-LiCS-Pipeline/
+Graphion/
   app.py              ← Flask routes; the HTTP surface
   auth.py             ← Flask-Login wiring, user model
   db.py               ← Raw sqlite3, no ORM. Schema + migrations.
@@ -157,7 +157,7 @@ Local-only currently. The Flask dev server is fine for single-user use on `127.0
 1. Use a production WSGI server (gunicorn, waitress).
 2. Reverse-proxy behind nginx or Caddy.
 3. Set `FLASK_SECRET_KEY` from environment.
-4. Persist `data/stylus.db` and `content/` on a backed-up volume.
+4. Persist `data/graphion.db` and `content/` on a backed-up volume.
 5. Bundle Pandoc + Typst binaries in a Dockerfile if containerizing.
 
 The roadmap doc (`docs/audit-and-roadmap.md`) tracks what's planned next.

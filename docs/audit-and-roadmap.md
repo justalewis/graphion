@@ -1,4 +1,4 @@
-# Stylus / LiCS-Pipeline — Competitive Audit & Roadmap
+# Graphion — Competitive Audit & Roadmap
 
 Written 2026-05-21, after 12 commits. Compares the current tool against
 peer publishing platforms and identifies concrete improvements organized
@@ -8,12 +8,12 @@ should explicitly **not** build.
 
 ---
 
-## 1. Where Stylus already does well versus peers
+## 1. Where Graphion already does well versus peers
 
 Compared to OJS, Janeway, Quarto, Editoria, Texture, Manuscripts.io, and
-Pressbooks, Stylus already has a few distinct strengths:
+Pressbooks, Graphion already has a few distinct strengths:
 
-| Feature | Stylus | Quarto | OJS | Janeway | Editoria | Texture |
+| Feature | Graphion | Quarto | OJS | Janeway | Editoria | Texture |
 |---|---|---|---|---|---|---|
 | Single Markdown source → HTML + tagged PDF | ✓ | ✓ | ✗ | ✗ | ✓ | ✓ |
 | Per-journal template bundle (CSS + Typst + Lua) | ✓ | partial | ✗ | ✗ | ✓ | partial |
@@ -70,7 +70,7 @@ value.
 The action row has Edit metadata / Edit Markdown / Render / View HTML /
 View PDF / Download CrossRef XML in one flat strip. Compared to OJS's
 clear status-driven workflow (Submission → Review → Copyedit → Layout →
-Publish), Stylus doesn't show "what stage is this article in" at a
+Publish), Graphion doesn't show "what stage is this article in" at a
 glance.
 
 **Recommendation:** add a **status timeline** at the top of each article
@@ -82,7 +82,7 @@ visualization.
 ### 2.4 No reader-facing site
 
 OJS, Janeway, and Pressbooks all produce a public journal site as part
-of the same tool. Stylus produces files; you upload them elsewhere. For
+of the same tool. Graphion produces files; you upload them elsewhere. For
 LiCS this is fine (OJS hosts the public site). For a journal that wants
 to self-host, this is missing.
 
@@ -116,7 +116,7 @@ Concrete checks worth shipping:
 
 Right now the CrossRef tab shows config + downloads. Compared to OJS's
 CrossRef plugin which has explicit "queue this for deposit" / "marked
-as deposited" / "DOI confirmed" states, Stylus has no awareness of
+as deposited" / "DOI confirmed" states, Graphion has no awareness of
 which deposits have actually been registered.
 
 **Recommendation:** add a `deposits` table tracking when each article's
@@ -242,7 +242,7 @@ Single-user only. A real journal has multiple editors, copyeditors,
 designers. OJS and Janeway model these as user roles with permissions.
 
 **Recommendation:** not worth building unless LiCS wants to move off
-OJS entirely. Stylus's current model (single layout editor working from
+OJS entirely. Graphion's current model (single layout editor working from
 manuscripts handed to them) matches the actual LiCS workflow. Adding
 multi-user is significant work for a small payoff in this context.
 
@@ -253,7 +253,7 @@ multi-user is significant work for a small payoff in this context.
 Currently we export: **HTML** (semantic, OJS-galley-style) and **PDF**
 (Typst, tagged, 6×9). Peer tools support more:
 
-| Format | Stylus | Quarto | OJS | Editoria | Pressbooks | Reason it matters |
+| Format | Graphion | Quarto | OJS | Editoria | Pressbooks | Reason it matters |
 |---|---|---|---|---|---|---|
 | HTML | ✓ | ✓ | upload | ✓ | ✓ | Web reading |
 | Tagged PDF | ✓ | ✓ | upload | ✓ | ✓ | Print + accessibility |
@@ -351,9 +351,9 @@ rough effort estimates:
 
 - **Multi-user collaboration / role-based access.** Not worth the
   complexity for a single-editor workflow. If LiCS needs this, stay on
-  OJS for the review pipeline and use Stylus only for layout.
+  OJS for the review pipeline and use Graphion only for layout.
 - **Author submission / peer review workflow.** Same reason; OJS does
-  this and Stylus shouldn't try.
+  this and Graphion shouldn't try.
 - **Print-on-demand integration.** Niche; only relevant if LiCS ever
   prints physical copies.
 - **Analytics / read tracking.** OJS handles this if the public site is
@@ -380,7 +380,7 @@ incremental as new checks land.
 
 ## Appendix: features peer tools have that we explicitly chose not to copy
 
-For completeness, here's what I'd keep *out* of Stylus on principle:
+For completeness, here's what I'd keep *out* of Graphion on principle:
 
 - **Database-stored article content** (OJS does this). We deliberately
   keep article body on disk; the SQLite is just an index. Easier to

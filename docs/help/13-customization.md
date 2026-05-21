@@ -1,6 +1,6 @@
 # Customization for other journals
 
-Stylus ships with one example journal (LiCS) configured. The architecture is per-journal: each journal has its own template bundle, its own configuration, its own articles and issues. Adding a new journal is well-supported.
+Graphion ships with one example journal (LiCS) configured. The architecture is per-journal: each journal has its own template bundle, its own configuration, its own articles and issues. Adding a new journal is well-supported.
 
 ## The quick path: scaffold a new journal
 
@@ -101,7 +101,7 @@ For one-off layouts (e.g., a special-issue art cover), you can also override the
 
 ## Multi-journal coexistence
 
-Multiple journals coexist in the same Stylus install:
+Multiple journals coexist in the same Graphion install:
 
 - Each appears on the dashboard.
 - The Issues tab lists issues across all journals.

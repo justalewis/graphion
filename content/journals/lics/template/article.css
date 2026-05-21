@@ -83,6 +83,17 @@ section.abstract {
   margin: 2rem auto;
   max-width: 30em;
 }
+section.abstract {
+  padding-bottom: 2rem;
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--rule);
+}
+section.abstract + section.level1 > h1,
+section.abstract + section > h1:first-child {
+  border-top: 0;
+  padding-top: 1rem;
+  margin-top: 2rem;
+}
 aside.keywords h2,
 section.abstract h2 {
   font-family: var(--serif);
@@ -233,10 +244,23 @@ a:hover { border-bottom-color: var(--link); }
 /* Footnotes */
 section.footnotes {
   margin-top: 3rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--rule);
   font-size: 0.85rem;
   line-height: 1.45;
+}
+section.footnotes::before {
+  content: "Notes";
+  display: block;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-variant-caps: small-caps;
+  font-feature-settings: "smcp", "kern";
+  font-size: 1.05rem;
+  letter-spacing: 0.18em;
+  color: var(--ink);
+  text-align: center;
+  margin: 0 0 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
 }
 section.footnotes ol { padding-left: 1.75em; }
 section.footnotes p { text-indent: 0; }

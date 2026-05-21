@@ -824,12 +824,18 @@ def register_routes(app: Flask):
     @app.route("/articles/<int:article_id>/html")
     @login_required
     def serve_html(article_id):
-        return _serve_artifact(article_id, "article.html")
+        return _serve_artifact(
+            article_id, "article.html",
+            as_attachment=request.args.get("dl") == "1",
+        )
 
     @app.route("/articles/<int:article_id>/pdf")
     @login_required
     def serve_pdf(article_id):
-        return _serve_artifact(article_id, "article.pdf")
+        return _serve_artifact(
+            article_id, "article.pdf",
+            as_attachment=request.args.get("dl") == "1",
+        )
 
     @app.route("/articles/<int:article_id>/epub")
     @login_required
@@ -1119,15 +1125,23 @@ def _peek_title(md_path: Path) -> Optional[str]:
     return m.group(1).strip() if m else None
 
 
-def _serve_artifact(article_id: int, name: str):
-    article = db.query_one("SELECT project_path FROM articles WHERE id = ?", (article_id,))
+def _serve_artifact(article_id: int, name: str, as_attachment: bool = False):
+    article = db.query_one("SELECT project_path, slug FROM articles WHERE id = ?", (article_id,))
     if not article:
         abort(404)
     apath = Path(article["project_path"])
     target = apath / name
     if not target.exists():
         abort(404)
-    return send_from_directory(apath, name)
+    download_name = None
+    if as_attachment and "." in name:
+        ext = name.rsplit(".", 1)[1]
+        download_name = f"{article['slug']}.{ext}"
+    return send_from_directory(
+        apath, name,
+        as_attachment=as_attachment,
+        download_name=download_name,
+    )
 
 
 if __name__ == "__main__":

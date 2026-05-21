@@ -1,6 +1,6 @@
 # Overview
 
-LiCS-Pipeline (working codename **Stylus**) is a single-editor publishing workstation for scholarly journals. Its job is to take a Word manuscript handed off by an author and turn it into a clean, well-typeset, indexable, deposit-ready issue with as little manual layout work as possible.
+**Graphion** is a single-editor publishing workstation for scholarly journals. Its job is to take a Word manuscript handed off by an author and turn it into a clean, well-typeset, indexable, deposit-ready issue with as little manual layout work as possible.
 
 ## Who this is for
 
@@ -24,7 +24,7 @@ In plain terms:
 
 ## What this tool deliberately does *not* do
 
-- **Author submission & peer review.** That's what OJS, Janeway, and Scholastica are for. Stylus assumes the manuscript has already been accepted.
+- **Author submission & peer review.** That's what OJS, Janeway, and Scholastica are for. Graphion assumes the manuscript has already been accepted.
 - **Multi-user role-based access.** Single editor at a time. Not built for distributed teams.
 - **Hosting the public reader-facing journal site.** It produces galleys and metadata; you host them on OJS or wherever your journal lives publicly.
 - **Replacing your designer.** The journal's template bundle (CSS, Typst, Lua filters) is itself a design artifact — it just lives in a repo where it can be reviewed, versioned, and iterated on.

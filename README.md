@@ -1,4 +1,4 @@
-# Stylus
+# Graphion
 
 A single-editor publishing workstation for scholarly journals.
 Markdown source in, **structured accessible HTML + tagged PDF + EPUB +
@@ -26,7 +26,7 @@ Two problems it tries to solve:
 
 1. **Accessibility.** Most scholarly content in rhet/comp lives in
    unstructured PDFs or HTML that fails screen-reader navigation,
-   tagged-PDF compliance, and proper heading hierarchy. Stylus
+   tagged-PDF compliance, and proper heading hierarchy. Graphion
    produces **semantic HTML5** (OJS-galley-style with `<article>`,
    `<section>`, `<aside>`, ARIA labels, alt text on figures,
    hanging-indent works cited via `class="references"`) and

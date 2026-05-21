@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ article['title'] }} | LiCS Pipeline{% endblock %}
+{% block title %}{{ article['title'] }} | Graphion{% endblock %}
 {% block content %}
 <section class="card">
   <h1>{{ article['title'] }}</h1>
@@ -15,6 +15,8 @@
     <button class="button" id="render-btn" data-href="{{ url_for('article_render', article_id=article['id']) }}">Render</button>
     {% if rendered_html %}<a class="button ghost" href="{{ url_for('serve_html', article_id=article['id']) }}" target="_blank">View HTML</a>{% endif %}
     {% if rendered_pdf %}<a class="button ghost" href="{{ url_for('serve_pdf', article_id=article['id']) }}" target="_blank">View PDF</a>{% endif %}
+    {% if rendered_html %}<a class="button ghost" href="{{ url_for('serve_html', article_id=article['id']) }}?dl=1">Download HTML</a>{% endif %}
+    {% if rendered_pdf %}<a class="button ghost" href="{{ url_for('serve_pdf', article_id=article['id']) }}?dl=1">Download PDF</a>{% endif %}
     <a class="button ghost" href="{{ url_for('serve_epub', article_id=article['id']) }}">Download EPUB</a>
     <a class="button ghost" href="{{ url_for('article_jats_xml', article_id=article['id']) }}">Download JATS XML</a>
     <a class="button ghost" href="{{ url_for('article_crossref_xml', article_id=article['id']) }}">Download CrossRef XML</a>

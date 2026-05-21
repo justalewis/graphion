@@ -1,6 +1,6 @@
 # Installation & setup
 
-A start-from-scratch guide for getting Stylus running on your machine.
+A start-from-scratch guide for getting Graphion running on your machine.
 
 ## Requirements
 
@@ -12,7 +12,7 @@ A start-from-scratch guide for getting Stylus running on your machine.
 
 ## Installing Pandoc
 
-Stylus uses Pandoc as a Python subprocess via `pypandoc`. You need the actual Pandoc binary on PATH.
+Graphion uses Pandoc as a Python subprocess via `pypandoc`. You need the actual Pandoc binary on PATH.
 
 **macOS** (Homebrew):
 
@@ -65,7 +65,7 @@ python seed.py
 
 The script will:
 
-1. Create the SQLite database at `data/stylus.db`.
+1. Create the SQLite database at `data/graphion.db`.
 2. Apply the schema and any pending column migrations.
 3. Register the LiCS example journal (or skip if you've removed the seed for it).
 4. Prompt you for an admin username and password.
@@ -131,12 +131,12 @@ Schema migrations are additive (`ALTER TABLE ... ADD COLUMN`) and idempotent; ex
 
 ## Deployment beyond local dev
 
-Stylus is designed as a single-user local tool. For multi-machine access:
+Graphion is designed as a single-user local tool. For multi-machine access:
 
 1. Use a production WSGI server (`gunicorn`, `waitress`) instead of `app.run`.
 2. Reverse-proxy behind nginx or Caddy with HTTPS.
 3. Set `FLASK_SECRET_KEY` from environment.
-4. Persist `data/stylus.db` and `content/` on a backed-up volume.
+4. Persist `data/graphion.db` and `content/` on a backed-up volume.
 5. Optionally containerize: a `Dockerfile` that starts from `python:3.12-slim`, installs Pandoc, and adds the repo is straightforward.
 
-There is no built-in multi-user authentication or role-based access control. If multiple people need to collaborate, run multiple instances or stick to OJS for the submission/review workflow and use Stylus only for layout.
+There is no built-in multi-user authentication or role-based access control. If multiple people need to collaborate, run multiple instances or stick to OJS for the submission/review workflow and use Graphion only for layout.

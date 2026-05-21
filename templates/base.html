@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% block title %}LiCS Pipeline{% endblock %}</title>
+  <title>{% block title %}Graphion{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='lewis-tokens.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
   {% block head %}{% endblock %}
 </head>
 <body>
   <header class="topbar">
-    <div class="brand"><a href="{{ url_for('dashboard') }}">LiCS Pipeline</a></div>
+    <div class="brand"><a href="{{ url_for('dashboard') }}">Graphion</a></div>
     {% if current_user.is_authenticated %}
     <nav>
       <a href="{{ url_for('dashboard') }}">Dashboard</a>

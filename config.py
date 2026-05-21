@@ -5,7 +5,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 CONTENT_DIR = BASE_DIR / "content"
 DATA_DIR = BASE_DIR / "data"
-DB_PATH = DATA_DIR / "stylus.db"
+DB_PATH = DATA_DIR / "graphion.db"
 
 SECRET_KEY = os.environ.get("FLASK_SECRET_KEY", "dev-key-change-me-before-deploy")
 

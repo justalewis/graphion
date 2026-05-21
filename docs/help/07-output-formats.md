@@ -83,4 +83,4 @@ The canonical source — `article.md` — is committed. Generated outputs (`arti
 
 Article assets (figures, source.docx) are also gitignored per-article. Template assets (the journal's wordmark, CSS, Lua filters, CSL) are committed.
 
-The DB (`data/stylus.db`) is gitignored. To reproduce a project state from git, restore the DB by walking the filesystem.
+The DB (`data/graphion.db`) is gitignored. To reproduce a project state from git, restore the DB by walking the filesystem.

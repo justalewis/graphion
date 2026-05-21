@@ -45,7 +45,7 @@ def ensure_admin_user(username: str, password: str, email: str | None):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Initialize the LiCS Pipeline database.")
+    parser = argparse.ArgumentParser(description="Initialize the Graphion database.")
     parser.add_argument("--user", default=None, help="Admin username (interactive if omitted)")
     parser.add_argument("--pass", dest="password", default=None, help="Admin password (interactive if omitted)")
     parser.add_argument("--email", default=None)
