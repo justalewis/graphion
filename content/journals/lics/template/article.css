@@ -106,7 +106,7 @@ section.abstract p {
   text-indent: 0;
   font-size: 0.95rem;
   margin: 0 0 0.75rem;
-  hyphens: auto;
+  hyphens: none;
 }
 section.abstract p:last-child { margin-bottom: 0; }
 
@@ -159,8 +159,8 @@ article p {
   margin: 0;
   text-align: justify;
   text-indent: 1.4em;
-  hyphens: auto;
-  -webkit-hyphens: auto;
+  hyphens: none;
+  -webkit-hyphens: none;
   hanging-punctuation: first last;
   orphans: 2;
   widows: 2;

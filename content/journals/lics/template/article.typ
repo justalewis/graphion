@@ -82,6 +82,11 @@
   first-line-indent: 1.4em,
   linebreaks: "optimized",
 )
+// Disable word-level hyphenation across the document. Long words flow to
+// the end of the line and break only at natural boundaries; justified
+// lines may therefore have wider word spacing on some lines, which is
+// the intended trade-off.
+#set text(hyphenate: false)
 
 // Section-h1: centered small-caps with a hairline rule above
 #show heading.where(level: 1): it => {
