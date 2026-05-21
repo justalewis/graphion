@@ -111,6 +111,40 @@ def init_db():
     Path(DB_PATH).parent.mkdir(parents=True, exist_ok=True)
     with cursor() as cur:
         cur.executescript(SCHEMA)
+    _apply_migrations()
+
+
+def _apply_migrations():
+    """Additive column migrations. Idempotent: skips any column that already
+    exists. Append new columns at the bottom; never reorder or drop."""
+    additions = {
+        "journals": [
+            ("short_name", "TEXT"),
+            ("wordmark_image_path", "TEXT"),
+            ("header_label_template", "TEXT"),
+            ("depositor_name", "TEXT"),
+            ("depositor_email", "TEXT"),
+            ("editorial_team_md", "TEXT"),
+            ("editorial_board_md", "TEXT"),
+            ("mission_statement_md", "TEXT"),
+            ("financial_credit_md", "TEXT"),
+            ("toc_sections_json", "TEXT"),
+        ],
+        "articles": [
+            ("kind", "TEXT DEFAULT 'article'"),
+            ("section", "TEXT DEFAULT 'ARTICLES'"),
+        ],
+        "issues": [
+            ("header_season", "TEXT"),
+        ],
+    }
+    with cursor() as cur:
+        for table, cols in additions.items():
+            cur.execute(f"PRAGMA table_info({table})")
+            existing = {row[1] for row in cur.fetchall()}
+            for name, decl in cols:
+                if name not in existing:
+                    cur.execute(f"ALTER TABLE {table} ADD COLUMN {name} {decl}")
 
 
 def query_one(sql, params=()):

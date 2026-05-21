@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Settings | {{ journal['name'] }}{% endblock %}
+{% block head %}
+<style>
+  .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 1.5rem; }
+  .field-grid .full { grid-column: 1 / -1; }
+  .section-divider { border-top: 1px solid var(--rule); margin: 1.5rem 0 0.75rem; padding-top: 0.75rem; }
+  .section-divider h2 { margin: 0 0 0.25rem; font-size: 1.1rem; }
+  .help-text { color: var(--muted); font-size: 0.85rem; margin-top: 0.25rem; }
+  textarea { width: 100%; min-height: 6rem; padding: 0.5rem 0.65rem; font: inherit; border: 1px solid var(--rule); border-radius: 4px; background: #fff; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.95rem; }
+  textarea.tall { min-height: 10rem; }
+  .wordmark-preview { max-width: 12rem; max-height: 6rem; display: block; margin: 0.5rem 0; background: #fff; border: 1px solid var(--rule); padding: 0.5rem; }
+</style>
+{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>Journal settings: {{ journal['name'] }}</h1>
+  <p class="dim">
+    <code>{{ journal['slug'] }}</code>
+    &middot; <a href="{{ url_for('journal_home', slug=journal['slug']) }}">Back to journal</a>
+  </p>
+
+  <form method="post" enctype="multipart/form-data" class="stack">
+    <div class="section-divider">
+      <h2>Brand</h2>
+      <p class="help-text">The wordmark renders on the cover of every issue's front matter. SVG preferred for resolution independence.</p>
+    </div>
+    <div class="field-grid">
+      <label>Short name <span style="color:#b54e2c">*</span>
+        <input type="text" name="short_name" value="{{ journal['short_name'] or '' }}" placeholder="LiCS" />
+        <span class="help-text">Short form used in running headers and the wordmark text fallback. For "Literacy in Composition Studies" use "LiCS".</span>
+      </label>
+      <label>&nbsp;</label>
+      <label class="full">Wordmark image (SVG, PNG, or JPG)
+        {% if wordmark_url %}<img class="wordmark-preview" src="{{ wordmark_url }}" alt="current wordmark" />{% endif %}
+        <input type="file" name="wordmark" accept=".svg,.png,.jpg,.jpeg" />
+        <span class="help-text">Uploads to <code>content/journals/{{ journal['slug'] }}/template/assets/wordmark.{ext}</code>. If absent, a Typst-set text fallback is used.</span>
+      </label>
+      <label class="full">Running header template
+        <input type="text" name="header_label_template" value="{{ journal['header_label_template'] or '' }}" placeholder="e.g., *{short_name}* {volume}.{issue} / {season}" />
+        <span class="help-text">Placeholders: <code>{short_name}</code>, <code>{name}</code>, <code>{volume}</code>, <code>{issue}</code>, <code>{year}</code>, <code>{season}</code>.</span>
+      </label>
+    </div>
+
+    <div class="section-divider">
+      <h2>Front matter content</h2>
+      <p class="help-text">Markdown. These render into the issue's front matter pages in this order: editorial team, editorial board, financial credit, mission statement.</p>
+    </div>
+    <label class="full">Editorial team (Markdown)
+      <textarea name="editorial_team_md" class="tall" placeholder="| Managing Editor | Senior Editor |&#10;|---|---|&#10;| **Brenda Glascott** | **Tara Lockhart** |&#10;| *Portland State University* | *San Francisco State University* |">{{ journal['editorial_team_md'] or '' }}</textarea>
+      <span class="help-text">Markdown tables are recommended for the 2-column layout. Use **bold** for role headers, *italic* for institutions.</span>
+    </label>
+    <label class="full">Editorial board (Markdown)
+      <textarea name="editorial_board_md" class="tall" placeholder="Patrick Berry &mdash; *Syracuse University*&#10;&#10;Santosh Khadka &mdash; *California State University, Northridge*">{{ journal['editorial_board_md'] or '' }}</textarea>
+    </label>
+    <label class="full">Financial credit (Markdown)
+      <textarea name="financial_credit_md" placeholder="*LiCS* is published with financial and administrative support from Portland State University.&#10;&#10;Print Layout: Justin Lewis&#10;Web Design: Justin Lewis&#10;Website: www.licsjournal.com&#10;Email: licsjournal@gmail.com">{{ journal['financial_credit_md'] or '' }}</textarea>
+    </label>
+    <label class="full">Mission statement (Markdown)
+      <textarea name="mission_statement_md" class="tall">{{ journal['mission_statement_md'] or '' }}</textarea>
+    </label>
+
+    <div class="section-divider">
+      <h2>Table of contents</h2>
+    </div>
+    <label class="full">Section labels (one per line, in display order)
+      <textarea name="toc_sections_json" placeholder="ARTICLES&#10;SYMPOSIUM&#10;BOOK REVIEWS">{% if journal['toc_sections_json'] %}{% set sections = journal['toc_sections_json'] | from_json %}{% if sections is iterable %}{{ sections | join('\n') }}{% endif %}{% endif %}</textarea>
+      <span class="help-text">Articles are grouped by their <code>section</code> field in the ToC. Default if blank: <code>ARTICLES</code> only.</span>
+    </label>
+
+    <div class="section-divider">
+      <h2>CrossRef</h2>
+    </div>
+    <div class="field-grid">
+      <label>DOI prefix
+        <input type="text" name="crossref_prefix" value="{{ journal['crossref_prefix'] or '' }}" placeholder="10.21623" />
+      </label>
+      <label>Member ID
+        <input type="text" name="crossref_member_id" value="{{ journal['crossref_member_id'] or '' }}" placeholder="1" />
+      </label>
+      <label>Depositor name <span style="color:#b54e2c">*</span>
+        <input type="text" name="depositor_name" value="{{ journal['depositor_name'] or '' }}" placeholder="Literacy in Composition Studies" />
+      </label>
+      <label>Depositor email <span style="color:#b54e2c">*</span>
+        <input type="email" name="depositor_email" value="{{ journal['depositor_email'] or '' }}" placeholder="editor@example.org" />
+        <span class="help-text">CrossRef will reject deposits with placeholder emails. Must be registered with your CrossRef account.</span>
+      </label>
+    </div>
+
+    <div class="section-divider"></div>
+    <div>
+      <button type="submit">Save settings</button>
+      <a class="button ghost" href="{{ url_for('journal_home', slug=journal['slug']) }}">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

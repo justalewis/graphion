@@ -26,6 +26,16 @@ def create_app() -> Flask:
     app.config["SECRET_KEY"] = SECRET_KEY
     app.config["MAX_CONTENT_LENGTH"] = MAX_UPLOAD_BYTES
 
+    @app.template_filter("from_json")
+    def _from_json(s):
+        import json
+        if not s:
+            return []
+        try:
+            return json.loads(s)
+        except Exception:
+            return []
+
     db.init_db()
     login_manager.init_app(app)
 
@@ -81,6 +91,73 @@ def register_routes(app: Flask):
         return render_template("dashboard.html", journals=journals, recent=recent, recent_issues=recent_issues)
 
     # ---------- journal ----------
+
+    @app.route("/journals/<slug>/settings", methods=["GET", "POST"])
+    @login_required
+    def journal_settings(slug):
+        j = db.query_one("SELECT * FROM journals WHERE slug = ?", (slug,))
+        if not j:
+            abort(404)
+        if request.method == "POST":
+            import json
+            sections_raw = request.form.get("toc_sections_json", "").strip()
+            sections = [line.strip() for line in sections_raw.splitlines() if line.strip()]
+            sections_json = json.dumps(sections) if sections else None
+            fields = {
+                "short_name": request.form.get("short_name", "").strip() or None,
+                "header_label_template": request.form.get("header_label_template", "").strip() or None,
+                "depositor_name": request.form.get("depositor_name", "").strip() or None,
+                "depositor_email": request.form.get("depositor_email", "").strip() or None,
+                "editorial_team_md": request.form.get("editorial_team_md", "").strip() or None,
+                "editorial_board_md": request.form.get("editorial_board_md", "").strip() or None,
+                "mission_statement_md": request.form.get("mission_statement_md", "").strip() or None,
+                "financial_credit_md": request.form.get("financial_credit_md", "").strip() or None,
+                "toc_sections_json": sections_json,
+                "crossref_prefix": request.form.get("crossref_prefix", "").strip() or None,
+                "crossref_member_id": request.form.get("crossref_member_id", "").strip() or None,
+            }
+            updates = ", ".join(f"{k} = ?" for k in fields)
+            db.execute(
+                f"UPDATE journals SET {updates} WHERE id = ?",
+                (*fields.values(), j["id"]),
+            )
+
+            wordmark_file = request.files.get("wordmark")
+            if wordmark_file and wordmark_file.filename:
+                fname = secure_filename(wordmark_file.filename)
+                ext = Path(fname).suffix.lower()
+                if ext not in {".png", ".svg", ".jpg", ".jpeg"}:
+                    flash("Wordmark must be PNG, SVG, or JPG.", "error")
+                    return redirect(request.url)
+                target_dir = conversion.template_dir(slug) / "assets"
+                target_dir.mkdir(parents=True, exist_ok=True)
+                target = target_dir / f"wordmark{ext}"
+                wordmark_file.save(target)
+                rel = target.relative_to(conversion.template_dir(slug).parent.parent.parent)
+                db.execute(
+                    "UPDATE journals SET wordmark_image_path = ? WHERE id = ?",
+                    (str(rel).replace("\\", "/"), j["id"]),
+                )
+
+            flash("Journal settings saved.", "success")
+            return redirect(url_for("journal_settings", slug=slug))
+
+        wordmark_url = None
+        if j["wordmark_image_path"]:
+            wm = Path(j["wordmark_image_path"])
+            if wm.is_absolute():
+                wordmark_url = wm.as_posix()
+            else:
+                wordmark_url = url_for(
+                    "serve_journal_asset", slug=slug, filename=Path(j["wordmark_image_path"]).name
+                )
+        return render_template("journal_settings.html", journal=j, wordmark_url=wordmark_url)
+
+    @app.route("/journals/<slug>/assets/<path:filename>")
+    @login_required
+    def serve_journal_asset(slug, filename):
+        target_dir = conversion.template_dir(slug) / "assets"
+        return send_from_directory(target_dir, filename)
 
     @app.route("/journals/<slug>")
     @login_required
@@ -195,9 +272,11 @@ def register_routes(app: Flask):
                 return redirect(request.url)
             title = request.form.get("title", "").strip() or None
             status = request.form.get("status", "draft")
+            season = request.form.get("header_season", "").strip() or None
             db.execute(
-                "UPDATE issues SET volume = ?, issue_number = ?, year = ?, title = ?, status = ? WHERE id = ?",
-                (volume, issue_number, year, title, status, issue_id),
+                "UPDATE issues SET volume = ?, issue_number = ?, year = ?, title = ?, "
+                "status = ?, header_season = ? WHERE id = ?",
+                (volume, issue_number, year, title, status, season, issue_id),
             )
             islug = conversion.issue_slug_for(volume, issue_number, year)
             conversion.write_issue_yaml(issue["journal_slug"], islug, {

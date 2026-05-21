@@ -590,25 +590,56 @@ def _authors_inline(authors) -> str:
 
 
 def _render_issue_cover(issue, toc_entries: list, out_dir: Path) -> Path:
-    """Render the issue's title page + ToC as a standalone PDF."""
+    """Render the issue's title page (and a basic ToC for now) as a
+    front-matter PDF with roman pagination.
+
+    Layout: top-centered italic running label, large wordmark (image if
+    journal.wordmark_image_path is set, text fallback otherwise),
+    journal subtitle, year/volume/number block bottom-right, roman page
+    counter. Subsequent front-matter sections (editorial team, board,
+    mission, intro, ToC) will be added in follow-up commits.
+    """
     import typst as typst_lib
 
-    journal = issue["journal_name"]
+    journal_name = issue["journal_name"]
     title = issue["title"] or ""
     vol = issue["volume"]
     num = issue["issue_number"]
     year = issue["year"]
-    issn = issue["journal_issn"] or ""
+    season = (issue.get("header_season") if isinstance(issue, dict) else issue["header_season"]) or ""
+
+    journal_row = db.query_one(
+        "SELECT wordmark_image_path, header_label_template, name, short_name FROM journals WHERE id = ?",
+        (issue["journal_id"],),
+    )
+    journal = dict(journal_row) if journal_row else {}
+
+    short_name = journal.get("short_name") or _short_journal_name(journal.get("name") or journal_name)
+    header_template = journal.get("header_label_template") or "*{short_name}* {volume}.{issue} / {season}"
+    header_label = header_template.format(
+        short_name=short_name,
+        name=journal.get("name") or journal_name,
+        volume=vol, issue=num, year=year,
+        season=season,
+    ).strip()
+    if header_label.endswith("/"):
+        header_label = header_label[:-1].strip()
+
+    wordmark_block = _typst_wordmark_block(journal.get("wordmark_image_path"), out_dir, short_name)
+
+    issue_label_lines = [str(year), f"Volume {vol}, Number {num}"]
+    if title:
+        issue_label_lines.insert(0, title)
 
     toc_typst = ""
     for e in toc_entries:
-        t = (e["title"] or "").replace('"', '\\"')
-        a = (e["authors"] or "").replace('"', '\\"')
+        t = _typst_str(e["title"])
+        a = _typst_str(e["authors"])
         start = e["start_page"]
         toc_typst += (
             f'grid(columns: (1fr, auto), '
-            f'[#text(weight: 500, "{t}") \\\n  #text(style: "italic", fill: rgb("#4a4137"), "{a}")], '
-            f'align(right, text("{start}")))\n'
+            f'[#text(weight: 500, {t}) \\\n  #text(style: "italic", fill: rgb("#4a4137"), {a})], '
+            f'align(right, text({_typst_str(str(start))})))\n'
             f'v(0.5em)\n'
         )
 
@@ -617,26 +648,35 @@ def _render_issue_cover(issue, toc_entries: list, out_dir: Path) -> Path:
   paper: "us-letter",
   width: 6in,
   height: 9in,
-  margin: (top: 1in, bottom: 1in, left: 0.85in, right: 0.85in),
-  header: none,
-  footer: none,
+  margin: (top: 0.85in, bottom: 0.95in, left: 0.75in, right: 0.75in),
+  numbering: "I",
+  number-align: right,
+  header: align(center, text(
+    size: 9pt,
+    fill: rgb("#1a1612"),
+    style: "italic",
+    [{_typst_inline_md(header_label)}]
+  )),
 )
-#set text(font: ("EB Garamond", "Garamond", "Georgia"), size: 11pt, fill: rgb("#1a1612"))
+
+#set text(font: ("EB Garamond", "Garamond", "Georgia"), size: 11pt, fill: rgb("#1a1612"), hyphenate: false)
 #set par(justify: false, leading: 0.65em)
 
-#align(center, {{
-  v(0.5in)
-  text(size: 22pt, weight: 500, "{journal.replace('"', '')}")
-  v(0.6em)
-  text(size: 14pt, style: "italic", fill: rgb("#4a4137"), "Volume {vol}, Number {num} · {year}")
-  v(0.6em)
-  {"text(size: 12pt, style: " + '"italic"' + ", fill: rgb(" + '"#4a4137"' + '), "' + title.replace('"', '\\"') + '")' if title else ''}
-  v(1em)
-  line(length: 40%, stroke: 0.5pt + rgb("#b6a98c"))
-  {f'v(0.5em); text(size: 9pt, tracking: 0.15em, fill: rgb("#4a4137"), "ISSN {issn}")' if issn else ''}
-}})
+{wordmark_block}
 
-#pagebreak()
+#v(1fr)
+
+#align(right, block(width: auto, {{
+  set par(first-line-indent: 0pt)
+  text(size: 22pt, weight: 600, "{year}")
+  linebreak()
+  text(size: 14pt, "Volume {vol}, Number {num}")
+  {f'linebreak(); v(0.4em); text(size: 11pt, style: "italic", fill: rgb("#4a4137"), {_typst_str(title)})' if title else ''}
+}}))
+
+#v(0.4in)
+
+{f'''#pagebreak()
 
 #align(center, text(size: 14pt, tracking: 0.18em, "CONTENTS"))
 #v(1.5em)
@@ -644,6 +684,7 @@ def _render_issue_cover(issue, toc_entries: list, out_dir: Path) -> Path:
 #{{
   {toc_typst}
 }}
+''' if toc_typst else ''}
 """
 
     cover_typ = out_dir / "_cover.typ"
@@ -651,3 +692,78 @@ def _render_issue_cover(issue, toc_entries: list, out_dir: Path) -> Path:
     cover_typ.write_text(cover_typst, encoding="utf-8")
     typst_lib.compile(str(cover_typ), output=str(cover_pdf))
     return cover_pdf
+
+
+def _short_journal_name(name: str) -> str:
+    """Best-effort short form of a journal name for running headers.
+    For 'Literacy in Composition Studies' -> 'LiCS'. Falls back to first
+    letters of capitalized words."""
+    if not name:
+        return ""
+    # If the name has a parenthetical acronym, prefer it.
+    import re
+    m = re.search(r"\(([A-Z][A-Za-z]{1,8})\)", name)
+    if m:
+        return m.group(1)
+    # Otherwise use initials of words >2 chars (skip prepositions etc).
+    skip = {"in", "of", "the", "and", "for", "on", "to", "a"}
+    parts = [w for w in re.split(r"\s+", name) if w]
+    initials = "".join(w[0] for w in parts if w.lower() not in skip)
+    return initials or name
+
+
+def _typst_str(s) -> str:
+    """Encode a Python string as a Typst string literal."""
+    if s is None:
+        s = ""
+    return '"' + str(s).replace("\\", "\\\\").replace('"', '\\"') + '"'
+
+
+def _typst_inline_md(s: str) -> str:
+    """Best-effort inline markdown -> Typst content for *italic* spans.
+    Returns content that goes inside [...]."""
+    if not s:
+        return ""
+    out = []
+    i = 0
+    while i < len(s):
+        c = s[i]
+        if c == "*" and i + 1 < len(s) and s[i + 1] != "*":
+            end = s.find("*", i + 1)
+            if end != -1:
+                inner = s[i + 1:end].replace('"', '\\"')
+                out.append(f'#text(style: "italic", "{inner}")')
+                i = end + 1
+                continue
+        if c == '"':
+            out.append('\\"')
+        elif c == "\\":
+            out.append("\\\\")
+        else:
+            out.append(c)
+        i += 1
+    return "".join(out)
+
+
+def _typst_wordmark_block(rel_path: Optional[str], out_dir: Path, fallback: str) -> str:
+    """Emit Typst code that renders the journal wordmark, either as an
+    image (if the file exists) or as a large text fallback. The path is
+    rewritten to be relative to the cover .typ file's location."""
+    if rel_path:
+        candidate = (CONTENT_DIR / rel_path).resolve()
+        if candidate.exists():
+            try:
+                rel = candidate.relative_to(out_dir.resolve(), walk_up=True)
+            except TypeError:
+                # Python < 3.12: compute manually
+                import os
+                rel = Path(os.path.relpath(candidate, out_dir.resolve()))
+            return (
+                f'#align(center, block(width: 100%, '
+                f'image({_typst_str(rel.as_posix())}, width: 80%, fit: "contain")))'
+            )
+    return (
+        f'#align(center, block(inset: (top: 1.5in), '
+        f'text(size: 96pt, weight: 700, font: ("Helvetica Neue", "Helvetica", "Arial"), {_typst_str(fallback)})))\n'
+        f'#align(center, text(size: 18pt, font: ("Helvetica Neue", "Helvetica", "Arial"), {_typst_str("Literacy in Composition Studies" if fallback == "LiCS" else "")}))'
+    )

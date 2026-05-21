@@ -16,6 +16,7 @@ keywords:
 - linguistic justice
 short-title: Against AI Empire
 short-authors: Fernandes, Sano-Franchini, & McIntyre
+start-page: 1
 ---
 
 # INTRODUCTION 

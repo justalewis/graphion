@@ -22,6 +22,10 @@
     <label>Title (special-issue title; leave blank for a regular issue)
       <input type="text" name="title" value="{{ issue['title'] or '' }}" />
     </label>
+    <label>Header season (e.g., WINTER 2026)
+      <input type="text" name="header_season" value="{{ issue['header_season'] or '' }}" placeholder="WINTER 2026" />
+      <span class="help-text" style="color:#6a6357;font-size:0.85rem;">Appears in the running header on front-matter pages and on the cover.</span>
+    </label>
     <label>Status
       <select name="status">
         {% for s in ['draft', 'in-production', 'published'] %}
