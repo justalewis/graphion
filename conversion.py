@@ -400,6 +400,9 @@ def render_html(article_path: Path, journal_slug: str) -> Path:
         f"--template={template}",
         f"--css={css.name}",
     ]
+    fig_filter = tpl / "figures-filter.lua"
+    if fig_filter.exists():
+        extra.append(f"--lua-filter={fig_filter}")
     if lua_filter.exists():
         extra.append(f"--lua-filter={lua_filter}")
     extra.extend(_citation_args(article_path, journal_slug))
@@ -432,6 +435,9 @@ def render_pdf(article_path: Path, journal_slug: str) -> Path:
     typst_input = article_path / "article.typ"
 
     extra = [f"--template={typ_template}"]
+    fig_filter = tpl / "figures-filter.lua"
+    if fig_filter.exists():
+        extra.append(f"--lua-filter={fig_filter}")
     if lua_filter.exists():
         extra.append(f"--lua-filter={lua_filter}")
     extra.extend(_citation_args(article_path, journal_slug))
@@ -465,6 +471,9 @@ def render_epub(article_path: Path, journal_slug: str) -> Path:
         "--from", "markdown+yaml_metadata_block",
         "--to", "epub3",
     ]
+    fig_filter = tpl / "figures-filter.lua"
+    if fig_filter.exists():
+        extra.extend(["--lua-filter", str(fig_filter)])
     if css.exists():
         extra.extend(["--css", str(css)])
     extra.extend(_citation_args(article_path, journal_slug))

@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% block title %}Help — {{ current_title }}{% endblock %}
+{% block head %}
+<style>
+  .help-grid {
+    display: grid;
+    grid-template-columns: 14rem 1fr;
+    gap: var(--space-8);
+    max-width: var(--container-wide);
+    margin: 0 auto;
+  }
+  .help-sidebar {
+    border-right: 1px solid var(--rule);
+    padding-right: var(--space-4);
+    position: sticky;
+    top: var(--space-6);
+    align-self: start;
+    max-height: calc(100vh - 8rem);
+    overflow-y: auto;
+  }
+  .help-sidebar h3 {
+    font-family: var(--font-display);
+    font-size: var(--text-base);
+    color: var(--accent);
+    font-weight: 500;
+    margin: 0 0 var(--space-3);
+  }
+  .help-sidebar ul { list-style: none; padding: 0; margin: 0; }
+  .help-sidebar li { margin: 0 0 var(--space-1); }
+  .help-sidebar a {
+    display: block;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    color: var(--ink);
+    text-decoration: none;
+    font-size: var(--text-sm);
+    line-height: var(--leading-snug);
+    transition: background var(--t-fast), color var(--t-fast);
+  }
+  .help-sidebar a:hover { background: var(--surface-sage-soft); color: var(--accent); }
+  .help-sidebar a.active {
+    background: var(--accent);
+    color: var(--paper);
+    font-weight: 500;
+  }
+
+  .help-content {
+    min-width: 0;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: var(--space-8) var(--space-10);
+    box-shadow: var(--shadow-sm);
+    max-width: 48rem;
+  }
+  .help-content h1 {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    color: var(--accent);
+    margin: 0 0 var(--space-5);
+    font-weight: 500;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: var(--space-3);
+  }
+  .help-content h2 {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    color: var(--ink);
+    margin: var(--space-6) 0 var(--space-3);
+    font-weight: 500;
+  }
+  .help-content h3 {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: var(--text-base);
+    margin: var(--space-4) 0 var(--space-2);
+    color: var(--ink);
+  }
+  .help-content p {
+    margin: 0 0 var(--space-4);
+    line-height: var(--leading-base);
+    color: var(--ink);
+  }
+  .help-content ul, .help-content ol {
+    margin: 0 0 var(--space-4);
+    padding-left: var(--space-6);
+  }
+  .help-content li { margin: var(--space-1) 0; }
+  .help-content code {
+    font-family: var(--font-mono);
+    background: var(--surface-taupe-soft);
+    padding: 0.05em 0.4em;
+    border-radius: var(--radius-sm);
+    font-size: 0.92em;
+  }
+  .help-content pre {
+    font-family: var(--font-mono);
+    background: var(--surface-taupe-soft);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-sm);
+    padding: var(--space-4);
+    overflow-x: auto;
+    font-size: var(--text-sm);
+    line-height: var(--leading-snug);
+    color: var(--ink);
+    margin: 0 0 var(--space-4);
+  }
+  .help-content pre code {
+    background: transparent;
+    padding: 0;
+    font-size: inherit;
+  }
+  .help-content blockquote {
+    border-left: 3px solid var(--accent-soft);
+    padding-left: var(--space-4);
+    color: var(--muted);
+    margin: var(--space-4) 0;
+    font-style: italic;
+  }
+  .help-content a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-color: var(--rule-strong);
+    text-underline-offset: 0.2em;
+  }
+  .help-content a:hover {
+    color: var(--accent-hover);
+    text-decoration-color: var(--accent);
+  }
+  .help-content strong { font-weight: 600; }
+  .help-content hr {
+    border: 0;
+    border-top: 1px solid var(--rule);
+    margin: var(--space-6) 0;
+  }
+  .help-pagination {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--space-6);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--rule);
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+  .help-pagination a { color: var(--accent); }
+</style>
+{% endblock %}
+{% block content %}
+<div class="help-grid">
+  <aside class="help-sidebar">
+    <h3>Help</h3>
+    <ul>
+      {% for slug, title in topics %}
+      <li>
+        <a href="{{ url_for('help_page', slug=slug) }}" class="{% if slug == current_slug %}active{% endif %}">{{ title }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </aside>
+
+  <main class="help-content">
+    {{ html | safe }}
+
+    {% set idx = (topics | map(attribute=0) | list).index(current_slug) %}
+    <div class="help-pagination">
+      {% if idx > 0 %}
+        <span>&larr; <a href="{{ url_for('help_page', slug=topics[idx-1][0]) }}">{{ topics[idx-1][1] }}</a></span>
+      {% else %}<span></span>{% endif %}
+      {% if idx < topics|length - 1 %}
+        <span><a href="{{ url_for('help_page', slug=topics[idx+1][0]) }}">{{ topics[idx+1][1] }}</a> &rarr;</span>
+      {% else %}<span></span>{% endif %}
+    </div>
+  </main>
+</div>
+{% endblock %}

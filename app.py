@@ -979,6 +979,53 @@ def register_routes(app: Flask):
             counts=counts,
         )
 
+    # ---------- help / docs ----------
+
+    HELP_TOPICS = [
+        ("01-overview", "Overview"),
+        ("02-workflow", "Workflow"),
+        ("03-articles", "Articles"),
+        ("04-issues-and-front-matter", "Issues & Front Matter"),
+        ("05-citations", "Citations & Bibliography"),
+        ("06-figures", "Figures"),
+        ("07-output-formats", "Output Formats"),
+        ("08-templates", "Templates & Customization"),
+        ("09-crossref", "CrossRef Deposit"),
+        ("10-troubleshooting", "Troubleshooting & FAQ"),
+        ("11-developers", "For Developers"),
+    ]
+
+    @app.route("/help")
+    @app.route("/help/<slug>")
+    @login_required
+    def help_page(slug=None):
+        from pathlib import Path as _Path
+        import mistune
+
+        if slug is None:
+            slug = HELP_TOPICS[0][0]
+        valid = {s for s, _ in HELP_TOPICS}
+        if slug not in valid:
+            abort(404)
+
+        docs_dir = _Path(__file__).parent / "docs" / "help"
+        md_path = docs_dir / f"{slug}.md"
+        if not md_path.exists():
+            abort(404)
+        text = md_path.read_text(encoding="utf-8")
+        html = mistune.html(text)
+
+        # Title of the current page
+        current_title = next((t for s, t in HELP_TOPICS if s == slug), "Help")
+
+        return render_template(
+            "help.html",
+            topics=HELP_TOPICS,
+            current_slug=slug,
+            current_title=current_title,
+            html=html,
+        )
+
     @app.route("/healthz")
     def healthz():
         return {"ok": True}

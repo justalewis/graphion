@@ -255,6 +255,49 @@ def check_alt_text(article: dict, fm: dict, body: str) -> LintResult:
     return _ok("alt-text", f"All {len(images)} image(s) have alt text.")
 
 
+_FIG_LABEL_RE = re.compile(r"!\[[^\]]*\]\([^)]+\)\s*\{[^}]*#(fig:[a-zA-Z0-9_-]+)")
+_FIG_REF_RE = re.compile(r"\[?@(fig:[a-zA-Z0-9_-]+)\]?")
+
+
+def check_figure_references(article: dict, fm: dict, body: str) -> LintResult:
+    """Verify that every @fig:X reference points at an image with that
+    identifier, and that no figure is defined twice."""
+    labels = _FIG_LABEL_RE.findall(body)
+    refs = _FIG_REF_RE.findall(body)
+    if not labels and not refs:
+        return _ok("figure-references", "No figures or references.")
+
+    label_set = set(labels)
+    dups = sorted({l for l in labels if labels.count(l) > 1})
+
+    refs_set = set(refs)
+    refs_missing = sorted(refs_set - label_set)
+    unreferenced = sorted(label_set - refs_set)
+
+    findings = []
+    if dups:
+        findings.append("Duplicate figure labels: " + ", ".join(f"`{d}`" for d in dups))
+    if refs_missing:
+        findings.append(
+            "References to undefined figures: " + ", ".join(f"`@{r}`" for r in refs_missing)
+        )
+    if unreferenced:
+        findings.append(
+            "Figures never referenced in text: " + ", ".join(f"`{l}`" for l in unreferenced)
+        )
+
+    if not findings:
+        return _ok(
+            "figure-references",
+            f"All {len(refs)} cross-reference(s) resolve; {len(labels)} figure(s) defined.",
+        )
+    return _warn(
+        "figure-references",
+        f"{len(findings)} figure-reference issue(s).",
+        findings,
+    )
+
+
 # ---------- runner ----------
 
 DEFAULT_CHECKS: list[Callable] = [
@@ -268,6 +311,7 @@ DEFAULT_CHECKS: list[Callable] = [
     check_citations_match_references,
     check_unstripped_artifacts,
     check_alt_text,
+    check_figure_references,
 ]
 
 
