@@ -425,7 +425,7 @@ def render_pdf(article_path: Path, journal_slug: str) -> Path:
     )
 
     import typst as typst_lib
-    typst_lib.compile(str(typst_input), output=str(out))
+    typst_lib.compile(str(typst_input), output=str(out), root=str(CONTENT_DIR))
     return out
 
 
@@ -690,7 +690,7 @@ def _render_issue_cover(issue, toc_entries: list, out_dir: Path) -> Path:
     cover_typ = out_dir / "_cover.typ"
     cover_pdf = out_dir / "_cover.pdf"
     cover_typ.write_text(cover_typst, encoding="utf-8")
-    typst_lib.compile(str(cover_typ), output=str(cover_pdf))
+    typst_lib.compile(str(cover_typ), output=str(cover_pdf), root=str(CONTENT_DIR))
     return cover_pdf
 
 
@@ -752,15 +752,13 @@ def _typst_wordmark_block(rel_path: Optional[str], out_dir: Path, fallback: str)
     if rel_path:
         candidate = (CONTENT_DIR / rel_path).resolve()
         if candidate.exists():
-            try:
-                rel = candidate.relative_to(out_dir.resolve(), walk_up=True)
-            except TypeError:
-                # Python < 3.12: compute manually
-                import os
-                rel = Path(os.path.relpath(candidate, out_dir.resolve()))
+            # With root=CONTENT_DIR, Typst resolves leading-slash paths
+            # against the root, so use "/journals/.../wordmark.png".
+            typst_path = "/" + rel_path.lstrip("/").replace("\\", "/")
             return (
+                f'#v(0.7in)\n'
                 f'#align(center, block(width: 100%, '
-                f'image({_typst_str(rel.as_posix())}, width: 80%, fit: "contain")))'
+                f'image({_typst_str(typst_path)}, width: 75%, fit: "contain")))'
             )
     return (
         f'#align(center, block(inset: (top: 1.5in), '

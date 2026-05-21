@@ -14,7 +14,8 @@ content/**/article.typ
 content/**/conversion.log
 content/**/.versions/
 content/**/source.docx
-content/**/assets/
+content/**/articles/*/assets/
+content/**/_unfiled/*/assets/
 # Per-article copy of the journal stylesheet (the canonical template/article.css
 # is committed; copies under articles/ are regenerated each render).
 content/**/articles/*/article.css
