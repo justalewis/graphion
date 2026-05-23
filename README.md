@@ -56,6 +56,17 @@ Two problems it tries to solve:
 
 Typst (the PDF engine), pypdf, bibtexparser, and friends install via pip.
 
+### Before you start
+
+Install [Python 3.11+](https://www.python.org/downloads/) and [git](https://git-scm.com/downloads). On Windows, tick **"Add Python to PATH"** in the Python installer. Then open a terminal — **cmd** or **PowerShell** on Windows, **Terminal** on macOS — and check both are wired up:
+
+```bash
+python --version
+git --version
+```
+
+If both print a version number you're ready. If you'd prefer a guided setup that runs these checks and walks through the install for you, clone the repo and run `python graphion-install.py`.
+
 ### Install (10 minutes, basic)
 
 ```bash
@@ -67,6 +78,8 @@ python app.py             # opens at http://127.0.0.1:5050
 ```
 
 That gives you a fully working editor with HTML, PDF, EPUB, JATS, and CrossRef output. Optional integrations (Claude AI assistance, alternate PDF engines, accessibility validators, OCR) are described in the [Advanced Tools guide](docs/help/14-advanced-tools.md) and the [Installation guide](docs/help/12-installation.md).
+
+If you'd rather have a script handle the checks and walk you through each step, run `python graphion-install.py` after cloning instead of the commands above.
 
 ### Quick install of optional integrations (Windows only, one-shot)
 

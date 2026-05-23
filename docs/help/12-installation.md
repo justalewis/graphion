@@ -12,6 +12,21 @@ A start-from-scratch guide for getting Graphion running on your machine. Two pat
 
 ## Basic install (10 minutes)
 
+### Before you start
+
+Install two things in advance: [Python 3.11+](https://www.python.org/downloads/) and [git](https://git-scm.com/downloads). On Windows, when the Python installer asks, tick **"Add Python to PATH"** before clicking Install — without that, the `python` command won't be found in your terminal.
+
+Every command in this guide runs in a terminal: **cmd** or **PowerShell** on Windows, **Terminal** on macOS, your shell of choice on Linux. To confirm both tools are ready, open a terminal and run:
+
+```bash
+python --version
+git --version
+```
+
+If both print a version number, you're set. If either reports "command not found" or "is not recognized," reinstall it and reopen the terminal before continuing.
+
+If you would rather have the install script check these for you and walk through the rest interactively, clone the repo (Step 2 below) and then run `python graphion-install.py` instead of working through Steps 1–4 by hand.
+
 ### Step 1: Install Pandoc
 
 **macOS** (Homebrew):
