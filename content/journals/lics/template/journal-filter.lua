@@ -107,6 +107,20 @@ function Header(el)
     return el
   end
   if _is_notes_text(el) then
+    -- HTML and EPUB: Pandoc auto-emits a `<section id="footnotes">`
+    -- with the actual numbered notes inside. The explicit `### Notes`
+    -- heading from the markdown source would render as an empty
+    -- orphan section right above it — visible to readers as a bare
+    -- "Notes" line followed by a blank gap, then Pandoc's own `<hr>`
+    -- and numbered list. Delete the orphan. The auto-generated
+    -- section already gets a "Notes" label via the CSS rule
+    -- `section.footnotes::before { content: "Notes"; ... }`.
+    if FORMAT:match("^html") or FORMAT:match("^epub") then
+      return {}
+    end
+    -- Typst (and any other format without Pandoc's auto-footnotes
+    -- behavior): keep the heading. Our Pandoc() pass injects the
+    -- collected note content under it.
     el.level = 1
     el.identifier = "notes-section"
     table.insert(el.classes, "notes")
