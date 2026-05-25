@@ -439,6 +439,37 @@
   const hashMatch = location.hash.match(/^#tab=(\w+)/);
   if (hashMatch) showTab(hashMatch[1]);
 
+  // Cross-tab anchor jumps. The Overview header has chips that link to
+  // `#bibliography-section`, `#css-section`, etc. — sections that live
+  // inside the Settings tab panel (or another non-default tab). A plain
+  // anchor click would change the URL hash but the target stays
+  // display:none because its panel isn't active. This handler switches
+  // to the right tab first, then scrolls.
+  function activateAnchor(hash) {
+    if (!hash || !hash.startsWith('#') || hash.startsWith('#tab=')) return false;
+    const target = document.getElementById(hash.slice(1));
+    if (!target) return false;
+    const panel = target.closest('.tab-panel');
+    if (panel && panel.dataset.tab) {
+      showTab(panel.dataset.tab);
+      // Re-pin the hash after showTab rewrote it to #tab=...
+      if (history.replaceState) history.replaceState(null, '', hash);
+    }
+    // Defer scroll so the now-visible panel can lay out first.
+    requestAnimationFrame(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+    return true;
+  }
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    const href = a.getAttribute('href');
+    if (!href || href === '#' || href.startsWith('#tab=')) return;
+    a.addEventListener('click', (e) => {
+      if (activateAnchor(href)) e.preventDefault();
+    });
+  });
+  // Honor a section hash on first load (e.g., someone bookmarked
+  // `/articles/1#bibliography-section`).
+  if (!hashMatch && location.hash) activateAnchor(location.hash);
+
   // ---------- Dropdown menus ----------
   document.querySelectorAll('.menu-trigger').forEach(trigger => {
     const btn = trigger.querySelector('button[aria-haspopup]');
