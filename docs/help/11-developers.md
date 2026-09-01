@@ -35,6 +35,9 @@ Graphion/
   ojs_client.py       ← OJS REST API client stub for direct galley
                         submission (env-var configured).
   seed.py             ← Initial DB + LiCS journal + admin user seed.
+  change_password.py  ← Rotate a user's password; prompts via getpass so the
+                        value stays out of shell history. The DB hash is the
+                        source of truth, not GRAPHION_ADMIN_PASSWORD.
   smoketest.py        ← End-to-end pipeline runner for development.
   render_pages.py     ← Rasterize a PDF to PNG (for previews).
   templates/          ← Jinja2 admin UI templates

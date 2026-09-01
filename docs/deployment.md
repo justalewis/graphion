@@ -118,17 +118,53 @@ change the stored password; see below.
 
 ## Rotating the admin password
 
-The seeded password lives in the database, not in the secret. To change it:
+Know where the password actually lives before changing it. There are three
+copies and only one of them authenticates anyone:
+
+| Location | What it is |
+|---|---|
+| Fly secret store | Encrypted; set by `fly secrets set`, never readable back |
+| Container environment | Plaintext, readable by anyone with `fly ssh console` |
+| `users.password_hash` in the database | The scrypt hash that actually logs you in |
+
+`seed.py` reads `GRAPHION_ADMIN_PASSWORD` only on the boot where it finds no
+database. Once the database exists that variable is inert: changing or unsetting
+it does not change any password. The database is the source of truth.
+
+To rotate, open a shell and run the helper. It prompts through `getpass`, so the
+new password never reaches shell history, a process listing, or a terminal log:
 
 ```bash
-fly ssh console -C "python -c \"import auth, db; u = auth.User.by_username('justin'); db.execute('UPDATE users SET password_hash = ? WHERE id = ?', (__import__('werkzeug.security', fromlist=['generate_password_hash']).generate_password_hash('NEW-PASSWORD'), u.id))\""
+fly ssh console
 ```
 
-Then clear the stale secret so it cannot be mistaken for the live value:
+Then, on the machine:
+
+```bash
+python /app/change_password.py justin
+```
+
+Afterwards, drop the stale plaintext copy from the container environment, since
+it no longer does anything and is a live credential sitting in `env`:
 
 ```bash
 fly secrets unset GRAPHION_ADMIN_PASSWORD
 ```
+
+### Signing out existing sessions
+
+Changing a password does **not** sign anyone out. Flask-Login sessions are
+signed with `FLASK_SECRET_KEY` and carry only a user id, so a cookie issued
+before the change stays valid until it expires.
+
+If you are rotating because you think the password leaked, rotate the signing
+key too. That invalidates every outstanding session cookie at once:
+
+```bash
+fly secrets set FLASK_SECRET_KEY="$(python -c 'import secrets; print(secrets.token_hex(32))')"
+```
+
+Everyone, including you, has to sign in again afterwards.
 
 ## Backups
 
