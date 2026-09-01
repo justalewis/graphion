@@ -19,12 +19,15 @@
 // Body type: 10pt Minion Pro per LiCS InDesign spec. Fallback chain
 // favors free fonts since Minion Pro is Adobe-commercial and most
 // installs won't have it; EB Garamond is a close visual match
-// (humanist serif, similar x-height) and ships with Typst by default.
-#let body-font = ("Minion Pro", "EB Garamond", "Garamond", "Georgia")
+// (humanist serif, similar x-height). Debian's fonts-ebgaramond
+// registers the family as "EB Garamond 12", so both spellings are
+// listed: without the second one the container silently falls back
+// to Libertinus Serif and the galley is in the wrong face.
+#let body-font = ("Minion Pro", "EB Garamond", "EB Garamond 12", "Garamond", "Georgia")
 // Display type: 13-15pt Didot per LiCS InDesign spec. Same logic —
 // fall back through GFS Didot (free), Bodoni (similar high-contrast
 // modern), then EB Garamond as a last resort.
-#let display-font = ("Didot", "GFS Didot", "Bodoni 72", "Bodoni", "EB Garamond", "Garamond")
+#let display-font = ("Didot", "GFS Didot", "Bodoni 72", "Bodoni", "EB Garamond", "EB Garamond 12", "Garamond")
 
 #let short-title-val = "$short-title$"
 #let short-authors-val = "$short-authors$"
