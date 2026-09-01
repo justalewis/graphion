@@ -35,3 +35,12 @@ content/**/issue.pdf
 content/**/_front_matter.pdf
 content/**/_cover.pdf
 content/**/_unfiled/
+
+# The per-journal template bundle is source, not output. The globs above are
+# borrowed from .gitignore, where they target generated per-article files, but
+# they also match the committed template/article.typ. Git keeps that file only
+# because ignore rules do not apply to already-tracked paths; Docker has no
+# such exemption, so the template has to be re-included explicitly or PDF
+# rendering has no Typst template at all.
+!content/journals/*/template
+!content/journals/*/template/**
