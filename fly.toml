@@ -1,9 +1,12 @@
-# Graphion on Fly.io, reachable only over Tailscale.
+# Graphion on Fly.io, reached through a Cloudflare Tunnel.
 #
 # There is deliberately no [http_service] or [[services]] block. Without one
-# Fly allocates no public IP and its edge proxy never fronts the app, so the
-# only way in is the tailnet. That also means Fly's autostop/autostart machinery
-# is not involved: the machine runs continuously.
+# Fly allocates no public IP and its edge proxy never fronts the app. The only
+# route in is the tunnel that cloudflared dials out to Cloudflare, and every
+# request through it passes a Cloudflare Access identity check first.
+#
+# That also means Fly's autostop/autostart machinery is not involved: the
+# machine runs continuously.
 
 app = "graphion"
 primary_region = "ord"
@@ -15,7 +18,6 @@ primary_region = "ord"
   PORT = "8080"
   GRAPHION_CONTENT_DIR = "/data/content"
   GRAPHION_DATA_DIR = "/data/data"
-  TAILSCALE_HOSTNAME = "graphion"
 
 # One volume, therefore one machine. That is correct for a single-editor app,
 # but it makes the volume a single point of failure for irreplaceable journal

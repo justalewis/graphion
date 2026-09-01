@@ -1,14 +1,12 @@
 #!/usr/bin/env bash
-# Container entrypoint: seed the volume, join the tailnet, serve the app.
+# Container entrypoint: seed the volume, open the tunnel, serve the app.
 set -euo pipefail
 
 VOLUME_ROOT="${GRAPHION_VOLUME_ROOT:-/data}"
 CONTENT_DIR="${GRAPHION_CONTENT_DIR:-$VOLUME_ROOT/content}"
 DATA_DIR="${GRAPHION_DATA_DIR:-$VOLUME_ROOT/data}"
-TS_SOCK=/var/run/tailscale/tailscaled.sock
 
-mkdir -p "$CONTENT_DIR" "$DATA_DIR" "$VOLUME_ROOT/tailscale" \
-         "$VOLUME_ROOT/backups" /var/run/tailscale
+mkdir -p "$CONTENT_DIR" "$DATA_DIR" "$VOLUME_ROOT/backups"
 
 # ---------------------------------------------------------------- volume seed
 # -n never clobbers. Template files added in git arrive as new files on the next
@@ -21,35 +19,20 @@ mkdir -p "$CONTENT_DIR" "$DATA_DIR" "$VOLUME_ROOT/tailscale" \
 echo "[entrypoint] seeding $CONTENT_DIR from image (no-clobber)"
 cp -rn /app/content-seed/. "$CONTENT_DIR/" 2>/dev/null || true
 
-# ------------------------------------------------------------------ tailscale
-# Userspace networking needs no TUN device and no NET_ADMIN capability.
-# Inbound tailnet traffic reaches the app through `tailscale serve`, which
-# means gunicorn never listens on anything but loopback.
-if [ -n "${TAILSCALE_AUTHKEY:-}" ]; then
-  echo "[entrypoint] starting tailscaled (userspace networking)"
-  /usr/sbin/tailscaled \
-      --state="$VOLUME_ROOT/tailscale/tailscaled.state" \
-      --socket="$TS_SOCK" \
-      --tun=userspace-networking &
-
-  for _ in $(seq 1 40); do
-    [ -S "$TS_SOCK" ] && break
-    sleep 0.5
-  done
-
-  # State lives on the volume, so this is a no-op on every restart after the
-  # first and the auth key is only actually consumed once.
-  tailscale --socket="$TS_SOCK" up \
-      --authkey="${TAILSCALE_AUTHKEY}" \
-      --hostname="${TAILSCALE_HOSTNAME:-graphion}"
-
-  # Publish on the tailnet over HTTPS. Requires MagicDNS and HTTPS certificates
-  # enabled for the tailnet (Tailscale admin console, DNS tab).
-  tailscale --socket="$TS_SOCK" serve --bg "${PORT}"
-  TS_NAME="$(tailscale --socket="$TS_SOCK" status --json 2>/dev/null | python -c 'import json,sys; print(json.load(sys.stdin)["Self"]["DNSName"].rstrip("."))' || true)"
-  echo "[entrypoint] tailnet address: https://${TS_NAME:-unknown, run tailscale status}"
+# ----------------------------------------------------------------- the tunnel
+# cloudflared dials out to Cloudflare's edge; nothing dials in, which is why
+# this app needs no public IP and no inbound firewall rule. The hostname
+# mapping (graphion.<domain> -> http://127.0.0.1:$PORT) and the Access policy
+# that gates it live in the Zero Trust dashboard, not in this image.
+#
+# Access is what authenticates visitors. Confirm the policy is actually
+# attached before trusting this: docs/deployment.md, "Verify the gate".
+if [ -n "${CLOUDFLARE_TUNNEL_TOKEN:-}" ]; then
+  echo "[entrypoint] starting cloudflared tunnel"
+  cloudflared tunnel --no-autoupdate --loglevel info \
+      run --token "${CLOUDFLARE_TUNNEL_TOKEN}" &
 else
-  echo "[entrypoint] WARNING: TAILSCALE_AUTHKEY unset; app will be unreachable" >&2
+  echo "[entrypoint] WARNING: CLOUDFLARE_TUNNEL_TOKEN unset; app unreachable" >&2
 fi
 
 # ----------------------------------------------------------------- first boot
@@ -75,6 +58,9 @@ if [ -n "${GRAPHION_BACKUP_REMOTE:-}" ]; then
 fi
 
 # ---------------------------------------------------------------------- serve
+# Bound to loopback: cloudflared is in this same container and is the only
+# thing that can reach gunicorn.
+#
 # One worker, many threads: SQLite has no WAL configured here, so concurrent
 # writer *processes* would contend for the database lock. A single-editor app
 # has no need for more. The long timeout covers Typst renders and issue

@@ -16,8 +16,8 @@ Read these before making structural changes; do not duplicate their content here
   pipeline stages, and step-by-step recipes (new output format, new lint check,
   new cleanup pass, new journal).
 - `docs/audit-and-roadmap.md` for what is planned next.
-- `docs/deployment.md` for the Fly.io + Tailscale deployment, the volume
-  layout, and backups.
+- `docs/deployment.md` for the Fly.io + Cloudflare Access deployment, the
+  volume layout, and backups.
 
 ## Running it
 
@@ -130,7 +130,7 @@ Anything touching Claude (`stylize.py`, `llm_cleanup.py`) requires
 
 ## Deployment
 
-Production runs on Fly.io behind Tailscale with no public IP; see
+Production runs on Fly.io behind Cloudflare Access with no public IP; see
 `docs/deployment.md`. Two things follow from that and are easy to get wrong:
 
 - **Paths are env-driven.** `GRAPHION_CONTENT_DIR` and `GRAPHION_DATA_DIR`

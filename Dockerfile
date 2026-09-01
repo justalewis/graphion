@@ -6,6 +6,10 @@ FROM python:3.12-slim-bookworm
 ARG PANDOC_VERSION=3.1.11
 ARG PANDOC_ARCH=amd64
 
+# cloudflared carries the outbound-only tunnel to Cloudflare's edge. Pinned
+# rather than :latest so a rebuild is reproducible.
+ARG CLOUDFLARED_VERSION=2026.8.3
+
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     GRAPHION_CONTENT_DIR=/data/content \
@@ -16,17 +20,14 @@ ENV PYTHONUNBUFFERED=1 \
 # content/journals/lics/template/article.typ. Without them Typst silently falls
 # back and the galley typography is wrong, so they are not optional.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        ca-certificates curl gnupg sqlite3 rclone \
+        ca-certificates curl sqlite3 rclone \
         fonts-ebgaramond fonts-gfs-didot fonts-dejavu fonts-liberation \
  && curl -fsSL -o /tmp/pandoc.deb \
         "https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-1-${PANDOC_ARCH}.deb" \
  && dpkg -i /tmp/pandoc.deb && rm /tmp/pandoc.deb \
- && curl -fsSL https://pkgs.tailscale.com/stable/debian/bookworm.noarmor.gpg \
-        -o /usr/share/keyrings/tailscale-archive-keyring.gpg \
- && curl -fsSL https://pkgs.tailscale.com/stable/debian/bookworm.tailscale-keyring.list \
-        -o /etc/apt/sources.list.d/tailscale.list \
- && apt-get update && apt-get install -y --no-install-recommends tailscale \
- && apt-get purge -y gnupg && apt-get autoremove -y \
+ && curl -fsSL -o /tmp/cloudflared.deb \
+        "https://github.com/cloudflare/cloudflared/releases/download/${CLOUDFLARED_VERSION}/cloudflared-linux-amd64.deb" \
+ && dpkg -i /tmp/cloudflared.deb && rm /tmp/cloudflared.deb \
  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
