@@ -37,7 +37,7 @@ In plain terms:
 
 Stack: **Flask + SQLite + Pandoc + Typst**. Article content lives on the filesystem; SQLite is just an index. The journal's design lives in a per-journal template bundle (`content/journals/<slug>/template/`). Outputs are rendered on demand; nothing is precomputed or cached except snapshots of your prior edits.
 
-The tool is single-user, runs locally, and ships as a small Flask app. There's no SaaS to log into; you run it on your machine.
+The tool is single-editor and ships as a small Flask app. You can run it locally on your own machine, or host one shared instance that editors reach in a browser; both are the same application, and the [Quickstart](quickstart) covers the hosted case. "Single-editor" describes the permission model rather than the installation: there are no roles, and everyone who signs in has the same full access.
 
 ## What's new (most recent additions)
 

@@ -147,9 +147,9 @@ Three files + one DB row:
    - `article.html.j2`
    - `article.typ`
    - `article.css`
-   - `lics-filter.lua` (or rename to something journal-specific; update conversion.py to discover both)
+   - `journal-filter.lua` (the name is journal-agnostic; copy the LiCS one and edit it for your journal's transformations)
    - `figures-filter.lua` (copy from LiCS bundle)
-   - `mla.csl` or whichever CSL the journal uses
+   - `mla-9.csl` or whichever CSL the journal uses
    - `front-matter-schema.yaml` (documentation)
 2. Add the journal row in `seed.py` (so fresh installs get it) and via direct DB insert (so your dev DB picks it up).
 3. Configure the journal's brand, depositor identity, and front-matter content via **Journal Settings** in the UI.

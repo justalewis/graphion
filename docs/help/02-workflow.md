@@ -72,9 +72,9 @@ content/
         article.css                  (semantic OJS-style HTML CSS)
         article.html.j2              (Pandoc HTML template)
         article.typ                  (Pandoc Typst template)
-        lics-filter.lua              (journal-specific transformations)
+        journal-filter.lua           (journal-specific transformations)
         figures-filter.lua           (figure numbering + xrefs)
-        mla.csl                      (citation style for citeproc)
+        mla-9.csl                    (citation style for citeproc)
         assets/
           wordmark.png               (committed brand asset)
       issues/

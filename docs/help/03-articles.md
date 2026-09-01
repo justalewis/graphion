@@ -4,7 +4,7 @@ Each article is a directory of files under a journal. Here's what you do with on
 
 ## Uploading
 
-From a journal page, click **Upload article**. The form takes:
+From the dashboard click **Upload DOCX** next to the journal, or **Upload new DOCX** from the journal's own page. The form takes:
 
 - **Source file** — `.docx` (Word), `.md`, or `.markdown`. Required.
 - Optional slug (auto-derived from the filename if blank). The slug becomes the article's directory name and must be unique per journal.
@@ -61,7 +61,6 @@ Three editor options, all backed by the same `article.md`:
 - **Rich (TinyMCE).** Full Word-like toolbar with tables (real cell-level editing), color picker, font controls, alignment, lists, images, find/replace, source view. Recommended for table-heavy articles or editors who prefer Word-style UI. Round-trip note: TinyMCE works in HTML; on save we convert HTML → Markdown via Pandoc with `grid_tables` enabled, so multi-paragraph cells and tables survive. The paste handler strips Microsoft Office `mso-*` style cruft automatically.
 - **Lite (ProseMirror).** Lightweight, fast-loading WYSIWYG. Toolbar: bold, italic, code, link, H1–H3, paragraph, bulleted/numbered lists, blockquote, image upload, undo/redo. Best for plain prose; **warning**: does not support grid tables — opens and saves of articles with tables will mangle them. The Edit menu surfaces a warning chip (⚠) if the current article contains tables.
 - **Markdown (CodeMirror).** Split-pane source editor with synced live preview. Bidirectional scroll-sync between source and preview, click-in-preview to jump cursor to the corresponding line. Toggle sync with `Ctrl+Shift+L`. Best for power users who want full source control. Insert image button on the toolbar uploads to `assets/` and inserts at cursor.
-- **Markdown (CodeMirror).** Better for power users who want raw control. Live preview pane on the right.
 
 Each save snapshots the previous `article.md` into `.versions/article-{timestamp}.md` (last 5 kept).
 
@@ -97,7 +96,7 @@ Results are pass/warn/fail. Warnings don't block publishing — they advise.
 
 Click **Render** to regenerate HTML and PDF. Both run sequentially via Pandoc (HTML) and Pandoc-to-Typst-then-typst-py (PDF). EPUB and JATS are rendered on demand the first time you request them.
 
-If `references.bib` exists, Pandoc invocations include `--citeproc --bibliography=references.bib --csl=<journal>/mla.csl`. Body citations like `[@smith2023]` resolve and a Works Cited section is auto-generated.
+If `references.bib` exists, Pandoc invocations include `--citeproc --bibliography=references.bib --csl=<journal>/mla-9.csl`. Body citations like `[@smith2023]` resolve and a Works Cited section is auto-generated.
 
 ## Status, publishing, archiving
 

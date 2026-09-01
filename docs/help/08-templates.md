@@ -9,9 +9,9 @@ content/journals/<slug>/template/
   article.html.j2        — Pandoc HTML template (Pandoc's $-syntax)
   article.typ            — Pandoc Typst template (for PDF)
   article.css            — Stylesheet for HTML and EPUB
-  lics-filter.lua        — Per-journal Lua transformations
+  journal-filter.lua     — Per-journal Lua transformations
   figures-filter.lua     — Figure auto-numbering + cross-references
-  mla.csl                — Citation Style Language for citeproc
+  mla-9.csl              — Citation Style Language for citeproc
   front-matter-schema.yaml — Documents required/optional metadata fields
   assets/
     wordmark.png         — Committed brand asset (for the cover)
@@ -58,7 +58,7 @@ Typst is documented at <https://typst.app/docs>. The syntax is more programming-
 
 ## Customizing the Lua filter
 
-`lics-filter.lua` runs over the parsed Pandoc AST before rendering. It does journal-specific transformations:
+`journal-filter.lua` runs over the parsed Pandoc AST before rendering. It does journal-specific transformations:
 
 - Adds the `opening` class to the first H1 section (enables the drop cap in CSS).
 - Adds the `references` class to the Works Cited heading (enables hanging-indent styling).

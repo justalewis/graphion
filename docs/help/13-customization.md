@@ -32,7 +32,7 @@ content/journals/<slug>/template/
   article.css           — Stylesheet for HTML + EPUB
   journal-filter.lua    — Per-journal Lua transformations
   figures-filter.lua    — Figure auto-numbering + cross-refs (usually unchanged)
-  mla.csl               — Citation Style Language for citeproc
+  mla-9.csl             — Citation Style Language for citeproc
   front-matter-schema.yaml — Documents required/optional metadata fields
   assets/
     wordmark.png        — Brand mark for the cover

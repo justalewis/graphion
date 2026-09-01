@@ -41,14 +41,14 @@ As Crawford notes [@crawford2021, p. 7], the supply chain ...
 Earlier work by @hao2023 and @tacheva2023ai established ...
 ```
 
-On render, the tool passes `--citeproc --bibliography=references.bib --csl=<journal>/mla.csl` to Pandoc. Citations resolve to MLA-formatted in-text references, and a Works Cited section is generated automatically. Don't write a manual Works Cited heading in the body when using this mode.
+On render, the tool passes `--citeproc --bibliography=references.bib --csl=<journal>/mla-9.csl` to Pandoc. Citations resolve to MLA-formatted in-text references, and a Works Cited section is generated automatically. Don't write a manual Works Cited heading in the body when using this mode.
 
 What this gets you:
 
 - **Structured CrossRef citations** with `<journal_title>`, `<author>`, `<volume>`, `<first_page>`, `<cYear>`, `<article_title>`, `<doi>`, etc.
 - **Structured JATS `<element-citation>`** with `<person-group>`, `<source>`, `<fpage>`, `<lpage>`, `<pub-id>`.
 - Citation linking in indexer downstream tools.
-- Style switches: replace `mla.csl` with another CSL (Chicago, APA, etc.) and re-render — the bibliography reformats automatically.
+- Style switches: replace `mla-9.csl` with another CSL (Chicago, APA, etc.) and re-render — the bibliography reformats automatically.
 
 ### BibTeX format reminder
 

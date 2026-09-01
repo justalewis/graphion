@@ -18,7 +18,13 @@ Pandoc and Typst are separate tools. The `typst` PyPI package bundles the Typst 
 
 **Browser shows "address not reachable"**
 
-The app runs on port 5050 (not 5000 — Pinakes typically owns 5000 if you also use that project). Open `http://127.0.0.1:5050/` exactly.
+Running it locally: the app uses port 5050 (not 5000 — Pinakes typically owns 5000 if you also use that project). Open `http://127.0.0.1:5050/` exactly.
+
+Using a hosted instance: check the address with your editor, and note that every page including `/help` sits behind the sign-in, so an expired session shows you the login page rather than an error. If the site itself is unreachable, the server is down and there is nothing to fix from your end.
+
+**"Too many failed sign-ins"**
+
+A hosted instance rate limits the login page: five failed attempts locks further tries for fifteen minutes, counted against both your address and the account name. Wait it out rather than retrying; retrying does not reset the clock.
 
 ## Article upload
 

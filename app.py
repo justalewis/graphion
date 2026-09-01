@@ -2201,6 +2201,9 @@ def register_routes(app: Flask):
     # ---------- help / docs ----------
 
     HELP_TOPICS = [
+        # First entry is what /help lands on with no slug, so the quickstart is
+        # deliberately ahead of the overview.
+        ("00-quickstart", "Quickstart"),
         ("01-overview", "Overview"),
         ("02-workflow", "Workflow"),
         ("03-articles", "Articles"),
@@ -2228,6 +2231,13 @@ def register_routes(app: Flask):
             slug = HELP_TOPICS[0][0]
         valid = {s for s, _ in HELP_TOPICS}
         if slug not in valid:
+            # The pages cross-link by bare name ("workflow"), while the sidebar
+            # uses the numbered slug ("02-workflow"). Accept either and redirect
+            # to the canonical one, so a doc can link a sibling without knowing
+            # its ordering prefix.
+            unprefixed = {s.split("-", 1)[1]: s for s, _ in HELP_TOPICS}
+            if slug in unprefixed:
+                return redirect(url_for("help_page", slug=unprefixed[slug]))
             abort(404)
 
         docs_dir = _Path(__file__).parent / "docs" / "help"
