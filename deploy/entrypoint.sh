@@ -20,19 +20,17 @@ echo "[entrypoint] seeding $CONTENT_DIR from image (no-clobber)"
 cp -rn /app/content-seed/. "$CONTENT_DIR/" 2>/dev/null || true
 
 # ----------------------------------------------------------------- the tunnel
-# cloudflared dials out to Cloudflare's edge; nothing dials in, which is why
-# this app needs no public IP and no inbound firewall rule. The hostname
-# mapping (graphion.<domain> -> http://127.0.0.1:$PORT) and the Access policy
-# that gates it live in the Zero Trust dashboard, not in this image.
-#
-# Access is what authenticates visitors. Confirm the policy is actually
-# attached before trusting this: docs/deployment.md, "Verify the gate".
+# Optional, and unset by default: this app is served publicly through Fly.
+# Providing CLOUDFLARE_TUNNEL_TOKEN additionally exposes it through a
+# Cloudflare Tunnel, which is the upgrade path to putting a Cloudflare Access
+# identity check in front of the login page. That needs a domain in a
+# Cloudflare account; see docs/deployment.md.
 if [ -n "${CLOUDFLARE_TUNNEL_TOKEN:-}" ]; then
   echo "[entrypoint] starting cloudflared tunnel"
   cloudflared tunnel --no-autoupdate --loglevel info \
       run --token "${CLOUDFLARE_TUNNEL_TOKEN}" &
 else
-  echo "[entrypoint] WARNING: CLOUDFLARE_TUNNEL_TOKEN unset; app unreachable" >&2
+  echo "[entrypoint] no CLOUDFLARE_TUNNEL_TOKEN; serving through Fly only"
 fi
 
 # ----------------------------------------------------------------- first boot
@@ -58,15 +56,15 @@ if [ -n "${GRAPHION_BACKUP_REMOTE:-}" ]; then
 fi
 
 # ---------------------------------------------------------------------- serve
-# Bound to loopback: cloudflared is in this same container and is the only
-# thing that can reach gunicorn.
+# Binds 0.0.0.0 because Fly's edge proxy connects from outside the container's
+# loopback interface. The app is public; /login is rate limited in app.py.
 #
 # One worker, many threads: SQLite has no WAL configured here, so concurrent
 # writer *processes* would contend for the database lock. A single-editor app
 # has no need for more. The long timeout covers Typst renders and issue
 # assembly, which can run for minutes on a large issue.
 exec gunicorn \
-    --bind "127.0.0.1:${PORT}" \
+    --bind "${GUNICORN_BIND:-0.0.0.0:${PORT}}" \
     --workers "${GUNICORN_WORKERS:-1}" \
     --threads "${GUNICORN_THREADS:-8}" \
     --timeout "${GUNICORN_TIMEOUT:-300}" \

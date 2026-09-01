@@ -3,6 +3,9 @@ from __future__ import annotations
 
 import re
 import sqlite3
+import threading
+import time
+from collections import defaultdict
 from pathlib import Path
 from typing import Optional
 
@@ -22,7 +25,8 @@ import jats
 import lint
 from auth import User, login_manager
 from config import (
-    ALLOWED_UPLOAD_EXTENSIONS, CONTENT_DIR, MAX_UPLOAD_BYTES, SECRET_KEY,
+    ALLOWED_UPLOAD_EXTENSIONS, CONTENT_DIR, LOGIN_MAX_ATTEMPTS,
+    LOGIN_WINDOW_SECONDS, MAX_UPLOAD_BYTES, SECURE_COOKIES, SECRET_KEY,
 )
 
 
@@ -30,6 +34,9 @@ def create_app() -> Flask:
     app = Flask(__name__)
     app.config["SECRET_KEY"] = SECRET_KEY
     app.config["MAX_CONTENT_LENGTH"] = MAX_UPLOAD_BYTES
+    app.config["SESSION_COOKIE_HTTPONLY"] = True
+    app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+    app.config["SESSION_COOKIE_SECURE"] = SECURE_COOKIES
 
     @app.template_filter("from_json")
     def _from_json(s):
@@ -55,6 +62,61 @@ def slugify(text: str) -> str:
     return text or "article"
 
 
+# ---------- login throttling ----------
+#
+# Every route but /login carries @login_required, so this is the only
+# unauthenticated surface. Werkzeug hashes with scrypt, which already makes
+# guessing slow, but nothing otherwise caps the number of tries.
+
+_login_failures: dict[str, list[float]] = defaultdict(list)
+_login_lock = threading.Lock()
+
+
+def _client_ip() -> str:
+    """Caller address, preferring the header Fly's proxy sets itself.
+
+    Fly-Client-IP is written by the proxy and overwrites anything the client
+    sent, so it cannot be spoofed from outside. X-Forwarded-For is only a
+    fallback for other proxies.
+    """
+    fly_ip = request.headers.get("Fly-Client-IP")
+    if fly_ip:
+        return fly_ip
+    forwarded = request.headers.get("X-Forwarded-For", "")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    return request.remote_addr or "unknown"
+
+
+def _login_retry_after(keys: list[str]) -> int:
+    """Seconds until the next attempt is allowed; 0 when not throttled."""
+    now = time.time()
+    longest = 0
+    with _login_lock:
+        for key in keys:
+            recent = [t for t in _login_failures[key] if now - t < LOGIN_WINDOW_SECONDS]
+            if recent:
+                _login_failures[key] = recent
+            else:
+                _login_failures.pop(key, None)
+            if len(recent) >= LOGIN_MAX_ATTEMPTS:
+                longest = max(longest, int(LOGIN_WINDOW_SECONDS - (now - recent[0])) + 1)
+    return longest
+
+
+def _record_login_failure(keys: list[str]) -> None:
+    now = time.time()
+    with _login_lock:
+        for key in keys:
+            _login_failures[key].append(now)
+
+
+def _clear_login_failures(keys: list[str]) -> None:
+    with _login_lock:
+        for key in keys:
+            _login_failures.pop(key, None)
+
+
 def register_routes(app: Flask):
 
     # ---------- auth ----------
@@ -64,10 +126,28 @@ def register_routes(app: Flask):
         if current_user.is_authenticated:
             return redirect(url_for("dashboard"))
         if request.method == "POST":
-            user = User.by_username(request.form.get("username", ""))
+            username = request.form.get("username", "")
+            # Throttled on both address and account, so that rotating addresses
+            # cannot walk one account and one address cannot spray many.
+            keys = ["ip:" + _client_ip(), "user:" + username.lower()]
+
+            wait = _login_retry_after(keys)
+            if wait:
+                minutes = max(1, wait // 60)
+                unit = "minute" if minutes == 1 else "minutes"
+                flash(
+                    "Too many failed sign-ins; try again in "
+                    f"{minutes} {unit}.", "error",
+                )
+                return render_template("login.html"), 429
+
+            user = User.by_username(username)
             if user and user.check_password(request.form.get("password", "")):
+                _clear_login_failures(keys)
                 login_user(user, remember=True)
                 return redirect(url_for("dashboard"))
+
+            _record_login_failure(keys)
             flash("Invalid credentials.", "error")
         return render_template("login.html")
 

@@ -16,8 +16,8 @@ Read these before making structural changes; do not duplicate their content here
   pipeline stages, and step-by-step recipes (new output format, new lint check,
   new cleanup pass, new journal).
 - `docs/audit-and-roadmap.md` for what is planned next.
-- `docs/deployment.md` for the Fly.io + Cloudflare Access deployment, the
-  volume layout, and backups.
+- `docs/deployment.md` for the Fly.io deployment, the volume layout, backups,
+  and the login hardening.
 
 ## Running it
 
@@ -130,8 +130,8 @@ Anything touching Claude (`stylize.py`, `llm_cleanup.py`) requires
 
 ## Deployment
 
-Production runs on Fly.io behind Cloudflare Access with no public IP; see
-`docs/deployment.md`. Two things follow from that and are easy to get wrong:
+Production runs on Fly.io at a public `.fly.dev` hostname; see
+`docs/deployment.md`. Three things follow from that and are easy to get wrong:
 
 - **Paths are env-driven.** `GRAPHION_CONTENT_DIR` and `GRAPHION_DATA_DIR`
   (`config.py`) point at a mounted volume in the container. Never hardcode
@@ -140,8 +140,18 @@ Production runs on Fly.io behind Cloudflare Access with no public IP; see
   imports `wsgi:app`. Flask's debugger stays off anywhere but loopback, which is
   what the `loopback` check at the bottom of `app.py` enforces; do not weaken it.
 
+- **`/login` is the only unauthenticated route, and it is public.** It is rate
+  limited per address and per account in `app.py`; the counters are in-process,
+  so they assume the single gunicorn worker that `deploy/entrypoint.sh`
+  configures. Do not raise `GUNICORN_WORKERS` without replacing the limiter,
+  and do not add an unauthenticated route without thinking about exposure.
+
 Shell scripts and the Dockerfile must keep LF endings (`.gitattributes` pins
 this). A CRLF shebang makes the container fail to start.
+
+`.dockerignore` is not `.gitignore`. Ignore rules do not apply to paths git
+already tracks, so a pattern that is harmless in one can silently drop a
+committed source file from the build context in the other.
 
 ## Committing
 

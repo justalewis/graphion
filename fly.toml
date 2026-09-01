@@ -1,12 +1,9 @@
-# Graphion on Fly.io, reached through a Cloudflare Tunnel.
+# Graphion on Fly.io, served publicly over HTTPS.
 #
-# There is deliberately no [http_service] or [[services]] block. Without one
-# Fly allocates no public IP and its edge proxy never fronts the app. The only
-# route in is the tunnel that cloudflared dials out to Cloudflare, and every
-# request through it passes a Cloudflare Access identity check first.
-#
-# That also means Fly's autostop/autostart machinery is not involved: the
-# machine runs continuously.
+# The app is reachable at https://<app>.fly.dev. Everything behind /login is
+# gated by Flask-Login, and /login itself is rate limited per address and per
+# account (see the login throttling block in app.py). Assume the hostname will
+# be found and probed by bots; that is what the throttle is for.
 
 app = "graphion"
 primary_region = "ord"
@@ -18,6 +15,17 @@ primary_region = "ord"
   PORT = "8080"
   GRAPHION_CONTENT_DIR = "/data/content"
   GRAPHION_DATA_DIR = "/data/data"
+  # Served over HTTPS, so the session cookie must carry the Secure flag.
+  GRAPHION_SECURE_COOKIES = "1"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  # A volume binds this app to one machine, so there is nothing to scale and
+  # nothing to gain from stopping it; cold starts would only slow renders.
+  auto_stop_machines = "off"
+  auto_start_machines = true
+  min_machines_running = 1
 
 # One volume, therefore one machine. That is correct for a single-editor app,
 # but it makes the volume a single point of failure for irreplaceable journal

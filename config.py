@@ -20,5 +20,17 @@ ALLOWED_UPLOAD_EXTENSIONS = {".docx", ".md", ".markdown"}
 
 VERSIONS_KEEP = 5
 
+# Login throttling. /login is the only unauthenticated route, and the app is
+# reachable from the public internet, so attempts have to be capped. The limiter
+# is in-process, which is correct for the single gunicorn worker configured in
+# deploy/entrypoint.sh; raising GUNICORN_WORKERS gives each worker its own
+# counters and weakens the cap proportionally.
+LOGIN_MAX_ATTEMPTS = int(os.environ.get("GRAPHION_LOGIN_MAX_ATTEMPTS", "5"))
+LOGIN_WINDOW_SECONDS = int(os.environ.get("GRAPHION_LOGIN_WINDOW_SECONDS", "900"))
+
+# Set wherever the app is served over HTTPS so the session cookie is never sent
+# in the clear. Off by default so local http://127.0.0.1 development still works.
+SECURE_COOKIES = os.environ.get("GRAPHION_SECURE_COOKIES", "0") == "1"
+
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 CONTENT_DIR.mkdir(parents=True, exist_ok=True)

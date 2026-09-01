@@ -1,96 +1,82 @@
-# Deployment (Fly.io behind Cloudflare Access)
+# Deployment (Fly.io)
 
-Graphion holds unpublished manuscripts under review, behind single-factor
-Flask-Login with no rate limiting. This deployment therefore never exposes it
-directly. Fly allocates **no public IP**; `cloudflared` dials out to Cloudflare's
-edge, and every request arriving through that tunnel must clear a **Cloudflare
-Access** identity check before it reaches the app.
+Graphion runs on a single Fly machine at `https://<app>.fly.dev`, served over
+HTTPS with a persistent volume holding all journal content.
 
-The point of this shape over a VPN is that it needs **no client software**. Any
-browser, any device: you get a login page, then Graphion.
+The app is publicly reachable. That is a deliberate trade-off for being able to
+edit from any browser without installing anything, and it puts the whole weight
+of access control on the login page. Read "What guards it" before deciding this
+is acceptable for your content, and consider the Cloudflare Access upgrade at
+the bottom if it is not.
 
 ## Shape
 
 ```
-  browser (anywhere, no client software)
-        |  https://graphion.<your-domain>
-  Cloudflare edge
-        |  Access policy: identity check happens HERE
-  Cloudflare Tunnel  <-- outbound-only, dialed by cloudflared
+  browser (anywhere)
+        |  https://<app>.fly.dev
+  Fly edge proxy  (force_https, shared v4 + dedicated v6)
         |
-  cloudflared  -->  gunicorn on 127.0.0.1:8080  -->  Flask app
-                                                        |
-   one Fly machine                        /data volume --+
-                                            content/  (canonical store)
-                                            data/graphion.db (index)
+  gunicorn on 0.0.0.0:8080  -->  Flask app
+                                    |
+   one Fly machine     /data volume -+
+                         content/  (canonical store)
+                         data/graphion.db (index)
 ```
-
-Two independent layers guard the app: Cloudflare Access at the edge, and
-Graphion's own Flask-Login behind it. Gunicorn binds loopback only, so
-`cloudflared` in the same container is the sole thing that can reach it.
 
 `content/` is the canonical store and SQLite only indexes it, so both live on
 one persistent volume. A volume binds to a single machine in a single region,
 which means **exactly one machine, no horizontal scaling.** That is the right
 shape for a single-editor app, but it makes the volume a single point of failure
-for irreplaceable journal source. Configure backups (below) before relying on
-this for real work.
+for irreplaceable journal source. Configure backups before relying on this.
+
+## What guards it
+
+Every route except `/login` carries `@login_required`, so the login page is the
+only unauthenticated surface. Three things protect it:
+
+- **scrypt password hashing** through `werkzeug.security`, which is slow and
+  salted by design, so offline guessing is expensive.
+- **Rate limiting** on `/login`, keyed on both the caller address and the account
+  name, so rotating addresses cannot walk one account and one address cannot
+  spray many. Five failures in fifteen minutes returns HTTP 429. Tunable with
+  `GRAPHION_LOGIN_MAX_ATTEMPTS` and `GRAPHION_LOGIN_WINDOW_SECONDS`.
+- **Hardened session cookies**: `HttpOnly`, `SameSite=Lax`, and `Secure`
+  whenever `GRAPHION_SECURE_COOKIES=1` (set in `fly.toml`).
+
+What it does **not** have: multi-factor authentication, account lockout beyond
+the sliding window, or any audit log of sign-in attempts.
+
+The rate limiter keeps its counters in process memory. That is correct for the
+single gunicorn worker configured in `deploy/entrypoint.sh`. Raising
+`GUNICORN_WORKERS` gives each worker independent counters and weakens the cap
+proportionally, and restarting the machine clears them entirely.
+
+Assume the `.fly.dev` hostname will be discovered and probed. Use a long random
+admin password; the throttle buys time, it does not replace password strength.
 
 ## Prerequisites
 
 - A Fly.io account and `flyctl`.
-- A Cloudflare account with **a domain in it**. This is the one hard
-  prerequisite: a named tunnel hostname has to live on a zone you control. A
-  cheap domain is fine; it never has to host anything else.
-- Cloudflare Zero Trust enabled on that account. The free plan covers up to
-  50 users, which is ample here.
+- Nothing else. Pandoc, Typst, and the fonts are baked into the image.
 
-## Cloudflare setup
-
-All of this happens in the Zero Trust dashboard at
-<https://one.dash.cloudflare.com>. Nothing is installed anywhere.
-
-### 1. Create the tunnel
-
-**Networks, then Tunnels, then Create a tunnel, then Cloudflared.** Name it
-`graphion`.
-
-Skip the install instructions it offers; the image already carries
-`cloudflared`. Copy the **token** out of the command it displays (the long
-string after `--token`). That becomes `CLOUDFLARE_TUNNEL_TOKEN`. Treat it as a
-credential: it authorizes a connection into your Cloudflare account.
-
-### 2. Route a hostname to the app
-
-On the tunnel's **Public Hostname** tab, add:
-
-| Field | Value |
-|---|---|
-| Subdomain | `graphion` |
-| Domain | your domain |
-| Service type | `HTTP` |
-| URL | `127.0.0.1:8080` |
-
-### 3. Gate it with Access
-
-**Access, then Applications, then Add an application, then Self-hosted.**
-
-- Application domain: `graphion.<your-domain>`
-- Add a policy: action **Allow**, include **Emails**, and list your own address.
-- Under login methods, **One-time PIN** needs no identity provider at all;
-  Cloudflare emails you a code. Add Google or another IdP later if you prefer.
-
-Without this step the tunnel hostname is open to the world. Do not skip it, and
-verify it below.
-
-## Fly setup
+## Deploying
 
 ```bash
 fly apps create graphion
 ```
 
 ```bash
-fly volumes create graphion_data --size 10 --region ord
+fly volumes create graphion_data --size 10 --region ord --yes
+```
+
+Allocate addresses so the Fly proxy can route to it:
+
+```bash
+fly ips allocate-v4 --shared
+```
+
+```bash
+fly ips allocate-v6
 ```
 
 Set the secrets. `FLASK_SECRET_KEY` matters: `config.py` otherwise falls back to
@@ -98,7 +84,11 @@ the literal string `dev-key-change-me-before-deploy`, which would make session
 cookies forgeable.
 
 ```bash
-fly secrets set FLASK_SECRET_KEY="$(python -c 'import secrets; print(secrets.token_hex(32))')" CLOUDFLARE_TUNNEL_TOKEN="eyJ..." GRAPHION_ADMIN_USER="justin" GRAPHION_ADMIN_PASSWORD="a-long-random-password"
+fly secrets set FLASK_SECRET_KEY="$(python -c 'import secrets; print(secrets.token_hex(32))')"
+```
+
+```bash
+fly secrets set GRAPHION_ADMIN_USER="justin" GRAPHION_ADMIN_PASSWORD="a-long-random-password"
 ```
 
 Optionally add Claude assistance (`stylize.py` and `llm_cleanup.py` both no-op
@@ -114,79 +104,46 @@ Then deploy:
 fly deploy
 ```
 
-### Confirm there is no public IP
-
-`fly launch` sometimes allocates addresses on its own. This deployment should
-have none:
-
-```bash
-fly ips list
-```
-
-Release anything listed:
-
-```bash
-fly ips release <address>
-```
-
-## Verify the gate
-
-This step catches a misconfigured Access policy, and it is worth repeating every
-time you change one.
-
-Open `https://graphion.<your-domain>` in a **private browsing window**. You must
-land on a Cloudflare Access login page. If Graphion's own login screen appears
-instead, the Access policy is not attached to that hostname and the app is
-publicly reachable. Fix that before uploading anything.
-
 ## First-run seeding
 
 If `GRAPHION_ADMIN_USER` and `GRAPHION_ADMIN_PASSWORD` are set, the entrypoint
-runs `seed.py` automatically the first time it finds no database. Otherwise:
+runs `seed.py` the first time it finds no database. Otherwise:
 
 ```bash
 fly ssh console -C "python /app/seed.py"
 ```
 
-## Known limit: the 100-second edge timeout
+Those two secrets are only read on first boot. Changing them later does not
+change the stored password; see below.
 
-Cloudflare's free and Pro plans cut off any proxied request that runs longer
-than **100 seconds**, returning error 524. Gunicorn here is configured with a
-300-second timeout, so the app is willing to wait; Cloudflare is not.
+## Rotating the admin password
 
-Single-article renders finish well inside that. **Issue assembly is the
-operation at risk**: `conversion.assemble_issue` re-renders every article, counts
-pages, renders front matter, and concatenates the result, which on a full issue
-can exceed 100 seconds.
-
-If assembly times out in the browser, run it from a shell instead, where nothing
-is proxied. Replace `1` with the issue id:
+The seeded password lives in the database, not in the secret. To change it:
 
 ```bash
-fly ssh console -C "python -c 'import conversion; conversion.assemble_issue(1)'"
+fly ssh console -C "python -c \"import auth, db; u = auth.User.by_username('justin'); db.execute('UPDATE users SET password_hash = ? WHERE id = ?', (__import__('werkzeug.security', fromlist=['generate_password_hash']).generate_password_hash('NEW-PASSWORD'), u.id))\""
 ```
 
-The real fix is to make assembly a background job the UI polls. Worth adding to
-`docs/audit-and-roadmap.md` if it becomes a routine annoyance.
+Then clear the stale secret so it cannot be mistaken for the live value:
 
-Uploads are unaffected: Cloudflare's free-plan body limit is 100 MB and
-`config.py` caps uploads at 25 MB.
+```bash
+fly secrets unset GRAPHION_ADMIN_PASSWORD
+```
 
 ## Backups
 
 The volume is the only copy of your journal source until you set this up.
 
-1. Configure an rclone remote (Backblaze B2 or S3) and set it:
+Configure an rclone remote (Backblaze B2 or S3) and set it:
 
 ```bash
 fly secrets set GRAPHION_BACKUP_REMOTE="b2:graphion-backups"
 ```
 
 `rclone` is already in the image. Supply its config through the standard
-`RCLONE_CONFIG_*` environment variables, also as Fly secrets.
-
-2. With that set, `deploy/entrypoint.sh` runs `deploy/backup.py` every
-   `GRAPHION_BACKUP_INTERVAL` seconds (default 86400).
+`RCLONE_CONFIG_*` environment variables, also as Fly secrets. With the remote
+set, `deploy/entrypoint.sh` runs `deploy/backup.py` every
+`GRAPHION_BACKUP_INTERVAL` seconds (default 86400).
 
 Run one on demand:
 
@@ -232,6 +189,45 @@ fly ssh console -C "cp /app/content-seed/journals/lics/template/article.typ /dat
 
 Back up first if the volume copy holds edits worth keeping.
 
+## Optional: put Cloudflare Access in front
+
+If the public login page is more exposure than you want, the image already
+carries `cloudflared` and the entrypoint starts it whenever
+`CLOUDFLARE_TUNNEL_TOKEN` is set. That routes the app through a Cloudflare
+Tunnel, where an Access policy can require an identity check (Google, or an
+emailed one-time code) before any request reaches Graphion.
+
+It requires a domain in a Cloudflare account. The setup, all in the Zero Trust
+dashboard at <https://one.dash.cloudflare.com>:
+
+1. **Networks, Tunnels, Create a tunnel, Cloudflared.** Name it `graphion` and
+   copy the token out of the command it shows.
+2. On the tunnel's **Public Hostname** tab: subdomain `graphion`, your domain,
+   service type `HTTP`, URL `127.0.0.1:8080`.
+3. **Access, Applications, Add an application, Self-hosted** on
+   `graphion.<your-domain>`. Policy: Allow, include Emails, your address.
+
+Then:
+
+```bash
+fly secrets set CLOUDFLARE_TUNNEL_TOKEN="eyJ..."
+```
+
+To make that the *only* way in, also drop the public addresses and remove the
+`[http_service]` block from `fly.toml`, then set `GUNICORN_BIND` back to
+`127.0.0.1:8080` so nothing but the tunnel can reach gunicorn:
+
+```bash
+fly ips list
+```
+
+```bash
+fly ips release <address>
+```
+
+Verify by opening the hostname in a private window: you must land on a
+Cloudflare login page, not Graphion's own.
+
 ## What is deliberately not installed
 
 LibreOffice, Tesseract, verapdf, and pa11y are absent. They would add well over
@@ -242,8 +238,12 @@ the UI simply greys those actions out. Run them locally when you need them.
 Pandoc **is** installed (pinned by `PANDOC_VERSION` in the Dockerfile, since
 Debian bookworm ships 2.17 and the app needs 3+). Typst arrives via `typst-py`.
 The `fonts-ebgaramond` and `fonts-gfs-didot` packages back the body and display
-font stacks in `content/journals/lics/template/article.typ`; without them Typst
-silently falls back and the galley typography is wrong.
+font stacks in `content/journals/lics/template/article.typ`.
+
+Note that Debian registers EB Garamond as the family **"EB Garamond 12"**. Both
+spellings are listed in the stack; Typst does not error on an unresolved family,
+it silently falls back to Libertinus Serif, so a missing name shows up only as
+the wrong typeface in the finished galley.
 
 ## Routine redeploy
 
