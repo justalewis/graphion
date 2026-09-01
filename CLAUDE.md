@@ -16,6 +16,8 @@ Read these before making structural changes; do not duplicate their content here
   pipeline stages, and step-by-step recipes (new output format, new lint check,
   new cleanup pass, new journal).
 - `docs/audit-and-roadmap.md` for what is planned next.
+- `docs/deployment.md` for the Fly.io + Tailscale deployment, the volume
+  layout, and backups.
 
 ## Running it
 
@@ -125,6 +127,21 @@ Anything touching Claude (`stylize.py`, `llm_cleanup.py`) requires
   under `content/`.
 - Pandoc 3 emits Figure blocks rather than `Para[Image]`; the figures filter
   handles both shapes.
+
+## Deployment
+
+Production runs on Fly.io behind Tailscale with no public IP; see
+`docs/deployment.md`. Two things follow from that and are easy to get wrong:
+
+- **Paths are env-driven.** `GRAPHION_CONTENT_DIR` and `GRAPHION_DATA_DIR`
+  (`config.py`) point at a mounted volume in the container. Never hardcode
+  `BASE_DIR / "content"`; import `CONTENT_DIR` and `DATA_DIR` from `config`.
+- **The production path never touches `app.py`'s `__main__` block.** Gunicorn
+  imports `wsgi:app`. Flask's debugger stays off anywhere but loopback, which is
+  what the `loopback` check at the bottom of `app.py` enforces; do not weaken it.
+
+Shell scripts and the Dockerfile must keep LF endings (`.gitattributes` pins
+this). A CRLF shebang makes the container fail to start.
 
 ## Committing
 

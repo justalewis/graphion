@@ -1,0 +1,37 @@
+.git
+.github
+.gitignore
+.gitattributes
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.env
+*.log
+.DS_Store
+.vscode/
+.idea/
+_dropbox/
+
+# Local database and backups; the Fly volume owns these at runtime.
+data/
+deploy/backups/
+
+# Generated galley artifacts. Only the committed template bundles under
+# content/journals/<slug>/template/ need to reach the image, since they are the
+# seed source for the volume. Note that docs/ IS required: app.py:2153 renders
+# docs/help/ at runtime for the /help route.
+content/**/article-raw.md
+content/**/article.html
+content/**/article.pdf
+content/**/article.typ
+content/**/article.epub
+content/**/conversion.log
+content/**/.versions/
+content/**/source.docx
+content/**/preview/
+content/**/issue.pdf
+content/**/_front_matter.pdf
+content/**/_cover.pdf
+content/**/_unfiled/

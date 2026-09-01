@@ -1,0 +1,13 @@
+# Shell scripts and container files must keep LF endings. A CRLF shebang makes
+# Linux fail the exec with "bad interpreter: bash\r", which on this project
+# means the container never starts.
+*.sh            text eol=lf
+Dockerfile      text eol=lf
+.dockerignore   text eol=lf
+deploy/*        text eol=lf
+
+*.png  binary
+*.jpg  binary
+*.pdf  binary
+*.docx binary
+*.epub binary

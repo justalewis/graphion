@@ -2248,6 +2248,15 @@ def _serve_artifact(article_id: int, name: str, as_attachment: bool = False):
 
 if __name__ == "__main__":
     import os
+
     app = create_app()
     port = int(os.environ.get("PORT", "5050"))
-    app.run(host="127.0.0.1", port=port, debug=True)
+    host = os.environ.get("GRAPHION_HOST", "127.0.0.1")
+
+    # Flask's debugger exposes an interactive Python console on any traceback,
+    # so it is only ever safe on loopback. Binding anywhere else turns it off
+    # unless it is explicitly forced back on.
+    loopback = host in {"127.0.0.1", "localhost", "::1"}
+    debug = os.environ.get("GRAPHION_DEBUG", "1" if loopback else "0") == "1"
+
+    app.run(host=host, port=port, debug=debug)

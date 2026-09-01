@@ -1,0 +1,29 @@
+# Graphion on Fly.io, reachable only over Tailscale.
+#
+# There is deliberately no [http_service] or [[services]] block. Without one
+# Fly allocates no public IP and its edge proxy never fronts the app, so the
+# only way in is the tailnet. That also means Fly's autostop/autostart machinery
+# is not involved: the machine runs continuously.
+
+app = "graphion"
+primary_region = "ord"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PORT = "8080"
+  GRAPHION_CONTENT_DIR = "/data/content"
+  GRAPHION_DATA_DIR = "/data/data"
+  TAILSCALE_HOSTNAME = "graphion"
+
+# One volume, therefore one machine. That is correct for a single-editor app,
+# but it makes the volume a single point of failure for irreplaceable journal
+# source. Configure GRAPHION_BACKUP_REMOTE; see docs/deployment.md.
+[mounts]
+  source = "graphion_data"
+  destination = "/data"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "1gb"

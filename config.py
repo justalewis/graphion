@@ -3,8 +3,11 @@ import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
-CONTENT_DIR = BASE_DIR / "content"
-DATA_DIR = BASE_DIR / "data"
+
+# Content and data roots are env-overridable so a container can point them at a
+# mounted volume; both default to the repo checkout for local development.
+CONTENT_DIR = Path(os.environ.get("GRAPHION_CONTENT_DIR") or (BASE_DIR / "content")).resolve()
+DATA_DIR = Path(os.environ.get("GRAPHION_DATA_DIR") or (BASE_DIR / "data")).resolve()
 DB_PATH = DATA_DIR / "graphion.db"
 
 SECRET_KEY = os.environ.get("FLASK_SECRET_KEY", "dev-key-change-me-before-deploy")
