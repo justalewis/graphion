@@ -19,8 +19,16 @@ leaves to OJS.
 
 ## 1. Sign in
 
-Open the address your editor sent you and sign in with the username and password
-they gave you. Everything, including this help section, sits behind that login.
+The LiCS instance lives at **<https://graphion.fly.dev>**. Sign in with the
+username and password your editor gave you. Everything, including this help
+section, sits behind that login.
+
+Two things worth knowing about the sign-in:
+
+- Five failed attempts locks further tries for fifteen minutes. Retrying does
+  not reset the clock, so slow down rather than guessing.
+- Sessions persist, so you will usually land straight on the dashboard. If you
+  get the login page unexpectedly, your session simply expired.
 
 If you are running Graphion on your own machine instead, it lives at
 `http://127.0.0.1:5050/`; see [Installation](installation).
