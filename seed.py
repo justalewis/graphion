@@ -27,10 +27,14 @@ def ensure_lics_journal():
         print(f"  ! template directory missing: {tpl}", file=sys.stderr)
         sys.exit(1)
 
+    # short_name is set explicitly rather than left to the initialism
+    # fallback: it drives the verso running head, and "LiCS" keeps the
+    # lowercase "i" that no general rule would infer reliably.
     journal_id = db.execute(
-        "INSERT INTO journals (slug, name, issn, template_path, crossref_prefix, crossref_member_id) "
-        "VALUES (?, ?, ?, ?, ?, ?)",
-        ("lics", "Literacy in Composition Studies", "2326-5620", str(tpl), "10.21623", "1"),
+        "INSERT INTO journals (slug, name, short_name, issn, template_path, "
+        "crossref_prefix, crossref_member_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        ("lics", "Literacy in Composition Studies", "LiCS", "2326-5620",
+         str(tpl), "10.21623", "1"),
     )
     print(f"  registered LiCS (id={journal_id})")
     return journal_id

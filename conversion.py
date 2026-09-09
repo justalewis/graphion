@@ -1618,10 +1618,18 @@ def _short_journal_name(name: str) -> str:
     m = re.search(r"\(([A-Z][A-Za-z]{1,8})\)", name)
     if m:
         return m.group(1)
-    # Otherwise use initials of words >2 chars (skip prepositions etc).
-    skip = {"in", "of", "the", "and", "for", "on", "to", "a"}
+    # Otherwise take initials, keeping function words as lowercase letters
+    # rather than dropping them: "Literacy in Composition Studies" gives
+    # "LiCS", which is how such titles are actually abbreviated. Dropping
+    # them outright produced "LCS" despite the example above.
+    #
+    # This is only a fallback. Set the journal's short_name in Journal
+    # Settings when the abbreviation matters, as it does in a running head.
+    lower = {"in", "of", "the", "and", "for", "on", "to", "a"}
     parts = [w for w in re.split(r"\s+", name) if w]
-    initials = "".join(w[0] for w in parts if w.lower() not in skip)
+    initials = "".join(
+        w[0].lower() if w.lower() in lower else w[0].upper() for w in parts
+    )
     return initials or name
 
 
