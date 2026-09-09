@@ -150,11 +150,19 @@
       </label>
       <label class="full">Footer text
         <input type="text" name="footer" value="{{ fm.get('footer', '') }}" placeholder="e.g., Literacy in Composition Studies 13.1" />
-        <span class="help-text">Appears to the left of the centered page number. Leave blank for page number only.</span>
+        <span class="help-text">Appears inboard of the page number, which sits at the outer edge of each page. Leave blank for the page number only.</span>
       </label>
       <label>Start page
         <input type="number" name="start_page" value="{{ fm.get('start-page', '') }}" min="1" />
-        <span class="help-text">Optional. Set when assembling an issue with continuous pagination.</span>
+        <span class="help-text">
+          Optional. Leave blank and assembling the issue numbers this article
+          automatically. Type a number and it is locked: assembly keeps it and
+          paginates the rest of the issue around it.
+          {%- if fm.get('start-page-locked') %}
+          <strong>Currently locked to page {{ fm.get('start-page') }}.</strong>
+          Clear the field to hand it back to automatic numbering.
+          {%- endif %}
+        </span>
       </label>
     </div>
 

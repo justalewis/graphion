@@ -34,6 +34,31 @@
 #let footer-val = "$footer$"
 #let start-page-val = $if(start-page)$$start-page$$else$1$endif$
 
+// Running-head inputs. `journal-short` is not stored in the article's
+// YAML; conversion.render_pdf passes it at render time from the journals
+// row (short_name, else an initialism of the full name), so the stored
+// article.md stays untouched.
+#let journal-short-val = "$journal-short$"
+#let volume-val = "$volume$"
+#let issue-val = "$issue$"
+#let title-content = [$if(title)$$title$$endif$]
+
+// Verso carries the journal locator, e.g. "LiCS / Vol. 13 / No. 2".
+// Missing pieces drop out rather than leaving a dangling separator, so a
+// journal with no issue number still gets a clean header.
+#let verso-label = {
+  let parts = ()
+  if journal-short-val != "" { parts.push(journal-short-val) }
+  if volume-val != "" { parts.push("Vol. " + volume-val) }
+  if issue-val != "" { parts.push("No. " + issue-val) }
+  parts.join("  /  ")
+}
+
+// Recto carries the article. Short title is preferred because a full
+// scholarly title overruns the 4.5in measure and wraps into the margin;
+// the full title is only a fallback for articles that never set one.
+#let recto-label = if short-title-val != "" { [#short-title-val] } else { title-content }
+
 // Pandoc's Typst writer emits `#horizontalrule` for Markdown `---`
 // thematic-break separators, expecting the template to define it.
 // We give it the same hairline centered look as the front-matter
@@ -73,27 +98,15 @@
   keywords: (GRAPHION_KEYWORDS_PLACEHOLDER),
 )
 
+// Front matter deliberately carries no header or footer. The running
+// furniture is installed further down, immediately after the abstract's
+// page break, so the title, keywords and abstract pages stay clean
+// without needing a per-page suppression test.
 #set page(
   paper: "us-letter",
   width: 6in,
   height: 9in,
   margin: (top: 0.85in, bottom: 0.95in, left: 0.75in, right: 0.75in),
-  header: context {
-    let p = counter(page).at(here()).first()
-    if p == start-page-val { return [] }
-    if calc.even(p) {
-      align(left, text(style: "italic", size: 8pt, fill: ink-soft, font: display-font, short-authors-val))
-    } else {
-      align(right, text(style: "italic", size: 8pt, fill: ink-soft, font: display-font, short-title-val))
-    }
-  },
-  footer: context {
-    let p = counter(page).at(here()).first()
-    if p == start-page-val { return [] }
-    let page-str = str(p)
-    let label = if footer-val != "" { footer-val + "  ·  " + page-str } else { page-str }
-    align(center, text(size: 8pt, fill: ink-soft, font: display-font, label))
-  },
 )
 
 // Shift the page counter so the first page is labeled `start-page-val`.
@@ -127,7 +140,12 @@
 // (rule was a Graphion approximation; LiCS print doesn't use one).
 // Spacing comes from "SubSection Heading" measurements: 36pt before,
 // 18pt after, which at 10pt body is 3.6em / 1.8em.
-#show heading.where(level: 1): it => {
+// `breakable: false` keeps a two-line heading from splitting across a
+// page boundary; `sticky: true` keeps the heading attached to the text
+// that follows so it cannot strand alone at the foot of a page. Both are
+// needed: without the first, a long heading breaks mid-phrase across the
+// spread; without the second, it sits orphaned above a page break.
+#show heading.where(level: 1): it => block(breakable: false, sticky: true, width: 100%, {
   set par(first-line-indent: 0pt)
   v(1.8em)
   align(center, text(
@@ -137,11 +155,11 @@
     it.body,
   ))
   v(0.9em)
-}
+})
 
 // Section-h2: italic, centered, slightly smaller — matches LiCS
 // "SubSection Heading" (11pt) treatment.
-#show heading.where(level: 2): it => {
+#show heading.where(level: 2): it => block(breakable: false, sticky: true, width: 100%, {
   set par(first-line-indent: 0pt)
   v(1.2em)
   align(center, text(
@@ -152,16 +170,16 @@
     it.body,
   ))
   v(0.6em)
-}
+})
 
 // Section-h3: italic, left-aligned, body-size — for finer subdivisions
 // not present in LiCS print but useful for articles that need them.
-#show heading.where(level: 3): it => {
+#show heading.where(level: 3): it => block(breakable: false, sticky: true, width: 100%, {
   set par(first-line-indent: 0pt)
   v(0.8em)
   text(size: 10pt, style: "italic", weight: 400, fill: ink-soft, it.body)
   v(0.3em)
-}
+})
 
 // First paragraph after a heading: no indent
 #show heading: it => {
@@ -260,15 +278,43 @@ $if(abstract)$
 #v(1em)
 $endif$
 
-// Horizontal rule between front matter (title, authors, keywords,
-// abstract) and the article body. Matches the LiCS print layout:
-// the body starts on the same page as the metadata, separated only
-// by a hairline rule. We do NOT pagebreak here — that would push the
-// body to page 2 unnecessarily and break the journal's expected
-// "opening rule + drop cap + body" visual pattern.
-#v(0.8em)
-#align(center, line(length: 40%, stroke: 0.5pt + rule-color))
-#v(1.2em)
+// The body opens on its own page. The abstract frequently runs past the
+// bottom of the title page, so keeping them together left the opening
+// section starting partway down whichever page the abstract happened to
+// end on.
+#pagebreak()
+
+// Running furniture, installed here rather than at the top so it applies
+// to the body only. The page counter is NOT reset: it keeps running
+// through the front matter, so the folios still line up with the page
+// range that issue assembly records for this article.
+#set page(
+  header: context {
+    if calc.even(counter(page).at(here()).first()) {
+      align(left, text(
+        style: "italic", size: 8pt, fill: ink-soft, font: display-font,
+        verso-label,
+      ))
+    } else {
+      align(right, text(
+        style: "italic", size: 8pt, fill: ink-soft, font: display-font,
+        recto-label,
+      ))
+    }
+  },
+  footer: context {
+    let p = counter(page).at(here()).first()
+    let styled(s) = text(size: 8pt, fill: ink-soft, font: display-font, s)
+    let folio = styled(str(p))
+    // Folio sits at the outer edge of each page so a spread reads the way
+    // a bound book does; any per-article footer note runs inboard of it.
+    if calc.even(p) {
+      align(left, if footer-val != "" { folio + styled("  ·  " + footer-val) } else { folio })
+    } else {
+      align(right, if footer-val != "" { styled(footer-val + "  ·  ") + folio } else { folio })
+    }
+  },
+)
 
 // ---------- Body ----------
 

@@ -386,8 +386,16 @@ section.references p {
   margin: 0.4rem 0;
   padding-left: 2em;
   text-indent: -2em;
-  text-align: left;
-  hyphens: none;
+  /* Block-aligned to match the article body. */
+  text-align: justify;
+  /* Hyphenation is disabled house-wide, but justified hanging-indent
+   * entries carrying long URLs open up unreadable word gaps without it.
+   * This is the one place it is deliberately turned back on. */
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  /* A DOI or URL longer than the measure would otherwise push past the
+   * column edge rather than wrap. */
+  overflow-wrap: break-word;
   font-size: 0.92rem;
   line-height: 1.4;
 }
@@ -395,16 +403,34 @@ section.references p {
 /* Print: 6x9 book trim with running headers and a centered footer.
  * Headers use the journal's `short-title` / `short-authors` metadata,
  * passed through CSS named strings set by the Pandoc HTML template. */
+/* Running furniture mirrors the Typst PDF: verso carries the journal
+ * locator, recto carries the article, and the folio sits at the outer edge
+ * of each page so a spread reads like a bound book.
+ *
+ * These margin boxes are only honoured by paged-media engines such as
+ * WeasyPrint (conversion.render_pdf_weasy). Browser printing ignores them;
+ * the Typst path is the primary PDF renderer. */
 @page {
   size: 6in 9in;
   margin: 0.85in 0.75in 0.95in 0.75in;
+}
+@page :left {
   @top-left {
-    content: string(short-authors);
+    content: string(journal-locator);
     font-family: "EB Garamond", "Garamond", Georgia, serif;
     font-style: italic;
     font-size: 9.5pt;
     color: #4a4137;
   }
+  @bottom-left {
+    content: counter(page) string(footer-lead);
+    font-family: "EB Garamond", "Garamond", Georgia, serif;
+    font-size: 9.5pt;
+    color: #4a4137;
+    font-feature-settings: "onum";
+  }
+}
+@page :right {
   @top-right {
     content: string(short-title);
     font-family: "EB Garamond", "Garamond", Georgia, serif;
@@ -412,7 +438,7 @@ section.references p {
     font-size: 9.5pt;
     color: #4a4137;
   }
-  @bottom-center {
+  @bottom-right {
     content: string(footer-text) counter(page);
     font-family: "EB Garamond", "Garamond", Georgia, serif;
     font-size: 9.5pt;
@@ -420,10 +446,20 @@ section.references p {
     font-feature-settings: "onum";
   }
 }
-@page :first {
+
+/* Front matter carries no furniture at all, matching the Typst template.
+ * A named page rather than `:first` because the abstract regularly runs to
+ * a second page before the body break. */
+header.article-meta,
+aside.keywords,
+section.abstract {
+  page: frontmatter;
+}
+@page frontmatter {
   @top-left { content: none; }
   @top-right { content: none; }
-  @bottom-center { content: none; }
+  @bottom-left { content: none; }
+  @bottom-right { content: none; }
 }
 
 /* Pull the named strings out of the document so @page rules can use them.
@@ -432,7 +468,11 @@ section.references p {
  * named string is empty and only the counter shows. */
 .short-title-anchor { string-set: short-title content(); position: absolute; left: -9999px; top: -9999px; }
 .short-authors-anchor { string-set: short-authors content(); position: absolute; left: -9999px; top: -9999px; }
-.footer-anchor { string-set: footer-text "" content() "  \00b7  "; position: absolute; left: -9999px; top: -9999px; }
+.journal-locator-anchor { string-set: journal-locator content(); position: absolute; left: -9999px; top: -9999px; }
+/* Two forms of the same note: `footer-text` carries its separator trailing,
+ * for use before the folio on recto pages; `footer-lead` carries it leading,
+ * for use after the folio on verso pages, where the folio sits outermost. */
+.footer-anchor { string-set: footer-text "" content() "  \00b7  ", footer-lead "  \00b7  " content(); position: absolute; left: -9999px; top: -9999px; }
 
 @media print {
   html { font-size: 11.25pt; }
@@ -450,8 +490,22 @@ section.references p {
     padding-bottom: 1.25rem;
   }
   header.article-meta h1 { font-size: 22pt; }
-  header.article-meta + section { page-break-before: always; }
-  h1, h2, h3 { page-break-after: avoid; break-after: avoid; }
+  /* The body opens on its own page, matching the Typst PDF. The metadata
+   * header's adjacent sibling is aside.keywords rather than a section, so
+   * the selector previously used here (header.article-meta + section)
+   * matched nothing and the rule never fired. */
+  section.abstract + section {
+    page-break-before: always;
+    break-before: page;
+  }
+  /* break-after keeps a heading from stranding at the foot of a page;
+   * break-inside keeps a two-line heading from splitting across one. */
+  h1, h2, h3 {
+    page-break-after: avoid;
+    break-after: avoid;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
   blockquote, figure, table { page-break-inside: avoid; break-inside: avoid; }
   p { orphans: 3; widows: 3; }
   section.references a::after { content: ""; }

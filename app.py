@@ -961,8 +961,13 @@ def register_routes(app: Flask):
                 except ValueError:
                     flash("Start page must be a number.", "error")
                     return redirect(request.url)
+                # Typing a number here locks it: issue assembly will number
+                # around this article rather than renumbering it. Clearing the
+                # field hands the article back to automatic pagination.
+                updated["start-page-locked"] = True
             else:
                 updated.pop("start-page", None)
+                updated.pop("start-page-locked", None)
 
             kw_raw = request.form.get("keywords", "").strip()
             if kw_raw:

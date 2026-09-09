@@ -208,31 +208,65 @@ local function is_notes_heading(header)
   return txt:match("^notes%s*$") ~= nil or txt:match("^endnotes%s*$") ~= nil
 end
 
+-- Opening raw blocks for the two end sections. Each opens a Typst content
+-- block and applies its paragraph settings *inside* it.
+--
+-- The previous version emitted a bare `#set par(...)` after the heading and
+-- relied on it reaching the entries that followed. It never reached the
+-- first one: entry 1 rendered with the body's first-line indent while every
+-- later entry hung correctly. Scoping the settings inside a block that
+-- physically contains the entries removes the ordering question.
+--
+-- `breakable: true` is deliberate; a bibliography must still flow across
+-- pages. `hyphenate: true` is re-enabled here only. The body disables
+-- hyphenation house-wide, but justified hanging-indent entries carrying
+-- long URLs open up unreadable word gaps without it.
+local REFERENCES_OPEN = table.concat({
+  "#block(width: 100%, breakable: true)[",
+  "#set par(first-line-indent: 0pt, hanging-indent: 1.5em, justify: true)",
+  "#set text(hyphenate: true)",
+}, "\n")
+
+local NOTES_OPEN = table.concat({
+  "#block(width: 100%, breakable: true)[",
+  "#set par(first-line-indent: 0pt, hanging-indent: 1.2em, leading: 0.55em, justify: true)",
+  "#set text(size: 9.5pt, hyphenate: true)",
+}, "\n")
+
+local BLOCK_CLOSE = "]"
+
 local function inject_typst_hanging_indent(blocks)
-  -- (a) Apply hanging-indent treatment after any references-style
-  -- heading, whatever its level. Some articles label Works Cited as
-  -- H1, others as H3 (depends on DOCX styling), and we want the
-  -- bibliography to render correctly in both cases.
-  -- (b) Start Works Cited and explicit Notes/Endnotes sections on
-  -- their own pages — matches the LiCS print convention.
+  -- (a) Wrap the entries under any references-style or Notes heading in a
+  -- block carrying that section's paragraph settings. The heading itself
+  -- stays outside the block so it keeps the normal heading style.
+  -- (b) Start both sections on their own page, per the LiCS print
+  -- convention. Headings are matched at any level: some articles label
+  -- Works Cited as H1, others as H3, depending on the DOCX styling.
   local out = {}
-  for _, block in ipairs(blocks) do
+  local i, n = 1, #blocks
+  while i <= n do
+    local block = blocks[i]
+    local opener = nil
     if block.t == "Header" and is_references_heading(block) then
-      table.insert(out, pandoc.RawBlock("typst", "#pagebreak()"))
-      table.insert(out, block)
-      table.insert(out, pandoc.RawBlock(
-        "typst",
-        "#set par(first-line-indent: 0pt, hanging-indent: 1.5em)"
-      ))
+      opener = REFERENCES_OPEN
     elseif block.t == "Header" and is_notes_heading(block) then
+      opener = NOTES_OPEN
+    end
+
+    if opener then
       table.insert(out, pandoc.RawBlock("typst", "#pagebreak()"))
       table.insert(out, block)
-      table.insert(out, pandoc.RawBlock(
-        "typst",
-        "#set par(first-line-indent: 0pt, hanging-indent: 1.2em, leading: 0.55em)\n#set text(size: 9.5pt)"
-      ))
+      table.insert(out, pandoc.RawBlock("typst", opener))
+      i = i + 1
+      -- Everything up to the next heading belongs to this section.
+      while i <= n and blocks[i].t ~= "Header" do
+        table.insert(out, blocks[i])
+        i = i + 1
+      end
+      table.insert(out, pandoc.RawBlock("typst", BLOCK_CLOSE))
     else
       table.insert(out, block)
+      i = i + 1
     end
   end
   return out
@@ -333,22 +367,18 @@ local function collect_typst_endnotes(doc)
   end
 
   if #collected_notes > 0 then
-    -- No explicit Notes heading — append one (LiCS print convention)
-    -- on its own page.
-    doc.blocks:insert(pandoc.RawBlock("typst", "#pagebreak()"))
+    -- No explicit Notes heading — append one (LiCS print convention).
+    -- The page break before it and the paragraph settings for the notes
+    -- themselves are applied by inject_typst_hanging_indent, which runs
+    -- after this and treats an appended Notes heading exactly like an
+    -- authored one. Inserting them here as well produced a doubled page
+    -- break and a stray `set` inside the wrapper.
     local notes_header = pandoc.Header(
       1,
       pandoc.Inlines({ pandoc.Str("Notes") }),
       pandoc.Attr("notes-section", { "notes-endnotes" })
     )
     doc.blocks:insert(notes_header)
-    -- Reset the global hanging-indent setting (which was set after the
-    -- Works Cited heading) and turn on a tighter, smaller-text style
-    -- for the notes list itself.
-    doc.blocks:insert(pandoc.RawBlock(
-      "typst",
-      "#set par(first-line-indent: 0pt, hanging-indent: 1.2em, leading: 0.55em)\n#set text(size: 9.5pt)"
-    ))
     for i, content in ipairs(collected_notes) do
       -- Content from `Note` is a list of Blocks; flatten the first
       -- block's inlines into a single paragraph prefixed with the

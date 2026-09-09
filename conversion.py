@@ -290,7 +290,7 @@ _FIELD_ORDER = (
     "short-title", "short-authors", "footer",
     "doi",
     "journal", "issn", "volume", "issue", "year",
-    "start-page", "end-page",
+    "start-page", "start-page-locked", "end-page",
     "submitted-date", "accepted-date", "published-date",
     "copyright",
     "status",
@@ -669,6 +669,11 @@ def render_html(article_path: Path, journal_slug: str) -> Path:
         f"--template={template}",
         f"--css={css.name}",
     ]
+    # Same journal locator the Typst running head uses, for the paged-media
+    # header in the print stylesheet. See journal_short_name().
+    short_name = journal_short_name(journal_slug)
+    if short_name:
+        extra.append(f"--metadata=journal-short:{short_name}")
     fig_filter = tpl / "figures-filter.lua"
     if fig_filter.exists():
         extra.append(f"--lua-filter={fig_filter}")
@@ -767,6 +772,25 @@ def _fill_typst_authors(typ_text: str, fm: dict) -> str:
     return typ_text
 
 
+def journal_short_name(journal_slug: str) -> str:
+    """Short journal label for running headers, e.g. "LiCS".
+
+    Prefers the journals row's `short_name`; falls back to an initialism
+    derived from the full name. Returns "" when the journal is unknown, in
+    which case the running head simply omits that segment.
+    """
+    try:
+        row = db.query_one(
+            "SELECT name, short_name FROM journals WHERE slug = ?", (journal_slug,)
+        )
+    except Exception:
+        return ""
+    if not row:
+        return ""
+    j = dict(row)
+    return (j.get("short_name") or _short_journal_name(j.get("name") or "") or "").strip()
+
+
 def render_pdf(article_path: Path, journal_slug: str) -> Path:
     """Render PDF via Pandoc (Typst template) + typst-py compile.
 
@@ -799,6 +823,13 @@ def render_pdf(article_path: Path, journal_slug: str) -> Path:
     typst_input = article_path / "article.typ"
 
     extra = [f"--template={typ_template}"]
+    # The verso running head needs the journal's short label, which lives on
+    # the journals row rather than in the article's YAML. Passing it as
+    # render-time metadata keeps the stored article.md untouched, so the
+    # header follows the journal even if the article moves between them.
+    short_name = journal_short_name(journal_slug)
+    if short_name:
+        extra.append(f"--metadata=journal-short:{short_name}")
     fig_filter = tpl / "figures-filter.lua"
     if fig_filter.exists():
         extra.append(f"--lua-filter={fig_filter}")
@@ -1076,11 +1107,20 @@ def assemble_issue(issue_id: int) -> AssemblyResult:
 
     for art in articles:
         apath = Path(art["project_path"])
-        start_page = cumulative + 1
-
         fm, body = read_article_metadata(apath)
-        fm["start-page"] = start_page
-        write_article_metadata(apath, fm, body)
+
+        # A page number typed into the metadata form is locked and survives
+        # assembly; assembly only auto-numbers articles that have no hand-set
+        # value. Pagination then continues from wherever the locked article
+        # actually ends, so a deliberate gap or a fixed opening folio stays
+        # put instead of being overwritten on every re-assemble.
+        locked = bool(fm.get("start-page-locked")) and fm.get("start-page")
+        if locked:
+            start_page = int(fm["start-page"])
+        else:
+            start_page = cumulative + 1
+            fm["start-page"] = start_page
+            write_article_metadata(apath, fm, body)
 
         try:
             pdf_path = render_pdf(apath, issue["journal_slug"])

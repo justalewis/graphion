@@ -33,6 +33,9 @@ $endif$
 $if(short-authors)$
 <span class="short-authors-anchor" aria-hidden="true">$short-authors$</span>
 $endif$
+$if(journal-short)$
+<span class="journal-locator-anchor" aria-hidden="true">$journal-short$$if(volume)$ / Vol. $volume$$endif$$if(issue)$ / No. $issue$$endif$</span>
+$endif$
 $if(footer)$
 <span class="footer-anchor" aria-hidden="true">$footer$</span>
 $endif$
