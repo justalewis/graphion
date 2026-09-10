@@ -30,6 +30,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
  && dpkg -i /tmp/cloudflared.deb && rm /tmp/cloudflared.deb \
  && rm -rf /var/lib/apt/lists/*
 
+# libreoffice-writer provides the `soffice` binary that preprocessors.py looks
+# up via shutil.which("soffice"). It backs the optional DOCX-normalize pass:
+# round-tripping a manuscript through headless LibreOffice flattens text boxes
+# and cleans autoformat junk before Pandoc ingest. Isolated in its own layer
+# because it is by far the heaviest thing in this image (~600 MB installed);
+# keeping it separate means edits to the pandoc/cloudflared layer above don't
+# reinstall it. --no-install-recommends drops the docs, help, JRE, and clip-art
+# bundles, none of which the headless conversion pass touches.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libreoffice-writer \
+ && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 # gunicorn is installed here rather than in requirements.txt so that local
@@ -44,8 +56,9 @@ COPY . .
 RUN cp -r /app/content /app/content-seed \
  && chmod +x /app/deploy/entrypoint.sh
 
-# The optional pre-press tools (LibreOffice, Tesseract, verapdf, pa11y) are
-# deliberately absent: they would add well over 1.5 GB and every module that
-# uses them degrades gracefully through its available() probe.
+# The remaining optional pre-press tools (Tesseract, verapdf, pa11y) are
+# deliberately absent: they would add well over another gigabyte on top of the
+# LibreOffice layer above, and every module that uses them degrades gracefully
+# through its available() probe.
 
 ENTRYPOINT ["/app/deploy/entrypoint.sh"]
