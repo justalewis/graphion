@@ -16,13 +16,7 @@
 #let rule-color = rgb("#b6a98c")
 
 // Font stacks — defined early so page header/footer can reference them.
-// Body type: 10pt Minion Pro per LiCS InDesign spec. Fallback chain
-// favors free fonts since Minion Pro is Adobe-commercial and most
-// installs won't have it; EB Garamond is a close visual match
-// (humanist serif, similar x-height). Debian's fonts-ebgaramond
-// registers the family as "EB Garamond 12", so both spellings are
-// listed: without the second one the container silently falls back
-// to Libertinus Serif and the galley is in the wrong face.
+//
 // Minion Pro is the LiCS InDesign body face, but it is deliberately NOT in
 // this stack. Typst matches a family by name and then takes the closest style
 // it can find inside it, so a machine carrying a single stray Minion Pro file
@@ -69,16 +63,22 @@
 // the full title is only a fallback for articles that never set one.
 #let recto-label = if short-title-val != "" { [#short-title-val] } else { title-content }
 
-// Pandoc's Typst writer emits `#horizontalrule` for Markdown `---`
-// thematic-break separators, expecting the template to define it.
-// We give it the same hairline centered look as the front-matter
-// separator between metadata and body — visually appropriate for an
-// inline section break in scholarly prose.
-#let horizontalrule = {
-  v(0.8em)
-  align(center, line(length: 35%, stroke: 0.5pt + rule-color))
-  v(0.8em)
+// A scene break is a centered asterisk: that is what the manuscript carries
+// and what the author meant. It was rendering as a rule across the measure,
+// which reads as a section divider rather than the pause it stands for.
+#let scene-break = {
+  v(0.9em)
+  align(center, text(size: 11pt, fill: ink-soft, "*"))
+  v(0.9em)
 }
+
+// Pandoc names this differently by version, and both have to be covered.
+// Older writers emit the value `#horizontalrule`, expecting the template to
+// define it. Pandoc 3.11 emits a call to `#divider()`, which is a Typst
+// built-in that draws a full-width line, so leaving it alone silently
+// reinstated exactly the rule we were trying to replace.
+#let horizontalrule = scene-break
+#let divider() = scene-break
 
 // Drop cap helper. Typst doesn't natively wrap body text around a
 // floated initial (no shape-aware reflow), so this approximates the
@@ -148,48 +148,55 @@
 // Section-h1: centered Didot 13pt — matches LiCS InDesign's "SubHead"
 // / "Article Sections" paragraph style. Centered, no hairline rule
 // (rule was a Graphion approximation; LiCS print doesn't use one).
-// Spacing comes from "SubSection Heading" measurements: 36pt before,
-// 18pt after, which at 10pt body is 3.6em / 1.8em.
 // `breakable: false` keeps a two-line heading from splitting across a
 // page boundary; `sticky: true` keeps the heading attached to the text
 // that follows so it cannot strand alone at the foot of a page. Both are
 // needed: without the first, a long heading breaks mid-phrase across the
 // spread; without the second, it sits orphaned above a page break.
-#show heading.where(level: 1): it => block(breakable: false, sticky: true, width: 100%, {
-  set par(first-line-indent: 0pt)
-  v(1.8em)
-  align(center, text(
-    font: display-font,
-    size: 13pt,
-    weight: 400,
-    it.body,
-  ))
-  v(0.9em)
-})
+#show heading.where(level: 1): it => block(
+  breakable: false, sticky: true, width: 100%,
+  // One body line of space above and below. The spacing lives on the block
+  // rather than in v() calls inside it so a two-line title cannot pick up a
+  // gap in its middle; `leading` keeps its own lines set close together.
+  above: 1.5em, below: 1.5em,
+  {
+    set par(first-line-indent: 0pt, leading: 0.35em, justify: false)
+    align(center, text(
+      font: display-font,
+      size: 13pt,
+      weight: 400,
+      it.body,
+    ))
+  },
+)
 
 // Section-h2: italic, centered, slightly smaller — matches LiCS
 // "SubSection Heading" (11pt) treatment.
-#show heading.where(level: 2): it => block(breakable: false, sticky: true, width: 100%, {
-  set par(first-line-indent: 0pt)
-  v(1.2em)
-  align(center, text(
-    font: display-font,
-    size: 11pt,
-    style: "italic",
-    weight: 400,
-    it.body,
-  ))
-  v(0.6em)
-})
+#show heading.where(level: 2): it => block(
+  breakable: false, sticky: true, width: 100%,
+  above: 1.5em, below: 1.5em,
+  {
+    set par(first-line-indent: 0pt, leading: 0.35em, justify: false)
+    align(center, text(
+      font: display-font,
+      size: 11pt,
+      style: "italic",
+      weight: 400,
+      it.body,
+    ))
+  },
+)
 
 // Section-h3: italic, left-aligned, body-size — for finer subdivisions
 // not present in LiCS print but useful for articles that need them.
-#show heading.where(level: 3): it => block(breakable: false, sticky: true, width: 100%, {
-  set par(first-line-indent: 0pt)
-  v(0.8em)
-  text(size: 10pt, style: "italic", weight: 400, fill: ink-soft, it.body)
-  v(0.3em)
-})
+#show heading.where(level: 3): it => block(
+  breakable: false, sticky: true, width: 100%,
+  above: 1.2em, below: 0.6em,
+  {
+    set par(first-line-indent: 0pt, leading: 0.35em, justify: false)
+    text(size: 10pt, style: "italic", weight: 400, fill: ink-soft, it.body)
+  },
+)
 
 // First paragraph after a heading: no indent
 #show heading: it => {

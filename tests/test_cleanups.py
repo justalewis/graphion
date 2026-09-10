@@ -367,3 +367,69 @@ def test_keywords_on_the_following_line_still_work():
     )
     out, _ = cleanups.run_all(src)
     assert "Alpha" in out and "Beta" in out
+
+
+# ---------- merge_continued_headings ----------
+
+def test_merge_heading_split_across_two_paragraphs():
+    """Pressing Enter mid-heading leaves two Heading paragraphs in Word."""
+    src = "# DEATH ROW, ABOLITION, AND WRITING STUDIES:\n\n# A LITERATURE REVIEW\n\nBody.\n"
+    out = cleanups.merge_continued_headings(src, _log())
+    assert "# DEATH ROW, ABOLITION, AND WRITING STUDIES: | A LITERATURE REVIEW" in out
+    assert out.count("#") == 1
+
+
+def test_merge_leaves_genuine_consecutive_headings_alone():
+    """A finished heading followed by another is a section, not a split."""
+    src = "# Introduction\n\n# Methods\n\nBody.\n"
+    assert cleanups.merge_continued_headings(src, _log()) == src
+
+
+def test_merge_requires_matching_levels():
+    src = "# Section One:\n\n## A Subsection\n\nBody.\n"
+    assert cleanups.merge_continued_headings(src, _log()) == src
+
+
+def test_merge_continued_headings_is_idempotent():
+    src = "# Part One:\n\n# Continued\n\nBody.\n"
+    once = cleanups.merge_continued_headings(src, _log())
+    assert cleanups.merge_continued_headings(once, _log()) == once
+
+
+def test_spaced_pipe_survives_the_word_artifact_merge():
+    """The forced-break convention must not be undone by the artifact repair."""
+    src = "## Facing What's Human: | From Dialogic Intertextuality\n\nBody.\n"
+    out = cleanups.reassemble_heading_linebreaks(src, _log())
+    assert " | " in out
+
+
+# ---------- normalize_scene_breaks ----------
+
+def test_asterisk_ornament_becomes_a_thematic_break():
+    src = "Body one.\n\n**\\***\n\nBody two.\n"
+    out = cleanups.normalize_scene_breaks(src, _log())
+    assert "\n---\n" in out
+    assert "*" not in out.replace("Body one.", "").replace("Body two.", "")
+
+
+def test_plain_asterisk_ornament_also_normalized():
+    src = "Body one.\n\n*\n\nBody two.\n"
+    out = cleanups.normalize_scene_breaks(src, _log())
+    assert "\n---\n" in out
+
+
+def test_scene_break_leaves_real_emphasis_alone():
+    src = "Body one.\n\n*emphasised words here*\n\nBody two.\n"
+    assert cleanups.normalize_scene_breaks(src, _log()) == src
+
+
+def test_scene_break_never_converts_the_first_paragraph():
+    """A leading --- would read as the start of a YAML front matter block."""
+    src = "*\n\nBody.\n"
+    assert cleanups.normalize_scene_breaks(src, _log()) == src
+
+
+def test_normalize_scene_breaks_is_idempotent():
+    src = "Body one.\n\n**\\***\n\nBody two.\n"
+    once = cleanups.normalize_scene_breaks(src, _log())
+    assert cleanups.normalize_scene_breaks(once, _log()) == once

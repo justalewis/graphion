@@ -116,7 +116,11 @@ def reassemble_heading_linebreaks(text: str, log: CleanupLog) -> str:
     adjacent-heading form for hand-editing since auto-merging there has
     high false-positive risk.
     """
-    pattern = re.compile(r"^(#{1,6}\s.+?)\s*\\?\|\s*(.+)$", re.MULTILINE)
+    # Only the ESCAPED pipe, which is the Word artifact. A spaced " | " is the
+    # documented convention for a deliberate forced break (see
+    # split_pipes_to_linebreaks in the journal filter); matching that here
+    # silently undid every break an editor asked for.
+    pattern = re.compile(r"^(#{1,6}\s.+?)\s*\\\|\s*(.+)$", re.MULTILINE)
     count = 0
 
     def _merge(m: re.Match) -> str:
@@ -895,6 +899,108 @@ def build_yaml_front_matter(text: str, log: CleanupLog, issue_metadata: Optional
 
 Pass = Callable[[str, CleanupLog], str]
 
+def merge_continued_headings(text: str, log: CleanupLog) -> str:
+    r"""Join a heading that Word split across two paragraphs.
+
+    An author who ends a heading line with Enter rather than Shift+Enter
+    leaves two Heading paragraphs where they meant one heading of two lines.
+    Pandoc faithfully emits two headings, and each then gets a full heading's
+    space above and below, opening a gap in the middle of the title::
+
+        # DEATH ROW, ABOLITION, AND WRITING STUDIES:
+        # A LITERATURE REVIEW
+
+    Merging is only safe with a signal that the first line is unfinished, so
+    this requires it to end in a colon, comma, or an opening conjunction, and
+    requires both headings to be at the same level. A genuine section followed
+    by a subsection does not look like that.
+
+    The two are joined with the " | " forced-break convention rather than a
+    space, so the title still sets as two lines; see split_pipes_to_linebreaks
+    in the journal filter.
+    """
+    lines = text.split("\n")
+    out: List[str] = []
+    count = 0
+    i = 0
+    heading = re.compile(r"^(#{1,6})\s+(.*\S)\s*$")
+
+    while i < len(lines):
+        m = heading.match(lines[i])
+        if not m:
+            out.append(lines[i])
+            i += 1
+            continue
+
+        level, first = m.group(1), m.group(2)
+        # Look past blank lines for an immediately following heading.
+        j = i + 1
+        while j < len(lines) and not lines[j].strip():
+            j += 1
+        nxt = heading.match(lines[j]) if j < len(lines) else None
+
+        unfinished = first.rstrip().endswith((":", ",")) or bool(
+            re.search(r"\b(and|or|of|in|through|for|with)$", first.rstrip(), re.I)
+        )
+        if nxt and nxt.group(1) == level and unfinished and "|" not in first:
+            out.append(f"{level} {first.rstrip()} | {nxt.group(2)}")
+            count += 1
+            i = j + 1
+            continue
+
+        out.append(lines[i])
+        i += 1
+
+    log.record("merge_continued_headings", count, "split headings rejoined")
+    return "\n".join(out)
+
+
+def normalize_scene_breaks(text: str, log: CleanupLog) -> str:
+    r"""Turn a lone-asterisk scene break into an explicit thematic break.
+
+    Manuscripts mark a scene break with a centered asterisk. Pandoc emits that
+    Word paragraph as ``**\***``: bold, wrapping an escaped asterisk. The
+    bold-escape repair below then unescapes it into ``*****``, which Markdown
+    happens to read as a thematic break, so the ornament survived by accident
+    and rendered as whatever the template draws for a rule. In LiCS that was a
+    hairline across the measure, which is not what the author wrote.
+
+    Normalizing to ``---`` states the intent, keeps the bold-escape repair away
+    from it, and leaves the appearance to the journal's template. The LiCS
+    templates render a thematic break as a centered asterisk.
+
+    The first paragraph is never converted: a ``---`` at the very top would
+    read as the opening of a YAML front matter block.
+    """
+    parts = re.split(r"(\n{2,})", text)
+    paragraphs = parts[0::2]
+    separators = parts[1::2]
+    count = 0
+
+    for index, para in enumerate(paragraphs):
+        if index == 0:
+            continue
+        stripped = para.strip()
+        if not stripped or "*" not in stripped:
+            continue
+        # Nothing but asterisks, backslashes and spaces: an ornament, not text.
+        if re.fullmatch(r"[\s\\*]+", stripped):
+            paragraphs[index] = "---"
+            count += 1
+
+    if not count:
+        log.record("normalize_scene_breaks", 0)
+        return text
+
+    rebuilt: List[str] = []
+    for index, para in enumerate(paragraphs):
+        rebuilt.append(para)
+        if index < len(separators):
+            rebuilt.append(separators[index])
+    log.record("normalize_scene_breaks", count, "asterisk ornaments made explicit")
+    return "".join(rebuilt)
+
+
 # A paragraph consisting of nothing but an image, which is how Pandoc emits a
 # DOCX drawing. `alt` is captured so we can tell an already-captioned figure
 # from a bare one.
@@ -1030,6 +1136,11 @@ DEFAULT_PASSES: List[Pass] = [
     strip_underline_spans,
     unescape_quoted_brackets,
     reassemble_heading_linebreaks,
+    # After the Word-artifact merge above, so the " | " it writes survives.
+    merge_continued_headings,
+    # Before repair_pandoc_bold_escape, which would otherwise turn an asterisk
+    # ornament into "*****" and thereby into an accidental thematic break.
+    normalize_scene_breaks,
     split_oneline_grid_tables,
     convert_single_cell_tables_to_blockquotes,
     convert_pandoc_div_footnotes_to_native,

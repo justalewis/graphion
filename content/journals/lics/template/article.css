@@ -374,6 +374,22 @@ article p:has(> strong:only-child) > strong {
   color: var(--ink);
 }
 
+/* Scene break. The manuscript marks these with a centered asterisk, and a
+ * default <hr> rule reads as a section divider rather than the pause the
+ * author wrote. Mirrors the Typst treatment. */
+hr {
+  border: 0;
+  margin: 1.6rem 0;
+  text-align: center;
+  height: auto;
+}
+hr::after {
+  content: "*";
+  color: var(--ink-soft);
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
 /* Figures. Image centered at its authored size, caption below and separated
  * by a hairline rule, the whole block kept off a page break so an image never
  * parts from its caption. Mirrors the Typst treatment. */
