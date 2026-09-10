@@ -46,6 +46,15 @@
 // "article", takes the classical page-per-front-matter layout.
 #let is-review-val = "$if(kind)$$kind$$endif$" == "review"
 
+// `body-started` gates the running header and footer. The header/footer
+// live on the initial `#set page` at the top (a second mid-document
+// `#set page` triggers an implicit page break in Typst, which was why
+// book reviews with no abstract still landed a mostly-empty page 1),
+// so a flag is needed to keep them invisible while the front matter is
+// laid out. The flag flips right after the abstract's if-block, i.e.,
+// after any explicit pagebreak but before the `$body$` substitution.
+#let body-started = state("body-started", false)
+
 // Running-head inputs. `journal-short` is not stored in the article's
 // YAML; conversion.render_pdf passes it at render time from the journals
 // row (short_name, else an initialism of the full name), so the stored
@@ -116,15 +125,57 @@
   keywords: (GRAPHION_KEYWORDS_PLACEHOLDER),
 )
 
-// Front matter deliberately carries no header or footer. The running
-// furniture is installed further down, immediately after the abstract's
-// page break, so the title, keywords and abstract pages stay clean
-// without needing a per-page suppression test.
+// Running header and footer are declared here rather than after the
+// abstract, because Typst treats any mid-document `#set page(...)` that
+// changes page furniture as an implicit page break: on book reviews
+// (no abstract, no explicit break) that implicit break was leaving a
+// mostly-empty page 1 with the body pushed to page 2. Both callbacks
+// query the `body-started` state so the front matter still renders
+// without header or folio.
 #set page(
   paper: "us-letter",
   width: 6in,
   height: 9in,
   margin: (top: 0.85in, bottom: 0.95in, left: 0.75in, right: 0.75in),
+  header: context {
+    let started = body-started.at(here())
+    let p = counter(page).at(here()).first()
+    if not started {
+      none
+    } else if is-review-val and p == 1 {
+      // Reviews start the body on page 1 alongside the title block;
+      // a running header on that page would sit above the title.
+      none
+    } else if calc.even(p) {
+      align(left, text(
+        style: "italic", size: 8pt, fill: ink-soft, font: display-font,
+        verso-label,
+      ))
+    } else {
+      align(right, text(
+        style: "italic", size: 8pt, fill: ink-soft, font: display-font,
+        recto-label,
+      ))
+    }
+  },
+  footer: context {
+    let started = body-started.at(here())
+    // Reviews carry the folio from page 1 because that page holds body
+    // content already; articles hold their folios back until the body
+    // starts (title / abstract pages stay clean).
+    if not started and not is-review-val {
+      none
+    } else {
+      let p = counter(page).at(here()).first()
+      let styled(s) = text(size: 8pt, fill: ink-soft, font: display-font, s)
+      let folio = styled(str(p))
+      if calc.even(p) {
+        align(left, if footer-val != "" { folio + styled("  ·  " + footer-val) } else { folio })
+      } else {
+        align(right, if footer-val != "" { styled(footer-val + "  ·  ") + folio } else { folio })
+      }
+    }
+  },
 )
 
 // Shift the page counter so the first page is labeled `start-page-val`.
@@ -331,43 +382,12 @@ $if(abstract)$
 #pagebreak()
 $endif$
 
-// Running furniture, installed here rather than at the top so it applies
-// to the body only. The page counter is NOT reset: it keeps running
-// through the front matter, so the folios still line up with the page
-// range that issue assembly records for this article.
-#set page(
-  header: context {
-    let p = counter(page).at(here()).first()
-    // On book reviews the body starts on page 1 alongside the title
-    // block, so the header would otherwise crown the title itself.
-    // Suppress it there; the recto/verso labels come back on page 2.
-    if is-review-val and p == 1 {
-      none
-    } else if calc.even(p) {
-      align(left, text(
-        style: "italic", size: 8pt, fill: ink-soft, font: display-font,
-        verso-label,
-      ))
-    } else {
-      align(right, text(
-        style: "italic", size: 8pt, fill: ink-soft, font: display-font,
-        recto-label,
-      ))
-    }
-  },
-  footer: context {
-    let p = counter(page).at(here()).first()
-    let styled(s) = text(size: 8pt, fill: ink-soft, font: display-font, s)
-    let folio = styled(str(p))
-    // Folio sits at the outer edge of each page so a spread reads the way
-    // a bound book does; any per-article footer note runs inboard of it.
-    if calc.even(p) {
-      align(left, if footer-val != "" { folio + styled("  ·  " + footer-val) } else { folio })
-    } else {
-      align(right, if footer-val != "" { styled(footer-val + "  ·  ") + folio } else { folio })
-    }
-  },
-)
+// Body starts here. Flip `body-started` so the header/footer set up
+// on the initial `#set page` at the top of this file begin rendering.
+// The page counter is not reset: it keeps running through the front
+// matter, so folios still line up with what issue assembly recorded
+// for this article.
+#body-started.update(true)
 
 // ---------- Body ----------
 
