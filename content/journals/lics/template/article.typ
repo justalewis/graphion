@@ -52,7 +52,12 @@
 // book reviews with no abstract still landed a mostly-empty page 1),
 // so a flag is needed to keep them invisible while the front matter is
 // laid out. The flag flips right after the abstract's if-block, i.e.,
-// after any explicit pagebreak but before the `$body$` substitution.
+// after any explicit pagebreak but before the body is substituted in.
+//
+// Do not name that variable literally in a comment here. Pandoc's template
+// engine does not know Typst comment syntax, so it expands the token
+// wherever it appears: writing it above inserted the whole article body at
+// this point as well as at the end, and the render failed to compile.
 #let body-started = state("body-started", false)
 
 // Running-head inputs. `journal-short` is not stored in the article's
