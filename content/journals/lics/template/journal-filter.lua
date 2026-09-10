@@ -229,13 +229,19 @@ local NOTES_OPEN = table.concat({
 
 local BLOCK_CLOSE = "]"
 
-local function inject_typst_hanging_indent(blocks)
+local function inject_typst_hanging_indent(blocks, is_review)
   -- (a) Wrap the entries under any references-style or Notes heading in a
   -- block carrying that section's paragraph settings. The heading itself
   -- stays outside the block so it keeps the normal heading style.
   -- (b) Start both sections on their own page, per the LiCS print
-  -- convention. Headings are matched at any level: some articles label
-  -- Works Cited as H1, others as H3, depending on the DOCX styling.
+  -- convention for full articles. Book reviews (is_review) skip that
+  -- forced break: a review's body + Works Cited are typically short
+  -- enough to share a page, and forcing a new page pushed the review's
+  -- short body onto a mostly empty page 1 with Works Cited alone on
+  -- page 2. Natural pagination still splits them cleanly when the
+  -- review is long enough to warrant it.
+  -- Headings are matched at any level: some articles label Works Cited
+  -- as H1, others as H3, depending on the DOCX styling.
   local out = {}
   local i, n = 1, #blocks
   while i <= n do
@@ -248,7 +254,9 @@ local function inject_typst_hanging_indent(blocks)
     end
 
     if opener then
-      table.insert(out, pandoc.RawBlock("typst", "#pagebreak()"))
+      if not is_review then
+        table.insert(out, pandoc.RawBlock("typst", "#pagebreak()"))
+      end
       table.insert(out, block)
       table.insert(out, pandoc.RawBlock("typst", opener))
       i = i + 1
@@ -467,10 +475,12 @@ end
 
 function Pandoc(doc)
   doc.meta = split_pipes_in_meta(doc.meta)
+  local kind_str = doc.meta.kind and pandoc.utils.stringify(doc.meta.kind) or ""
+  local is_review = kind_str:lower() == "review"
   if FORMAT == "typst" then
     doc = collect_typst_endnotes(doc)
     doc.blocks = inject_typst_dropcap(doc.blocks)
-    doc.blocks = inject_typst_hanging_indent(doc.blocks)
+    doc.blocks = inject_typst_hanging_indent(doc.blocks, is_review)
     doc.blocks = adapt_typst_tables(doc.blocks)
   elseif FORMAT:match("^html") or FORMAT:match("^epub") then
     doc.blocks = wrap_html_opening_para(doc.blocks)
