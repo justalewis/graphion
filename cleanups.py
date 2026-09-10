@@ -189,7 +189,7 @@ def convert_pandoc_div_footnotes_to_native(text: str, log: CleanupLog) -> str:
     pattern = re.compile(
         r"(?:^|(?<=\s))"           # at start or after whitespace
         r"(?:\d+\.\s+)?"            # optional list marker like "1.  "
-        r":::\s*\{#footnote-([^\s}]+)\}"  # opening: ::: {#footnote-N}
+        r":::\s*\{#(?:foot|end)note-([^\s}]+)\}"  # opening: ::: {#footnote-N} or #endnote-N
         r"\s*(.*?)"                 # content (non-greedy)
         r"\s*:::",                  # closing :::
         re.DOTALL,
@@ -203,7 +203,7 @@ def convert_pandoc_div_footnotes_to_native(text: str, log: CleanupLog) -> str:
         content = m.group(2)
         # Strip the back-arrow link found inside footnote content.
         content = re.sub(
-            r"\s*\[[^\]]*\]\(#footnote-ref-[^)]+\)\s*",
+            r"\s*\[[^\]]*\]\(#(?:foot|end)note-ref-[^)]+\)\s*",
             " ",
             content,
         )
@@ -233,11 +233,17 @@ def convert_pandoc_div_footnotes_to_native(text: str, log: CleanupLog) -> str:
     # discarded. Outer `^^...^^` superscript markers are stripped if
     # they bracket the now-converted footnote ref (since `[^N]` is
     # rendered as a superscript automatically).
+    #
+    # One or two carets: Mammoth emits `^^...^^` for most references but a
+    # single `^...^` where the marker follows a word without a space. The
+    # negative lookahead keeps this from matching a back-arrow link, whose
+    # target is `#endnote-ref-N` and whose id would otherwise capture as
+    # "ref-N".
     body_ref = re.compile(
-        r"(?P<sup_open>\^\^)?"
-        r"\[[^\n]*?\]\(#footnote-(?P<id>[^\s)]+)\)"
-        r"(?P<attr>\{#footnote-ref-[^}]+\})?"
-        r"(?P<sup_close>\^\^)?"
+        r"(?P<sup_open>\^{1,2})?"
+        r"\[[^\n]*?\]\(#(?:foot|end)note-(?!ref-)(?P<id>[^\s)]+)\)"
+        r"(?P<attr>\{#(?:foot|end)note-ref-[^}]+\})?"
+        r"(?P<sup_close>\^{1,2})?"
     )
     def _replace_body_ref(m: "re.Match") -> str:
         return f"[^{m.group('id')}]"
@@ -245,10 +251,10 @@ def convert_pandoc_div_footnotes_to_native(text: str, log: CleanupLog) -> str:
 
     # 3. Strip any orphan back-arrow links that survived outside divs.
     new_text = re.sub(
-        r"\[[^\n]*?\]\(#footnote-ref-[^)]+\)", "", new_text,
+        r"\[[^\n]*?\]\(#(?:foot|end)note-ref-[^)]+\)", "", new_text,
     )
     # Also strip orphan `{#footnote-ref-N}` attribute blocks.
-    new_text = re.sub(r"\{#footnote-ref-[^}]+\}", "", new_text)
+    new_text = re.sub(r"\{#(?:foot|end)note-ref-[^}]+\}", "", new_text)
 
     # 4. Clean up the trailing artifacts left when divs got embedded in
     # a numbered list squashed onto one line: numerals + spaces that
@@ -1009,6 +1015,77 @@ def strip_empty_anchor_spans(text: str, log: CleanupLog) -> str:
     return new_text
 
 
+# A heading that opens the bibliography, at any level.
+_REFERENCES_HEADING_RE = re.compile(
+    r"^#{1,6}\s*(works\s+cited|references|bibliography)\s*$", re.IGNORECASE
+)
+
+# MLA's repeated-author marker: a run of dashes and a period, standing in for
+# the author named in the entry above. Pandoc escapes the leading hyphens, so
+# it arrives as `\-\--.` rather than `---.`; em dashes appear too.
+_REPEATED_AUTHOR_RE = re.compile(r"(?<=\S)\s+((?:\\?[-–—]){2,4}\.\s)")
+
+
+def split_repeated_author_entries(text: str, log: CleanupLog) -> str:
+    r"""Give each MLA repeated-author entry its own line in the bibliography.
+
+    MLA replaces a repeated author with a dash run: the second Wacquant entry
+    opens ``---.`` rather than repeating his name. Word keeps each on its own
+    line, but the run of continuation-line merges that reassembles wrapped
+    citations cannot tell a wrapped line from a new entry, so the second entry
+    gets glued onto the end of the first::
+
+        Wacquant, Loic. "Class, Race and Hyperincarceration." ... 2010,
+        pp. 74-90. Accessed 16 June 2024. \-\--. *Punishing the Poor*. Duke UP,
+
+    The marker is unambiguous, so splitting on it is safe: nothing else in a
+    citation is a bare dash run followed by a period and a space. The marker
+    itself is preserved exactly, including Pandoc's escaping, so the entry
+    still renders the way the author wrote it.
+
+    Only the bibliography is touched. A dash run in body prose is left alone.
+    """
+    lines = text.split("\n")
+    in_references = False
+    count = 0
+    out: List[str] = []
+
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith("#"):
+            in_references = bool(_REFERENCES_HEADING_RE.match(stripped))
+            out.append(line)
+            continue
+        if not in_references or not stripped:
+            out.append(line)
+            continue
+
+        pieces = _REPEATED_AUTHOR_RE.split(line)
+        if len(pieces) == 1:
+            out.append(line)
+            continue
+
+        # split() alternates text, marker, text, marker, ... Rejoin so each
+        # marker opens a line of its own.
+        current = pieces[0]
+        for i in range(1, len(pieces), 2):
+            out.append(current)
+            out.append("")
+            current = pieces[i] + (pieces[i + 1] if i + 1 < len(pieces) else "")
+            count += 1
+        out.append(current)
+
+    if not count:
+        log.record("split_repeated_author_entries", 0)
+        return text
+
+    log.record(
+        "split_repeated_author_entries", count,
+        "MLA repeated-author entries given their own line",
+    )
+    return "\n".join(out)
+
+
 def merge_continued_headings(text: str, log: CleanupLog) -> str:
     r"""Join a heading that Word split across two paragraphs.
 
@@ -1267,6 +1344,9 @@ DEFAULT_PASSES: List[Pass] = [
     repair_pandoc_bold_escape,
     normalize_smart_quotes,
     unfragment_works_cited,
+    # Directly after the merge above, which cannot tell a wrapped citation
+    # line from the start of a repeated-author entry and glues them together.
+    split_repeated_author_entries,
     # Runs last so caption text has already had its dashes and quotes
     # normalized before it is folded into the image.
     pair_figure_captions,

@@ -545,3 +545,57 @@ def test_strip_empty_anchor_spans_is_idempotent():
     src = '# []{#_heading=h.abc}A Heading' + chr(10) + '[]{#_heading=h.def}Body.' + chr(10)
     once = cleanups.strip_empty_anchor_spans(src, _log())
     assert cleanups.strip_empty_anchor_spans(once, _log()) == once
+
+
+# ---------- split_repeated_author_entries ----------
+
+def _split(src):
+    return cleanups.split_repeated_author_entries(src, _log())
+
+
+def test_repeated_author_entry_gets_its_own_line():
+    r"""MLA replaces a repeated author with a dash run; Pandoc escapes the
+    leading hyphens, so it arrives as \-\--. rather than ---."""
+    src = (
+        '# Works Cited' + chr(10) + chr(10)
+        + r'Wacquant, Loic. *Class, Race.* 2010. Accessed 16 June 2024. \-\--. *Punishing the Poor*. Duke UP, 2009.' + chr(10)
+    )
+    out = _split(src)
+    lines = [l for l in out.splitlines() if l.strip()]
+    assert len(lines) == 3, lines
+    assert lines[1].startswith('Wacquant, Loic')
+    assert lines[2].lstrip().startswith(r'\-\--.')
+    assert 'Punishing the Poor' in lines[2]
+
+
+def test_plain_dash_marker_also_splits():
+    src = '# References' + chr(10) + chr(10) + 'Author, A. *One.* 2019. ---. *Two.* 2020.' + chr(10)
+    out = _split(src)
+    lines = [l for l in out.splitlines() if l.strip()]
+    assert len(lines) == 3
+    assert lines[2].startswith('---.')
+
+
+def test_body_prose_is_not_split():
+    '''Only the bibliography is touched; a dash run in prose stays put.'''
+    src = '# Introduction' + chr(10) + chr(10) + 'A sentence ---. and it continues here.' + chr(10)
+    assert _split(src) == src
+
+
+def test_entry_without_a_marker_is_untouched():
+    src = '# Works Cited' + chr(10) + chr(10) + 'Baker-Bell, April. *Linguistic Justice*. Routledge, 2020.' + chr(10)
+    assert _split(src) == src
+
+
+def test_several_markers_in_one_entry():
+    src = ('# Works Cited' + chr(10) + chr(10)
+           + 'Author, A. *One.* 2018. ---. *Two.* 2019. ---. *Three.* 2020.' + chr(10))
+    lines = [l for l in _split(src).splitlines() if l.strip()]
+    assert len(lines) == 4, lines
+
+
+def test_split_repeated_author_entries_is_idempotent():
+    src = ('# Works Cited' + chr(10) + chr(10)
+           + 'Author, A. *One.* 2018. ---. *Two.* 2019.' + chr(10))
+    once = _split(src)
+    assert _split(once) == once
