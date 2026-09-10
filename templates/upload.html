@@ -52,12 +52,14 @@
       <legend>Optional preprocessing</legend>
       <label>
         <input type="checkbox" name="preprocess_lo"
-               {% if not libreoffice_available %}disabled{% endif %} />
+               {% if libreoffice_available %}checked{% else %}disabled{% endif %} />
         Round-trip the DOCX through LibreOffice before ingest
         {% if libreoffice_available %}
-        <span class="dim">— flattens text boxes, cleans Word autoformat junk</span>
+        <span class="dim">— flattens text boxes so figure captions land beside
+          their images, and clears Word autoformat junk. On by default; uncheck
+          if a manuscript converts worse with it.</span>
         {% else %}
-        <span class="dim">— LibreOffice not detected on PATH; install <a href="https://www.libreoffice.org/" target="_blank">LibreOffice</a> to enable</span>
+        <span class="dim">— LibreOffice not detected on PATH; install <a href="https://www.libreoffice.org/" target="_blank">LibreOffice</a> to enable. Without it, captions held in Word text boxes may land far from their images.</span>
         {% endif %}
       </label>
     </fieldset>

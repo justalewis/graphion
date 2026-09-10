@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block title %}Figures | {{ article['title'] }}{% endblock %}
+{% block head %}
+<style>
+  .fig-intro { max-width: 60ch; color: var(--ink-soft); margin-bottom: var(--space-5); }
+
+  .fig-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: var(--space-5);
+    padding: var(--space-5) 0;
+    border-top: 1px solid var(--rule);
+    align-items: start;
+  }
+  .fig-row:last-of-type { border-bottom: 1px solid var(--rule); }
+
+  .fig-thumb {
+    background: var(--surface-sunk, #f3f3f0);
+    border: 1px solid var(--rule);
+    padding: var(--space-2);
+    text-align: center;
+  }
+  .fig-thumb img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+  .fig-thumb .missing {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--status-error-fg);
+    padding: var(--space-4) var(--space-2);
+    display: block;
+  }
+
+  .fig-n {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: var(--space-2);
+  }
+  .fig-path {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--ink-soft);
+    word-break: break-all;
+    margin-top: var(--space-2);
+  }
+  .fig-fields { display: grid; gap: var(--space-3); }
+  .fig-fields label { display: block; }
+  .fig-fields textarea { width: 100%; min-height: 4.5em; }
+  .fig-fields input[type="text"] { width: 16em; }
+  .help-text { display: block; color: var(--ink-soft); font-size: var(--text-xs); }
+
+  .fig-empty {
+    border: 1px dashed var(--rule);
+    padding: var(--space-6);
+    color: var(--ink-soft);
+    max-width: 60ch;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<nav class="breadcrumb">
+  <a href="{{ url_for('dashboard') }}">Dashboard</a> ›
+  <a href="{{ url_for('article_home', article_id=article['id']) }}">{{ article['slug'] }}</a> ›
+  Figures
+</nav>
+
+<h1>Figures</h1>
+
+<p class="fig-intro">
+  Every image in this article, in the order it appears. Captions are attached
+  automatically at ingest where Word left one nearby; correct anything that was
+  missed or mispaired here. The caption is also the image's alt text, so write
+  it to describe the image rather than just to number it.
+</p>
+
+{% if not figures %}
+  <p class="fig-empty">
+    No images found in this article. If the manuscript had figures, check the
+    conversion log on the article page: images inside Word text boxes sometimes
+    need the LibreOffice round-trip enabled at upload to come through.
+  </p>
+{% else %}
+<form method="post">
+  {% for fig in figures %}
+  <div class="fig-row">
+    <div class="fig-thumb">
+      {% if fig.exists and fig.asset_path %}
+        <img src="{{ url_for('serve_asset', article_id=article['id'], filename=fig.asset_path) }}"
+             alt="Figure {{ fig.n }} preview" />
+      {% elif not fig.exists %}
+        <span class="missing">file missing</span>
+      {% else %}
+        <span class="missing">not under assets/</span>
+      {% endif %}
+    </div>
+
+    <div>
+      <p class="fig-n">Figure {{ fig.n }}</p>
+      <div class="fig-fields">
+        <label>Caption and alt text
+          <textarea name="caption" rows="3">{{ fig.caption }}</textarea>
+          <span class="help-text">
+            Do not type "Figure {{ fig.n }}." here; the renderer numbers figures
+            in document order and adds that label itself.
+          </span>
+        </label>
+        <label>Cross-reference label
+          <input type="text" name="label" value="{{ fig.label }}" placeholder="{{ fig.n }}" />
+          <span class="help-text">
+            Refer to it in the body as <code>@fig:{{ fig.label or fig.n }}</code>,
+            which resolves to the figure's number.
+          </span>
+        </label>
+      </div>
+      <p class="fig-path">
+        {{ fig.path }}{% if fig.other_attrs %} · {{ fig.other_attrs }}{% endif %}
+      </p>
+    </div>
+  </div>
+  {% endfor %}
+
+  <p style="margin-top: var(--space-5)">
+    <button type="submit">Save figures</button>
+    <span class="help-text" style="display:inline">
+      Saves a snapshot first. Render the article afterwards to see the changes.
+    </span>
+  </p>
+</form>
+{% endif %}
+{% endblock %}

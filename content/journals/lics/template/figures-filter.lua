@@ -45,13 +45,38 @@ local function caption_inlines_from_figure(el)
 end
 
 
-local function prefix_inlines(number, original_inlines)
-  local out = pandoc.List({
-    pandoc.Str("Figure"),
-    pandoc.Space(),
-    pandoc.Str(tostring(number) .. ":"),
+-- The caption label, emitted per format so each output can style it.
+--
+-- Print convention is a letterspaced "FIGURE 1." followed by the caption in
+-- running text, so the label is marked up distinctly rather than left as
+-- plain words. HTML gets a span the stylesheet can reach; Typst gets the
+-- treatment inline, since Pandoc's Typst writer does not carry span classes
+-- through. Weight and tracking only, no font: that keeps this filter usable
+-- in a bundle whose template defines different faces.
+local function label_inlines(number)
+  local text = "Figure " .. tostring(number) .. "."
+  if FORMAT == "typst" then
+    return pandoc.List({
+      pandoc.RawInline(
+        "typst",
+        "#text(size: 8.5pt, tracking: 0.12em, weight: 600)[" ..
+          string.upper(text) .. "]"
+      ),
+      pandoc.Space(),
+    })
+  end
+  return pandoc.List({
+    pandoc.Span(
+      pandoc.Inlines({ pandoc.Str(text) }),
+      pandoc.Attr("", { "figure-label" })
+    ),
     pandoc.Space(),
   })
+end
+
+
+local function prefix_inlines(number, original_inlines)
+  local out = label_inlines(number)
   for _, inline in ipairs(original_inlines or {}) do
     out:insert(inline)
   end

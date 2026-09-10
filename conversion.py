@@ -16,6 +16,7 @@ import pypandoc
 
 import cleanups
 import db
+import preprocessors
 from config import CONTENT_DIR, VERSIONS_KEEP
 
 
@@ -194,6 +195,11 @@ def ingest_docx(
 
     has_tracked = _docx_has_tracked_changes(source_copy)
 
+    # Pandoc extracts the stored image but carries across the dimensions Word
+    # used for the *cropped* region, so anything cropped in Word arrives
+    # stretched. Crop the extracted files to match before anything renders.
+    crop_notes = preprocessors.apply_docx_image_crops(source_copy, assets)
+
     body = (
         f"pandoc version: {_pandoc_version()}\n"
         f"input: {source_copy.name}\n"
@@ -204,6 +210,8 @@ def ingest_docx(
         f"docx-title-detected: {docx_title or '(none)'}\n"
         f"elapsed: {dt:.2f}s\n"
     )
+    if crop_notes:
+        body += "image crops:\n" + "".join(f"  - {n}\n" for n in crop_notes)
     _append_log(article_path, "Stage 1: DOCX ingest", body)
 
     return IngestResult(raw_md_path=raw_md, log=body, has_tracked_changes=has_tracked)

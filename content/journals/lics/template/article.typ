@@ -226,6 +226,26 @@
   v(0.4em)
 }
 
+// Figures. The image sits centered with its caption below, separated by a
+// hairline rule, and the whole block is kept off a page break so an image can
+// never part from its caption.
+//
+// Typst's own figure numbering is switched off: figures-filter.lua has already
+// numbered them in document order and prefixed the caption with "FIGURE N.",
+// so leaving Typst's on would render "Figure 1: FIGURE 1. ...".
+#set figure(supplement: none, numbering: none, gap: 0pt)
+#show figure: it => block(breakable: false, width: 100%, {
+  set par(first-line-indent: 0pt, justify: false)
+  v(1em)
+  align(center, it.body)
+  v(0.6em)
+  line(length: 100%, stroke: 0.5pt + rule-color)
+  v(0.5em)
+  set par(justify: true)
+  text(size: 9pt, fill: ink-soft, it.caption)
+  v(1.1em)
+})
+
 // Links: subtle, ink color (no underline noise in print)
 #show link: it => text(fill: rgb("#5a3a1f"), it)
 

@@ -374,6 +374,40 @@ article p:has(> strong:only-child) > strong {
   color: var(--ink);
 }
 
+/* Figures. Image centered at its authored size, caption below and separated
+ * by a hairline rule, the whole block kept off a page break so an image never
+ * parts from its caption. Mirrors the Typst treatment. */
+figure {
+  margin: 2.25rem 0;
+  text-align: center;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+figure img {
+  max-width: 100%;
+  height: auto;
+}
+figure figcaption {
+  margin: 0.75rem 0 0;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  text-align: justify;
+  text-indent: 0;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+/* "FIGURE 1." set as a letterspaced label ahead of the caption proper. */
+figure figcaption .figure-label {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.9em;
+  font-weight: 600;
+  color: var(--ink);
+}
+
 /* Works cited (hanging indent). Closing rule below the entire list so
  * there's a visual separator before whatever follows (Notes section,
  * end of document). */

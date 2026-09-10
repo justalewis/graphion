@@ -288,7 +288,126 @@ def scan_docx_for_warnings(docx_path: Path) -> List[str]:
     return warnings
 
 
+# ---------- Word image crops ----------
+
+# Word records a crop as a fraction of each edge, in hundred-thousandths.
+_SRCRECT_EDGES = ("l", "t", "r", "b")
+
+
+def _docx_image_crops(docx_path: Path) -> dict:
+    """Map each embedded media filename to the crop Word displays it with.
+
+    Cropping an image in Word does not alter the stored file. Word keeps the
+    original and records an `a:srcRect` giving the fraction trimmed from each
+    edge, then sizes the *cropped* region on the page. Pandoc extracts the
+    uncropped file but carries the cropped dimensions across, so anything
+    cropped in Word arrives stretched to the wrong aspect ratio.
+
+    Returns ``{media_filename: (left, top, right, bottom)}`` as fractions of
+    the full image, including only images with a crop. A filename used more
+    than once with differing crops is omitted, since one stored file cannot
+    satisfy both; the caller warns instead of guessing.
+    """
+    import re
+    import zipfile
+    from collections import defaultdict
+
+    seen = defaultdict(set)
+    try:
+        with zipfile.ZipFile(docx_path) as z:
+            try:
+                rels = z.read("word/_rels/document.xml.rels").decode("utf-8", "replace")
+                document = z.read("word/document.xml").decode("utf-8", "replace")
+            except KeyError:
+                return {}
+    except Exception:
+        return {}
+
+    # relationship id -> media filename
+    targets = {
+        m.group(1): m.group(2).rsplit("/", 1)[-1]
+        for m in re.finditer(r'Id="([^"]+)"[^>]*Target="([^"]*media/[^"]+)"', rels)
+    }
+
+    # Each <pic:pic> holds both the relationship reference and its crop.
+    for pic in re.findall(r"<pic:pic\b.*?</pic:pic>", document, re.S):
+        embed = re.search(r'r:embed="([^"]+)"', pic)
+        if not embed:
+            continue
+        name = targets.get(embed.group(1))
+        if not name:
+            continue
+        rect = re.search(r"<a:srcRect\b([^/>]*)/?>", pic)
+        crop = (0.0, 0.0, 0.0, 0.0)
+        if rect:
+            attrs = rect.group(1)
+            values = []
+            for edge in _SRCRECT_EDGES:
+                m = re.search(rf'\b{edge}="(-?\d+)"', attrs)
+                values.append((int(m.group(1)) / 100000.0) if m else 0.0)
+            crop = tuple(values)
+        seen[name].add(crop)
+
+    out = {}
+    for name, crops in seen.items():
+        if len(crops) != 1:
+            continue
+        crop = next(iter(crops))
+        if any(v > 0 for v in crop):
+            out[name] = crop
+    return out
+
+
+def apply_docx_image_crops(docx_path: Path, assets_dir: Path) -> List[str]:
+    """Crop extracted media to the region Word actually displayed.
+
+    Rewrites each cropped file in place so the markdown reference, and the
+    width and height Pandoc copied from Word, all stay valid. Returns
+    human-readable notes for the conversion log.
+
+    Silently does nothing when Pillow is unavailable; an uncropped image is
+    a worse rendering, not a failed one.
+    """
+    crops = _docx_image_crops(docx_path)
+    if not crops:
+        return []
+    try:
+        from PIL import Image
+    except ImportError:
+        return [
+            f"{len(crops)} image(s) are cropped in Word, but Pillow is not "
+            "installed, so they will render uncropped and stretched."
+        ]
+
+    notes: List[str] = []
+    for name, (left, top, right, bottom) in crops.items():
+        matches = list(assets_dir.rglob(name))
+        if not matches:
+            continue
+        path = matches[0]
+        try:
+            with Image.open(path) as im:
+                w, h = im.size
+                box = (
+                    int(round(w * left)),
+                    int(round(h * top)),
+                    int(round(w * (1.0 - right))),
+                    int(round(h * (1.0 - bottom))),
+                )
+                if box[2] - box[0] < 1 or box[3] - box[1] < 1:
+                    continue
+                im.crop(box).save(path)
+            notes.append(
+                f"cropped {name} to the region Word displayed "
+                f"({w}x{h} -> {box[2] - box[0]}x{box[3] - box[1]})"
+            )
+        except Exception as exc:  # noqa: BLE001 - report, never fail ingest
+            notes.append(f"could not crop {name}: {type(exc).__name__}: {exc}")
+    return notes
+
+
 __all__ = [
+    "apply_docx_image_crops",
     "mammoth_available",
     "ingest_with_mammoth",
     "libreoffice_available",

@@ -1310,6 +1310,90 @@ def register_routes(app: Flask):
                 return redirect(url_for("article_home", article_id=article_id))
         return send_from_directory(apath, "article.epub", as_attachment=True)
 
+    # ---------- figures ----------
+
+    # A standalone image paragraph, which is what a DOCX drawing becomes.
+    _FIGURE_RE = re.compile(
+        r"^!\[(?P<caption>[^\]]*)\]\((?P<path>[^)]+)\)(?P<attrs>\{[^}]*\})?[ \t]*$",
+        re.MULTILINE,
+    )
+
+    def _figure_attrs_without_label(attrs: str) -> str:
+        return re.sub(r"#fig:[A-Za-z0-9_-]+\s*", "", attrs).strip()
+
+    @app.route("/articles/<int:article_id>/figures", methods=["GET", "POST"])
+    @login_required
+    def article_figures(article_id):
+        """Review every figure in the article in document order.
+
+        The caption-pairing cleanup pass attaches captions Word left adrift,
+        but it can only act on paragraphs that look like captions. Anything it
+        cannot reach, and anything it guessed wrongly, gets corrected here.
+
+        Note that in Pandoc markdown an image's caption text is also its alt
+        text, so one field serves both; write it to describe the image, not
+        merely to label it.
+        """
+        article = db.query_one(
+            "SELECT a.*, j.slug AS journal_slug, j.name AS journal_name "
+            "FROM articles a JOIN journals j ON a.journal_id = j.id WHERE a.id = ?",
+            (article_id,),
+        )
+        if not article:
+            abort(404)
+        apath = Path(article["project_path"])
+        fm, body = conversion.read_article_metadata(apath)
+
+        if request.method == "POST":
+            captions = request.form.getlist("caption")
+            labels = request.form.getlist("label")
+            counter = {"i": 0}
+
+            def _rewrite(m):
+                i = counter["i"]
+                counter["i"] += 1
+                caption = (
+                    captions[i] if i < len(captions) else m.group("caption")
+                ).strip()
+                label = (labels[i] if i < len(labels) else "").strip()
+                attrs = _figure_attrs_without_label((m.group("attrs") or "")[1:-1])
+                if label:
+                    if not label.startswith("#fig:"):
+                        label = f"#fig:{label}"
+                    attrs = f"{label} {attrs}".strip()
+                suffix = f"{{{attrs}}}" if attrs else ""
+                return f"![{caption}]({m.group('path')}){suffix}"
+
+            new_body = _FIGURE_RE.sub(_rewrite, body)
+            if new_body == body:
+                flash("No figure changes to save.", "info")
+            else:
+                conversion._snapshot_version(apath)
+                conversion.write_article_metadata(apath, fm, new_body)
+                flash(
+                    "Figures updated and snapshotted. Render to apply.", "success"
+                )
+            return redirect(url_for("article_figures", article_id=article_id))
+
+        figures = []
+        for n, m in enumerate(_FIGURE_RE.finditer(body), 1):
+            path = m.group("path")
+            attrs = (m.group("attrs") or "")[1:-1]
+            label_match = re.search(r"#fig:([A-Za-z0-9_-]+)", attrs)
+            # serve_asset is rooted at the article's assets/ directory.
+            relative = path[len("assets/"):] if path.startswith("assets/") else None
+            figures.append({
+                "n": n,
+                "caption": m.group("caption"),
+                "path": path,
+                "asset_path": relative,
+                "label": label_match.group(1) if label_match else "",
+                "other_attrs": _figure_attrs_without_label(attrs),
+                "exists": (apath / path).exists(),
+            })
+
+        return render_template("figures.html", article=article, figures=figures)
+
     @app.route("/articles/<int:article_id>/assets/<path:filename>")
     @login_required
     def serve_asset(article_id, filename):

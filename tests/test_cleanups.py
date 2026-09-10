@@ -211,3 +211,124 @@ def test_author_with_hyphenated_name():
     out, _ = cleanups.run_all(src)
     assert "name: Jenny Sano-Franchini" in out
     assert "affiliation: Virginia Tech" in out
+
+
+# ---------- pair_figure_captions ----------
+
+def _pair(src: str) -> str:
+    log = cleanups.CleanupLog()
+    return cleanups.pair_figure_captions(src, log)
+
+
+def test_caption_above_image_is_attached():
+    """The sample article keeps its caption in a text box, which Pandoc emits
+    as a paragraph before the image rather than after it."""
+    src = (
+        "Body text mentioning Figure 1 in passing.\n"
+        "\n"
+        "Figure 1. Flowchart showing the capital appeals process.\n"
+        "\n"
+        "![](assets/media/image1.png){width=\"2.75in\"}\n"
+        "\n"
+        "Following body text.\n"
+    )
+    out = _pair(src)
+    assert '![Flowchart showing the capital appeals process.]' in out
+    assert "#fig:1" in out
+    assert 'width="2.75in"' in out
+    # The caption paragraph is consumed, not duplicated.
+    assert out.count("Flowchart showing") == 1
+    assert "Figure 1. Flowchart" not in out
+    # Prose that merely mentions a figure is untouched.
+    assert "Body text mentioning Figure 1 in passing." in out
+
+
+def test_caption_below_image_is_attached():
+    src = (
+        "![](assets/fig.png)\n"
+        "\n"
+        "Figure 2: A chart of results.\n"
+    )
+    out = _pair(src)
+    assert "![A chart of results.](assets/fig.png){#fig:2}" in out
+
+
+def test_caption_after_wins_ties_with_caption_before():
+    src = (
+        "Figure 1. The one before.\n"
+        "\n"
+        "![](assets/fig.png)\n"
+        "\n"
+        "Figure 2. The one after.\n"
+    )
+    out = _pair(src)
+    assert "![The one after.](assets/fig.png){#fig:2}" in out
+    assert "Figure 1. The one before." in out
+
+
+def test_already_captioned_image_untouched():
+    src = "![An existing caption.](assets/fig.png){#fig:1}\n\n Figure 9. Not mine.\n"
+    assert _pair(src) == src
+
+
+def test_search_stops_at_a_heading():
+    """A caption on the far side of a section break belongs to that section."""
+    src = (
+        "![](assets/fig.png)\n"
+        "\n"
+        "# Next Section\n"
+        "\n"
+        "Figure 7. Belongs to a figure further down.\n"
+    )
+    out = _pair(src)
+    assert "![](assets/fig.png)" in out
+    assert "Figure 7. Belongs to a figure further down." in out
+
+
+def test_caption_survives_intervening_list_paragraphs():
+    """The sample article separates caption and image by four list items."""
+    src = (
+        "Figure 1. Flowchart of the appeals process.\n"
+        "\n"
+        "1) Trial. Four days.\n"
+        "\n"
+        "2) Direct appeal.\n"
+        "\n"
+        "3) Post conviction relief.\n"
+        "\n"
+        "4) Federal habeas corpus.\n"
+        "\n"
+        "![](assets/media/image1.png)\n"
+    )
+    out = _pair(src)
+    assert "![Flowchart of the appeals process.](assets/media/image1.png){#fig:1}" in out
+    assert "1) Trial. Four days." in out
+
+
+def test_caption_beyond_the_backstop_is_left_alone():
+    src = (
+        "![](assets/fig.png)\n\n"
+        + "".join(f"Filler {n}.\n\n" for n in range(1, 10))
+        + "Figure 7. Too far away to belong to it.\n"
+    )
+    out = _pair(src)
+    assert "![](assets/fig.png)" in out
+    assert "Figure 7. Too far away" in out
+
+
+def test_pair_figure_captions_is_idempotent():
+    src = (
+        "Figure 1. Flowchart showing the capital appeals process.\n"
+        "\n"
+        "![](assets/media/image1.png){width=\"2.75in\"}\n"
+        "\n"
+        "Body.\n"
+    )
+    once = _pair(src)
+    assert _pair(once) == once
+
+
+def test_blank_line_runs_are_preserved():
+    """The pass rejoins paragraphs, so it must not reflow spacing elsewhere."""
+    src = "Alpha.\n\n\nBeta.\n\n\n\nGamma.\n"
+    assert _pair(src) == src

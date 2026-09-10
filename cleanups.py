@@ -886,6 +886,136 @@ def build_yaml_front_matter(text: str, log: CleanupLog, issue_metadata: Optional
 
 Pass = Callable[[str, CleanupLog], str]
 
+# A paragraph consisting of nothing but an image, which is how Pandoc emits a
+# DOCX drawing. `alt` is captured so we can tell an already-captioned figure
+# from a bare one.
+_FIG_IMAGE_RE = re.compile(
+    r"^!\[(?P<alt>[^\]]*)\]\((?P<path>[^)]+)\)(?P<attrs>\{[^}]*\})?$"
+)
+
+# A paragraph that opens like a caption. Anchored at the start so prose that
+# merely mentions "Figure 1" partway through a sentence is not mistaken for
+# one. Word's caption punctuation varies, hence the character class.
+_FIG_CAPTION_RE = re.compile(
+    r"^(?:\*\*)?(?P<kind>Figure|Fig\.|Table|Chart|Image)\s*(?P<num>\d+)(?:\*\*)?"
+    r"\s*[.:\-–—]?\s+(?P<text>\S.*)$",
+    re.IGNORECASE | re.DOTALL,
+)
+
+# A markdown heading, which bounds the search below.
+_FIG_HEADING_RE = re.compile(r"^#{1,6}\s")
+
+# Outer limit on how far either side of an image to look for its caption. The
+# search normally stops earlier, at a heading or another image; this is only a
+# backstop for long unbroken runs of prose. The sample article that prompted
+# this pass separates caption from image by four list paragraphs.
+_CAPTION_SEARCH_RADIUS = 8
+
+
+def pair_figure_captions(text: str, log: CleanupLog) -> str:
+    r"""Attach orphaned "Figure N." paragraphs to the images they describe.
+
+    Word keeps captions in their own paragraphs, and frequently inside text
+    boxes, so Pandoc emits them as ordinary prose some distance from the
+    image rather than as a caption. The image itself arrives as a bare
+    ``![](path)`` carrying no alt text, which means no ``<figure>`` element,
+    no auto-numbering, and nothing for ``@fig:`` to point at.
+
+    This pass pairs each uncaptioned image with the nearest caption-shaped
+    paragraph and rewrites the two into the single form that
+    ``figures-filter.lua`` expects::
+
+        ![Flowchart of the appeals process.](assets/media/image1.png){#fig:1}
+
+    The leading "Figure 1." is dropped from the caption text: the filter
+    numbers figures in document order and supplies its own label, so keeping
+    it would render "Figure 1: Figure 1. Flowchart ...".
+
+    A caption following the image wins over one the same distance before it,
+    since that is the commoner arrangement; the sample article that prompted
+    this has the caption above, which is why both directions are searched.
+
+    Idempotent. An image that already carries caption text is left alone,
+    and a paired caption paragraph is consumed, so a second run finds
+    nothing to do.
+    """
+    # Split into paragraphs while keeping the exact separators, so rejoining
+    # cannot silently reflow blank-line runs elsewhere in the document.
+    parts = re.split(r"(\n{2,})", text)
+    paras = parts[0::2]
+    seps = parts[1::2]
+
+    image_positions = []
+    for i, para in enumerate(paras):
+        m = _FIG_IMAGE_RE.match(para.strip())
+        if m and not m.group("alt").strip():
+            image_positions.append(i)
+
+    if not image_positions:
+        log.record("pair_figure_captions", 0)
+        return text
+
+    image_set = set(image_positions)
+    consumed: set[int] = set()
+    count = 0
+
+    def scan(origin: int, step: int):
+        """Walk outward from an image looking for a caption paragraph.
+
+        Stops at a heading or another image rather than at a fixed distance:
+        a caption belongs to the figure sharing its run of content, however
+        many list items or paragraphs Word happened to leave between them.
+        """
+        j = origin + step
+        while 0 <= j < len(paras) and abs(j - origin) <= _CAPTION_SEARCH_RADIUS:
+            para = paras[j].strip()
+            if _FIG_HEADING_RE.match(para) or j in image_set:
+                return None
+            if j not in consumed:
+                cm = _FIG_CAPTION_RE.match(para)
+                if cm:
+                    return (j, cm)
+            j += step
+        return None
+
+    for i in image_positions:
+        m = _FIG_IMAGE_RE.match(paras[i].strip())
+        after = scan(i, 1)
+        before = scan(i, -1)
+        if after and before:
+            # A caption below the figure wins a tie; that is the commoner
+            # arrangement, though this sample keeps it above.
+            found = after if (after[0] - i) <= (i - before[0]) else before
+        else:
+            found = after or before
+        if not found:
+            continue
+
+        j, cm = found
+        consumed.add(j)
+        caption = " ".join(cm.group("text").split())
+        attrs = m.group("attrs") or ""
+        inner = attrs[1:-1].strip() if attrs else ""
+        if "#fig:" not in inner:
+            inner = f"#fig:{cm.group('num')} {inner}".strip()
+        paras[i] = f"![{caption}]({m.group('path')}){{{inner}}}"
+        count += 1
+
+    if not count:
+        log.record("pair_figure_captions", 0)
+        return text
+
+    kept = [i for i in range(len(paras)) if i not in consumed]
+    chunks: List[str] = []
+    for position, i in enumerate(kept):
+        chunks.append(paras[i])
+        if position < len(kept) - 1:
+            chunks.append(seps[i] if i < len(seps) else "\n\n")
+
+    log.record("pair_figure_captions", count, "caption paragraphs attached to images")
+    return "".join(chunks)
+
+
 DEFAULT_PASSES: List[Pass] = [
     strip_highlighter_spans,
     strip_underline_spans,
@@ -901,6 +1031,9 @@ DEFAULT_PASSES: List[Pass] = [
     repair_pandoc_bold_escape,
     normalize_smart_quotes,
     unfragment_works_cited,
+    # Runs last so caption text has already had its dashes and quotes
+    # normalized before it is folded into the image.
+    pair_figure_captions,
 ]
 
 
