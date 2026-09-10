@@ -541,12 +541,30 @@ def _ensure_works_cited_heading(text: str) -> str:
 # Strong signals that a paragraph IS the start of a new citation entry.
 # Anything not matching these (and following a paragraph that doesn't end
 # in clear terminal punctuation) is treated as a continuation.
+# An organisational author: a run of words, the first capitalised and the rest
+# either capitalised or function words, closed by a period and followed
+# immediately by a title. This is what "Cornell Law School. "Dissent."" and
+# "Project Hope to Abolish the Death Penalty, and Katie Owens-Murphy. "Choose
+# Your Own Homicide."" look like, and neither has the `Surname, First` shape
+# every other pattern here keys on.
+#
+# The trailing title is what makes it safe. A wrapped continuation line can
+# begin with capitalised words, but it does not then close a sentence and open
+# a quoted or italicised title; "Culture, and Theory*, vol. 4" and "Mar. 2024,
+# pp. 57-81" both fail on that requirement.
+_ORG_AUTHOR = (
+    r"[A-Z][\w'’\-]*"
+    r"(?:,?\s+(?:[A-Z][\w'’\-]*|of|the|to|and|for|in|on|a|an))+"
+    r"\.\s+[\"“*]"
+)
+
 _NEW_ENTRY_RE = re.compile(
     r"^\s*("
     r"---\.|—\.|--\."                                              # MLA same-author dash
     r"|\"[A-Z]|“[A-Z]|'[A-Z]|‘[A-Z]"                     # Quoted title (anonymous works)
     r"|[A-Z][\w'\-]+,\s+[A-Z]"                                     # `Surname, First` (most MLA)
     r"|[A-Z][\w'\-]+\s+[A-Z][\w'\-]+,\s+[A-Z]"                     # `Two-word Surname, First`
+    r"|" + _ORG_AUTHOR +                                           # `Cornell Law School. "Title."`
     r"|\*[A-Z]"                                                    # *Italic title* (title-led entry; ambiguous, see check below)
     r")"
 )

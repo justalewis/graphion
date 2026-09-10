@@ -599,3 +599,59 @@ def test_split_repeated_author_entries_is_idempotent():
            + 'Author, A. *One.* 2018. ---. *Two.* 2019.' + chr(10))
     once = _split(src)
     assert _split(once) == once
+
+
+# ---------- organisational authors in the bibliography ----------
+
+def test_org_author_starts_a_new_entry():
+    '''An organisation as author has no Surname, First shape, so the merge
+    that reassembles wrapped citations used to glue it onto the entry above.'''
+    for line in (
+        'Cornell Law School. "Dissent." *Legal Information Institute*, Sept. 2022.',
+        'Project Hope to Abolish the Death Penalty, and Katie Owens-Murphy. "Choose Your Own Homicide."',
+        'Death Penalty Information Center. *Facts About the Death Penalty*, 2026.',
+    ):
+        assert cleanups._NEW_ENTRY_RE.match(line), line
+
+
+def test_wrapped_continuation_is_not_mistaken_for_an_entry():
+    '''The trailing title is what makes the organisation pattern safe: a
+    continuation line can start with capitals but does not close a sentence
+    and open a quoted or italicised title.'''
+    for line in (
+        'Culture, and Theory*, vol. 4, no. 1, 2004, pp. 62-75.',
+        'Mar. 2024, pp. 57-81, https://doi.org/10.1353/arq.2024.a921517.',
+        'vol. 132, no. 6, 2019, pp. 1684-694.',
+        'Communication*, vol. 51, no. 3, 2000, pp. 447-68.',
+        'and a Road to Repair*. The New Press, 2019.',
+        'Reprinted 1988.',
+    ):
+        assert not cleanups._NEW_ENTRY_RE.match(line), line
+
+
+def test_org_author_entry_is_not_merged_into_the_one_above():
+    """Word leaves each citation as its own paragraph; the merge pass decides
+    which of them are wrapped continuations. An organisational author was
+    being read as a continuation and absorbed."""
+    src = (
+        '# Works Cited' + chr(10) + chr(10)
+        + 'Cholbi, Michael, and Alex Madva. "Black Lives Matter." *Ethics*, 2018.' + chr(10) + chr(10)
+        + 'Cornell Law School. "Dissent." *LII*, Sept. 2022.' + chr(10)
+    )
+    out = cleanups.unfragment_works_cited(src, _log())
+    entries = [p for p in out.split(chr(10) + chr(10)) if p.strip() and not p.startswith('#')]
+    assert len(entries) == 2, entries
+    assert entries[1].strip().startswith('Cornell Law School.')
+
+
+def test_genuine_continuation_is_still_merged():
+    """The pass must keep doing its original job."""
+    src = (
+        '# Works Cited' + chr(10) + chr(10)
+        + 'Kerr, Tom. "Between Ivy and Razor Wire." *Reflections*,' + chr(10) + chr(10)
+        + 'vol. 4, no. 1, 2004, pp. 62-75.' + chr(10)
+    )
+    out = cleanups.unfragment_works_cited(src, _log())
+    entries = [p for p in out.split(chr(10) + chr(10)) if p.strip() and not p.startswith('#')]
+    assert len(entries) == 1, entries
+    assert 'pp. 62-75' in entries[0]
