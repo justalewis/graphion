@@ -9,15 +9,34 @@ DATA_DIR="${GRAPHION_DATA_DIR:-$VOLUME_ROOT/data}"
 mkdir -p "$CONTENT_DIR" "$DATA_DIR" "$VOLUME_ROOT/backups"
 
 # ---------------------------------------------------------------- volume seed
-# -n never clobbers. Template files added in git arrive as new files on the next
-# deploy, while anything already on the volume survives: edited templates, and
-# the wordmarks the Journal Settings page writes into template/assets/.
-#
-# The trade-off is that a *modified* committed template will not overwrite the
-# volume copy. To take those updates, see "Refreshing templates" in
-# docs/deployment.md.
+# Article and issue content is data: it lives on the volume and is seeded
+# no-clobber, so nothing an editor has produced is ever overwritten.
 echo "[entrypoint] seeding $CONTENT_DIR from image (no-clobber)"
 cp -rn /app/content-seed/. "$CONTENT_DIR/" 2>/dev/null || true
+
+# Per-journal template bundles are source rather than data: they are versioned
+# in git and shipped in the image, so they are refreshed on every boot. Seeding
+# them no-clobber like the rest meant a *modified* template never reached the
+# volume, and a deploy carrying template changes silently rendered exactly as
+# before, which is a difficult failure to spot from the outside.
+#
+# template/assets/ is the exception. The Journal Settings page writes uploaded
+# wordmarks there, so that directory stays volume-owned and no-clobber.
+#
+# A template edited directly on the volume is therefore replaced on the next
+# deploy. Edit the bundle in git, which is where it is versioned and backed up.
+for seed_template in /app/content-seed/journals/*/template; do
+  [ -d "$seed_template" ] || continue
+  slug=$(basename "$(dirname "$seed_template")")
+  destination="$CONTENT_DIR/journals/$slug/template"
+  mkdir -p "$destination"
+  find "$seed_template" -maxdepth 1 -type f -exec cp -f {} "$destination/" \;
+  if [ -d "$seed_template/assets" ]; then
+    mkdir -p "$destination/assets"
+    cp -rn "$seed_template/assets/." "$destination/assets/" 2>/dev/null || true
+  fi
+  echo "[entrypoint] refreshed template bundle: $slug"
+done
 
 # ----------------------------------------------------------------- the tunnel
 # Optional, and unset by default: this app is served publicly through Fly.

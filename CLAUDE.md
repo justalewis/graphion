@@ -153,6 +153,13 @@ this). A CRLF shebang makes the container fail to start.
 already tracks, so a pattern that is harmless in one can silently drop a
 committed source file from the build context in the other.
 
+**The volume holds two kinds of thing.** `deploy/entrypoint.sh` refreshes
+per-journal template bundles from the image on every boot, because they are
+versioned source; it seeds article and issue content no-clobber, because that is
+data an editor produced. `template/assets/` is volume-owned so uploaded
+wordmarks survive. A template edited on the volume is replaced by the next
+deploy; edit it in git.
+
 ## Committing
 
 The remote is `https://github.com/justalewis/graphion.git`. Work is only portable

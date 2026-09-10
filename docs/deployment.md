@@ -209,21 +209,28 @@ rclone copy b2:graphion-backups/graphion-STAMP.tar.gz /tmp/ && tar -xzf /tmp/gra
 The archive's internal layout (`content/`, `data/graphion.db`) matches the volume
 layout at `/data`.
 
-## Refreshing templates
+## What a deploy does and does not overwrite
 
-The entrypoint seeds `/data/content` from the image with `cp -rn`, which never
-clobbers. That protects template edits and the wordmarks the Journal Settings
-page writes into `template/assets/`.
+The entrypoint treats the volume as two different kinds of thing.
 
-The trade-off: a **modified** committed template will not overwrite the copy
-already on the volume. New files land automatically; changed ones do not. To take
-an updated template deliberately:
+**Article and issue content is data.** Everything under
+`content/journals/*/issues/` is seeded no-clobber, so nothing an editor has
+produced is ever overwritten by a deploy.
 
-```bash
-fly ssh console -C "cp /app/content-seed/journals/lics/template/article.typ /data/content/journals/lics/template/article.typ"
-```
+**Per-journal template bundles are source.** They are versioned in git and
+shipped in the image, so they are refreshed from it on every boot. A deploy
+carrying template changes therefore changes what renders, with no follow-up
+step.
 
-Back up first if the volume copy holds edits worth keeping.
+The one exception is `template/assets/`, which stays volume-owned: the Journal
+Settings page writes uploaded wordmarks there, and a deploy must not discard
+them.
+
+This means **a template edited directly on the volume is replaced on the next
+deploy.** Edit the bundle in git, where it is versioned and backed up, and let
+the deploy carry it. Seeding templates no-clobber was the earlier behaviour, and
+it meant a modified template never reached the volume: the deploy succeeded, the
+galley rendered exactly as before, and nothing said why.
 
 ## Optional: put Cloudflare Access in front
 
