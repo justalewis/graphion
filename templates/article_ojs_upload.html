@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Push to OJS — {{ article['title'] }}{% endblock %}
+
+{% block content %}
+<section class="prose">
+  <p><a class="button ghost small" href="{{ url_for('article_home', article_id=article['id']) }}">&larr; Back to article</a></p>
+
+  <h1>Push to OJS</h1>
+  <p class="help-text">
+    Attaches a rendered galley to an existing submission in
+    <a href="{{ journal['ojs_url'] }}" target="_blank" rel="noopener">{{ journal['ojs_url'] }}</a>.
+    Graphion doesn't create submissions — do that in the OJS editor first, then paste the
+    submission id here. It's in the URL after <code>/submission/</code>.
+  </p>
+
+  {% if not available %}
+    <p class="help-text" style="border-left: 3px solid #b54e2c; padding-left: 0.75rem;">
+      No rendered galley files were found for this article. Render at least one of HTML, PDF, or EPUB
+      before pushing.
+    </p>
+  {% else %}
+    <form method="post" class="stack">
+      <div class="field-grid">
+        <label class="full">OJS submission ID
+          <input type="number" name="submission_id" min="1" required
+                 placeholder="e.g. 123"
+                 {% if submissions %}list="ojs-submissions"{% endif %} />
+          {% if submissions %}
+            <datalist id="ojs-submissions">
+              {% for s in submissions %}
+                <option value="{{ s.id }}">{{ s.title }}</option>
+              {% endfor %}
+            </datalist>
+            <span class="help-text">Suggestions are pulled live from OJS; you can also type an id.</span>
+          {% else %}
+            <span class="help-text">Open the submission in OJS; the id is the number in the URL.</span>
+          {% endif %}
+        </label>
+
+        <label class="full">Galley to upload
+          <select name="galley_kind" required>
+            {% for key, label in available %}
+              <option value="{{ key }}">{{ label }}</option>
+            {% endfor %}
+          </select>
+          <span class="help-text">
+            OJS ZIP bundles the standalone HTML + CSS + assets/ into a single .zip. Useful only if
+            your OJS install has a galley plugin that extracts them; otherwise upload the plain HTML
+            and add images as dependent files inside OJS.
+          </span>
+        </label>
+
+        <label>Galley label (shown in OJS)
+          <input type="text" name="label" placeholder="PDF" />
+          <span class="help-text">Optional. Defaults to the file type — PDF, HTML, or EPUB.</span>
+        </label>
+        <label>Locale
+          <input type="text" name="locale" value="en" />
+          <span class="help-text">BCP-47. Almost always <code>en</code>.</span>
+        </label>
+      </div>
+
+      <div>
+        <button type="submit">Upload to OJS</button>
+        <a class="button ghost" href="{{ url_for('article_home', article_id=article['id']) }}">Cancel</a>
+      </div>
+    </form>
+  {% endif %}
+</section>
+{% endblock %}

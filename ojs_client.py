@@ -1,43 +1,51 @@
-"""Lightweight OJS REST API client for galley submission.
+"""OJS 3.4 REST-API client for galley submission.
 
-OJS 3.3+ exposes a REST API (`/api/v1/...`). This client posts a
-rendered galley package to an OJS submission. Requires:
-  - the OJS site URL (with /index.php/<journal_slug>/api/v1)
-  - an API token (generated in the user's OJS profile)
-  - the submission id (created in OJS UI; Graphion attaches galley to it)
+Two-step upload flow that mirrors what OJS's own editor UI does:
 
-The token and URL live in journal settings (or env vars) since they're
-per-journal. This client only handles galley upload; the submission
-itself must already exist in OJS.
+  1. POST {base}/temporaryFiles with the file — returns a
+     `temporaryFileId` that OJS holds in staging until it's bound to
+     a submission file record.
+  2. POST {base}/submissions/{sid}/publications/{pid}/galleys with
+     the temporaryFileId + label + locale — OJS creates the galley on
+     the current publication and attaches the staged file to it.
 
-Note: OJS's REST API surface is still evolving; specific endpoints can
-shift between versions. This is a thin wrapper that aims to be obvious
-to patch when needed.
+The publication id (`pid`) is not in the article's URL in OJS; the
+editor UI resolves it from the submission's `currentPublicationId`,
+which is what this client does too.
+
+The token is a personal API key generated from the OJS user profile.
+It is passed as `Authorization: Bearer <token>` on every request.
+Both the API base URL and the token live in the journal row so they
+travel with the journal across deployments; env vars override the DB
+so a per-deployment key is easy.
+
+The OJS REST surface still shifts between minor versions. Errors are
+re-raised with the response body preserved so the UI can show what
+OJS actually said, which is the fastest way to diagnose a version
+mismatch.
 """
 from __future__ import annotations
 
 import os
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Any, Dict, List, Optional
 
 
 def _requests():
-    """Defer the requests import so the module loads without it (we
-    technically have it as a hard dep, but be defensive)."""
     import requests
     return requests
 
 
 def _config_from_journal(journal: Dict) -> Dict[str, Optional[str]]:
-    """Pull OJS config from a journal row. Env vars override DB fields,
-    so per-deployment overrides are easy.
+    """Assemble the effective OJS config for a journal row. Env vars win
+    over stored fields so an operator can override without editing DB.
     """
     return {
         "url": os.environ.get("OJS_URL") or journal.get("ojs_url"),
         "token": os.environ.get("OJS_API_TOKEN") or journal.get("ojs_api_token"),
         "context_id": (
             os.environ.get("OJS_CONTEXT_ID")
-            or str(journal.get("ojs_context_id") or "")
+            or (str(journal.get("ojs_context_id")) if journal.get("ojs_context_id") else None)
         ),
     }
 
@@ -47,23 +55,7 @@ def ojs_configured(journal: Dict) -> bool:
     return bool(cfg["url"] and cfg["token"])
 
 
-def upload_galley(
-    journal: Dict,
-    submission_id: int,
-    galley_label: str,
-    galley_locale: str,
-    file_path: Path,
-) -> Dict:
-    """Upload a galley file to an existing OJS submission.
-
-    Returns the OJS response body (parsed JSON) on success. Raises
-    Exception with the OJS error message on failure.
-
-    `galley_label`: free text shown in OJS, e.g., "HTML" or "PDF".
-    `galley_locale`: BCP-47 code, e.g., "en_US" or "en".
-    `file_path`: local path to the file to upload (HTML, PDF, EPUB,
-        ZIP — OJS accepts whatever you send).
-    """
+def _base_and_headers(journal: Dict) -> tuple[str, dict]:
     cfg = _config_from_journal(journal)
     if not cfg["url"] or not cfg["token"]:
         raise RuntimeError(
@@ -71,63 +63,112 @@ def upload_galley(
             "OJS_API_TOKEN env vars, or fill the OJS fields in Journal "
             "Settings."
         )
-    requests = _requests()
-    base = cfg["url"].rstrip("/")
-    headers = {"Authorization": f"Bearer {cfg['token']}"}
+    return cfg["url"].rstrip("/"), {"Authorization": f"Bearer {cfg['token']}"}
 
-    # Step 1: upload the file to OJS's temporary file store. The API
-    # returns a temporaryFileId we then bind to a galley.
-    with open(file_path, "rb") as f:
-        files = {"file": (file_path.name, f)}
+
+def _describe(response) -> str:
+    """A compact one-line summary of an OJS response for error text."""
+    body = response.text[:600] if response.text else ""
+    return f"{response.status_code} {response.reason} — {body}".strip()
+
+
+def upload_galley(
+    journal: Dict,
+    submission_id: int,
+    galley_label: str,
+    galley_locale: str,
+    file_path: Path,
+) -> Dict[str, Any]:
+    """Upload one file as a galley on the submission's current publication.
+
+    `galley_label`: shown to readers, e.g. "PDF", "HTML", "EPUB".
+    `galley_locale`: BCP-47 code as OJS expects it — usually "en".
+    `file_path`: any file OJS accepts; the label communicates the format.
+    """
+    requests = _requests()
+    base, headers = _base_and_headers(journal)
+
+    # 1. Stage the file in OJS's temporaryFiles store.
+    with open(file_path, "rb") as fh:
         r = requests.post(
-            f"{base}/_uploadPublicFile", headers=headers, files=files, timeout=120,
+            f"{base}/temporaryFiles",
+            headers=headers,
+            files={"file": (file_path.name, fh)},
+            timeout=180,
         )
     if r.status_code >= 400:
-        raise RuntimeError(f"OJS file upload failed: {r.status_code} {r.text[:300]}")
-    upload_resp = r.json()
-    temp_id = upload_resp.get("temporaryFileId") or upload_resp.get("id")
+        raise RuntimeError(f"OJS temporaryFiles upload failed: {_describe(r)}")
+    staged = r.json() if r.text else {}
+    temp_id = staged.get("id") or staged.get("temporaryFileId")
     if not temp_id:
-        raise RuntimeError(f"OJS upload returned no temporaryFileId: {upload_resp}")
+        raise RuntimeError(f"OJS temporaryFiles returned no id: {staged!r}")
 
-    # Step 2: create the galley + attach the file.
+    # 2. Look up the submission's current publication id — galleys live
+    #    on publications, not on the submission directly.
+    r = requests.get(f"{base}/submissions/{submission_id}", headers=headers, timeout=30)
+    if r.status_code >= 400:
+        raise RuntimeError(
+            f"OJS submission {submission_id} lookup failed: {_describe(r)}"
+        )
+    submission = r.json()
+    publication_id = submission.get("currentPublicationId")
+    if not publication_id:
+        # Fall back to the last entry in the publications list, which is
+        # what the editor UI does when currentPublicationId is unset on
+        # a very new submission.
+        pubs = submission.get("publications") or []
+        if pubs:
+            publication_id = pubs[-1].get("id")
+    if not publication_id:
+        raise RuntimeError(
+            f"OJS submission {submission_id} has no publication to attach the galley to."
+        )
+
+    # 3. Create the galley + bind the staged file in one call.
     payload = {
         "label": galley_label,
         "locale": galley_locale,
         "temporaryFileId": temp_id,
-        "submissionFileType": "submissionGalley",
     }
     r = requests.post(
-        f"{base}/submissions/{submission_id}/galleys",
-        headers=headers, json=payload, timeout=120,
+        f"{base}/submissions/{submission_id}/publications/{publication_id}/galleys",
+        headers=headers,
+        json=payload,
+        timeout=180,
     )
     if r.status_code >= 400:
-        raise RuntimeError(f"OJS galley create failed: {r.status_code} {r.text[:300]}")
-    return r.json()
+        raise RuntimeError(f"OJS galley create failed: {_describe(r)}")
+    return r.json() if r.text else {}
 
 
-def list_submissions(journal: Dict) -> list:
-    """Return a list of submissions on the configured OJS journal,
-    each with id + title. For populating a "pick submission" dropdown.
+def list_submissions(journal: Dict) -> List[Dict[str, Any]]:
+    """List submissions on the configured journal for a picker dropdown.
+
+    Returns [] on any error rather than raising, because the picker is a
+    convenience: the upload form still accepts a submission id typed by
+    hand when this returns nothing.
     """
-    cfg = _config_from_journal(journal)
-    if not cfg["url"] or not cfg["token"]:
-        return []
     requests = _requests()
-    base = cfg["url"].rstrip("/")
-    headers = {"Authorization": f"Bearer {cfg['token']}"}
-    r = requests.get(f"{base}/submissions", headers=headers, timeout=30)
+    try:
+        base, headers = _base_and_headers(journal)
+    except RuntimeError:
+        return []
+    try:
+        r = requests.get(f"{base}/submissions", headers=headers, timeout=30)
+    except Exception:
+        return []
     if r.status_code >= 400:
         return []
-    body = r.json()
+    body = r.json() if r.text else {}
     items = body.get("items", []) if isinstance(body, dict) else body
-    out = []
-    for s in items:
+    out: List[Dict[str, Any]] = []
+    for s in items or []:
         title = ""
-        if isinstance(s.get("publications"), list) and s["publications"]:
-            pub = s["publications"][0]
-            title_obj = pub.get("fullTitle", {}) or pub.get("title", {})
+        pubs = s.get("publications") if isinstance(s, dict) else None
+        if isinstance(pubs, list) and pubs:
+            title_obj = pubs[0].get("fullTitle") or pubs[0].get("title") or {}
             if isinstance(title_obj, dict):
-                title = next(iter(title_obj.values()), "") if title_obj else ""
+                title = next(iter(title_obj.values()), "") or ""
             else:
                 title = str(title_obj)
         out.append({"id": s.get("id"), "title": title or f"Submission {s.get('id')}"})

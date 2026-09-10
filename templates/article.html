@@ -148,6 +148,7 @@
             {% if rendered_html %}
             <div class="menu-sep"></div>
             <div class="menu-section">For OJS submission</div>
+            <a href="{{ url_for('article_ojs_upload', article_id=article['id']) }}">Push to OJS…</a>
             <a href="{{ url_for('article_ojs_package', article_id=article['id']) }}">OJS package (ZIP)</a>
             {% endif %}
             {% if stats.weasy_pdf_exists %}

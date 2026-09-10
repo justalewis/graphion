@@ -23,6 +23,7 @@ import crossref
 import db
 import jats
 import lint
+import ojs_client
 from auth import User, login_manager
 from config import (
     ALLOWED_UPLOAD_EXTENSIONS, CONTENT_DIR, LOGIN_MAX_ATTEMPTS,
@@ -240,6 +241,9 @@ def register_routes(app: Flask):
                 "crossref_prefix": request.form.get("crossref_prefix", "").strip() or None,
                 "crossref_member_id": request.form.get("crossref_member_id", "").strip() or None,
                 "citation_style": citation_style,
+                "ojs_url": request.form.get("ojs_url", "").strip() or None,
+                "ojs_api_token": request.form.get("ojs_api_token", "").strip() or None,
+                "ojs_context_id": request.form.get("ojs_context_id", "").strip() or None,
             }
             updates = ", ".join(f"{k} = ?" for k in fields)
             db.execute(
@@ -2078,6 +2082,145 @@ def register_routes(app: Flask):
             headers={
                 "Content-Disposition": f'attachment; filename="{slug}-ojs.zip"',
             },
+        )
+
+    @app.route("/articles/<int:article_id>/ojs-upload", methods=["GET", "POST"])
+    @login_required
+    def article_ojs_upload(article_id):
+        """Push a rendered galley file directly into an existing OJS
+        submission via the REST API. Reads OJS credentials from the
+        journal row (see Journal Settings → OJS). The submission itself
+        must already exist in OJS; this endpoint attaches a galley to it.
+        """
+        article = db.query_one(
+            "SELECT a.*, j.slug AS journal_slug "
+            "FROM articles a JOIN journals j ON a.journal_id = j.id "
+            "WHERE a.id = ?",
+            (article_id,),
+        )
+        if not article:
+            abort(404)
+        journal = db.query_one("SELECT * FROM journals WHERE id = ?", (article["journal_id"],))
+        if not journal:
+            abort(404)
+        journal = dict(journal)
+
+        apath = Path(article["project_path"])
+        # (form-value, file relative to apath, default label)
+        galley_choices = [
+            ("pdf", "article.pdf", "PDF"),
+            ("html", "article.html", "HTML"),
+            ("epub", "article.epub", "EPUB"),
+            ("ojs_zip", None, "HTML (OJS ZIP)"),
+        ]
+        available = []
+        for key, rel, label in galley_choices:
+            if key == "ojs_zip":
+                # ZIP is generated on demand; offer it whenever HTML exists.
+                if (apath / "article.html").exists():
+                    available.append((key, label))
+            else:
+                if (apath / rel).exists():
+                    available.append((key, label))
+
+        if not ojs_client.ojs_configured(journal):
+            flash(
+                "OJS is not configured for this journal. Add the API URL and token in "
+                "Journal Settings before pushing.",
+                "error",
+            )
+            return redirect(url_for("journal_settings", slug=article["journal_slug"]))
+
+        if request.method == "POST":
+            submission_id = (request.form.get("submission_id") or "").strip()
+            galley_kind = (request.form.get("galley_kind") or "").strip()
+            label = (request.form.get("label") or "").strip()
+            locale = (request.form.get("locale") or "en").strip() or "en"
+
+            if not submission_id.isdigit():
+                flash("Submission ID must be a positive integer (find it in the OJS submission URL).", "error")
+                return redirect(request.url)
+
+            match = next(((k, r, l) for k, r, l in galley_choices if k == galley_kind), None)
+            if match is None:
+                flash("Pick a rendered file to upload.", "error")
+                return redirect(request.url)
+            _, rel, default_label = match
+            label = label or default_label
+
+            # Resolve the file to send.
+            import io, zipfile
+            from flask import g  # noqa: F401
+            upload_path: Optional[Path] = None
+            tmp_zip: Optional[Path] = None
+            try:
+                if galley_kind == "ojs_zip":
+                    html_path = apath / "article.html"
+                    if not html_path.exists():
+                        flash("No rendered HTML to bundle. Render the article first.", "error")
+                        return redirect(request.url)
+                    tpl = conversion.template_dir(article["journal_slug"])
+                    css_paths = []
+                    if (tpl / "article.css").exists():
+                        css_paths.append(tpl / "article.css")
+                    if (apath / "article-override.css").exists():
+                        css_paths.append(apath / "article-override.css")
+                    slug = article["slug"]
+                    tmp_zip = apath / f".{slug}-ojs.zip"
+                    with zipfile.ZipFile(tmp_zip, "w", zipfile.ZIP_DEFLATED) as z:
+                        z.write(html_path, arcname=f"{slug}.html")
+                        for css in css_paths:
+                            z.write(css, arcname=css.name)
+                        assets_dir = apath / "assets"
+                        if assets_dir.exists():
+                            for f in assets_dir.rglob("*"):
+                                if f.is_file():
+                                    z.write(f, arcname=str(f.relative_to(apath)).replace("\\", "/"))
+                    upload_path = tmp_zip
+                else:
+                    upload_path = apath / rel
+                    if not upload_path.exists():
+                        flash(f"{default_label} has not been rendered for this article yet.", "error")
+                        return redirect(request.url)
+
+                result = ojs_client.upload_galley(
+                    journal=journal,
+                    submission_id=int(submission_id),
+                    galley_label=label,
+                    galley_locale=locale,
+                    file_path=upload_path,
+                )
+                galley_id = result.get("id") if isinstance(result, dict) else None
+                if galley_id:
+                    flash(
+                        f"Uploaded {label} galley to OJS submission {submission_id} "
+                        f"(galley id {galley_id}).",
+                        "success",
+                    )
+                else:
+                    flash(
+                        f"Uploaded {label} galley to OJS submission {submission_id}.",
+                        "success",
+                    )
+                return redirect(url_for("article_home", article_id=article_id))
+            except Exception as exc:
+                flash(f"OJS upload failed: {exc}", "error")
+                return redirect(request.url)
+            finally:
+                if tmp_zip and tmp_zip.exists():
+                    try:
+                        tmp_zip.unlink()
+                    except OSError:
+                        pass
+
+        # GET: render the form. Best-effort submissions dropdown.
+        submissions = ojs_client.list_submissions(journal)
+        return render_template(
+            "article_ojs_upload.html",
+            article=article,
+            journal=journal,
+            available=available,
+            submissions=submissions,
         )
 
     @app.route("/articles/<int:article_id>/delete", methods=["POST"])

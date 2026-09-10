@@ -158,6 +158,25 @@
       </label>
     </div>
 
+    <div class="section-divider">
+      <h2>OJS integration</h2>
+      <p class="help-text">Push rendered galleys straight to an existing OJS submission via the REST API. The submission itself is still created in OJS as usual; Graphion attaches the file to it. The submission id appears in the URL when you open a submission in the OJS backend (<code>/submission/<em>123</em>/</code>).</p>
+    </div>
+    <div class="field-grid">
+      <label class="full">API base URL
+        <input type="url" name="ojs_url" value="{{ journal['ojs_url'] or '' }}" placeholder="https://licsjournal.org/index.php/LiCS/api/v1" />
+        <span class="help-text">Ends in <code>/api/v1</code>. For the LiCS site: <code>https://licsjournal.org/index.php/LiCS/api/v1</code>.</span>
+      </label>
+      <label class="full">API token
+        <input type="password" name="ojs_api_token" value="{{ journal['ojs_api_token'] or '' }}" autocomplete="off" />
+        <span class="help-text">Generate in OJS: <em>User Profile → API Key → Generate</em>. If that tab is missing, the site admin needs to set <code>api_key_secret</code> in <code>config.inc.php</code>.</span>
+      </label>
+      <label>Context ID (optional)
+        <input type="text" name="ojs_context_id" value="{{ journal['ojs_context_id'] or '' }}" placeholder="usually blank" />
+        <span class="help-text">Only needed on multi-journal installs where OJS can't infer the context from the URL.</span>
+      </label>
+    </div>
+
     <div class="section-divider"></div>
     <div>
       <button type="submit">Save settings</button>

@@ -132,6 +132,9 @@ def _apply_migrations():
             ("editorial_team_json", "TEXT"),
             ("editorial_board_json", "TEXT"),
             ("citation_style", "TEXT"),
+            ("ojs_url", "TEXT"),
+            ("ojs_api_token", "TEXT"),
+            ("ojs_context_id", "TEXT"),
         ],
         "articles": [
             ("kind", "TEXT DEFAULT 'article'"),
