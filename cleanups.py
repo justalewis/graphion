@@ -255,8 +255,17 @@ def convert_pandoc_div_footnotes_to_native(text: str, log: CleanupLog) -> str:
     # used to mark list items now have nothing to mark.
     # e.g., "1825-1846.   2.   3.   4." after stripping. The trailing
     # naked "N.  " markers are safe to drop.
-    new_text = re.sub(r"(?<=\s)\d+\.\s+(?=\d+\.\s|$)", "", new_text)
-    new_text = re.sub(r"(?<=\s)\d+\.\s*$", "", new_text, flags=re.MULTILINE)
+    #
+    # Only when divs were actually converted, and only for one- or two-digit
+    # markers. A bare number and period at the end of a line is also the shape
+    # of the year closing a works-cited entry, so running this unconditionally
+    # deleted the publication year from every citation ending "Routledge,
+    # 2020." and left a dangling comma. Orphan list markers cannot appear
+    # unless this pass removed the list they belonged to, and a list marker is
+    # never four digits.
+    if n_def:
+        new_text = re.sub(r"(?<=\s)\d{1,2}\.\s+(?=\d{1,2}\.\s|$)", "", new_text)
+        new_text = re.sub(r"(?<=\s)\d{1,2}\.\s*$", "", new_text, flags=re.MULTILINE)
 
     # 5. Append the collected definitions at the end of the document,
     # separated by blank lines so Pandoc parses each as a standalone
@@ -899,6 +908,76 @@ def build_yaml_front_matter(text: str, log: CleanupLog, issue_metadata: Optional
 
 Pass = Callable[[str, CleanupLog], str]
 
+# Pandoc's HTML endnote block ends each note with a back-reference arrow,
+# either as a link or bare. Nothing else in a manuscript uses this character.
+_ENDNOTE_BACKREF_RE = re.compile(r"[ \t]*\[?↩︎?\]?(?:\{[^}]*\})?(?:\([^)]*\))?")
+
+# An ordered-list item, which is what a flattened endnote becomes.
+_ORDERED_ITEM_RE = re.compile(r"^\s{0,3}\d+[.)]\s")
+
+# Any heading that already introduces the notes.
+_NOTES_HEADING_RE = re.compile(r"^#{1,6}\s*(notes|endnotes)\s*$", re.IGNORECASE)
+
+
+def restore_flattened_endnotes(text: str, log: CleanupLog) -> str:
+    """Recover endnotes that arrived as an ordinary numbered list.
+
+    A DOCX read through an HTML intermediate, which is what the Mammoth ingest
+    engine does and what an editor round trip can do, turns Pandoc's endnote
+    section into a plain ordered list whose items end with a back-reference
+    arrow. The notes are no longer footnotes at that point: `journal-filter.lua`
+    finds no `Note` elements to collect, so the galley gets no "Notes" heading
+    and no page of its own, and the arrows print as literal characters.
+
+    This strips the arrows and, where the list is not already introduced by a
+    notes heading, supplies one. The heading is all the rest of the pipeline
+    needs: the filter matches a notes heading at any level and adds the page
+    break and the hanging-indent block itself.
+
+    The arrow is the discriminator, so a manuscript that simply ends on a
+    numbered list is left alone.
+    """
+    if "↩" not in text:
+        log.record("restore_flattened_endnotes", 0)
+        return text
+
+    lines = text.split("\n")
+    arrow_rows = [i for i, line in enumerate(lines) if "↩" in line]
+    cleaned = [_ENDNOTE_BACKREF_RE.sub("", line).rstrip() for line in lines]
+
+    # Walk back from the first arrow to the top of its list block.
+    start = arrow_rows[0]
+    while start > 0:
+        previous = cleaned[start - 1]
+        if _ORDERED_ITEM_RE.match(previous) or (previous.strip() and previous.startswith((" ", "\t"))):
+            start -= 1
+            continue
+        if not previous.strip() and start - 2 >= 0 and _ORDERED_ITEM_RE.match(cleaned[start - 2]):
+            start -= 1
+            continue
+        break
+
+    # Is a notes heading already in front of it?
+    has_heading = False
+    for i in range(start - 1, -1, -1):
+        candidate = cleaned[i].strip()
+        if not candidate:
+            continue
+        if _NOTES_HEADING_RE.match(candidate):
+            has_heading = True
+        break
+
+    if not has_heading:
+        cleaned[start:start] = ["# Notes", ""]
+
+    log.record(
+        "restore_flattened_endnotes",
+        len(arrow_rows),
+        "back-references stripped" + ("" if has_heading else "; Notes heading added"),
+    )
+    return "\n".join(cleaned)
+
+
 def merge_continued_headings(text: str, log: CleanupLog) -> str:
     r"""Join a heading that Word split across two paragraphs.
 
@@ -1138,6 +1217,9 @@ DEFAULT_PASSES: List[Pass] = [
     reassemble_heading_linebreaks,
     # After the Word-artifact merge above, so the " | " it writes survives.
     merge_continued_headings,
+    # Before the scene-break and heading work below, so the "# Notes" heading
+    # it inserts is in place for everything downstream.
+    restore_flattened_endnotes,
     # Before repair_pandoc_bold_escape, which would otherwise turn an asterisk
     # ornament into "*****" and thereby into an accidental thematic break.
     normalize_scene_breaks,

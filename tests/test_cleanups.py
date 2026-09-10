@@ -433,3 +433,75 @@ def test_normalize_scene_breaks_is_idempotent():
     src = "Body one.\n\n**\\***\n\nBody two.\n"
     once = cleanups.normalize_scene_breaks(src, _log())
     assert cleanups.normalize_scene_breaks(once, _log()) == once
+
+
+# ---------- citation years must survive the div-footnote pass ----------
+
+def test_works_cited_year_is_not_stripped():
+    '''A works-cited entry ends in a year and a period, the same shape as an
+    orphan list marker. Stripping those unconditionally deleted the
+    publication year from every such citation.'''
+    for entry in (
+        'Baker-Bell, April. *Linguistic Justice*. Routledge, 2020.',
+        'Sered, Danielle. *Until We Reckon*. The New Press, 2019.',
+        'Goldberg, Jess A. *Abolition Time*. U of Minnesota P, 2024.',
+    ):
+        out = cleanups.convert_pandoc_div_footnotes_to_native(entry + chr(10), _log())
+        assert out.rstrip(chr(10)) == entry, 'year stripped from ' + repr(entry)
+
+
+def test_sentence_ending_in_a_number_survives():
+    src = 'The court denied the motion in 42.' + chr(10)
+    assert cleanups.convert_pandoc_div_footnotes_to_native(src, _log()) == src
+
+
+def test_year_survives_the_full_pipeline():
+    src = (
+        'A Title' + chr(10)
+        + 'Jane Crawford' + chr(0x2014) + 'Penn State' + chr(10)
+        + 'Abstract' + chr(10) + 'Short.' + chr(10) + chr(10)
+        + '# Works Cited' + chr(10) + chr(10)
+        + 'Baker-Bell, April. *Linguistic Justice*. Routledge, 2020.' + chr(10)
+    )
+    out, _ = cleanups.run_all(src)
+    assert 'Routledge, 2020.' in out
+
+
+# ---------- restore_flattened_endnotes ----------
+
+ARROW = chr(0x21a9)
+
+
+def test_flattened_endnotes_get_a_heading_and_lose_their_arrows():
+    '''An HTML intermediate turns the endnote section into a plain numbered
+    list whose items end with a back-reference arrow.'''
+    src = (
+        '# Works Cited' + chr(10) + chr(10)
+        + 'Berger, Dan. *Jacobin*, 2017.' + chr(10) + chr(10)
+        + '1. This is an excerpt from a memoir. [' + ARROW + '](#fnref1)' + chr(10)
+        + '2. A second note. [' + ARROW + '](#fnref2)' + chr(10)
+    )
+    out = cleanups.restore_flattened_endnotes(src, _log())
+    assert ARROW not in out
+    assert '# Notes' in out
+    assert out.index('# Notes') > out.index('Berger, Dan')
+    assert 'This is an excerpt from a memoir.' in out
+
+
+def test_flattened_endnotes_not_double_headed():
+    src = '# Notes' + chr(10) + chr(10) + '1. Already introduced. [' + ARROW + '](#fnref1)' + chr(10)
+    out = cleanups.restore_flattened_endnotes(src, _log())
+    assert out.count('# Notes') == 1
+    assert ARROW not in out
+
+
+def test_ordinary_trailing_list_is_left_alone():
+    '''The arrow is the discriminator; a plain numbered list is not endnotes.'''
+    src = '# Steps' + chr(10) + chr(10) + '1. First thing' + chr(10) + '2. Second thing' + chr(10)
+    assert cleanups.restore_flattened_endnotes(src, _log()) == src
+
+
+def test_restore_flattened_endnotes_is_idempotent():
+    src = '1. A note. [' + ARROW + '](#fnref1)' + chr(10)
+    once = cleanups.restore_flattened_endnotes(src, _log())
+    assert cleanups.restore_flattened_endnotes(once, _log()) == once
