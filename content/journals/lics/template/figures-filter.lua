@@ -121,7 +121,13 @@ local rewrite_filter = {
         if not prepended then
           new_blocks:insert(pandoc.Plain(prefix_inlines(n, pandoc.List({}))))
         end
-        el.caption = pandoc.Caption(new_blocks, el.caption.short)
+        -- Mutate the existing caption rather than constructing a new one.
+        -- `pandoc.Caption` is not in every Pandoc Lua API this filter has to
+        -- run under: the deployed image pins 3.1.11, where the constructor is
+        -- absent and calling it aborts the whole render with "attempt to call
+        -- a nil value (field 'Caption')". Assigning `.long` works on every
+        -- version that has Figure at all.
+        el.caption.long = new_blocks
       end
       return el
     end
