@@ -160,6 +160,12 @@ local function inject_typst_dropcap(blocks)
     local s = block.content[first_str_idx].text
     local letter = s:sub(1, 1)
     local rest = s:sub(2)
+    -- Only ever cap a letter or digit. The character goes straight into
+    -- `#dropcap[...]` as Typst markup, so a bracket or backslash arriving here
+    -- silently breaks the delimiter and fails the render for the whole
+    -- article. Cleanups strip the anchor spans that caused that, but the
+    -- drop cap should not be the thing that depends on it.
+    if not letter:match("[%w]") then return false end
     local dropcap_raw = pandoc.RawInline("typst", "#dropcap[" .. letter .. "]")
     block.content[first_str_idx] = pandoc.Str(rest)
     table.insert(block.content, first_str_idx, dropcap_raw)

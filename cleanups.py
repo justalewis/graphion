@@ -978,6 +978,37 @@ def restore_flattened_endnotes(text: str, log: CleanupLog) -> str:
     return "\n".join(cleaned)
 
 
+# An empty span carrying only an anchor id, e.g. `[]{#_heading=h.p3ibalxwq0w}`.
+# Mammoth emits one wherever the source document held a bookmark.
+_EMPTY_ANCHOR_SPAN_RE = re.compile(r"\[\]\{#[^}\s]*\}")
+
+
+def strip_empty_anchor_spans(text: str, log: CleanupLog) -> str:
+    r"""Remove the empty bookmark anchors the Mammoth ingest path leaves behind.
+
+    Mammoth turns every Word or Google Docs bookmark into an empty span holding
+    nothing but an id::
+
+        # []{#_heading=h.p3ibalxwq0w}DEATH ROW, ABOLITION, AND WRITING STUDIES:
+
+    They carry no content. Left alone they print literally in headings, and one
+    of them broke the PDF outright: the drop cap takes the first character of
+    the opening paragraph, which was the anchor's `[`, so the emitted
+    ``#dropcap[`` never closed and Typst failed the whole render with
+    "unclosed delimiter".
+
+    Only spans that are empty *and* carry just an identifier are removed; a
+    span with real text or a class is left alone.
+    """
+    new_text, count = _EMPTY_ANCHOR_SPAN_RE.subn("", text)
+    if count:
+        # Removing a leading anchor can strand a space at the start of a line.
+        new_text = re.sub(r"^([ \t]+)(?=\S)", "", new_text, flags=re.MULTILINE)
+        new_text = re.sub(r"(^#{1,6})\s+", r"\1 ", new_text, flags=re.MULTILINE)
+    log.record("strip_empty_anchor_spans", count, "Mammoth bookmark anchors")
+    return new_text
+
+
 def merge_continued_headings(text: str, log: CleanupLog) -> str:
     r"""Join a heading that Word split across two paragraphs.
 
@@ -1214,6 +1245,9 @@ DEFAULT_PASSES: List[Pass] = [
     strip_highlighter_spans,
     strip_underline_spans,
     unescape_quoted_brackets,
+    # Before the heading work below, which would otherwise carry an anchor
+    # along into a merged heading.
+    strip_empty_anchor_spans,
     reassemble_heading_linebreaks,
     # After the Word-artifact merge above, so the " | " it writes survives.
     merge_continued_headings,

@@ -505,3 +505,43 @@ def test_restore_flattened_endnotes_is_idempotent():
     src = '1. A note. [' + ARROW + '](#fnref1)' + chr(10)
     once = cleanups.restore_flattened_endnotes(src, _log())
     assert cleanups.restore_flattened_endnotes(once, _log()) == once
+
+
+# ---------- strip_empty_anchor_spans ----------
+
+def test_mammoth_anchor_span_is_removed_from_heading():
+    '''Mammoth turns every bookmark into an empty span holding only an id.'''
+    src = '# []{#_heading=h.p3ibalxwq0w}DEATH ROW, ABOLITION' + chr(10)
+    out = cleanups.strip_empty_anchor_spans(src, _log())
+    assert out == '# DEATH ROW, ABOLITION' + chr(10)
+
+
+def test_anchor_span_removed_mid_paragraph():
+    src = 'Body text []{#_heading=h.abc123} continues here.' + chr(10)
+    out = cleanups.strip_empty_anchor_spans(src, _log())
+    assert '_heading' not in out
+    assert 'Body text' in out and 'continues here.' in out
+
+
+def test_leading_anchor_does_not_strand_a_bracket():
+    '''The drop cap takes the first character of the opening paragraph. A
+    stranded bracket became an unclosed #dropcap[ and failed the render.'''
+    src = '[]{#_heading=h.x69hh1ymbnnc}When I made it to Parchman' + chr(10)
+    out = cleanups.strip_empty_anchor_spans(src, _log())
+    assert out.startswith('When I made it')
+
+
+def test_span_with_real_content_is_kept():
+    src = 'A [real span]{#some-id} stays.' + chr(10)
+    assert cleanups.strip_empty_anchor_spans(src, _log()) == src
+
+
+def test_span_with_a_class_is_kept():
+    src = 'Highlighted [words]{.mark} stay.' + chr(10)
+    assert cleanups.strip_empty_anchor_spans(src, _log()) == src
+
+
+def test_strip_empty_anchor_spans_is_idempotent():
+    src = '# []{#_heading=h.abc}A Heading' + chr(10) + '[]{#_heading=h.def}Body.' + chr(10)
+    once = cleanups.strip_empty_anchor_spans(src, _log())
+    assert cleanups.strip_empty_anchor_spans(once, _log()) == once
