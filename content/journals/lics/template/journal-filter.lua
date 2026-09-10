@@ -4,18 +4,20 @@
 -- section in `<section class="level1">`; this filter adds extra classes
 -- and identifiers so the article.css selectors match the design:
 --
---   * First H1 section gets class "opening" (enables the drop cap in HTML
---     via section.opening > h1 + p::first-letter)
+--   * First H1 section gets class "opening" (retained for any per-journal
+--     stylesheet that keys off it; the drop cap no longer needs it).
 --   * Works Cited / References / Bibliography H1 gets:
 --       - identifier "works-cited"
 --       - class "references"
 --
--- For Typst output, the filter additionally wraps the first character of
--- the first paragraph of the opening section in a #dropcap[X] raw inline.
--- This is needed because Pandoc's Typst writer does not propagate header
--- classes, so we cannot key a Typst `show` rule on the `opening` class.
--- HTML output uses CSS `::first-letter`; the drop cap there does not need
--- the wrapping.
+-- Drop cap: the first Para of the body proper carries the initial, whether
+-- the body opens with prose or with a heading. Two output paths need it:
+--   * Typst: the filter wraps the first character in a #dropcap[X] raw
+--     inline. Pandoc's Typst writer does not propagate block classes, so
+--     a `show` rule keyed on a class is not an option.
+--   * HTML / EPUB: the filter wraps the first Para in a Div with class
+--     "opening-para" so article.css can target `.opening-para > p::first-letter`
+--     regardless of whether that paragraph sits before or inside a section.
 --
 -- Additional journal idioms (pull quotes, epigraphs, etc.) can be added
 -- here as patterns surface.
@@ -136,19 +138,16 @@ function Header(el)
   return nil
 end
 
--- Typst-only: inject a #dropcap[X] raw inline at the start of the
--- opening paragraph.
+-- Typst-only: inject a #dropcap[X] raw inline at the start of the first
+-- body Para in document order.
 --
--- Two-pass strategy: first look for the canonical "opening" section
--- (the first H1 that isn't Works Cited). If found, drop the cap there.
--- If the article has no H1s at all (common for book reviews and short
--- articles), fall back to the FIRST body-level Para that comes after
--- the document title. Either way, the visual result is "drop cap on
--- the first letter of the running text."
+-- The rule is deliberately "first Para, wherever it sits" rather than
+-- "first Para of the opening section." A body that opens with prose
+-- above the first H1 — e.g., an introductory line the editor moved out
+-- of the abstract — still gets its cap on that line, not on the first
+-- paragraph that happens to follow a heading. Book reviews and short
+-- articles with no H1s at all fall into the same rule for free.
 local function inject_typst_dropcap(blocks)
-  local in_opening = false
-  local injected = false
-
   local function wrap_first_letter(block)
     local first_str_idx = nil
     for i, inline in ipairs(block.content) do
@@ -157,42 +156,37 @@ local function inject_typst_dropcap(blocks)
         break
       end
     end
-    if first_str_idx then
-      local s = block.content[first_str_idx].text
-      local letter = s:sub(1, 1)
-      local rest = s:sub(2)
-      local dropcap_raw = pandoc.RawInline("typst", "#dropcap[" .. letter .. "]")
-      block.content[first_str_idx] = pandoc.Str(rest)
-      table.insert(block.content, first_str_idx, dropcap_raw)
-      return true
-    end
-    return false
+    if not first_str_idx then return false end
+    local s = block.content[first_str_idx].text
+    local letter = s:sub(1, 1)
+    local rest = s:sub(2)
+    local dropcap_raw = pandoc.RawInline("typst", "#dropcap[" .. letter .. "]")
+    block.content[first_str_idx] = pandoc.Str(rest)
+    table.insert(block.content, first_str_idx, dropcap_raw)
+    return true
   end
 
-  -- Pass 1: opening-section heuristic.
   for _, block in ipairs(blocks) do
-    if block.t == "Header" and block.level == 1 then
-      in_opening = false
-      for _, cls in ipairs(block.classes or {}) do
-        if cls == "opening" then in_opening = true end
-      end
-    elseif in_opening and not injected and block.t == "Para" then
-      if wrap_first_letter(block) then injected = true end
+    if block.t == "Para" then
+      wrap_first_letter(block)
+      break
     end
   end
 
-  -- Pass 2: fallback if Pass 1 didn't fire (article has no opening
-  -- H1 — e.g., book reviews, short articles whose body starts with
-  -- prose). Wrap the very first Para in the document.
-  if not injected then
-    for _, block in ipairs(blocks) do
-      if block.t == "Para" then
-        if wrap_first_letter(block) then injected = true end
-        break
-      end
+  return blocks
+end
+
+-- HTML / EPUB: wrap the first body Para in a Div with class
+-- "opening-para" so article.css can attach the drop cap by class rather
+-- than by structural position. Same "first Para, wherever it sits"
+-- rule as the Typst path above.
+local function wrap_html_opening_para(blocks)
+  for i, block in ipairs(blocks) do
+    if block.t == "Para" then
+      blocks[i] = pandoc.Div({block}, pandoc.Attr("", {"opening-para"}))
+      break
     end
   end
-
   return blocks
 end
 
@@ -478,6 +472,8 @@ function Pandoc(doc)
     doc.blocks = inject_typst_dropcap(doc.blocks)
     doc.blocks = inject_typst_hanging_indent(doc.blocks)
     doc.blocks = adapt_typst_tables(doc.blocks)
+  elseif FORMAT:match("^html") or FORMAT:match("^epub") then
+    doc.blocks = wrap_html_opening_para(doc.blocks)
   end
   return doc
 end

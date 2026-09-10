@@ -181,12 +181,22 @@ article h2 + p,
 article h3 + p,
 article > section:not(.references) > p:first-of-type,
 section.abstract p:first-of-type,
-aside.keywords p:first-of-type {
+aside.keywords p:first-of-type,
+.opening-para > p {
   text-indent: 0;
 }
 
-/* Drop cap on the opening section */
-section.opening > h1 + p::first-letter {
+/* Drop cap on the first body paragraph.
+ *
+ * The journal filter wraps that paragraph in <div class="opening-para">
+ * regardless of whether it opens the body directly (prose above the
+ * first H1) or opens the first section (paragraph after the H1). Keying
+ * the cap on that class rather than on `section.opening > h1 + p` means
+ * an article that starts with a stray introductory line moved out of
+ * the abstract still puts the cap on the actual first line of running
+ * text.
+ */
+.opening-para > p::first-letter {
   font-family: var(--serif);
   font-weight: 500;
   float: left;
