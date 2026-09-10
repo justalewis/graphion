@@ -27,7 +27,8 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (24 functions: 19 in `test_cleanups.py`, 5 in `test_metadata_roundtrip.py`):
+Tests (60 functions: 47 in `test_cleanups.py`, 8 in `test_lint.py`, 5 in
+`test_metadata_roundtrip.py`):
 
 ```bash
 python -m pytest tests/ -q

@@ -108,6 +108,85 @@ def check_short_title_length(article: dict, fm: dict, body: str) -> LintResult:
     return _ok("short-title-length", f"Short title is {len(s)} chars (well within limits).")
 
 
+# Words too short or too common to carry a typo worth flagging.
+_SHORT_TITLE_STOPWORDS = {
+    "a", "an", "and", "as", "at", "but", "by", "for", "from", "in", "into",
+    "of", "on", "or", "the", "through", "to", "with",
+}
+
+
+def _word_variants(word: str) -> set:
+    """A word plus plausible singular forms of it.
+
+    Every candidate is offered rather than one guessed stem: "narratives"
+    yields both "narrative" and "narrativ", and only the correct one will ever
+    match anything real. Over-generating here costs nothing but stops a plural
+    in the title reading as a typo in the short title.
+    """
+    variants = {word}
+    if len(word) > 3:
+        if word.endswith("ies"):
+            variants.add(word[:-3] + "y")
+        if word.endswith("es"):
+            variants.add(word[:-2])
+        if word.endswith("s") and not word.endswith("ss"):
+            variants.add(word[:-1])
+    return variants
+
+
+def _title_words(text: str) -> set:
+    """Comparable words from a title: lowercased, stripped of punctuation,
+    each expanded to its singular variants."""
+    cleaned = re.sub(r"[^\w\s-]", " ", (text or "").lower())
+    words = {w for w in cleaned.split() if w}
+    return set().union(*(_word_variants(w) for w in words)) if words else set()
+
+
+def check_short_title_matches_title(article: dict, fm: dict, body: str) -> LintResult:
+    """Flag a short title containing words that appear nowhere in the title.
+
+    The short title only ever shows up in the running header, so a typo in it
+    survives every proofread of the article itself. One LiCS galley ran for
+    weeks with "Maginifying Dissent" across every recto page while the title
+    below read "Magnifying Dissent" correctly.
+
+    Advisory only. A short title is allowed to rephrase rather than truncate,
+    and this cannot tell a deliberate rewording from a slip; it just says which
+    words are not in the title so the editor can glance at them.
+    """
+    short = (fm.get("short-title") or "").strip()
+    title = (fm.get("title") or "").strip()
+    if not short or not title:
+        # check_short_title_length already reports an empty short title.
+        return _ok("short-title-matches", "No short title or title to compare.")
+
+    title_words = _title_words(title)
+    cleaned_short = re.sub(r"[^\w\s-]", " ", short.lower())
+    unmatched = [
+        word for word in sorted({w for w in cleaned_short.split() if w})
+        if len(word) > 2
+        and word not in _SHORT_TITLE_STOPWORDS
+        and not (_word_variants(word) & title_words)
+    ]
+    if unmatched:
+        return _warn(
+            "short-title-matches",
+            "Short title has word(s) not in the title: "
+            + ", ".join(repr(w) for w in unmatched) + ".",
+            [
+                "The short title appears only in the running header, so a typo "
+                "there is easy to miss.",
+                f"Title: {title}",
+                f"Short title: {short}",
+                "Ignore this if the short title deliberately rephrases the title.",
+            ],
+        )
+    return _ok(
+        "short-title-matches",
+        "Every word of the short title appears in the title.",
+    )
+
+
 def check_short_authors_length(article: dict, fm: dict, body: str) -> LintResult:
     s = (fm.get("short-authors") or "").strip()
     if not s:
@@ -305,6 +384,7 @@ DEFAULT_CHECKS: list[Callable] = [
     check_orcid_format,
     check_doi_format,
     check_short_title_length,
+    check_short_title_matches_title,
     check_short_authors_length,
     check_hyperlinks,
     check_works_cited_present,
