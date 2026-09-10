@@ -38,6 +38,14 @@
 #let footer-val = "$footer$"
 #let start-page-val = $if(start-page)$$start-page$$else$1$endif$
 
+// Article "kind" comes through from the YAML front matter. The template
+// treats "review" (book reviews) specially: no forced page break after
+// the front matter, and no running header on the first page (which is
+// also the opening body page, so the design's usual "front matter is
+// clean" rule loses its anchor). Any other value, including the default
+// "article", takes the classical page-per-front-matter layout.
+#let is-review-val = "$if(kind)$$kind$$endif$" == "review"
+
 // Running-head inputs. `journal-short` is not stored in the article's
 // YAML; conversion.render_pdf passes it at render time from the journals
 // row (short_name, else an initialism of the full name), so the stored
@@ -313,13 +321,15 @@ $if(abstract)$
   text(size: 9.75pt, [$abstract$])
 }))
 #v(1em)
-$endif$
 
 // The body opens on its own page. The abstract frequently runs past the
 // bottom of the title page, so keeping them together left the opening
 // section starting partway down whichever page the abstract happened to
-// end on.
+// end on. This pagebreak is inside the abstract branch: pieces with no
+// abstract (book reviews, notes, short forewords) flow the body directly
+// under the title block instead of leaving the rest of page 1 blank.
 #pagebreak()
+$endif$
 
 // Running furniture, installed here rather than at the top so it applies
 // to the body only. The page counter is NOT reset: it keeps running
@@ -327,7 +337,13 @@ $endif$
 // range that issue assembly records for this article.
 #set page(
   header: context {
-    if calc.even(counter(page).at(here()).first()) {
+    let p = counter(page).at(here()).first()
+    // On book reviews the body starts on page 1 alongside the title
+    // block, so the header would otherwise crown the title itself.
+    // Suppress it there; the recto/verso labels come back on page 2.
+    if is-review-val and p == 1 {
+      none
+    } else if calc.even(p) {
       align(left, text(
         style: "italic", size: 8pt, fill: ink-soft, font: display-font,
         verso-label,

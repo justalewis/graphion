@@ -958,6 +958,19 @@ def register_routes(app: Flask):
                 else:
                     updated.pop(key, None)
 
+            # Article kind travels in the YAML front matter (Pandoc reads it
+            # into `$kind$` for the Typst template) and is mirrored to the DB
+            # so listings can filter without loading each article's file. The
+            # default is "article"; the YAML key is dropped in that case to
+            # keep existing files unchanged when a user hasn't touched Type.
+            selected_kind = (request.form.get("kind") or "article").strip().lower()
+            if selected_kind not in {"article", "review", "editorial"}:
+                selected_kind = "article"
+            if selected_kind == "article":
+                updated.pop("kind", None)
+            else:
+                updated["kind"] = selected_kind
+
             page = request.form.get("start_page", "").strip()
             if page:
                 try:
@@ -1014,8 +1027,8 @@ def register_routes(app: Flask):
             new_section = updated.get("section")
             db.execute(
                 "UPDATE articles SET title = COALESCE(?, title), section = COALESCE(?, section), "
-                "updated_at = CURRENT_TIMESTAMP WHERE id = ?",
-                (new_title, new_section, article_id),
+                "kind = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+                (new_title, new_section, selected_kind, article_id),
             )
 
             render_result = conversion.render_all(apath, article["journal_slug"])

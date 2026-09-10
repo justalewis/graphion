@@ -74,6 +74,15 @@
           <option value="published" {% if current_status == 'published' %}selected{% endif %}>published</option>
         </select>
       </label>
+      <label>Type
+        <select name="kind">
+          {% set current_kind = (fm.get('kind') or article['kind'] or 'article') %}
+          <option value="article" {% if current_kind == 'article' %}selected{% endif %}>Article</option>
+          <option value="review"  {% if current_kind == 'review' %}selected{% endif %}>Book review</option>
+          <option value="editorial" {% if current_kind == 'editorial' %}selected{% endif %}>Editorial</option>
+        </select>
+        <span class="help-text">Book reviews skip the forced page break after the front matter and suppress the running header on page&nbsp;1, so short pieces don't waste page&nbsp;1.</span>
+      </label>
       <label>ToC section
         <select name="section">
           {% set current_section = fm.get('section') or article['section'] or toc_sections[0] %}
