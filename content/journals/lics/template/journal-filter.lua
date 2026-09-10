@@ -215,15 +215,21 @@ end
 -- pages. `hyphenate: true` is re-enabled here only. The body disables
 -- hyphenation house-wide, but justified hanging-indent entries carrying
 -- long URLs open up unreadable word gaps without it.
+-- Both end sections hang to the same measure, stated absolutely rather than in
+-- em. Notes set 9.5pt against the references' 10pt, so equal em values would
+-- have produced visibly different indents; the two sections sit one after the
+-- other and any difference reads as a mistake.
+local HANGING_INDENT = "15pt"
+
 local REFERENCES_OPEN = table.concat({
   "#block(width: 100%, breakable: true)[",
-  "#set par(first-line-indent: 0pt, hanging-indent: 1.5em, justify: true)",
+  "#set par(first-line-indent: 0pt, hanging-indent: " .. HANGING_INDENT .. ", justify: true)",
   "#set text(hyphenate: true)",
 }, "\n")
 
 local NOTES_OPEN = table.concat({
   "#block(width: 100%, breakable: true)[",
-  "#set par(first-line-indent: 0pt, hanging-indent: 1.2em, leading: 0.55em, justify: true)",
+  "#set par(first-line-indent: 0pt, hanging-indent: " .. HANGING_INDENT .. ", leading: 0.55em, justify: true)",
   "#set text(size: 9.5pt, hyphenate: true)",
 }, "\n")
 
