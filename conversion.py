@@ -5,6 +5,7 @@ Stage 2 (cleanups) is in `cleanups.py` and called from here.
 from __future__ import annotations
 
 import json
+import re
 import shutil
 import time
 from dataclasses import dataclass
@@ -907,7 +908,40 @@ def render_pdf(article_path: Path, journal_slug: str) -> Path:
 
     import typst as typst_lib
     typst_lib.compile(str(typst_input), output=str(out), root=str(CONTENT_DIR))
+
+    # Record which faces Typst actually chose. A font stack resolves silently:
+    # Typst never reports that it fell through to a fallback, or that it picked
+    # an odd style out of a partially installed family, so a galley can come
+    # out in the wrong face with nothing in the logs. Naming them here makes
+    # that visible from the article's Logs tab.
+    faces = _embedded_pdf_fonts(out)
+    if faces:
+        _append_log(
+            article_path,
+            "Fonts used in PDF",
+            "".join(f"  - {f}\n" for f in faces),
+        )
     return out
+
+
+def _embedded_pdf_fonts(pdf_path: Path) -> list[str]:
+    """Names of the font faces embedded in a rendered PDF, deduplicated.
+
+    Best effort: a failure to introspect must never fail a render that has
+    already succeeded.
+    """
+    try:
+        raw = pdf_path.read_bytes()
+    except Exception:
+        return []
+    names = set()
+    for match in re.finditer(rb"/BaseFont\s*/([A-Za-z0-9+\-_,.]+)", raw):
+        name = match.group(1).decode("ascii", "replace")
+        # Subset fonts are prefixed with a six-letter tag and a plus sign.
+        if len(name) > 7 and name[6] == "+":
+            name = name[7:]
+        names.add(name)
+    return sorted(names)
 
 
 def weasyprint_available() -> bool:

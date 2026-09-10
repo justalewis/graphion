@@ -332,3 +332,38 @@ def test_blank_line_runs_are_preserved():
     """The pass rejoins paragraphs, so it must not reflow spacing elsewhere."""
     src = "Alpha.\n\n\nBeta.\n\n\n\nGamma.\n"
     assert _pair(src) == src
+
+
+def test_keywords_on_the_label_line():
+    """Word manuscripts often write "Keywords: a; b; c" on a single line."""
+    src = (
+        "A Title\n"
+        "Jane Crawford—Penn State University\n"
+        "Keywords: Death row; Dissent; Capital appeals process\n"
+        "Abstract\n"
+        "Short abstract.\n"
+        "\n"
+        "# Body\n"
+        "Body text.\n"
+    )
+    out, _ = cleanups.run_all(src)
+    assert "Death row" in out
+    assert "Capital appeals process" in out
+    # The abstract must not be swallowed into the keyword list.
+    assert "abstract: Short abstract." in out or "abstract: 'Short abstract.'" in out
+
+
+def test_keywords_on_the_following_line_still_work():
+    src = (
+        "A Title\n"
+        "Jane Crawford—Penn State University\n"
+        "Keywords\n"
+        "Alpha; Beta\n"
+        "Abstract\n"
+        "Short abstract.\n"
+        "\n"
+        "# Body\n"
+        "Body text.\n"
+    )
+    out, _ = cleanups.run_all(src)
+    assert "Alpha" in out and "Beta" in out

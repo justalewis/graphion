@@ -793,19 +793,28 @@ def extract_lics_front_matter(text: str) -> ExtractedFrontMatter:
     # Keywords block.
     i = _skip_blanks(lines, i)
     if i < len(lines) and lines[i].strip().lower().startswith("keyword"):
+        label_line = lines[i].strip()
         i += 1
         kw_lines = []
-        while i < len(lines):
-            line = lines[i].strip()
-            if not line:
-                if kw_lines:
+        # Manuscripts write this both ways: "Keywords: a; b; c" keeps the
+        # values on the label line, while a bare "Keywords" puts them on the
+        # lines below. Reading past an inline list swallowed it and then hit
+        # "Abstract", leaving the article with no keywords at all.
+        _, separator, inline = label_line.partition(":")
+        if separator and inline.strip():
+            kw_lines.append(inline.strip())
+        else:
+            while i < len(lines):
+                line = lines[i].strip()
+                if not line:
+                    if kw_lines:
+                        break
+                    i += 1
+                    continue
+                if line.lower() == "abstract" or line.startswith("#"):
                     break
+                kw_lines.append(line)
                 i += 1
-                continue
-            if line.lower() == "abstract" or line.startswith("#"):
-                break
-            kw_lines.append(line)
-            i += 1
         raw_kw = " ".join(kw_lines)
         fm.keywords = [k.strip() for k in re.split(r"[;,]", raw_kw) if k.strip()]
 

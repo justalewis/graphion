@@ -23,7 +23,17 @@
 // registers the family as "EB Garamond 12", so both spellings are
 // listed: without the second one the container silently falls back
 // to Libertinus Serif and the galley is in the wrong face.
-#let body-font = ("Minion Pro", "EB Garamond", "EB Garamond 12", "Garamond", "Georgia")
+// Minion Pro is the LiCS InDesign body face, but it is deliberately NOT in
+// this stack. Typst matches a family by name and then takes the closest style
+// it can find inside it, so a machine carrying a single stray Minion Pro file
+// (a lone MinionPro-BoldCnIt.otf, say, dropped in by an Adobe installer)
+// renders the entire galley in bold condensed italic, silently. Galleys have
+// to be reproducible across whatever fonts an editor happens to have, and the
+// production container ships EB Garamond, so that leads instead.
+//
+// Debian registers the family as "EB Garamond 12"; both spellings are listed
+// because without the second the container falls through to Libertinus Serif.
+#let body-font = ("EB Garamond", "EB Garamond 12", "Garamond", "Georgia")
 // Display type: 13-15pt Didot per LiCS InDesign spec. Same logic —
 // fall back through GFS Didot (free), Bodoni (similar high-contrast
 // modern), then EB Garamond as a last resort.
