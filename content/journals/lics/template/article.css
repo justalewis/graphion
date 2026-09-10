@@ -262,6 +262,11 @@ section.footnotes::before {
   padding-top: 1.5rem;
   border-top: 1px solid var(--rule);
 }
+/* Pandoc opens its endnote block with its own <hr>. That is a structural
+ * artifact rather than a scene break: it sits directly under the rule this
+ * section already draws above "Notes", and the scene-break styling would
+ * otherwise print a stray asterisk there. */
+section.footnotes > hr { display: none; }
 section.footnotes ol { padding-left: 1.75em; }
 section.footnotes p { text-indent: 0; }
 sup a {
@@ -427,8 +432,10 @@ figure figcaption .figure-label {
 /* Works cited (hanging indent). Closing rule below the entire list so
  * there's a visual separator before whatever follows (Notes section,
  * end of document). */
+/* No closing rule here. The Notes section draws its own rule above its
+ * heading, and the two stacked into a double line at that boundary. Where
+ * Works Cited is the last section, the end of the document needs no rule. */
 section.references {
-  border-bottom: 1px solid var(--rule);
   padding-bottom: 1.5rem;
   margin-bottom: 0;
 }
