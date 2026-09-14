@@ -27,11 +27,10 @@ import crossref
 import db
 
 
-JATS_NS = "https://jats.nlm.nih.gov/archiving/1.3/"
 XLINK_NS = "http://www.w3.org/1999/xlink"
 MML_NS = "http://www.w3.org/1998/Math/MathML"
 
-NSMAP = {None: JATS_NS, "xlink": XLINK_NS, "mml": MML_NS}
+NSMAP = {"xlink": XLINK_NS, "mml": MML_NS}
 
 
 def _strip_namespace(xml_bytes: bytes) -> bytes:
