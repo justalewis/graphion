@@ -406,8 +406,64 @@ def apply_docx_image_crops(docx_path: Path, assets_dir: Path) -> List[str]:
     return notes
 
 
+_REL_NS = "{http://schemas.openxmlformats.org/package/2006/relationships}"
+_IMAGE_REL = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"
+
+
+def recover_unplaced_images(docx_path: Path, article_path: Path) -> List[str]:
+    """Save images the DOCX contains but article.md never references.
+
+    Pandoc drops a picture it cannot place: a floating image anchored inside
+    a text box or a drawing group simply vanishes from the Markdown, with no
+    error. Compare the images the document body uses against the Markdown,
+    copy each missing one into assets/media/ (so the editor can insert it
+    with "Insert image"), and return their article-relative paths for a
+    warning. Returns [] when nothing is missing or the files cannot be read.
+
+    Assumes Pandoc's naming, where extracted media keep their DOCX file
+    names (word/media/image1.png -> assets/media/image1.png).
+    """
+    import re
+    import zipfile
+    from lxml import etree
+
+    md_path = article_path / "article.md"
+    if not md_path.exists():
+        return []
+    try:
+        with zipfile.ZipFile(docx_path) as z:
+            rels = etree.fromstring(z.read("word/_rels/document.xml.rels"))
+            targets = {
+                rel.get("Id"): rel.get("Target")
+                for rel in rels.iter(_REL_NS + "Relationship")
+                if rel.get("Type") == _IMAGE_REL and rel.get("TargetMode") != "External"
+            }
+            document = z.read("word/document.xml").decode("utf-8", "replace")
+            used: List[str] = []
+            for rid in re.findall(r'r:(?:embed|id)="([^"]+)"', document):
+                target = targets.get(rid)
+                if target and target not in used:
+                    used.append(target)
+            md = md_path.read_text(encoding="utf-8")
+            media_dir = article_path / "assets" / "media"
+            recovered: List[str] = []
+            for target in used:
+                name = Path(target).name
+                if name in md:
+                    continue
+                dest = media_dir / name
+                if not dest.exists():
+                    media_dir.mkdir(parents=True, exist_ok=True)
+                    dest.write_bytes(z.read("word/" + target.lstrip("/")))
+                recovered.append(dest.relative_to(article_path).as_posix())
+            return recovered
+    except Exception:
+        return []
+
+
 __all__ = [
     "apply_docx_image_crops",
+    "recover_unplaced_images",
     "mammoth_available",
     "ingest_with_mammoth",
     "libreoffice_available",

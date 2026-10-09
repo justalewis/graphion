@@ -116,3 +116,15 @@ def test_round_trip_preserves_body():
         assert body == body2
     finally:
         shutil.rmtree(article)
+
+
+def test_plain_text_strips_markdown_from_titles():
+    assert conversion.plain_text(
+        "Review of *Abolitionist Intimacies: Queer and Trans Migrants*"
+    ) == "Review of Abolitionist Intimacies: Queer and Trans Migrants"
+    assert conversion.plain_text("A **bold** and _italic_ title") == "A bold and italic title"
+    assert conversion.plain_text(r"Un/learning \*not emphasis\*") == "Un/learning *not emphasis*"
+    assert conversion.plain_text("Queer Black Imagination & Abolitionist Futures") == (
+        "Queer Black Imagination & Abolitionist Futures"
+    )
+    assert conversion.plain_text(None) is None

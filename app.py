@@ -741,11 +741,30 @@ def register_routes(app: Flask):
                         "short-authors": short_authors,
                     },
                 )
+                # Pandoc silently drops pictures it cannot place (floating
+                # images in text boxes). Save any it lost and say so, since
+                # nothing in the Markdown would otherwise show they existed.
+                used_pandoc = ingest_engine != "mammoth" or not preprocessors.mammoth_available()
+                if ext == ".docx" and used_pandoc:
+                    recovered = preprocessors.recover_unplaced_images(apath / "source.docx", apath)
+                    if recovered:
+                        flash(
+                            f"{len(recovered)} image(s) in the DOCX did not come through "
+                            "(usually a picture inside a text box): "
+                            + ", ".join(recovered)
+                            + ". They are saved in the article's assets; place each one "
+                            "with Insert image in the Markdown editor.",
+                            "warning",
+                        )
+                        conversion._append_log(
+                            apath, "Stage 2b: unplaced images",
+                            "".join(f"  - {p}\n" for p in recovered),
+                        )
             except Exception as exc:
                 flash(f"Conversion failed: {exc}", "error")
                 return redirect(request.url)
 
-            title = title_hint or _peek_title(apath / "article.md") or article_slug
+            title = conversion.plain_text(title_hint or _peek_title(apath / "article.md")) or article_slug
             try:
                 article_id = db.execute(
                     "INSERT INTO articles (journal_id, slug, title, project_path, status) "
@@ -987,6 +1006,11 @@ def register_routes(app: Flask):
                 updated.pop("start-page", None)
                 updated.pop("start-page-locked", None)
 
+            if request.form.get("hide_page_numbers") == "on":
+                updated["hide-page-numbers"] = True
+            else:
+                updated.pop("hide-page-numbers", None)
+
             kw_raw = request.form.get("keywords", "").strip()
             if kw_raw:
                 updated["keywords"] = [
@@ -1024,7 +1048,7 @@ def register_routes(app: Flask):
                 return redirect(request.url)
 
             conversion.write_article_metadata(apath, updated, body)
-            new_title = updated.get("title")
+            new_title = conversion.plain_text(updated.get("title"))
             new_section = updated.get("section")
             db.execute(
                 "UPDATE articles SET title = COALESCE(?, title), section = COALESCE(?, section), "

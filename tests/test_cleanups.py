@@ -655,3 +655,133 @@ def test_genuine_continuation_is_still_merged():
     entries = [p for p in out.split(chr(10) + chr(10)) if p.strip() and not p.startswith('#')]
     assert len(entries) == 1, entries
     assert 'pp. 62-75' in entries[0]
+
+
+# ---------- body text before the first heading is not a title ----------
+
+def test_opening_paragraph_without_preamble_is_kept():
+    """A manuscript whose title and authors are entered in the metadata form
+    starts straight into the body. Its first paragraph was being read as the
+    title and deleted."""
+    src = (
+        "In my work, I am often asked by formerly incarcerated people about it.\n"
+        "\n"
+        "Dominant narratives about incarceration are built on carceral logics.\n"
+        "\n"
+        "# Rationale\n"
+    )
+    out = cleanups.build_yaml_front_matter(
+        src, _log(), issue_metadata={"short-title": "Short", "short-authors": "Wolf"}
+    )
+    assert out.startswith("---\n")
+    assert "short-title: Short" in out
+    assert "title: In my work" not in out
+    assert "In my work, I am often asked" in out.split("---\n", 2)[2]
+
+
+def test_content_warning_and_epigraph_survive():
+    for first in (
+        "Content Warning: detailed discussion of gun violence",
+        "> To reiterate, rather than try to imagine one single alternative.",
+    ):
+        src = first + "\n\nSometime in the winter of 2020.\n\n# Section\n"
+        fm = cleanups.extract_lics_front_matter(src)
+        assert fm.title is None
+        assert first in fm.body_after_strip
+
+
+def test_no_preamble_and_no_upload_metadata_is_left_alone():
+    src = "Just a paragraph.\n\nAnother.\n"
+    assert cleanups.build_yaml_front_matter(src, _log()) == src
+
+
+def test_real_preamble_is_still_extracted():
+    src = (
+        "A Title\n"
+        "Jane Crawford—Penn State\n"
+        "Abstract\n"
+        "The abstract.\n"
+        "\n"
+        "# Introduction\n"
+    )
+    fm = cleanups.extract_lics_front_matter(src)
+    assert fm.title == "A Title"
+    assert fm.abstract == "The abstract."
+    assert fm.body_after_strip.startswith("# Introduction")
+
+
+# ---------- lowercase and punctuated authors in the bibliography ----------
+
+def test_lowercase_and_punctuated_authors_start_new_entries():
+    for line in (
+        "brown, adrienne maree. *Emergent Strategy: Shaping Change, Changing Worlds*. AK Press, 2017.",
+        "paperson, la. *A Third University Is Possible*. U of Minnesota P, 2017.",
+        "hooks, bell. *Teaching to Transgress*. Routledge, 1994.",
+        "INCITE! Women of Color Against Violence. *The Revolution Will Not Be Funded*. Duke UP, 2017.",
+        'KC Tenants [@kctenants]. "LONG LIVE LULU LIVINGSTON." *Instagram*, 31 Jan. 2025.',
+        r'KC Tenants \[\@kctenants\]. "LONG LIVE LULU LIVINGSTON." *Instagram*, 31 Jan. 2025.',
+    ):
+        assert cleanups._NEW_ENTRY_RE.match(line), line
+
+
+def test_lowercase_continuations_still_merge():
+    for line in (
+        "and a Road to Repair*. The New Press, 2019.",
+        "vol. 4, no. 1, 2004, pp. 62-75.",
+        "edited by Jane Doe, U of Chicago P, 2004.",
+        "translated by, and with an introduction. *Not a name*.",
+    ):
+        assert not cleanups._NEW_ENTRY_RE.match(line), line
+
+
+def test_lowercase_author_entry_is_not_merged_into_the_one_above():
+    src = (
+        "# Works Cited\n\n"
+        "Brandt, Deborah. \"Sponsors of Literacy.\" *College Composition and Communication*, 1998.\n\n"
+        "brown, adrienne maree. *We Will Not Cancel Us*. AK Press, 2020.\n"
+    )
+    out = cleanups.unfragment_works_cited(src, _log())
+    entries = [p for p in out.split("\n\n") if p.strip() and not p.startswith("#")]
+    assert len(entries) == 2, entries
+    assert entries[1].startswith("brown, adrienne maree.")
+
+
+# ---------- stray @ signs ----------
+
+def test_handle_at_sign_is_escaped():
+    src = 'KC Tenants [@kctenants]. "LONG LIVE LULU." Follow @lics on social.'
+    out = cleanups.escape_stray_at_signs(src, _log())
+    assert r"[\@kctenants]" in out
+    assert r"Follow \@lics" in out
+
+
+def test_at_signs_that_must_stay_are_left_alone():
+    src = (
+        "Email editor@example.org or see @fig:flow and [@fig:flow]. "
+        "Video at https://www.youtube.com/@KCHomelessUnion and <https://x.com/@lics>."
+    )
+    assert cleanups.escape_stray_at_signs(src, _log()) == src
+
+
+def test_escape_stray_at_signs_is_idempotent():
+    src = "Handle [@kctenants] and @someone."
+    once = cleanups.escape_stray_at_signs(src, _log())
+    assert cleanups.escape_stray_at_signs(once, _log()) == once
+
+
+# ---------- captions for images that carry an author's description ----------
+
+def test_caption_is_paired_with_an_image_that_has_alt_text():
+    """Word carries an author's image description through as alt text; the
+    image still needs its "Figure N." caption."""
+    src = (
+        '![Livingston, in a gray raincoat, stands in the rain.](assets/media/image1.jpeg){width="3.3in"}\n'
+        "\n"
+        "Figure 1. A screen capture from Livingston's interview with IMA.\n"
+    )
+    out = _pair(src)
+    assert out.startswith("![A screen capture from Livingston's interview with IMA.](assets/media/image1.jpeg)")
+    assert "#fig:1" in out and 'width="3.3in"' in out
+    assert 'fig-alt="Livingston, in a gray raincoat, stands in the rain."' in out
+    assert "Figure 1. A screen capture" not in out
+    assert _pair(out) == out

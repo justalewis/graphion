@@ -552,9 +552,23 @@ def _ensure_works_cited_heading(text: str) -> str:
 # begin with capitalised words, but it does not then close a sentence and open
 # a quoted or italicised title; "Culture, and Theory*, vol. 4" and "Mar. 2024,
 # pp. 57-81" both fail on that requirement.
+#
+# Name words may carry "!" or "&" ("INCITE! Women of Color Against Violence"),
+# and a social-media handle may sit between the name and its closing period
+# ("KC Tenants [@kctenants].").
 _ORG_AUTHOR = (
-    r"[A-Z][\w'’\-]*"
-    r"(?:,?\s+(?:[A-Z][\w'’\-]*|of|the|to|and|for|in|on|a|an))+"
+    r"[A-Z][\w'’\-!&]*"
+    r"(?:,?\s+(?:[A-Z][\w'’\-!&]*|of|the|to|and|for|in|on|a|an))+"
+    r"(?:\s+\\?\[[^\]\n]*?\\?\])?"
+    r"\.\s+[\"“*]"
+)
+
+# An author who writes their name in lowercase ("brown, adrienne maree.",
+# "paperson, la.", "hooks, bell."). Held to the same trailing-title test as
+# the organisation pattern, because a wrapped continuation can also start
+# lowercase; "vol. 4, no. 1" and "and a Road to Repair*." both fail it.
+_LOWERCASE_AUTHOR = (
+    r"[a-z][\w'’\-]+,\s+[a-z][\w'’\-]*(?:\s+[a-z][\w'’\-]*){0,3}"
     r"\.\s+[\"“*]"
 )
 
@@ -565,9 +579,45 @@ _NEW_ENTRY_RE = re.compile(
     r"|[A-Z][\w'\-]+,\s+[A-Z]"                                     # `Surname, First` (most MLA)
     r"|[A-Z][\w'\-]+\s+[A-Z][\w'\-]+,\s+[A-Z]"                     # `Two-word Surname, First`
     r"|" + _ORG_AUTHOR +                                           # `Cornell Law School. "Title."`
+    r"|" + _LOWERCASE_AUTHOR +                                     # `brown, adrienne maree. *Title*`
     r"|\*[A-Z]"                                                    # *Italic title* (title-led entry; ambiguous, see check below)
     r")"
 )
+
+
+# An @ that Pandoc would read as a citation key: not preceded by a word
+# character (so email addresses are left alone), not already escaped, and not
+# a figure cross-reference, which the figures filter depends on.
+_STRAY_AT_RE = re.compile(r"(?<![\w\\])@(?!fig:)(?=\w)")
+_URLISH_RE = re.compile(r"://|^<?www\.")
+
+
+def escape_stray_at_signs(text: str, log: CleanupLog) -> str:
+    """Escape @ signs that Pandoc would otherwise parse as citations.
+
+    A manuscript never contains intended Pandoc citations, but it can contain
+    social-media handles ("KC Tenants [@kctenants]"). Pandoc reads those as
+    citation keys; with no bibliography the Typst PDF fails outright ("the
+    document does not contain a bibliography"). Escaping the @ keeps the
+    text as written.
+
+    `@fig:` cross-references and anything inside a URL are left alone.
+    Idempotent: an escaped `\\@` is not matched again.
+    """
+    count = 0
+
+    def fix_token(m: re.Match) -> str:
+        nonlocal count
+        token = m.group(0)
+        if _URLISH_RE.search(token):
+            return token
+        new, n = _STRAY_AT_RE.subn(r"\\@", token)
+        count += n
+        return new
+
+    out = re.sub(r"\S+", fix_token, text)
+    log.record("escape_stray_at_signs", count, "escaped @ signs Pandoc would read as citations")
+    return out
 
 
 def unfragment_works_cited(text: str, log: CleanupLog) -> str:
@@ -868,6 +918,15 @@ def extract_lics_front_matter(text: str) -> ExtractedFrontMatter:
             i += 1
         fm.abstract = "\n".join(abs_lines).strip() or None
 
+    if fm.title and not (fm.authors or fm.keywords or fm.abstract):
+        # A first line with no author, keywords, or abstract after it is the
+        # opening of the article (a content warning, an epigraph, the first
+        # paragraph of a manuscript whose front matter is entered elsewhere),
+        # not a title. Treating it as one deleted it from the body.
+        fm.title = None
+        fm.body_after_strip = text
+        return fm
+
     fm.body_after_strip = "\n".join(lines[i:]).lstrip("\n")
     return fm
 
@@ -888,13 +947,17 @@ def build_yaml_front_matter(text: str, log: CleanupLog, issue_metadata: Optional
         return text
 
     fm = extract_lics_front_matter(text)
-    if not fm.title and not fm.authors:
-        log.record("build_yaml_front_matter", 0, "no preamble detected")
-        return text
-
     # External metadata (docx pre-scan, issue config) wins over body extraction:
     # external sources are semantically more authoritative than heuristic parsing.
     extra = dict(issue_metadata or {})
+    if not fm.title and not fm.authors:
+        if not extra:
+            log.record("build_yaml_front_matter", 0, "no preamble detected")
+            return text
+        # No preamble in the body, but the upload supplied metadata (short
+        # title and authors at minimum): still write the YAML block, and keep
+        # the whole body.
+        log.record("build_yaml_front_matter", 0, "no preamble detected; using upload metadata")
 
     payload: dict = {}
     title = extra.pop("title", None) or fm.title
@@ -1268,7 +1331,10 @@ def pair_figure_captions(text: str, log: CleanupLog) -> str:
     image_positions = []
     for i, para in enumerate(paras):
         m = _FIG_IMAGE_RE.match(para.strip())
-        if m and not m.group("alt").strip():
+        # A candidate is any image without a figure label: one with no alt
+        # text, or one whose alt is an author's image description (Word
+        # carries that through) but which has no caption yet.
+        if m and "#fig:" not in (m.group("attrs") or ""):
             image_positions.append(i)
 
     if not image_positions:
@@ -1318,6 +1384,11 @@ def pair_figure_captions(text: str, log: CleanupLog) -> str:
         inner = attrs[1:-1].strip() if attrs else ""
         if "#fig:" not in inner:
             inner = f"#fig:{cm.group('num')} {inner}".strip()
+        # Keep an author's image description as the alt text; the caption
+        # paragraph becomes the figure caption.
+        alt = " ".join(m.group("alt").split()).replace("\\", "")
+        if alt and "fig-alt=" not in inner:
+            inner = inner + ' fig-alt="' + alt.replace('"', "'") + '"'
         paras[i] = f"![{caption}]({m.group('path')}){{{inner}}}"
         count += 1
 
@@ -1361,6 +1432,7 @@ DEFAULT_PASSES: List[Pass] = [
     normalize_dashes,
     repair_pandoc_bold_escape,
     normalize_smart_quotes,
+    escape_stray_at_signs,
     unfragment_works_cited,
     # Directly after the merge above, which cannot tell a wrapped citation
     # line from the start of a repeated-author entry and glues them together.

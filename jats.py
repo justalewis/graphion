@@ -239,7 +239,7 @@ def build_article_jats(article_id: int, base_url: str = "https://example.org") -
         ).text = doi_value
 
     title_group = etree.SubElement(article_meta, "title-group")
-    etree.SubElement(title_group, "article-title").text = fm.get("title") or art["title"]
+    etree.SubElement(title_group, "article-title").text = conversion.plain_text(fm.get("title") or art["title"])
     if fm.get("subtitle"):
         etree.SubElement(title_group, "subtitle").text = fm["subtitle"]
 

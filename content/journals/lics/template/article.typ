@@ -37,6 +37,10 @@
 #let short-authors-val = "$short-authors$"
 #let footer-val = "$footer$"
 #let start-page-val = $if(start-page)$$start-page$$else$1$endif$
+// Author proofs go out before the issue order (and so the page numbers) is
+// known. `hide-page-numbers: true` drops the folio from every footer; issue
+// assembly clears the flag when it assigns real page numbers.
+#let hide-folios = $if(hide-page-numbers)$true$else$false$endif$
 
 // Article "kind" comes through from the YAML front matter. The template
 // treats "review" (book reviews) specially: no forced page break after
@@ -170,6 +174,12 @@
     // starts (title / abstract pages stay clean).
     if not started and not is-review-val {
       none
+    } else if hide-folios {
+      if footer-val != "" {
+        align(center, text(size: 8pt, fill: ink-soft, font: display-font, footer-val))
+      } else {
+        none
+      }
     } else {
       let p = counter(page).at(here()).first()
       let styled(s) = text(size: 8pt, fill: ink-soft, font: display-font, s)

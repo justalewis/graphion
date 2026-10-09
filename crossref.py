@@ -274,8 +274,8 @@ def _add_article(
     )
 
     titles = etree.SubElement(ja, f"{{{CROSSREF_NS}}}titles")
-    etree.SubElement(titles, f"{{{CROSSREF_NS}}}title").text = fm.get(
-        "title", article["title"]
+    etree.SubElement(titles, f"{{{CROSSREF_NS}}}title").text = conversion.plain_text(
+        fm.get("title", article["title"])
     )
     if fm.get("subtitle"):
         etree.SubElement(titles, f"{{{CROSSREF_NS}}}subtitle").text = fm["subtitle"]

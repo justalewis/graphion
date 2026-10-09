@@ -116,6 +116,24 @@ def template_dir(journal_slug: str) -> Path:
     return CONTENT_DIR / "journals" / journal_slug / "template"
 
 
+_EMPHASIS_RE = re.compile(r"(?<!\\)(\*{1,3}|_{1,3})(?=\S)(.+?)(?<=\S)(?<!\\)\1")
+
+
+def plain_text(md: Optional[str]) -> Optional[str]:
+    """A Markdown title or phrase as plain text.
+
+    Titles may carry Markdown emphasis ("Review of *Book Title*") so the
+    rendered galleys italicise the book title. Plain-text consumers (the
+    browser tab title, the articles list, CrossRef and JATS titles) must
+    not see the asterisks.
+    """
+    if not md:
+        return md
+    out = _EMPHASIS_RE.sub(r"\2", md)
+    out = re.sub(r"\\([\\`*_{}\[\]()#+\-.!@])", r"\1", out)
+    return " ".join(out.split())
+
+
 def _append_log(article_path: Path, header: str, body: str):
     log_file = article_path / "conversion.log"
     stamp = datetime.now().isoformat(timespec="seconds")
@@ -299,7 +317,7 @@ _FIELD_ORDER = (
     "short-title", "short-authors", "footer",
     "doi",
     "journal", "issn", "volume", "issue", "year",
-    "start-page", "start-page-locked", "end-page",
+    "start-page", "start-page-locked", "end-page", "hide-page-numbers",
     "submitted-date", "accepted-date", "published-date",
     "copyright",
     "status",
@@ -1163,6 +1181,10 @@ def assemble_issue(issue_id: int) -> AssemblyResult:
             start_page = cumulative + 1
             fm["start-page"] = start_page
             write_article_metadata(apath, fm, body)
+        # Assembly is where real page numbers arrive, so an article still
+        # set up as an author proof gets its folios back here.
+        if fm.pop("hide-page-numbers", None) is not None:
+            write_article_metadata(apath, fm, body)
 
         try:
             pdf_path = render_pdf(apath, issue["journal_slug"])
@@ -1353,7 +1375,7 @@ def render_front_matter(issue: dict, journal: dict, articles: list, editor_intro
                     fm, _ = read_article_metadata(Path(art["project_path"]))
             except Exception:
                 fm = {}
-            title_text = fm.get("title") or art["title"]
+            title_text = plain_text(fm.get("title") or art["title"])
             authors_text = _authors_inline_with_affil(fm.get("author") or [])
             start = art.get("start_page") or "?"
             toc_blocks.append(

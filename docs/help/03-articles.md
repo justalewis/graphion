@@ -23,6 +23,8 @@ What happens on submit:
 5. The cleanup pipeline runs: strip Word highlight/underline wrappers, normalize dashes/quotes, repair Pandoc Div-style footnotes, split collapsed grid tables, convert single-cell callout tables to blockquotes, extract preamble into YAML front matter.
 6. The result is `article.md`, the canonical source from this point forward.
 
+If the DOCX contains a picture Pandoc could not place (typically an image inside a text box), the upload saves it to `assets/media/` and flashes a warning naming the file; place it with **Insert image** in the Markdown editor.
+
 ## The article home page
 
 The redesigned article page has four top-level zones:
@@ -47,7 +49,7 @@ The metadata form is form-based — you don't see YAML. Sections:
 - **Identification:** Title, subtitle, DOI, status (draft / revising / final / published), ToC section (ARTICLES / SYMPOSIUM / BOOK REVIEWS or whatever the journal configures).
 - **Authors:** repeating rows of Name / Affiliation / ORCID, with up/down/remove buttons. Drag-and-drop reorder is not yet supported; use arrows.
 - **Content:** abstract (textarea) and keywords (comma- or semicolon-separated).
-- **Running headers & pagination:** short title, short authors, footer text, start page.
+- **Running headers & pagination:** short title, short authors, footer text, start page, and **Hide page numbers (author proofs)**, which leaves the folio off every PDF page for proofs sent before the issue order is set. Assembling the issue turns page numbers back on.
 - **Issue assignment (advanced):** override the inherited journal/volume/issue/year if needed.
 
 On save, the form serializes back to YAML in `article.md` (preserving the body) and **auto-runs Render** so HTML and PDF reflect the new metadata immediately.

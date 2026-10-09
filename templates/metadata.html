@@ -173,6 +173,15 @@
           {%- endif %}
         </span>
       </label>
+      <label class="full">
+        <span><input type="checkbox" name="hide_page_numbers" {% if fm.get('hide-page-numbers') %}checked{% endif %} />
+        Hide page numbers (author proofs)</span>
+        <span class="help-text">
+          Leaves the folio off every page of the PDF, for proofs sent out
+          before the issue order is set. Assembling the issue turns page
+          numbers back on.
+        </span>
+      </label>
     </div>
 
     <div class="section-divider">
