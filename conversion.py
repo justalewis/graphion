@@ -796,6 +796,17 @@ def _fill_typst_authors(typ_text: str, fm: dict) -> str:
         keywords_inner = ""
     typ_text = typ_text.replace("GRAPHION_KEYWORDS_PLACEHOLDER", keywords_inner)
 
+    # Running-head and footer strings. Same problem as authors: these sit in
+    # string literals, and a value with quotation marks in it (a short title
+    # that is itself a quotation) broke the literal.
+    for key, sentinel in (
+        ("short-title", "GRAPHION_SHORT_TITLE_STRING"),
+        ("short-authors", "GRAPHION_SHORT_AUTHORS_STRING"),
+        ("footer", "GRAPHION_FOOTER_STRING"),
+    ):
+        value = plain_text(str(fm.get(key) or "").strip()) or ""
+        typ_text = typ_text.replace(sentinel, f'"{_typst_escape_string(value)}"')
+
     return typ_text
 
 

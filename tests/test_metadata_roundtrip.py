@@ -128,3 +128,22 @@ def test_plain_text_strips_markdown_from_titles():
         "Queer Black Imagination & Abolitionist Futures"
     )
     assert conversion.plain_text(None) is None
+
+
+def test_running_head_strings_are_escaped_for_typst():
+    """A short title that is itself a quotation used to end the Typst string
+    literal early and fail the whole PDF render."""
+    typ = (
+        "#let short-title-val = GRAPHION_SHORT_TITLE_STRING\n"
+        "#let short-authors-val = GRAPHION_SHORT_AUTHORS_STRING\n"
+        "#let footer-val = GRAPHION_FOOTER_STRING\n"
+    )
+    fm = {
+        "short-title": "\u201cTeaching Must Be Our Demonstration!\u201d",
+        "short-authors": 'Pell & "Duffy"',
+    }
+    out = conversion._fill_typst_authors(typ, fm)
+    assert "GRAPHION_" not in out
+    assert '#let short-title-val = "\u201cTeaching Must Be Our Demonstration!\u201d"' in out
+    assert '#let short-authors-val = "Pell & \\"Duffy\\""' in out
+    assert '#let footer-val = ""' in out

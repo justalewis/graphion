@@ -33,9 +33,14 @@
 // modern), then EB Garamond as a last resort.
 #let display-font = ("Didot", "GFS Didot", "Bodoni 72", "Bodoni", "EB Garamond", "EB Garamond 12", "Garamond")
 
-#let short-title-val = "$short-title$"
-#let short-authors-val = "$short-authors$"
-#let footer-val = "$footer$"
+// Filled in from Python with proper string escaping (see
+// conversion._fill_typst_strings): Pandoc writes metadata into this
+// position as Typst markup, so a quotation mark in a short title (or
+// any other quote-bearing value) ended the string literal early and
+// failed the whole render.
+#let short-title-val = GRAPHION_SHORT_TITLE_STRING
+#let short-authors-val = GRAPHION_SHORT_AUTHORS_STRING
+#let footer-val = GRAPHION_FOOTER_STRING
 #let start-page-val = $if(start-page)$$start-page$$else$1$endif$
 // Author proofs go out before the issue order (and so the page numbers) is
 // known. `hide-page-numbers: true` drops the folio from every footer; issue
