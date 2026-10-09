@@ -138,7 +138,8 @@
           </button>
           <div class="menu-panel">
             <div class="menu-section">For readers</div>
-            {% if rendered_html %}<a href="{{ url_for('serve_html', article_id=article['id']) }}?dl=1">HTML</a>{% endif %}
+            {% if rendered_html %}<a href="{{ url_for('serve_html_standalone', article_id=article['id']) }}">HTML (self-contained)</a>{% endif %}
+            {% if rendered_html %}<a href="{{ url_for('serve_html', article_id=article['id']) }}?dl=1">HTML (links article.css and assets/)</a>{% endif %}
             {% if rendered_pdf %}<a href="{{ url_for('serve_pdf', article_id=article['id']) }}?dl=1">PDF</a>{% endif %}
             <a href="{{ url_for('serve_epub', article_id=article['id']) }}">EPUB</a>
             <div class="menu-sep"></div>

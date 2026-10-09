@@ -24,6 +24,7 @@ import db
 import jats
 import lint
 import ojs_client
+import standalone_html
 from auth import User, login_manager
 from config import (
     ALLOWED_UPLOAD_EXTENSIONS, CONTENT_DIR, LOGIN_MAX_ATTEMPTS,
@@ -1299,6 +1300,26 @@ def register_routes(app: Flask):
             as_attachment=request.args.get("dl") == "1",
         )
 
+    @app.route("/articles/<int:article_id>/html-standalone")
+    @login_required
+    def serve_html_standalone(article_id):
+        """The HTML galley as one self-contained file: stylesheet and
+        figures embedded, so it opens styled with nothing beside it."""
+        article = db.query_one("SELECT project_path, slug FROM articles WHERE id = ?", (article_id,))
+        if not article:
+            abort(404)
+        apath = Path(article["project_path"])
+        if not (apath / "article.html").exists():
+            abort(404)
+        from flask import Response
+        return Response(
+            standalone_html.build(apath),
+            mimetype="text/html",
+            headers={
+                "Content-Disposition": f'attachment; filename="{article["slug"]}.html"',
+            },
+        )
+
     @app.route("/articles/<int:article_id>/pdf")
     @login_required
     def serve_pdf(article_id):
@@ -2165,7 +2186,7 @@ def register_routes(app: Flask):
             import io, zipfile
             from flask import g  # noqa: F401
             upload_path: Optional[Path] = None
-            tmp_zip: Optional[Path] = None
+            tmp_upload: Optional[Path] = None
             try:
                 if galley_kind == "ojs_zip":
                     html_path = apath / "article.html"
@@ -2179,8 +2200,8 @@ def register_routes(app: Flask):
                     if (apath / "article-override.css").exists():
                         css_paths.append(apath / "article-override.css")
                     slug = article["slug"]
-                    tmp_zip = apath / f".{slug}-ojs.zip"
-                    with zipfile.ZipFile(tmp_zip, "w", zipfile.ZIP_DEFLATED) as z:
+                    tmp_upload = apath / f".{slug}-ojs.zip"
+                    with zipfile.ZipFile(tmp_upload, "w", zipfile.ZIP_DEFLATED) as z:
                         z.write(html_path, arcname=f"{slug}.html")
                         for css in css_paths:
                             z.write(css, arcname=css.name)
@@ -2189,7 +2210,19 @@ def register_routes(app: Flask):
                             for f in assets_dir.rglob("*"):
                                 if f.is_file():
                                     z.write(f, arcname=str(f.relative_to(apath)).replace("\\", "/"))
-                    upload_path = tmp_zip
+                    upload_path = tmp_upload
+                elif galley_kind == "html":
+                    # The bare article.html links article.css and assets/ by
+                    # relative path, so on its own in OJS it shows unstyled
+                    # with broken figures. Send the self-contained version.
+                    if not (apath / "article.html").exists():
+                        flash("HTML has not been rendered for this article yet.", "error")
+                        return redirect(request.url)
+                    tmp_dir = apath / ".ojs-upload"
+                    tmp_dir.mkdir(exist_ok=True)
+                    tmp_upload = tmp_dir / f"{article['slug']}.html"
+                    tmp_upload.write_text(standalone_html.build(apath), encoding="utf-8")
+                    upload_path = tmp_upload
                 else:
                     upload_path = apath / rel
                     if not upload_path.exists():
@@ -2220,9 +2253,9 @@ def register_routes(app: Flask):
                 flash(f"OJS upload failed: {exc}", "error")
                 return redirect(request.url)
             finally:
-                if tmp_zip and tmp_zip.exists():
+                if tmp_upload and tmp_upload.exists():
                     try:
-                        tmp_zip.unlink()
+                        tmp_upload.unlink()
                     except OSError:
                         pass
 

@@ -4,7 +4,8 @@ The tool produces seven output formats from each article's Markdown source. All 
 
 | Format | When to use | Route |
 |---|---|---|
-| HTML galley | OJS HTML galley, web reading, archival | `/articles/<id>/html` |
+| HTML galley | Web reading on the server; links `article.css` and `assets/` | `/articles/<id>/html` |
+| HTML (self-contained) | OJS HTML galley, sharing, archival; one file with CSS and figures embedded | `/articles/<id>/html-standalone` |
 | Tagged PDF (Typst) | Print archival, OJS PDF galley, primary distribution | `/articles/<id>/pdf` |
 | Alt PDF (WeasyPrint) | HTML/PDF visual parity (optional engine) | `Tools → Advanced → Render PDF (WeasyPrint)` |
 | EPUB | E-reader distribution, library | `/articles/<id>/epub` |
@@ -40,6 +41,8 @@ Structure (LiCS):
 ```
 
 Best for: web reading, uploading as the OJS HTML galley, archival.
+
+The rendered `article.html` links its stylesheet and figures by relative path (`article.css`, `assets/media/...`). Served by the app, or unzipped from the OJS package, that works. Downloaded on its own, it opens unstyled with broken images. **Download ▾ → HTML (self-contained)** (`/articles/<id>/html-standalone`) produces the same galley as a single file: local stylesheets become a `<style>` block and local images become `data:` URIs. Remote resources (the Google Fonts import, embedded iframes) stay as links. **Push to OJS → HTML** uploads this self-contained version, so the OJS galley needs no dependent files.
 
 ## Tagged PDF (Typst)
 
