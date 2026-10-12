@@ -147,3 +147,20 @@ def test_running_head_strings_are_escaped_for_typst():
     assert '#let short-title-val = "\u201cTeaching Must Be Our Demonstration!\u201d"' in out
     assert '#let short-authors-val = "Pell & \\"Duffy\\""' in out
     assert '#let footer-val = ""' in out
+
+
+def test_epub_is_stale_after_article_edit():
+    """The EPUB is built on first download; a later edit must trigger a rebuild."""
+    import os
+    article = _scratch_article("---\ntitle: T\n---\n\nbody.\n")
+    try:
+        assert conversion.epub_is_stale(article)  # never built
+        epub = article / "article.epub"
+        epub.write_bytes(b"epub")
+        md = article / "article.md"
+        os.utime(md, (1000, 1000)); os.utime(epub, (2000, 2000))
+        assert not conversion.epub_is_stale(article)
+        os.utime(md, (3000, 3000))
+        assert conversion.epub_is_stale(article)
+    finally:
+        shutil.rmtree(article)

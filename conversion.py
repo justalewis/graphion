@@ -1063,6 +1063,20 @@ def render_epub(article_path: Path, journal_slug: str) -> Path:
     return out
 
 
+def epub_is_stale(article_path: Path) -> bool:
+    """True when article.epub is missing or older than article.md.
+
+    Render builds HTML and PDF only; the EPUB is built on first download.
+    Without this check an edit or metadata save after that first download
+    left the old EPUB being served.
+    """
+    epub = article_path / "article.epub"
+    src = article_path / "article.md"
+    if not epub.exists():
+        return True
+    return src.exists() and src.stat().st_mtime > epub.stat().st_mtime
+
+
 def render_all(article_path: Path, journal_slug: str, formats: Optional[set] = None) -> RenderResult:
     """Render the configured output formats. By default: HTML and PDF.
 

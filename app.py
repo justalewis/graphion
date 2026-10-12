@@ -1363,14 +1363,16 @@ def register_routes(app: Flask):
         if not article:
             abort(404)
         apath = Path(article["project_path"])
-        target = apath / "article.epub"
-        if not target.exists():
+        if conversion.epub_is_stale(apath):
             try:
                 conversion.render_epub(apath, article["journal_slug"])
             except Exception as exc:
                 flash(f"EPUB render failed: {exc}", "error")
                 return redirect(url_for("article_home", article_id=article_id))
-        return send_from_directory(apath, "article.epub", as_attachment=True)
+        return send_from_directory(
+            apath, "article.epub", as_attachment=True,
+            download_name=f"{article['slug']}.epub",
+        )
 
     # ---------- figures ----------
 
