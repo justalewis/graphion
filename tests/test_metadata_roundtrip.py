@@ -164,3 +164,20 @@ def test_epub_is_stale_after_article_edit():
         assert conversion.epub_is_stale(article)
     finally:
         shutil.rmtree(article)
+
+
+def test_epub_author_args_split_names_and_affiliations():
+    """Map-style authors printed as "true" on the EPUB title page."""
+    args = conversion._epub_author_args({"author": [
+        {"name": "Erin Green", "affiliation": "University of Maryland"},
+        {"name": "Logan Middleton"},
+    ]})
+    assert args == [
+        "-M", "author=Erin Green", "-M", "author=Logan Middleton",
+        "-V", "author=Erin Green—University of Maryland",
+        "-V", "author=Logan Middleton",
+    ]
+    assert conversion._epub_author_args({"author": "Solo Author"}) == [
+        "-M", "author=Solo Author", "-V", "author=Solo Author",
+    ]
+    assert conversion._epub_author_args({}) == []

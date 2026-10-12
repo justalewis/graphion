@@ -1052,6 +1052,8 @@ def render_epub(article_path: Path, journal_slug: str) -> Path:
     if override_css.exists():
         extra.extend(["--css", str(override_css)])
     extra.extend(_citation_args(article_path, journal_slug))
+    fm, _ = read_article_metadata(article_path)
+    extra.extend(_epub_author_args(fm))
 
     pypandoc.convert_file(
         str(md),
@@ -1061,6 +1063,34 @@ def render_epub(article_path: Path, journal_slug: str) -> Path:
         extra_args=extra,
     )
     return out
+
+
+def _epub_author_args(fm: dict) -> list:
+    """Pandoc arguments that give the EPUB usable author lines.
+
+    Graphion stores authors as {name, affiliation} maps, which Pandoc's
+    EPUB writer prints as "true" on the title page and drops from
+    dc:creator. Names go in as metadata (dc:creator); "Name—Affiliation"
+    goes in as the template variable the title page prints.
+    """
+    authors = fm.get("author") or []
+    if isinstance(authors, (str, dict)):
+        authors = [authors]
+    args = []
+    lines = []
+    for a in authors:
+        if isinstance(a, dict):
+            name = str(a.get("name") or "").strip()
+            aff = str(a.get("affiliation") or "").strip()
+        else:
+            name, aff = str(a).strip(), ""
+        if not name:
+            continue
+        args.extend(["-M", f"author={name}"])
+        lines.append(f"{name}—{aff}" if aff else name)
+    for line in lines:
+        args.extend(["-V", f"author={line}"])
+    return args
 
 
 def epub_is_stale(article_path: Path) -> bool:
