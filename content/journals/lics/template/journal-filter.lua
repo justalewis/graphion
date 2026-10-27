@@ -529,9 +529,12 @@ end
 -- Long links break only after a slash or before a period. Typst gets each
 -- run between break points as an unbreakable box, joined by zero-width
 -- spaces; HTML gets <wbr> at the same points. A run longer than the
--- measure can carry (a slug like "nashua-german-american-returns-home-…")
--- may also break after a hyphen, or it would run off the page.
+-- measure can carry (a slug like "nashua-german-american-returns-home-…"
+-- or "Revolutionary_Scholarship_by_Any_…") may also break after a hyphen
+-- or underscore, and a run with neither is split at MAX_RUN characters,
+-- or it would run off the page.
 local LONG_RUN = 20
+local MAX_RUN = 30
 
 local function url_segments(url)
   local segs, cur = {}, ""
@@ -541,7 +544,8 @@ local function url_segments(url)
       cur = ch
     else
       cur = cur .. ch
-      if ch == "/" or (ch == "-" and #cur > LONG_RUN) then
+      if ch == "/" or ((ch == "-" or ch == "_") and #cur > LONG_RUN)
+          or #cur >= MAX_RUN then
         table.insert(segs, cur)
         cur = ""
       end
