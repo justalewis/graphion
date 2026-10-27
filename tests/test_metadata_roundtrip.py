@@ -181,3 +181,18 @@ def test_epub_author_args_split_names_and_affiliations():
         "-M", "author=Solo Author", "-V", "author=Solo Author",
     ]
     assert conversion._epub_author_args({}) == []
+
+
+def test_notes_move_ahead_of_works_cited_in_html():
+    html = (
+        '<section id="intro" class="level1"><p>Body.</p></section>\n'
+        '<section id="works-cited" class="level1 references"><h1>Works Cited</h1></section>\n'
+        '<section id="footnotes" class="footnotes" role="doc-endnotes">\n<ol><li>A note.</li></ol>\n</section>\n'
+        '</article>'
+    )
+    out = conversion.move_notes_before_references(html)
+    assert out.index('id="footnotes"') < out.index('id="works-cited"')
+    assert out.count('id="footnotes"') == 1 and out.endswith("</article>")
+    # No Works Cited: unchanged.
+    no_refs = html.replace('id="works-cited"', 'id="other"')
+    assert conversion.move_notes_before_references(no_refs) == no_refs

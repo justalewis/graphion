@@ -138,8 +138,7 @@ function Header(el)
   return nil
 end
 
--- Typst-only: inject a #dropcap[X] raw inline at the start of the first
--- body Para in document order.
+-- Typst-only: wrap the first body Para in document order in #dropcap[...].
 --
 -- The rule is deliberately "first Para, wherever it sits" rather than
 -- "first Para of the opening section." A body that opens with prose
@@ -147,34 +146,38 @@ end
 -- of the abstract — still gets its cap on that line, not on the first
 -- paragraph that happens to follow a heading. Book reviews and short
 -- articles with no H1s at all fall into the same rule for free.
+--
+-- The template's #dropcap takes the whole paragraph (it hands it to the
+-- droplet package) so the text flows beside a two-line initial. Wrapping
+-- only the first letter made the enlarged glyph inflate the first line's
+-- height, leaving a visible gap between lines one and two.
 local function inject_typst_dropcap(blocks)
-  local function wrap_first_letter(block)
-    local first_str_idx = nil
-    for i, inline in ipairs(block.content) do
+  local function wrap_para(block)
+    local first = nil
+    for _, inline in ipairs(block.content) do
       if inline.t == "Str" and #inline.text > 0 then
-        first_str_idx = i
+        first = inline.text:sub(1, 1)
         break
+      elseif inline.t ~= "Space" then
+        return false
       end
     end
-    if not first_str_idx then return false end
-    local s = block.content[first_str_idx].text
-    local letter = s:sub(1, 1)
-    local rest = s:sub(2)
-    -- Only ever cap a letter or digit. The character goes straight into
-    -- `#dropcap[...]` as Typst markup, so a bracket or backslash arriving here
-    -- silently breaks the delimiter and fails the render for the whole
-    -- article. Cleanups strip the anchor spans that caused that, but the
-    -- drop cap should not be the thing that depends on it.
-    if not letter:match("[%w]") then return false end
-    local dropcap_raw = pandoc.RawInline("typst", "#dropcap[" .. letter .. "]")
-    block.content[first_str_idx] = pandoc.Str(rest)
-    table.insert(block.content, first_str_idx, dropcap_raw)
+    -- Only ever cap a letter or digit; a paragraph opening with a quotation
+    -- mark, bracket, or formatting is left as ordinary text.
+    if not first or not first:match("[%w]") then return false end
+    block.content:insert(1, pandoc.RawInline("typst", "#dropcap["))
+    block.content:insert(pandoc.RawInline("typst", "]"))
     return true
   end
 
-  for _, block in ipairs(blocks) do
+  for i, block in ipairs(blocks) do
     if block.t == "Para" then
-      wrap_first_letter(block)
+      -- Typst indents a paragraph only when it follows another paragraph,
+      -- and the drop-cap block is not one, so the paragraph after it would
+      -- start flush left. Give it the body indent explicitly.
+      if wrap_para(block) and blocks[i + 1] and blocks[i + 1].t == "Para" then
+        blocks[i + 1].content:insert(1, pandoc.RawInline("typst", "#h(18pt)"))
+      end
       break
     end
   end
@@ -392,7 +395,10 @@ local function collect_typst_endnotes(doc)
       pandoc.Inlines({ pandoc.Str("Notes") }),
       pandoc.Attr("notes-section", { "notes-endnotes" })
     )
-    doc.blocks:insert(notes_header)
+    -- Notes come before Works Cited (LiCS Checklist C, order of
+    -- elements), so the section goes in ahead of the references heading
+    -- when there is one, and at the end otherwise.
+    local notes_blocks = { notes_header }
     for i, content in ipairs(collected_notes) do
       -- Content from `Note` is a list of Blocks; flatten the first
       -- block's inlines into a single paragraph prefixed with the
@@ -406,17 +412,27 @@ local function collect_typst_endnotes(doc)
         for _, inl in ipairs(first.content) do
           first_inlines:insert(inl)
         end
-        doc.blocks:insert(pandoc.Para(first_inlines))
+        table.insert(notes_blocks, pandoc.Para(first_inlines))
         -- Any additional paragraphs in the note.
         for j = 2, #content do
-          doc.blocks:insert(content[j])
+          table.insert(notes_blocks, content[j])
         end
       else
         -- Fallback: treat the whole content as separate blocks.
         for _, b in ipairs(content) do
-          doc.blocks:insert(b)
+          table.insert(notes_blocks, b)
         end
       end
+    end
+    local at = #doc.blocks + 1
+    for k, block in ipairs(doc.blocks) do
+      if block.t == "Header" and is_references_heading(block) then
+        at = k
+        break
+      end
+    end
+    for k, b in ipairs(notes_blocks) do
+      doc.blocks:insert(at + k - 1, b)
     end
   end
   return doc
@@ -485,10 +501,104 @@ local function split_pipes_in_meta(meta)
   return meta
 end
 
+-- A Works Cited entry that ends in its publication year ("…Press, 2005.")
+-- can leave the year alone on the entry's last line. Bind the year to the
+-- word before it with a no-break space.
+local NBSP = "\u{00A0}"
+
+local function bind_final_year(para)
+  local c = para.content
+  local n = #c
+  if n >= 3 and c[n].t == "Str" and c[n].text:match("^%d%d%d%d%a?%.$")
+      and c[n - 1].t == "Space" then
+    c[n - 1] = pandoc.Str(NBSP)
+  end
+end
+
+local function bind_years_in_references(blocks)
+  local in_refs = false
+  for _, block in ipairs(blocks) do
+    if block.t == "Header" then
+      in_refs = is_references_heading(block)
+    elseif in_refs and block.t == "Para" then
+      bind_final_year(block)
+    end
+  end
+end
+
+-- Long links break only after a slash or before a period. Typst gets each
+-- run between break points as an unbreakable box, joined by zero-width
+-- spaces; HTML gets <wbr> at the same points.
+local function url_segments(url)
+  local segs, cur = {}, ""
+  for ch in url:gmatch(utf8.charpattern) do
+    if ch == "." and cur ~= "" then
+      table.insert(segs, cur)
+      cur = ch
+    else
+      cur = cur .. ch
+      if ch == "/" then
+        table.insert(segs, cur)
+        cur = ""
+      end
+    end
+  end
+  if cur ~= "" then table.insert(segs, cur) end
+  return segs
+end
+
+local function typst_string(s)
+  return '"' .. s:gsub("\\", "\\\\"):gsub('"', '\\"') .. '"'
+end
+
+local function html_escape(s)
+  return (s:gsub("&", "&amp;"):gsub("<", "&lt;"):gsub(">", "&gt;"))
+end
+
+local function is_url_text(s)
+  return s:match("^https?://") or s:match("^www%.") or s:match("^doi%.org/")
+end
+
+local function breakable_url(text)
+  local parts = {}
+  if FORMAT == "typst" then
+    for _, seg in ipairs(url_segments(text)) do
+      table.insert(parts, "#box(" .. typst_string(seg) .. ")")
+    end
+    return pandoc.RawInline("typst", table.concat(parts, "#sym.zws"))
+  end
+  for _, seg in ipairs(url_segments(text)) do
+    table.insert(parts, html_escape(seg))
+  end
+  return pandoc.RawInline("html", table.concat(parts, "<wbr>"))
+end
+
+local url_filter = {
+  Link = function(el)
+    if #el.content == 1 and el.content[1].t == "Str" and is_url_text(el.content[1].text) then
+      el.content = { breakable_url(el.content[1].text) }
+      return el
+    end
+  end,
+  Str = function(el)
+    -- A URL typed as plain text ("www.gao.gov/assets/…") rather than a link.
+    if #el.text > 20 and is_url_text(el.text) then
+      local url, tail = el.text:match("^(.-)([%.,;:]?)$")
+      local out = { breakable_url(url) }
+      if tail ~= "" then table.insert(out, pandoc.Str(tail)) end
+      return out
+    end
+  end,
+}
+
 function Pandoc(doc)
   doc.meta = split_pipes_in_meta(doc.meta)
   local kind_str = doc.meta.kind and pandoc.utils.stringify(doc.meta.kind) or ""
   local is_review = kind_str:lower() == "review"
+  bind_years_in_references(doc.blocks)
+  if FORMAT == "typst" or FORMAT:match("^html") then
+    doc = doc:walk(url_filter)
+  end
   if FORMAT == "typst" then
     doc = collect_typst_endnotes(doc)
     doc.blocks = inject_typst_dropcap(doc.blocks)

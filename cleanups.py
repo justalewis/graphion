@@ -557,8 +557,8 @@ def _ensure_works_cited_heading(text: str) -> str:
 # and a social-media handle may sit between the name and its closing period
 # ("KC Tenants [@kctenants].").
 _ORG_AUTHOR = (
-    r"[A-Z][\w'’\-!&]*"
-    r"(?:,?\s+(?:[A-Z][\w'’\-!&]*|of|the|to|and|for|in|on|a|an))+"
+    r"[A-Z][\w'’\-!&.]*"
+    r"(?:,?\s+(?:[A-Z][\w'’\-!&.]*|of|the|to|and|for|in|on|a|an))+"
     r"(?:\s+\\?\[[^\]\n]*?\\?\])?"
     r"\.\s+[\"“*]"
 )

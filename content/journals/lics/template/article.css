@@ -114,6 +114,7 @@ aside.keywords p {
 }
 section.abstract p {
   text-align: justify;
+  text-align-last: left;
   text-indent: 0;
   font-size: 0.95rem;
   margin: 0 0 0.75rem;
@@ -247,7 +248,11 @@ a {
   color: var(--link);
   text-decoration: none;
   border-bottom: 1px solid #00000020;
-  word-break: break-word;
+  /* The journal filter puts <wbr> after each slash and before each period
+   * of a long URL, so links break at those points. break-word remains as
+   * a fallback for a single run too long for a narrow screen. */
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 a:hover { border-bottom-color: var(--link); }
 

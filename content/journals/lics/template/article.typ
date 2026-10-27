@@ -8,8 +8,10 @@
 // on the first paragraph of the opening section.
 //
 // The drop cap is injected by the journal's Lua filter (typst output
-// path only); it wraps the first character of the first body paragraph
-// in `#dropcap[X]`. The helper below implements the visual treatment.
+// path only); it wraps the first body paragraph in `#dropcap[...]`. The
+// helper below hands that paragraph to the droplet package.
+
+#import "@preview/droplet:0.3.1": dropcap as droplet-dropcap
 
 #let ink = rgb("#1a1612")
 #let ink-soft = rgb("#4a4137")
@@ -46,6 +48,10 @@
 // known. `hide-page-numbers: true` drops the folio from every footer; issue
 // assembly clears the flag when it assigns real page numbers.
 #let hide-folios = $if(hide-page-numbers)$true$else$false$endif$
+// Folio style: "1" (arabic, the default) or "i" (lowercase roman), set by
+// `page-numbering` in the front matter. The editors' introduction runs on
+// roman-numbered pages ahead of the articles, which start at 1.
+#let folio-style = "$if(page-numbering)$$page-numbering$$else$1$endif$"
 
 // Article "kind" comes through from the YAML front matter. The template
 // treats "review" (book reviews) specially: no forced page break after
@@ -111,21 +117,17 @@
 #let horizontalrule = scene-break
 #let divider() = scene-break
 
-// Drop cap helper. Typst doesn't natively wrap body text around a
-// floated initial (no shape-aware reflow), so this approximates the
-// classical scholarly-book opening: an enlarged first letter set
-// across two lines, with the rest of the line tucked neatly to its
-// right. Smaller than the previous version (2.4em vs 3.6em) and with
-// a tighter baseline to prevent overlap with the line above.
-#let dropcap(letter) = box(
-  baseline: 0.5em,
-  text(
-    size: 2.4em,
-    weight: 500,
-    font: ("EB Garamond", "Garamond", "Georgia"),
-    [#letter],
-  ),
-) + h(0.1em)
+// Drop cap helper. The filter passes the whole opening paragraph; droplet
+// sets its first letter across two lines and flows the rest of the text
+// beside it. The earlier inline version enlarged a single glyph in the
+// line, which pushed the first two lines of the article apart.
+#let dropcap(body) = droplet-dropcap(
+  height: 2,
+  gap: 3pt,
+  font: ("EB Garamond", "EB Garamond 12", "Garamond", "Georgia"),
+  weight: 500,
+  body,
+)
 
 // Title uses Typst content syntax ([...]) so quoted titles like
 // `"Facing the World" through Translingual...` don't blow up the Typst
@@ -188,7 +190,7 @@
     } else {
       let p = counter(page).at(here()).first()
       let styled(s) = text(size: 8pt, fill: ink-soft, font: display-font, s)
-      let folio = styled(str(p))
+      let folio = styled(numbering(folio-style, p))
       if calc.even(p) {
         align(left, if footer-val != "" { folio + styled("  ·  " + footer-val) } else { folio })
       } else {
@@ -212,9 +214,12 @@
 // (Properties → Leading = 15 on BodyText). Typst's `leading` is
 // inter-line space (i.e., extra gap between lines), so 15pt - 10pt
 // = 5pt extra, which is 0.5em.
+// `spacing` equals `leading`: no extra space between paragraphs, which
+// are marked by their first-line indent alone (as in LiCS 12.2).
 #set par(
   justify: true,
   leading: 0.5em,
+  spacing: 0.5em,
   first-line-indent: 18pt,
   linebreaks: "optimized",
 )
@@ -286,12 +291,15 @@
 // Blockquotes: 36pt (0.5") left indent per LiCS InDesign "BlockQuote"
 // paragraph style. Same point size as body (10pt), no border or italic
 // — the indent itself is the visual marker.
-#show quote.where(block: true): it => {
+//
+// The space above and below is set once, on the block, so it is the same on
+// both sides. The earlier v() calls stacked on top of the surrounding
+// paragraph spacing and left more room above a quote than below it, and
+// more again under a heading (Sanders's epigraphs).
+#show quote.where(block: true): it => block(above: 1em, below: 1em, {
   set par(first-line-indent: 0pt, leading: 0.5em)
-  v(0.6em)
   pad(left: 36pt, right: 18pt, text(size: 10pt, it.body))
-  v(0.6em)
-}
+})
 
 // Tables. Classical book treatment:
 //   - Hairline rule above and below the entire table (1pt, ink color).
@@ -376,7 +384,9 @@
 // tracking gives the same "label" feel and prints cleanly.
 $if(keywords)$
 #align(center, block(width: 80%, {
-  set par(first-line-indent: 0pt)
+  // Not justified: a justified keyword line stretched the gaps between
+  // keywords to fill the measure.
+  set par(first-line-indent: 0pt, justify: false)
   text(font: display-font, size: 8.5pt, tracking: 0.2em, fill: ink-soft, upper("Keywords"))
   v(0.3em)
   text(style: "italic", size: 9pt, fill: ink-soft, [$for(keywords)$$keywords$$sep$; $endfor$])
@@ -389,7 +399,9 @@ $if(abstract)$
   set par(first-line-indent: 0pt, justify: true, leading: 0.5em)
   text(font: display-font, size: 8.5pt, tracking: 0.2em, fill: ink-soft, upper("Abstract"))
   v(0.4em)
-  text(size: 9.75pt, [$abstract$])
+  // Left-aligned so the justified paragraph's last line sits at the left
+  // margin; inheriting the block's centering centered it.
+  align(left, text(size: 9.75pt, [$abstract$]))
 }))
 #v(1em)
 

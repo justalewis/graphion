@@ -317,7 +317,7 @@ _FIELD_ORDER = (
     "short-title", "short-authors", "footer",
     "doi",
     "journal", "issn", "volume", "issue", "year",
-    "start-page", "start-page-locked", "end-page", "hide-page-numbers",
+    "start-page", "start-page-locked", "end-page", "hide-page-numbers", "page-numbering",
     "submitted-date", "accepted-date", "published-date",
     "copyright",
     "status",
@@ -725,7 +725,35 @@ def render_html(article_path: Path, journal_slug: str) -> Path:
         outputfile=str(out),
         extra_args=extra,
     )
+    html = out.read_text(encoding="utf-8")
+    moved = move_notes_before_references(html)
+    if moved != html:
+        out.write_text(moved, encoding="utf-8")
     return out
+
+
+_FOOTNOTES_SECTION_RE = re.compile(
+    r'[ \t]*<section id="footnotes"[^>]*>.*?</section>\n?', re.DOTALL
+)
+_REFERENCES_SECTION_RE = re.compile(r'[ \t]*<section id="works-cited"[^>]*>')
+
+
+def move_notes_before_references(html: str) -> str:
+    """Put Pandoc's endnotes section ahead of Works Cited.
+
+    Pandoc always writes the notes at the end of the document, after Works
+    Cited; LiCS (Checklist C, order of elements) wants Notes first. The PDF
+    path does the same in the journal filter. Without a Works Cited
+    section the notes stay at the end.
+    """
+    notes = _FOOTNOTES_SECTION_RE.search(html)
+    refs = _REFERENCES_SECTION_RE.search(html)
+    if not notes or not refs or refs.start() > notes.start():
+        return html
+    block = notes.group(0)
+    without = html[:notes.start()] + html[notes.end():]
+    at = _REFERENCES_SECTION_RE.search(without).start()
+    return without[:at] + block + without[at:]
 
 
 def _typst_escape_string(s: str) -> str:

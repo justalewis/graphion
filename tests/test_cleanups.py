@@ -785,3 +785,15 @@ def test_caption_is_paired_with_an_image_that_has_alt_text():
     assert 'fig-alt="Livingston, in a gray raincoat, stands in the rain."' in out
     assert "Figure 1. A screen capture" not in out
     assert _pair(out) == out
+
+
+def test_works_cited_entry_starting_with_an_initialism_is_not_merged():
+    """"U.S. Government Accountability Office. "Title."" opens a new entry;
+    it was being joined onto the entry before it."""
+    text = (
+        "# Works Cited\n\n"
+        "Tuck, Eve, and K. Wayne Yang. \"Decolonization Is Not a Metaphor.\" *Decolonization*, 2012, pp. 1--40.\n\n"
+        "U.S. Government Accountability Office. \"Checkpoints Contribute to Border Patrol's Mission.\" Aug. 2009.\n"
+    )
+    out = cleanups.unfragment_works_cited(text, cleanups.CleanupLog())
+    assert "pp. 1--40.\n\nU.S. Government" in out
