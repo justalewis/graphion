@@ -56,10 +56,8 @@ $endif$
       <span class="chapter-title">$title$</span>
     </h1>
     $if(subtitle)$<p class="subtitle">$subtitle$</p>$endif$
-    $if(author)$
-    <p class="byline">
-      $for(author)$$author.name$$sep$, $endfor$
-    </p>
+    $if(byline)$
+    <p class="byline">$byline$</p>
     $endif$
   </header>
 

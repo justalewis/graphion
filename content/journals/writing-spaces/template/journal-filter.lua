@@ -607,6 +607,26 @@ local url_filter = {
 -- that would have made nested h1s equivalent was never implemented by any
 -- browser or assistive technology. Demote one level for the tagged formats;
 -- Typst builds its own structure and is left alone.
+-- The series prints "A, B, C, and D". Pandoc's template language joins a
+-- list with one separator, so a loop there gives "A, B, C" and can never
+-- add the serial "and". Build the byline here, where the length of the list
+-- is known. The Typst template does the same thing in Typst for the same
+-- reason; neither can be done in the template language itself.
+local function format_byline(authors)
+  if not authors then return nil end
+  local names = {}
+  for _, a in ipairs(authors) do
+    local name = a.name and pandoc.utils.stringify(a.name)
+                 or pandoc.utils.stringify(a)
+    name = name:gsub("^%s+", ""):gsub("%s+$", "")
+    if name ~= "" then names[#names + 1] = name end
+  end
+  if #names == 0 then return nil end
+  if #names == 1 then return names[1] end
+  if #names == 2 then return names[1] .. " and " .. names[2] end
+  return table.concat(names, ", ", 1, #names - 1) .. ", and " .. names[#names]
+end
+
 local function demote_headings(blocks)
   return pandoc.walk_block(pandoc.Div(blocks), {
     Header = function(h)
@@ -644,6 +664,10 @@ function Pandoc(doc)
       local flat = pandoc.utils.stringify(doc.meta.abstract)
       flat = flat:gsub("%s+", " "):gsub("^%s+", ""):gsub("%s+$", "")
       doc.meta.description = pandoc.MetaString(flat)
+    end
+    if not doc.meta.byline then
+      local byline = format_byline(doc.meta.author)
+      if byline then doc.meta.byline = pandoc.MetaString(byline) end
     end
   end
   return doc

@@ -232,10 +232,17 @@ article p {
   text-indent: 1.3em;
   hyphens: auto;
 }
+/* The first paragraph after any head runs flush. The opening paragraph of
+ * the chapter sits inside a wrapper the filter adds for the drop cap, so it
+ * needs its own rule rather than an adjacent-sibling one.
+ *
+ * There is deliberately no `section > p:first-of-type` here. That wrapper
+ * makes the SECOND paragraph the section's first direct <p> child, so the
+ * rule stripped the indent from the paragraph after the drop cap and left
+ * two unindented paragraphs running together at the top of every section. */
 article h2 + p,
 article h3 + p,
 article h4 + p,
-section > p:first-of-type,
 .opening-para > p { text-indent: 0; }
 
 /* Drop cap. ::first-letter changes no markup and adds nothing to the
@@ -328,12 +335,28 @@ section.footnotes > hr { display: none; }
 section.footnotes p { text-indent: 0; }
 section.footnotes ol { padding-left: 1.7em; }
 
-/* Accessibility: the reference and the back link are small targets. Pad
- * them out and keep them underlined so they are findable and clickable. */
-sup a, a.footnote-back {
-  padding: 0 0.15em;
-  text-decoration: underline;
+/* Accessibility: a footnote reference and its back link are small targets,
+ * so they get padding to click at.
+ *
+ * The underline comes off these two. Colour is not carrying the link on its
+ * own here: a raised, smaller numeral is already distinct from the prose
+ * around it, which is what the rule against colour-only links asks for. An
+ * underline under a superscript digit also sits almost on the text baseline,
+ * where it reads as a stray mark rather than a link. Focus is unaffected,
+ * since :focus-visible draws its own outline. */
+/* Pandoc wraps the superscript in the anchor, not the other way round, so
+ * the obvious `sup a` never matches anything. Target what it actually
+ * emits. */
+a.footnote-ref, a[role="doc-noteref"], a.footnote-back {
+  /* Padding on the trailing side only. Padding both sides opens a gap
+   * between the word and its marker, so the reference reads as a stray
+   * numeral rather than as attached to "assignment." */
+  padding: 0 0.25em 0 0;
+  text-decoration: none;
 }
+a.footnote-ref:hover,
+a[role="doc-noteref"]:hover,
+a.footnote-back:hover { text-decoration: underline; }
 
 /* ---------- figures and tables ---------- */
 
