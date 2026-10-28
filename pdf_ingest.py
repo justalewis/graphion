@@ -64,6 +64,10 @@ QUOTE_INSET_MIN = 18.0
 HEAD_SIZE_DELTA = 0.6
 # Type this much larger than the body is a dropped initial, not a head.
 DROPCAP_SIZE_FACTOR = 2.5
+# A step between lines this much larger than the paragraph's own leading is
+# space between blocks. Measured on the series: 13.2pt inside a paragraph,
+# 17.5pt and up between them, so the two never come close to overlapping.
+PARA_GAP_FACTOR = 1.25
 
 
 @dataclass
@@ -102,6 +106,9 @@ class Layout:
     body_top: float
     body_bottom: float
     page_centre: float
+    # Baseline-to-baseline distance inside a paragraph. Zero means it could
+    # not be learned, and the gap rule then stays out of the way.
+    line_pitch: float = 0.0
 
 
 @dataclass
@@ -292,6 +299,21 @@ def learn_layout(lines: list, page_width: float) -> Layout:
     body = [l for l in lines if abs(l.size - body_size) < 0.05]
     if not body:
         body = lines
+
+    # The commonest step between one body line and the next is the leading
+    # inside a paragraph. Anything appreciably larger is space the typesetter
+    # put between blocks, which is the only mark separating two quoted
+    # paragraphs: they share an indent, so position alone runs them together.
+    steps: dict = {}
+    previous = None
+    for line in body:
+        if previous is not None and previous.page == line.page:
+            step = round(line.top - previous.top, 1)
+            if 0 < step < body_size * 3:
+                steps[step] = steps.get(step, 0) + 1
+        previous = line
+    pitch = max(steps, key=steps.get) if steps else 0.0
+
     return Layout(
         body_size=body_size,
         body_left=_modal(l.x0 for l in body),
@@ -300,6 +322,7 @@ def learn_layout(lines: list, page_width: float) -> Layout:
                         for p in sorted({l.page for l in body})),
         body_bottom=max((l.top for l in body), default=0.0),
         page_centre=page_width / 2,
+        line_pitch=pitch,
     )
 
 
@@ -473,6 +496,7 @@ def assemble(lines: list, layout: Layout, vocab: set, compounds: set) -> list:
     hanging = False
     prev_indented = False
     in_list = False
+    prev_line = None
 
     def flush():
         nonlocal buffer, kind, had_dropcap
@@ -528,6 +552,7 @@ def assemble(lines: list, layout: Layout, vocab: set, compounds: set) -> list:
             buffer = [line]
             prev_indented = True
             in_list = True
+            prev_line = line
             continue
         indented = line.x0 > layout.body_left + INDENT_MIN
         if hanging:
@@ -541,7 +566,22 @@ def assemble(lines: list, layout: Layout, vocab: set, compounds: set) -> list:
                 and indented
             )
         prev_indented = indented
-        if kind is not None and (this != kind or starts_para or is_note_start):
+
+        # Two quoted paragraphs share an indent and differ only by the space
+        # between them, so without this the whole of a printed dialogue
+        # arrives as one block quotation.
+        gap_break = (
+            layout.line_pitch > 0
+            and prev_line is not None
+            and prev_line.page == line.page
+            and this in ("body", "quote")
+            and kind in ("body", "quote")
+            and (line.top - prev_line.top) > layout.line_pitch * PARA_GAP_FACTOR
+        )
+        prev_line = line
+
+        if kind is not None and (this != kind or starts_para or is_note_start
+                                 or gap_break):
             flush()
         if kind is None:
             kind = this

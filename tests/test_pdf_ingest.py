@@ -176,6 +176,46 @@ def test_lines_beside_a_dropcap_are_not_a_quote():
     assert "quote" not in [k for k, _ in blocks]
 
 
+LAYOUT_PITCHED = pdf_ingest.Layout(
+    body_size=11.0, body_left=58.5, body_right=376.3,
+    body_top=56.4, body_bottom=572.0, page_centre=216.0, line_pitch=13.2,
+)
+
+
+def test_quoted_paragraphs_split_on_the_space_between_them():
+    """Printed dialogue is several quoted paragraphs sharing one indent.
+    Position cannot tell them apart; only the space between them can."""
+    lines = [
+        _line("But that is not really writing, Ana told me.", x0=94.5, top=200.0),
+        _line("What do you mean? I asked.", x0=94.5, top=220.2),
+        _line("That is what I do for me, Ana said.", x0=94.5, top=240.6),
+    ]
+    blocks = pdf_ingest.assemble(lines, LAYOUT_PITCHED, set(), set())
+    assert [k for k, _ in blocks] == ["quote", "quote", "quote"]
+
+
+def test_ordinary_leading_does_not_split_a_paragraph():
+    """The guard that matters: the rule must not fire on normal wrap."""
+    lines = [
+        _line("a quoted sentence that runs", x0=94.5, top=200.0),
+        _line("on to a second line", x0=94.5, top=213.2),
+        _line("and a third", x0=94.5, top=226.4),
+    ]
+    blocks = pdf_ingest.assemble(lines, LAYOUT_PITCHED, set(), set())
+    assert len(blocks) == 1
+
+
+def test_a_page_break_is_not_a_paragraph_break():
+    """Tops reset on each page, so the step across a page boundary is
+    meaningless and must not be read as space between blocks."""
+    lines = [
+        _line("a paragraph ending at the foot", top=560.0, page=2),
+        _line("of one page and continuing", top=56.4, page=3),
+    ]
+    blocks = pdf_ingest.assemble(lines, LAYOUT_PITCHED, set(), set())
+    assert len(blocks) == 1
+
+
 def test_list_turn_lines_stay_with_their_item():
     lines = [
         _line("1. Which of the three sections", x0=68.5),
