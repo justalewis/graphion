@@ -726,6 +726,22 @@ def register_routes(app: Flask):
                             docx_for_ingest, apath,
                             accept_track_changes=accept_tc,
                         )
+                elif ext == ".pdf":
+                    # A PDF carries no structure, only placed ink, so ingest
+                    # infers the structure back and is a reading rather than a
+                    # conversion. Say so: the editor has to check this one
+                    # against the page in a way a DOCX ingest does not need.
+                    try:
+                        conversion.ingest_pdf(staged, apath)
+                    except Exception as exc:
+                        flash(f"PDF ingest failed: {exc}", "error")
+                        return redirect(request.url)
+                    flash(
+                        "PDF ingest rebuilds structure from the page layout; "
+                        "check headings, paragraph breaks, and any hyphenated "
+                        "words against the original before publishing.",
+                        "warning",
+                    )
                 else:
                     # Markdown bypass: copy uploaded MD straight to
                     # article-raw.md so cleanups can run on it.

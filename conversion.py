@@ -17,6 +17,7 @@ import pypandoc
 
 import cleanups
 import db
+import pdf_ingest
 import preprocessors
 from config import CONTENT_DIR, PDF_UA_STANDARD, VERSIONS_KEEP
 
@@ -234,6 +235,56 @@ def ingest_docx(
     _append_log(article_path, "Stage 1: DOCX ingest", body)
 
     return IngestResult(raw_md_path=raw_md, log=body, has_tracked_changes=has_tracked)
+
+
+def ingest_pdf(pdf_path: Path, article_path: Path) -> IngestResult:
+    """Reconstruct Markdown from a typeset PDF, write `article-raw.md`.
+
+    A DOCX still knows what a paragraph is, so Pandoc can be handed the file.
+    A PDF knows only where ink sits, so `pdf_ingest` has to infer the
+    structure back out of the geometry. What it recovers is written here as
+    YAML front matter plus a body, in the same shape Pandoc leaves behind,
+    which lets Stage 2 cleanups run on it unchanged.
+
+    The source PDF is kept beside the article like `source.docx` is, because
+    the reconstruction is a reading of it and an editor will want to check it
+    against the page.
+    """
+    import yaml
+
+    if not pdf_ingest.available():
+        raise RuntimeError(
+            "PDF ingest needs pdfplumber, which is not installed. "
+            "Run pip install -r requirements.txt, then try again."
+        )
+
+    article_path.mkdir(parents=True, exist_ok=True)
+    (article_path / "assets").mkdir(exist_ok=True)
+
+    source_copy = article_path / "source.pdf"
+    if Path(pdf_path).resolve() != source_copy.resolve():
+        shutil.copy2(pdf_path, source_copy)
+
+    t0 = time.time()
+    result = pdf_ingest.extract(source_copy)
+    dt = time.time() - t0
+
+    raw_md = article_path / "article-raw.md"
+    front = yaml.safe_dump(
+        result.front_matter, sort_keys=False, allow_unicode=True, width=10_000,
+    )
+    raw_md.write_text(f"---\n{front}---\n\n{result.body}", encoding="utf-8")
+
+    body = (
+        f"input: {source_copy.name}\n"
+        f"output: {raw_md.name}\n"
+        f"fields recovered: {', '.join(result.front_matter) or '(none)'}\n"
+        f"elapsed: {dt:.2f}s\n"
+    )
+    body += "".join(f"  - {n}\n" for n in result.notes)
+    _append_log(article_path, "Stage 1: PDF ingest", body)
+
+    return IngestResult(raw_md_path=raw_md, log=body, has_tracked_changes=False)
 
 
 def _extract_docx_title(docx_path: Path) -> Optional[str]:

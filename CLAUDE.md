@@ -27,9 +27,10 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (113 functions: 75 in `test_cleanups.py`, 14 in `test_lint.py`, 10 in
-`test_metadata_roundtrip.py`, 6 in `test_standalone_html.py`, 5 in
-`test_pdf_ua.py`, 3 in `test_preprocessors.py`):
+Tests (136 functions: 75 in `test_cleanups.py`, 23 in `test_pdf_ingest.py`,
+14 in `test_lint.py`, 10 in `test_metadata_roundtrip.py`, 6 in
+`test_standalone_html.py`, 5 in `test_pdf_ua.py`, 3 in
+`test_preprocessors.py`):
 
 ```bash
 python -m pytest tests/ -q
@@ -103,6 +104,17 @@ cause is an image with no alt text, which `lint.check_alt_text` fails on
 first. Assembled issues are a separate case: concatenating with pypdf drops
 the structure tree, so `issue.pdf` deliberately does not claim conformance.
 
+**PDF ingest infers structure; it does not read it.** A DOCX still knows what
+a paragraph is, so Pandoc can be handed the file. A PDF knows only where ink
+sits, so `pdf_ingest.py` reconstructs paragraphs from the first-line indent,
+heads from type size and centring, emphasis from font names, and word breaks
+from a vocabulary built out of the document itself. Every one of those is a
+judgement that can be wrong, so the upload route says so to the editor, and
+new heuristics need a case in `tests/test_pdf_ingest.py`. The geometry is
+learned per document rather than hardcoded: a series that redesigns between
+volumes should degrade, not silently misread. Use pdfplumber, not PyMuPDF,
+which is AGPL and would reach the whole deployed app.
+
 **YAML round-trips are validated.** `write_article_metadata()` refuses to write
 YAML that fails `safe_load`, and normalizes whitespace in scalar fields to
 prevent wraparound corruption. `safe_dump` uses `width=10_000` to keep scalars
@@ -130,7 +142,7 @@ Anything touching Claude (`stylize.py`, `llm_cleanup.py`) requires
 
 ## Layout notes
 
-- `app.py` (2656 lines) is the whole HTTP surface. `conversion.py` (1833) is the
+- `app.py` (2672 lines) is the whole HTTP surface. `conversion.py` (1959) is the
   pipeline. Those two hold most of the complexity.
 - Per-journal template bundles live at `content/journals/<slug>/template/`:
   CSS, Pandoc HTML template, Typst template, Lua filters, CSL stylesheet,

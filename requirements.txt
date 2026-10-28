@@ -9,6 +9,10 @@ requests>=2.32
 typst>=0.13
 pypdf>=4.0
 pypdfium2>=4.30
+# pdfplumber: character positions and font names for PDF ingest
+# (pdf_ingest.py). MIT over pdfminer.six; PyMuPDF reports more but is AGPL,
+# which this deployment cannot take on.
+pdfplumber>=0.11
 bibtexparser>=1.4
 html5validator>=0.4
 werkzeug>=3.0
