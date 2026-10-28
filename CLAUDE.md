@@ -27,10 +27,10 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (139 functions: 75 in `test_cleanups.py`, 26 in `test_pdf_ingest.py`,
-14 in `test_lint.py`, 10 in `test_metadata_roundtrip.py`, 6 in
-`test_standalone_html.py`, 5 in `test_pdf_ua.py`, 3 in
-`test_preprocessors.py`):
+Tests (156 functions: 75 in `test_cleanups.py`, 26 in `test_pdf_ingest.py`,
+17 in `test_ingest_volume.py`, 14 in `test_lint.py`, 10 in
+`test_metadata_roundtrip.py`, 6 in `test_standalone_html.py`, 5 in
+`test_pdf_ua.py`, 3 in `test_preprocessors.py`):
 
 ```bash
 python -m pytest tests/ -q
@@ -114,6 +114,15 @@ new heuristics need a case in `tests/test_pdf_ingest.py`. The geometry is
 learned per document rather than hardcoded: a series that redesigns between
 volumes should degrade, not silently misread. Use pdfplumber, not PyMuPDF,
 which is AGPL and would reach the whole deployed app.
+
+`ingest_volume.py` runs a folder of chapter PDFs through that in one pass.
+It never fetches anything: the volume is downloaded by hand and the runner
+is pointed at the folder, so a mass download cannot happen by accident and
+`--dry-run` shows the whole plan before anything is written. Chapters land
+as drafts. `ingest_pdf` stamps `source-file` into the front matter, which is
+how a chapter is recognised as already taken in; matching on the slug alone
+fails, because a slug is built from the title and the same PDF ingested with
+and without a manifest lands under two of them.
 
 **YAML round-trips are validated.** `write_article_metadata()` refuses to write
 YAML that fails `safe_load`, and normalizes whitespace in scalar fields to

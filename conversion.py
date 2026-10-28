@@ -270,6 +270,12 @@ def ingest_pdf(pdf_path: Path, article_path: Path) -> IngestResult:
     dt = time.time() - t0
 
     raw_md = article_path / "article-raw.md"
+    # Record which file this was read out of. The copy beside the article is
+    # always called source.pdf, so without this the original name is lost,
+    # and that name is the only thing tying a chapter back to its place in a
+    # published volume. ingest_volume.py also uses it to recognise a chapter
+    # it has already taken in, whatever slug it ended up with.
+    result.front_matter["source-file"] = Path(pdf_path).name
     front = yaml.safe_dump(
         result.front_matter, sort_keys=False, allow_unicode=True, width=10_000,
     )
