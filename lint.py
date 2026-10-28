@@ -320,18 +320,41 @@ def check_unstripped_artifacts(article: dict, fm: dict, body: str) -> LintResult
     return _ok("cleanup-artifacts", "No leftover cleanup-pass artifacts.")
 
 
+_IMAGE_RE = re.compile(r"!\[(?P<alt>.*?)\]\([^)]+\)(?:\{(?P<attrs>[^}]*)\})?")
+_ALT_ATTR_RE = re.compile(r"\balt\s*=")
+
+
 def check_alt_text(article: dict, fm: dict, body: str) -> LintResult:
-    images = re.findall(r"!\[(.*?)\]\([^)]+\)", body)
-    missing = sum(1 for alt in images if not alt.strip())
-    if not images:
+    """Flag images with no alt text.
+
+    This is a fail rather than a warn because galleys compile as PDF/UA-1:
+    Typst refuses an image that carries no alt text, so a single one costs
+    the article its conformance and renders it through the fallback path in
+    `conversion._compile_typst` instead. An explicit `{alt="..."}` attribute
+    counts, since Pandoc passes that straight through to Typst.
+    """
+    total = missing = 0
+    for match in _IMAGE_RE.finditer(body):
+        total += 1
+        if match.group("alt").strip():
+            continue
+        if _ALT_ATTR_RE.search(match.group("attrs") or ""):
+            continue
+        missing += 1
+    if not total:
         return _ok("alt-text", "No images in the article.")
     if missing:
-        return _warn(
+        return _fail(
             "alt-text",
-            f"{missing} of {len(images)} image(s) have empty alt text.",
-            ["Alt text is required for screen readers and tagged PDF compliance."],
+            f"{missing} of {total} image(s) have no alt text.",
+            [
+                "Screen readers announce nothing for these images.",
+                "Typst cannot compile an image without alt text as PDF/UA-1, "
+                "so the PDF falls back to a non-conformant render and will be "
+                "flagged in an accessibility audit.",
+            ],
         )
-    return _ok("alt-text", f"All {len(images)} image(s) have alt text.")
+    return _ok("alt-text", f"All {total} image(s) have alt text.")
 
 
 _FIG_LABEL_RE = re.compile(r"!\[[^\]]*\]\([^)]+\)\s*\{[^}]*#(fig:[a-zA-Z0-9_-]+)")

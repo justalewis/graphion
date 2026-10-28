@@ -27,9 +27,9 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (102 functions: 75 in `test_cleanups.py`, 10 in
-`test_metadata_roundtrip.py`, 8 in `test_lint.py`, 6 in
-`test_standalone_html.py`, 3 in `test_preprocessors.py`):
+Tests (113 functions: 75 in `test_cleanups.py`, 14 in `test_lint.py`, 10 in
+`test_metadata_roundtrip.py`, 6 in `test_standalone_html.py`, 5 in
+`test_pdf_ua.py`, 3 in `test_preprocessors.py`):
 
 ```bash
 python -m pytest tests/ -q
@@ -84,13 +84,24 @@ contextmanager and the `query_one` / `query_all` / `execute` helpers in `db.py`.
 **Cleanup passes are pure and idempotent.** Every Stage 2 pass in `cleanups.py`
 has the signature `(text: str, log: CleanupLog) -> str`, records its work via
 `log.record(name, count)` (an optional `note=` argument exists), and is
-registered in `DEFAULT_PASSES` (`cleanups.py:889`). Running the pipeline twice
+registered in `DEFAULT_PASSES` (`cleanups.py:1410`). Running the pipeline twice
 must produce identical output.
 Any new pass needs a unit test in `tests/test_cleanups.py` with at least one
 input/output pair plus an idempotence assertion.
 
 **Lint checks** follow the same shape in `lint.py`: return `_ok(...)` or
-`_warn(...)`, then register in `DEFAULT_CHECKS` (`lint.py:303`).
+`_warn(...)`, then register in `DEFAULT_CHECKS` (`lint.py:405`).
+
+**Galleys are PDF/UA-1.** `conversion._compile_typst()` compiles every PDF
+with `pdf_standards` set from `config.PDF_UA_STANDARD`, which is what emits
+the conformance identifier and the ViewerPreferences `/DisplayDocTitle` entry
+that an accessibility audit checks for (ISO 14289-1 clause 5; WCAG 2.4.2).
+Typst validates the standard rather than merely declaring it, so content that
+cannot conform aborts the compile. The helper falls back to an unconstrained
+render and logs why, so an editor never loses a galley to this. The usual
+cause is an image with no alt text, which `lint.check_alt_text` fails on
+first. Assembled issues are a separate case: concatenating with pypdf drops
+the structure tree, so `issue.pdf` deliberately does not claim conformance.
 
 **YAML round-trips are validated.** `write_article_metadata()` refuses to write
 YAML that fails `safe_load`, and normalizes whitespace in scalar fields to

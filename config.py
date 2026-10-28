@@ -20,6 +20,16 @@ ALLOWED_UPLOAD_EXTENSIONS = {".docx", ".md", ".markdown"}
 
 VERSIONS_KEEP = 5
 
+# Rendered PDFs declare PDF/UA-1 (ISO 14289-1) conformance, which is the
+# standard educational content is audited against. Typst writes the
+# conformance identifier, /Lang, and the ViewerPreferences /DisplayDocTitle
+# entry only when the standard is requested; without it a galley fails
+# clause 5 and WCAG 2.4.2 even when its tagging is otherwise sound.
+# Typst validates the standard rather than merely declaring it, so a figure
+# with no alt text aborts the compile; conversion.py falls back to an
+# unconstrained render and logs why. Set to an empty string to turn it off.
+PDF_UA_STANDARD = os.environ.get("GRAPHION_PDF_UA_STANDARD", "ua-1")
+
 # Login throttling. /login is the only unauthenticated route, and the app is
 # reachable from the public internet, so attempts have to be capped. The limiter
 # is in-process, which is correct for the single gunicorn worker configured in

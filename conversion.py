@@ -18,7 +18,7 @@ import pypandoc
 import cleanups
 import db
 import preprocessors
-from config import CONTENT_DIR, VERSIONS_KEEP
+from config import CONTENT_DIR, PDF_UA_STANDARD, VERSIONS_KEEP
 
 
 # ---------- helpers ----------
@@ -857,6 +857,61 @@ def journal_short_name(journal_slug: str) -> str:
     return (j.get("short_name") or _short_journal_name(j.get("name") or "") or "").strip()
 
 
+def _compile_typst(
+    typ_path: Path,
+    out_pdf: Path,
+    log_to: Optional[Path] = None,
+    root: Optional[Path] = None,
+) -> bool:
+    """Compile a Typst file to PDF, declaring PDF/UA-1 where it can.
+
+    Typst emits the PDF/UA conformance identifier, /Lang, and the
+    ViewerPreferences /DisplayDocTitle entry only when the standard is
+    requested. Without it a galley fails ISO 14289-1 clause 5 and WCAG 2.4.2
+    even though Typst tags the content either way.
+
+    Typst validates the standard rather than merely declaring it, so a single
+    figure with no alt text aborts the whole compile. That must not cost an
+    editor their galley, so a PDF/UA failure falls back to an unconstrained
+    render and records the reason; `lint.check_alt_text` is what catches the
+    usual cause before a render gets this far. Any other compile error is a
+    real failure and propagates untouched.
+
+    `root` is the Typst project root, which every real caller leaves alone:
+    it has to be CONTENT_DIR so a template can reference image assets under
+    content/.
+
+    Returns True when the PDF/UA-1 compile succeeded.
+    """
+    import typst as typst_lib
+
+    typst_root = str(root or CONTENT_DIR)
+    if PDF_UA_STANDARD:
+        try:
+            typst_lib.compile(
+                str(typ_path),
+                output=str(out_pdf),
+                root=typst_root,
+                pdf_standards=PDF_UA_STANDARD,
+            )
+            return True
+        except Exception as exc:
+            if "PDF/UA" not in str(exc):
+                raise
+            if log_to is not None:
+                detail = (str(exc).strip().splitlines() or ["unknown"])[0]
+                _append_log(
+                    log_to,
+                    "PDF/UA conformance",
+                    f"""  Rendered WITHOUT PDF/UA-1: {detail}
+  The galley is readable, but it will fail an accessibility
+  audit; fix the item above and render again.
+""",
+                )
+    typst_lib.compile(str(typ_path), output=str(out_pdf), root=typst_root)
+    return False
+
+
 def render_pdf(article_path: Path, journal_slug: str) -> Path:
     """Render PDF via Pandoc (Typst template) + typst-py compile.
 
@@ -963,8 +1018,12 @@ def render_pdf(article_path: Path, journal_slug: str) -> Path:
 
     typst_input.write_text(typ_text, encoding="utf-8")
 
-    import typst as typst_lib
-    typst_lib.compile(str(typst_input), output=str(out), root=str(CONTENT_DIR))
+    if _compile_typst(typst_input, out, log_to=article_path):
+        _append_log(
+            article_path,
+            "PDF/UA conformance",
+            "  Declared PDF/UA-1 (ISO 14289-1).\n",
+        )
 
     # Record which faces Typst actually chose. A font stack resolves silently:
     # Typst never reports that it fell through to a fallback, or that it picked
@@ -1219,6 +1278,7 @@ def assemble_issue(issue_id: int) -> AssemblyResult:
     """
     import json
     from pypdf import PdfWriter, PdfReader
+    from pypdf.generic import NameObject, create_string_object
 
     issue_row = db.query_one(
         "SELECT i.*, j.slug AS journal_slug, j.name AS journal_name, j.issn AS journal_issn "
@@ -1317,6 +1377,25 @@ def assemble_issue(issue_id: int) -> AssemblyResult:
         reader = PdfReader(str(pdf_path))
         for page in reader.pages:
             writer.add_page(page)
+
+    # Concatenation copies pages, not document structure: the structure tree,
+    # the marked-content flag, and the title all live on the source documents'
+    # catalogs and do not survive. The combined file is therefore untagged no
+    # matter how conformant each article was on its own, so it deliberately
+    # does not claim PDF/UA; stamping the identifier here would assert a
+    # conformance the file does not have. Restore what is honestly
+    # restorable: a title the reader actually sees, and a language.
+    # Making issue.pdf itself conformant means compiling the whole issue as a
+    # single Typst document rather than merging rendered PDFs.
+    doc_title = f"{issue['journal_name']} {issue['volume']}.{issue['issue_number']}"
+    if issue.get("title"):
+        doc_title = f"{doc_title}: {issue['title']}"
+    writer.add_metadata({"/Title": doc_title})
+    writer.create_viewer_preferences()
+    writer.viewer_preferences.display_doctitle = True
+    # pypdf exposes no public setter for the catalog's /Lang entry.
+    writer._root_object[NameObject("/Lang")] = create_string_object("en")
+
     with issue_pdf.open("wb") as f:
         writer.write(f)
 
@@ -1394,8 +1473,6 @@ def render_front_matter(issue: dict, journal: dict, articles: list, editor_intro
     intro itself comes in via the `editor_intro` argument (the article
     record). Returns the path to front_matter.pdf.
     """
-    import typst as typst_lib
-
     vol = issue["volume"]
     num = issue["issue_number"]
     year = issue["year"]
@@ -1547,7 +1624,7 @@ def render_front_matter(issue: dict, journal: dict, articles: list, editor_intro
     out_path = out_dir / "_front_matter.typ"
     out_pdf = out_dir / "_front_matter.pdf"
     out_path.write_text(typst_doc, encoding="utf-8")
-    typst_lib.compile(str(out_path), output=str(out_pdf), root=str(CONTENT_DIR))
+    _compile_typst(out_path, out_pdf)
     return out_pdf
 
 
@@ -1659,8 +1736,6 @@ def _render_issue_cover(issue, toc_entries: list, out_dir: Path) -> Path:
     counter. Subsequent front-matter sections (editorial team, board,
     mission, intro, ToC) will be added in follow-up commits.
     """
-    import typst as typst_lib
-
     journal_name = issue["journal_name"]
     title = issue["title"] or ""
     vol = issue["volume"]
@@ -1750,7 +1825,7 @@ def _render_issue_cover(issue, toc_entries: list, out_dir: Path) -> Path:
     cover_typ = out_dir / "_cover.typ"
     cover_pdf = out_dir / "_cover.pdf"
     cover_typ.write_text(cover_typst, encoding="utf-8")
-    typst_lib.compile(str(cover_typ), output=str(cover_pdf), root=str(CONTENT_DIR))
+    _compile_typst(cover_typ, cover_pdf)
     return cover_pdf
 
 
