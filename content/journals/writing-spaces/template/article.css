@@ -358,6 +358,20 @@ a.footnote-ref:hover,
 a[role="doc-noteref"]:hover,
 a.footnote-back:hover { text-decoration: underline; }
 
+/* ---------- licence ---------- */
+
+/* An open-access series has to state its terms where a reader will see
+ * them, not only in a meta tag. The printed chapter puts them in a footnote
+ * on its opening page; on screen they close the document. */
+footer.licence {
+  margin-top: 3rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule-soft);
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+}
+footer.licence p { margin: 0; text-indent: 0; }
+
 /* ---------- figures and tables ---------- */
 
 figure { margin: 2rem 0; }

@@ -27,11 +27,13 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (176 functions: 75 in `test_cleanups.py`, 26 in `test_pdf_ingest.py`,
+Tests (180 functions: 75 in `test_cleanups.py`, 26 in `test_pdf_ingest.py`,
 20 in `test_teacher_resources.py`, 17 in `test_ingest_volume.py`, 14 in
 `test_lint.py`, 10 in `test_metadata_roundtrip.py`, 6 in
-`test_standalone_html.py`, 5 in `test_pdf_ua.py`, 3 in
-`test_preprocessors.py`):
+`test_standalone_html.py`, 5 in `test_pdf_ua.py`, 4 in
+`test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
+runs without Pandoc; `test_journal_filter.py` needs it and skips where it is
+absent:
 
 ```bash
 python -m pytest tests/ -q
@@ -136,7 +138,17 @@ definitions move to whichever half refers to them, since Markdown collects
 them at the end of the document, behind the teacher material. `render_pdf`
 and `render_html` take a `part`, pass it to the filters as
 `graphion-part`, and write to separate intermediates; the Writing Spaces
-filter uses it to keep the drop cap out of the teacher galley.
+filter uses it to keep the drop cap out of the teacher galley. Both galleys
+are served from the article page; see `serve_teacher_pdf` in `app.py`.
+
+**A volume shares one licence.** `ingest_volume.py` writes `license` and
+`license-url` over every chapter in a run, rather than leaving each to the
+notice printed on its own opening page: a chapter whose footnote failed to
+extract would otherwise publish with no licence recorded. The HTML galley
+carries it as `rel="license"`, a `dcterms.rights` meta, and a visible
+statement closing the document. A Lua filter that walks the whole document
+reaches metadata too, which is how soft break points for long URLs ended up
+inside the licence href; walk `doc.blocks`, not `doc`.
 
 **YAML round-trips are validated.** `write_article_metadata()` refuses to write
 YAML that fails `safe_load`, and normalizes whitespace in scalar fields to

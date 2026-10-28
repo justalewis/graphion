@@ -837,6 +837,11 @@ def register_routes(app: Flask):
         log_text = log_path.read_text(encoding="utf-8") if log_path.exists() else ""
         rendered_html = (apath / "article.html").exists()
         rendered_pdf = (apath / "article.pdf").exists()
+        # An article whose teacher material renders as its own galley. The
+        # files are what decide this, not the front matter: a chapter marked
+        # for the split but not yet re-rendered has nothing to offer yet.
+        rendered_teacher_html = (apath / "teacher-resources.html").exists()
+        rendered_teacher_pdf = (apath / "teacher-resources.pdf").exists()
         override_css_path = apath / "article-override.css"
         has_override = override_css_path.exists()
         override_size = override_css_path.stat().st_size if has_override else 0
@@ -953,6 +958,8 @@ def register_routes(app: Flask):
             log_text=log_text,
             rendered_html=rendered_html,
             rendered_pdf=rendered_pdf,
+            rendered_teacher_html=rendered_teacher_html,
+            rendered_teacher_pdf=rendered_teacher_pdf,
             has_override=has_override,
             override_size=override_size,
             has_tables=has_tables,
@@ -1365,6 +1372,24 @@ def register_routes(app: Flask):
     def serve_pdf(article_id):
         return _serve_artifact(
             article_id, "article.pdf",
+            as_attachment=request.args.get("dl") == "1",
+        )
+
+    @app.route("/articles/<int:article_id>/teacher-resources.pdf")
+    @login_required
+    def serve_teacher_pdf(article_id):
+        """The teacher galley of a chapter that renders its instructor
+        material separately; see `teacher-resources` in the front matter."""
+        return _serve_artifact(
+            article_id, "teacher-resources.pdf",
+            as_attachment=request.args.get("dl") == "1",
+        )
+
+    @app.route("/articles/<int:article_id>/teacher-resources.html")
+    @login_required
+    def serve_teacher_html(article_id):
+        return _serve_artifact(
+            article_id, "teacher-resources.html",
             as_attachment=request.args.get("dl") == "1",
         )
 

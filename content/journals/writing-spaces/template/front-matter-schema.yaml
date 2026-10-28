@@ -22,7 +22,10 @@ optional:
   - keywords
   - doi
   - published-date
-  - license         # defaults to the series CC BY-NC-ND notice
+  - license         # volume-wide terms; ingest_volume.py sets these
+  - license-url     # for every chapter in a run, so one volume has
+                    # one licence rather than whatever each chapter's
+                    # own pages happened to carry
   - teacher-resources   # see note below
   - volume          # inherited from the volume record
   - year            # inherited from the volume record

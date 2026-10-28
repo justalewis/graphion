@@ -642,7 +642,11 @@ function Pandoc(doc)
   local is_review = kind_str:lower() == "review"
   bind_years_in_references(doc.blocks)
   if FORMAT == "typst" or FORMAT:match("^html") then
-    doc = doc:walk(url_filter)
+    -- Only the body. The URL filter inserts soft break points into long
+    -- URLs so a Works Cited entry cannot run off the measure, and walking
+    -- the whole document applies that to metadata too: it put <wbr> tags
+    -- through the licence URL, which then arrived broken in an href.
+    doc.blocks = pandoc.walk_block(pandoc.Div(doc.blocks), url_filter).content
   end
   -- Which half of a split chapter this render is. A dropped initial opens a
   -- chapter; the teacher material behind it is a separate document that the

@@ -25,6 +25,12 @@
   $if(year)$
   <meta name="citation_publication_date" content="$year$">
   $endif$
+  $if(license-url)$
+  <link rel="license" href="$license-url$">
+  $endif$
+  $if(license)$
+  <meta name="dcterms.rights" content="$license$">
+  $endif$
   $for(css)$
   <link rel="stylesheet" href="$css$">
   $endfor$
@@ -78,6 +84,12 @@ $endif$
   <div id="chapter-body">
 $body$
   </div>
+
+  $if(license)$
+  <footer class="licence" aria-label="Licence">
+    <p>$if(license-url)$<a rel="license" href="$license-url$">$license$</a>$else$$license$$endif$</p>
+  </footer>
+  $endif$
 </article>
 </main>
 </body>

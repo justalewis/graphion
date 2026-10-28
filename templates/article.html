@@ -130,6 +130,12 @@
           View PDF
         </a>
         {% endif %}
+        {% if rendered_teacher_pdf %}
+        <a class="button ghost small" href="{{ url_for('serve_teacher_pdf', article_id=article['id']) }}" target="_blank">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          View Teacher Resources
+        </a>
+        {% endif %}
         <div class="menu-trigger" id="download-menu">
           <button class="button ghost small" type="button" aria-haspopup="true" id="download-menu-btn">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -142,6 +148,12 @@
             {% if rendered_html %}<a href="{{ url_for('serve_html', article_id=article['id']) }}?dl=1">HTML (links article.css and assets/)</a>{% endif %}
             {% if rendered_pdf %}<a href="{{ url_for('serve_pdf', article_id=article['id']) }}?dl=1">PDF</a>{% endif %}
             <a href="{{ url_for('serve_epub', article_id=article['id']) }}">EPUB</a>
+            {% if rendered_teacher_pdf or rendered_teacher_html %}
+            <div class="menu-sep"></div>
+            <div class="menu-section">For instructors</div>
+            {% if rendered_teacher_pdf %}<a href="{{ url_for('serve_teacher_pdf', article_id=article['id']) }}?dl=1">Teacher Resources (PDF)</a>{% endif %}
+            {% if rendered_teacher_html %}<a href="{{ url_for('serve_teacher_html', article_id=article['id']) }}?dl=1">Teacher Resources (HTML)</a>{% endif %}
+            {% endif %}
             <div class="menu-sep"></div>
             <div class="menu-section">For indexers</div>
             <a href="{{ url_for('article_jats_xml', article_id=article['id']) }}">JATS XML</a>

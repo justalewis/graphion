@@ -47,6 +47,18 @@ import db
 
 # "1Lester-Lucas-Doyle-Overcash.pdf" -> chapter 1, surnames Lester, Lucas, ...
 FILENAME_RE = re.compile(r"^(?P<number>\d{1,3})(?P<names>[A-Za-z][A-Za-z\-']*)?$")
+# Every chapter in a Writing Spaces volume carries the same terms, and the
+# series prints them as a footnote on each chapter's opening page. Setting
+# them once for the volume is more reliable than trusting that footnote to
+# come out of every PDF: a chapter whose note failed to extract would
+# otherwise be published with no licence recorded at all.
+DEFAULT_LICENSE = (
+    "This work is licensed under the Creative Commons "
+    "Attribution-NonCommercial-NoDerivatives 4.0 International License "
+    "(CC BY-NC-ND 4.0)."
+)
+DEFAULT_LICENSE_URL = "https://creativecommons.org/licenses/by-nc-nd/4.0/"
+
 # Files the archive ships alongside the chapters that are not chapters.
 NON_CHAPTER = {"acknowledgments", "contributors", "frontmatter", "front-matter",
                "introduction", "index", "cover", "toc", "copyright"}
@@ -266,6 +278,14 @@ def main():
     parser.add_argument("--volume-title", dest="volume_title")
     parser.add_argument("--volume", type=int)
     parser.add_argument("--year", type=int)
+    parser.add_argument("--license", dest="license_text", default=DEFAULT_LICENSE,
+                        help="licence applied to every chapter in the run; "
+                             "defaults to the Writing Spaces CC BY-NC-ND terms")
+    parser.add_argument("--license-url", dest="license_url",
+                        default=DEFAULT_LICENSE_URL)
+    parser.add_argument("--no-license", action="store_true",
+                        help="leave each chapter's licence to whatever its own "
+                             "pages carried")
     parser.add_argument("--limit", type=int)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--replace", action="store_true",
@@ -299,6 +319,12 @@ def main():
 
     defaults = {"volume-title": args.volume_title, "volume": args.volume,
                 "year": args.year}
+    if not args.no_license:
+        # A volume's terms are a property of the volume, so these overwrite
+        # whatever a chapter's own pages happened to say rather than filling
+        # a gap. That is the point: one licence across the whole run.
+        defaults["license"] = args.license_text
+        defaults["license-url"] = args.license_url
 
     print(f"{len(chapters)} chapter(s) from {pdf_dir}:")
     for c in chapters:
