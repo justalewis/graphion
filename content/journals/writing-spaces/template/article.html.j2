@@ -3,9 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>$pagetitle$</title>
+  <title>$pagetitle$$if(volume-title)$ | $volume-title$$endif$</title>
+  $if(description)$
+  <meta name="description" content="$description$">
+  $endif$
   $for(author)$
-  <meta name="author" content="$author.name$$if(author.affiliation)$&mdash;$author.affiliation$$endif$">
+  <meta name="author" content="$author.name$">
   $endfor$
   $if(keywords)$
   <meta name="keywords" content="$for(keywords)$$keywords$$sep$, $endfor$">
@@ -13,14 +16,14 @@
   $if(doi)$
   <meta name="citation_doi" content="$doi$">
   $endif$
-  $if(journal)$
-  <meta name="citation_journal_title" content="$journal$">
+  $if(volume-title)$
+  <meta name="citation_inbook_title" content="$volume-title$">
   $endif$
   $if(volume)$
   <meta name="citation_volume" content="$volume$">
   $endif$
-  $if(issue)$
-  <meta name="citation_issue" content="$issue$">
+  $if(year)$
+  <meta name="citation_publication_date" content="$year$">
   $endif$
   $for(css)$
   <link rel="stylesheet" href="$css$">
@@ -33,36 +36,51 @@ $endif$
 $if(short-authors)$
 <span class="short-authors-anchor" aria-hidden="true">$short-authors$</span>
 $endif$
-$if(journal-short)$
-<span class="journal-locator-anchor" aria-hidden="true">$journal-short$$if(volume)$ / Vol. $volume$$endif$$if(issue)$ / No. $issue$$endif$</span>
+$if(volume-title)$
+<span class="volume-anchor" aria-hidden="true">$volume-title$</span>
 $endif$
 $if(footer)$
 <span class="footer-anchor" aria-hidden="true">$footer$</span>
 $endif$
+
+<a class="skip-link" href="#chapter-body">Skip to the chapter</a>
+
+<main>
 <article lang="$if(lang)$$lang$$else$en-US$endif$">
-  <header class="article-meta">
-    <h1>$title$</h1>
+  <header class="chapter-opening">
+    $if(volume-title)$
+    <p class="volume-label">$volume-title$</p>
+    $endif$
+    <h1>
+      $if(chapter-number)$<span class="chapter-number">$chapter-number$</span>$endif$
+      <span class="chapter-title">$title$</span>
+    </h1>
     $if(subtitle)$<p class="subtitle">$subtitle$</p>$endif$
-    $for(author)$
-    <p class="byline">$author.name$$if(author.affiliation)$&mdash;$author.affiliation$$endif$</p>
-    $endfor$
+    $if(author)$
+    <p class="byline">
+      $for(author)$$author.name$$sep$, $endfor$
+    </p>
+    $endif$
   </header>
 
-  $if(keywords)$
-  <aside class="keywords" aria-label="Keywords">
-    <h2>Keywords</h2>
-    <p>$for(keywords)$$keywords$$sep$; $endfor$</p>
-  </aside>
-  $endif$
-
   $if(abstract)$
-  <section class="abstract" aria-label="Abstract">
-    <h2>Abstract</h2>
+  <section class="overview" aria-labelledby="overview-heading">
+    <h2 id="overview-heading">Overview</h2>
     <p>$abstract$</p>
   </section>
   $endif$
 
+  $if(keywords)$
+  <aside class="keywords" aria-labelledby="keywords-heading">
+    <h2 id="keywords-heading">Keywords</h2>
+    <p>$for(keywords)$$keywords$$sep$; $endfor$</p>
+  </aside>
+  $endif$
+
+  <div id="chapter-body">
 $body$
+  </div>
 </article>
+</main>
 </body>
 </html>

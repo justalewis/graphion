@@ -599,6 +599,23 @@ local url_filter = {
   end,
 }
 
+-- The template's title block carries the document's only <h1>. Body heads
+-- arrive from the Markdown at level 1, and the references head is promoted
+-- to level 1 above, so without this a chapter ships a dozen competing h1s
+-- and no single document heading. A heading outline is the main thing a
+-- screen reader navigates a long chapter by, and the HTML5 outline algorithm
+-- that would have made nested h1s equivalent was never implemented by any
+-- browser or assistive technology. Demote one level for the tagged formats;
+-- Typst builds its own structure and is left alone.
+local function demote_headings(blocks)
+  return pandoc.walk_block(pandoc.Div(blocks), {
+    Header = function(h)
+      h.level = math.min(h.level + 1, 6)
+      return h
+    end,
+  }).content
+end
+
 function Pandoc(doc)
   doc.meta = split_pipes_in_meta(doc.meta)
   local kind_str = doc.meta.kind and pandoc.utils.stringify(doc.meta.kind) or ""
@@ -614,6 +631,20 @@ function Pandoc(doc)
     doc.blocks = adapt_typst_tables(doc.blocks)
   elseif FORMAT:match("^html") or FORMAT:match("^epub") then
     doc.blocks = wrap_html_opening_para(doc.blocks)
+    doc.blocks = demote_headings(doc.blocks)
+    -- A meta description has to be plain text. Pandoc renders the abstract
+    -- to HTML, so dropping it into an attribute puts markup where markup
+    -- cannot go, and repeats every id inside it: the chapter's licence
+    -- footnote reference ended up declared twice in one document, which
+    -- breaks the back link and makes the page invalid. Flatten it here and
+    -- let the template use this instead.
+    if doc.meta.abstract and not doc.meta.description then
+      -- Collapse the wrapping the YAML scalar carries, or the attribute
+      -- arrives with line breaks inside it.
+      local flat = pandoc.utils.stringify(doc.meta.abstract)
+      flat = flat:gsub("%s+", " "):gsub("^%s+", ""):gsub("%s+$", "")
+      doc.meta.description = pandoc.MetaString(flat)
+    end
   end
   return doc
 end

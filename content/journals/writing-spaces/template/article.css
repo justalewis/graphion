@@ -1,588 +1,446 @@
-/* LiCS article stylesheet (classical typography).
+/* Writing Spaces chapter stylesheet.
  *
- * Ported from the Fernandes standalone HTML. EB Garamond on cream paper,
- * small-caps section heads, drop cap on the opening section, hanging-indent
- * works cited. 6 x 9 book trim for print, with running headers and a
- * centered page counter in the footer.
+ * The printed series is a 6 x 9 trade book: 11pt Garamond on a 13.2pt
+ * baseline, small-capped heads, a three-line drop cap opening the body, a
+ * hanging-indent Works Cited. This takes the voice of that page without
+ * pretending a screen is one. The rotated volume label that runs up the
+ * outer margin in print becomes a line above the title here, because text
+ * rotated ninety degrees is a reading problem, not a design flourish.
  *
- * Fonts: Google Fonts CDN. To go fully offline, drop EB Garamond woff2
- * files alongside this CSS and replace the @import with @font-face rules
- * using relative URLs; render with `pandoc --embed-resources --standalone`
- * to inline them.
+ * The series is assigned reading in college writing classes, so the galley
+ * has to hold up under the accessibility standards that apply to US
+ * educational content. The choices that follow from that are marked
+ * "accessibility:" and are not decoration; several of them look like
+ * stylistic preferences and are not.
+ *
+ * Fonts load from the Google CDN. To go offline, drop EB Garamond woff2
+ * files beside this file, replace the @import with @font-face rules using
+ * relative URLs, and render with `pandoc --embed-resources --standalone`.
  */
 @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
 
 :root {
-  --serif: "EB Garamond", "Adobe Garamond Pro", "Garamond", "Iowan Old Style", "Hoefler Text", Cambria, Georgia, serif;
-  --ink: #1a1612;
-  --ink-soft: #4a4137;
-  --rule: #b6a98c;
-  --link: #5a3a1f;
-  --paper: #fbf7ee;
-  --frame: #ffffff;
-  --frame-edge: #ddd5c2;
-  --measure: 33em;
+  --serif: "EB Garamond", "Adobe Garamond Pro", Garamond, "Iowan Old Style",
+           "Hoefler Text", Cambria, Georgia, serif;
+  --ink: #141414;
+  --ink-soft: #595959;
+  /* Accessibility: --rule draws the table head boundary, which is a
+   * meaningful edge, so it is held above 3:1 against the paper (#8f8f8f is
+   * 3.2:1; the #a8a8a8 this started as was 2.4:1 and failed).
+   * --rule-soft and --quote-edge draw hairlines whose meaning is already in
+   * the markup, a row break and a blockquote, so they are decoration and
+   * are allowed to stay faint. */
+  --rule: #8f8f8f;
+  --rule-soft: #d6d6d6;
+  --link: #11446b;
+  --link-visited: #5b2a6e;
+  --paper: #ffffff;
+  --focus: #0b5fff;
+  --quote-edge: #c9c9c9;
+  --measure: 34em;
+}
+
+/* Accessibility: the page follows the reader's own light or dark setting.
+ * A chapter is long-form reading and a forced white field at night is a
+ * reason to stop reading it. Contrast is kept above 4.5:1 in both. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #e8e6e3;
+    --ink-soft: #b4b0ab;
+    --rule: #6c6862;
+    --rule-soft: #3d3a36;
+    --link: #8fc1ea;
+    --link-visited: #c9a7dd;
+    --paper: #161513;
+    --focus: #7cb0ff;
+    --quote-edge: #4a4641;
+  }
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { font-size: 18px; }
+
+/* Accessibility: a percentage, not a pixel size. Setting px here overrides
+ * the font size the reader chose in their browser, which is the setting a
+ * low-vision reader is most likely to have already adjusted. */
+html { font-size: 112.5%; }
+
 body {
   margin: 0;
   background: var(--paper);
   color: var(--ink);
   font-family: var(--serif);
   font-weight: 400;
-  line-height: 1.55;
+  /* Accessibility: 1.6 clears the 1.5 minimum for body text. */
+  line-height: 1.6;
   font-feature-settings: "kern", "liga", "onum";
-  -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
+/* Accessibility: the first thing in the tab order is a way past the front
+ * matter. Hidden until focused, then placed where it cannot be missed.
+ * It is moved off-screen rather than display:none, which would take it out
+ * of the tab order and defeat the point. */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--paper);
+  color: var(--link);
+  padding: 0.6rem 1rem;
+  border: 2px solid var(--focus);
+  z-index: 10;
+}
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+}
+
+/* Accessibility: every focusable thing shows where focus is, at a width
+ * that survives a high-contrast setting. Never remove this outline. */
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+main { display: block; }
+
 article {
   max-width: var(--measure);
-  margin: 3rem auto 4rem;
-  padding: 4rem 3.5rem 5rem;
-  background: var(--frame);
-  border: 1px solid var(--frame-edge);
-  box-shadow: 0 1px 0 #00000008, 0 2px 18px #00000010;
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem 5rem;
 }
 
-/* Title block */
-header.article-meta {
-  text-align: center;
-  margin: 0 0 3rem;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid var(--rule);
+/* ---------- chapter opening ---------- */
+
+header.chapter-opening {
+  margin-bottom: 2.5rem;
 }
-header.article-meta h1 {
-  font-family: var(--serif);
-  font-weight: 500;
-  font-size: 2.05rem;
-  line-height: 1.18;
-  letter-spacing: 0.005em;
-  margin: 0 0 1.4rem;
-  text-align: center;
-  text-indent: 0;
-  hyphens: none;
-  text-wrap: balance;
-}
-header.article-meta .byline {
-  font-style: italic;
-  font-size: 1rem;
+
+.volume-label {
+  margin: 0 0 1.75rem;
+  font-size: 0.72rem;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.12em;
   color: var(--ink-soft);
+  text-transform: lowercase;
+}
+
+header.chapter-opening h1 {
   margin: 0;
-  text-align: center;
-  text-indent: 0;
-  line-height: 1.4;
-}
-header.article-meta .byline + .byline { margin-top: 0.15rem; }
-
-/* Abstract + keywords */
-aside.keywords,
-section.abstract {
-  margin: 2rem auto;
-  max-width: 30em;
-}
-section.abstract {
-  padding-bottom: 2rem;
-  margin-bottom: 0;
-  border-bottom: 1px solid var(--rule);
-}
-section.abstract + section.level1 > h1,
-section.abstract + section > h1:first-child {
-  border-top: 0;
-  padding-top: 1rem;
-  margin-top: 2rem;
-}
-aside.keywords h2,
-section.abstract h2 {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: 0.78rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-  text-align: center;
-  margin: 0 0 0.75rem;
-}
-aside.keywords p {
-  text-align: center;
-  text-indent: 0;
-  font-style: italic;
-  color: var(--ink-soft);
-  margin: 0;
-}
-section.abstract p {
-  text-align: justify;
-  text-align-last: left;
-  text-indent: 0;
-  font-size: 0.95rem;
-  margin: 0 0 0.75rem;
-  hyphens: none;
-}
-section.abstract p:last-child { margin-bottom: 0; }
-
-/* Section headings */
-article > section > h1,
-article h1 {
-  font-family: var(--serif);
+  font-size: 1.95rem;
   font-weight: 500;
+  line-height: 1.25;
+  /* The printed title is small caps. Browsers synthesize these where the
+   * font has no real ones, so unlike the Typst template this does not
+   * depend on which face the reader happens to have. */
   font-variant-caps: small-caps;
-  font-feature-settings: "smcp", "kern";
-  font-size: 1.05rem;
-  letter-spacing: 0.18em;
-  color: var(--ink);
-  text-align: center;
-  text-indent: 0;
-  margin: 3rem 0 1.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--rule);
-  hyphens: none;
-}
-header.article-meta + section h1,
-header.article-meta + section > h1:first-child {
-  border-top: 0;
-  padding-top: 0;
-}
-article h2 {
-  font-family: var(--serif);
-  font-style: italic;
-  font-weight: 400;
-  font-size: 1.1rem;
-  color: var(--ink);
-  text-align: left;
-  text-indent: 0;
-  margin: 2rem 0 0.75rem;
-  hyphens: none;
-}
-article h3 {
-  font-family: var(--serif);
-  font-style: italic;
-  font-weight: 400;
-  font-size: 1rem;
-  color: var(--ink-soft);
-  text-align: left;
-  text-indent: 0;
-  margin: 1.5rem 0 0.5rem;
+  letter-spacing: 0.015em;
 }
 
-/* Body paragraphs */
+.chapter-number {
+  color: var(--ink-soft);
+  font-variant-caps: normal;
+  margin-right: 0.35em;
+}
+
+.subtitle {
+  margin: 0.6rem 0 0;
+  font-size: 1.2rem;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+.byline {
+  margin: 1.4rem 0 0;
+  font-size: 1.05rem;
+  font-style: italic;
+}
+
+/* ---------- overview ---------- */
+
+section.overview {
+  margin: 2.5rem 0 0;
+}
+
+section.overview h2,
+aside.keywords h2 {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-variant-caps: small-caps;
+  letter-spacing: 0.06em;
+  text-align: center;
+}
+
+section.overview p {
+  margin: 0;
+  text-indent: 0;
+}
+
+/* The short centred rule the series puts between the Overview and the body.
+ * Decorative only, so it is hidden from assistive technology rather than
+ * announced as a separator the author did not write. */
+section.overview::after {
+  content: "";
+  display: block;
+  width: 9rem;
+  height: 1px;
+  margin: 2.5rem auto 0;
+  background: var(--rule);
+}
+
+aside.keywords {
+  margin: 2rem 0 0;
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+}
+aside.keywords p { margin: 0; text-align: center; font-style: italic; }
+
+/* ---------- body ---------- */
+
+#chapter-body { margin-top: 2.5rem; }
+
+article h2 {
+  margin: 2.75rem 0 1.1rem;
+  font-size: 1.12rem;
+  font-weight: 600;
+  line-height: 1.3;
+  font-variant-caps: small-caps;
+  letter-spacing: 0.045em;
+  text-align: center;
+}
+
+article h3 {
+  margin: 2rem 0 0.8rem;
+  font-size: 1.02rem;
+  font-weight: 500;
+  font-style: italic;
+  text-align: center;
+}
+
+article h4 {
+  margin: 1.6rem 0 0.6rem;
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+/* Paragraphs are marked by a first-line indent with no space between them,
+ * as the printed page does. The first paragraph after any head runs flush. */
 article p {
   margin: 0;
-  text-align: justify;
-  text-indent: 1.4em;
-  hyphens: none;
-  -webkit-hyphens: none;
-  hanging-punctuation: first last;
-  orphans: 2;
-  widows: 2;
+  text-indent: 1.3em;
+  hyphens: auto;
 }
-article h1 + p,
 article h2 + p,
 article h3 + p,
-article > section:not(.references) > p:first-of-type,
-section.abstract p:first-of-type,
-aside.keywords p:first-of-type,
-.opening-para > p {
-  text-indent: 0;
-}
+article h4 + p,
+section > p:first-of-type,
+.opening-para > p { text-indent: 0; }
 
-/* Drop cap on the first body paragraph.
- *
- * The journal filter wraps that paragraph in <div class="opening-para">
- * regardless of whether it opens the body directly (prose above the
- * first H1) or opens the first section (paragraph after the H1). Keying
- * the cap on that class rather than on `section.opening > h1 + p` means
- * an article that starts with a stray introductory line moved out of
- * the abstract still puts the cap on the actual first line of running
- * text.
- */
+/* Drop cap. ::first-letter changes no markup and adds nothing to the
+ * accessibility tree, so the opening word is still read as one word. */
 .opening-para > p::first-letter {
-  font-family: var(--serif);
-  font-weight: 500;
   float: left;
-  font-size: 4.6em;
-  line-height: 0.88;
-  margin: 0.05em 0.08em -0.06em 0;
-  color: var(--ink);
+  font-size: 3.1em;
+  line-height: 0.82;
+  padding: 0.08em 0.08em 0 0;
+  font-weight: 500;
 }
 
-/* Inline elements */
 em, i { font-style: italic; }
 strong, b { font-weight: 600; }
-abbr {
-  font-variant-caps: all-small-caps;
-  letter-spacing: 0.05em;
-  text-decoration: none;
-}
-/* Defense in depth: Pandoc emits `[x]{.mark}` (Word highlighter) as
- * <mark>, which browsers paint yellow. The cleanup pipeline should strip
- * these, but if any slips through it should render as plain text. */
+
+/* Pandoc renders Word's highlighter as <mark>. A background colour that
+ * carries meaning the text does not is information conveyed by colour
+ * alone, so it is dropped rather than styled. */
 mark { background: transparent; color: inherit; }
 
-/* Blockquotes */
+abbr { text-decoration: none; border-bottom: 1px dotted var(--rule); }
+
+/* ---------- quotations ---------- */
+
 blockquote {
-  margin: 1.25rem 1.5rem;
-  padding: 0;
-  font-size: 0.94rem;
-  line-height: 1.5;
-  color: var(--ink);
+  margin: 1.3rem 0 1.3rem 1.6rem;
+  padding-left: 1.1rem;
+  border-left: 2px solid var(--quote-edge);
 }
-blockquote p {
-  text-indent: 0;
-  text-align: justify;
-  margin: 0 0 0.5rem;
-}
+blockquote p { text-indent: 0; margin: 0 0 0.6rem; }
 blockquote p:last-child { margin-bottom: 0; }
 
-/* Lists */
-ol, ul {
-  margin: 0.75rem 0;
-  padding-left: 2.25em;
-}
-li { margin: 0.25rem 0; }
-li > p { text-indent: 0; }
+/* ---------- lists ---------- */
 
-/* Links */
+ol, ul { margin: 1.1rem 0; padding-left: 1.9em; }
+li { margin: 0.55rem 0; }
+li > p { text-indent: 0; margin: 0; }
+
+/* ---------- links ---------- */
+
+/* Accessibility: underlined, not coloured only. Colour alone is not a
+ * distinguishable mark for a reader who cannot see the difference, and a
+ * chapter's citations are full of them. */
 a {
   color: var(--link);
-  text-decoration: none;
-  border-bottom: 1px solid #00000020;
-  /* The journal filter puts <wbr> after each slash and before each period
-   * of a long URL, so links break at those points. break-word remains as
-   * a fallback for a single run too long for a narrow screen. */
-  word-break: normal;
-  overflow-wrap: break-word;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+  text-decoration-thickness: 0.06em;
 }
-a:hover { border-bottom-color: var(--link); }
+a:visited { color: var(--link-visited); }
+a:hover { text-decoration-thickness: 0.12em; }
 
-/* Footnotes */
+/* A long bare URL in a Works Cited entry has to be allowed to break, or it
+ * runs off a narrow screen and takes the horizontal scrollbar with it. */
+a[href^="http"] { word-break: break-word; }
+
+/* ---------- works cited ---------- */
+
+section#works-cited p,
+section.references p,
+div.csl-entry {
+  /* Hanging indent, as the printed list sets it: the entry's first line is
+   * flush and its turn lines are indented. */
+  margin: 0 0 0.7rem;
+  padding-left: 1.6em;
+  text-indent: -1.6em;
+}
+
+/* ---------- footnotes ---------- */
+
 section.footnotes {
   margin-top: 3rem;
-  font-size: 0.85rem;
-  line-height: 1.45;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule-soft);
+  font-size: 0.92rem;
+  color: var(--ink-soft);
 }
 section.footnotes::before {
   content: "Notes";
   display: block;
-  font-family: var(--serif);
-  font-weight: 500;
+  margin-bottom: 0.9rem;
+  font-size: 1rem;
   font-variant-caps: small-caps;
-  font-feature-settings: "smcp", "kern";
-  font-size: 1.05rem;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.05em;
   color: var(--ink);
-  text-align: center;
-  margin: 0 0 1.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--rule);
 }
-/* Pandoc opens its endnote block with its own <hr>. That is a structural
- * artifact rather than a scene break: it sits directly under the rule this
- * section already draws above "Notes", and the scene-break styling would
- * otherwise print a stray asterisk there. */
+/* Pandoc opens its note block with its own rule; the border above already
+ * draws that line, and two of them read as an empty section. */
 section.footnotes > hr { display: none; }
-section.footnotes ol { padding-left: 1.75em; }
 section.footnotes p { text-indent: 0; }
-sup a {
-  border-bottom: 0;
-  font-size: 0.7em;
-  vertical-align: super;
-  line-height: 0;
+section.footnotes ol { padding-left: 1.7em; }
+
+/* Accessibility: the reference and the back link are small targets. Pad
+ * them out and keep them underlined so they are findable and clickable. */
+sup a, a.footnote-back {
+  padding: 0 0.15em;
+  text-decoration: underline;
 }
 
-/* Tables. Classical book convention: hairline rules above and below
- * the entire table and below the header row, no vertical borders.
- * Generous padding inside cells, slightly smaller body text. The
- * table scrolls horizontally if the viewport is narrower than the
- * column data demands; this keeps wide pedagogical charts (common in
- * humanities scholarship) usable on phones without forcing horrible
- * overflow.
- *
- * Pandoc emits `<colgroup>` widths from the source document, so the
- * column proportions come through automatically. We add `table-layout:
- * fixed` only when explicit widths are present, falling back to auto
- * sizing otherwise. */
+/* ---------- figures and tables ---------- */
+
+figure { margin: 2rem 0; }
+figure img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+figcaption {
+  margin-top: 0.7rem;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  text-indent: 0;
+}
+
+/* A table wider than the screen needs somewhere to go, and a scrollable
+ * region has to be reachable by keyboard, which is what tabindex="0" on
+ * the wrapper is for. The journal filter adds that wrapper. */
+.table-wrapper { overflow-x: auto; }
+
 table {
   width: 100%;
-  margin: 1.5rem 0;
   border-collapse: collapse;
-  border-top: 1.5px solid #4a4137;
-  border-bottom: 1.5px solid #4a4137;
+  margin: 1.8rem 0;
   font-size: 0.94rem;
-  line-height: 1.5;
 }
-table caption {
+caption {
   caption-side: top;
-  text-align: center;
+  text-align: left;
   font-style: italic;
-  font-size: 0.92rem;
-  color: #4a4137;
-  margin-bottom: 0.5rem;
-}
-thead tr {
-  border-bottom: 1px solid #4a4137;
-}
-th {
-  text-align: left;
-  font-weight: 600;
-  padding: 0.55rem 0.85rem;
-  vertical-align: baseline;
-  font-variant: small-caps;
-  letter-spacing: 0.02em;
-}
-td {
-  padding: 0.55rem 0.85rem;
-  vertical-align: top;
-  text-align: left;
-  hyphens: auto;
-}
-/* Pandoc-from-DOCX tables often lack a <thead>: the visual header
- * row sits in <tbody> with every cell wrapping a <strong>. Detect that
- * shape with :has() and dress it like a real header so the chart is
- * legible. */
-tbody tr:has(> td > strong:only-child) {
-  border-bottom: 1.5px solid #4a4137;
-}
-tbody tr:has(> td > strong:only-child) td {
-  font-variant: small-caps;
-  letter-spacing: 0.02em;
+  color: var(--ink-soft);
   padding-bottom: 0.5rem;
 }
-tbody tr:has(> td > strong:only-child) td strong {
-  font-weight: 600;
+th, td {
+  padding: 0.5rem 0.7rem;
+  border-bottom: 1px solid var(--rule-soft);
+  text-align: left;
+  vertical-align: top;
 }
-/* Subtle row separator inside the body (not a heavy grid). */
-tbody tr + tr {
-  border-top: 1px solid #e5dcc4;
-}
-/* Lists inside table cells should be tight, not push the row to
- * absurd heights. */
-td ul, td ol {
-  margin: 0.25rem 0;
-  padding-left: 1.25rem;
-}
-td p {
-  margin: 0.3rem 0;
-}
-td p:first-child { margin-top: 0; }
-td p:last-child  { margin-bottom: 0; }
-/* On narrow viewports, wrap the whole table in a horizontal scroller.
- * The :has() selector applies only when the page actually contains a
- * table; older browsers fall back to overflow on <table> itself. */
-@media (max-width: 720px) {
-  table { display: block; overflow-x: auto; }
+thead th { border-bottom: 1.5px solid var(--rule); font-weight: 600; }
+
+/* ---------- small screens ---------- */
+
+@media (max-width: 34rem) {
+  html { font-size: 106%; }
+  article { padding: 2rem 1.1rem 3rem; }
+  header.chapter-opening h1 { font-size: 1.6rem; }
+  blockquote { margin-left: 0.6rem; }
+  /* A drop cap at this width eats a third of the measure. */
+  .opening-para > p::first-letter { font-size: 1em; float: none; padding: 0; }
 }
 
-/* Pseudo-heading: standalone bold paragraphs (the common DOCX shape
- * where the author bolded a section heading instead of using a Heading
- * 2 style). Give them breathing room above and a slightly larger size
- * so they read as headings, not random bold prose. Targets `<p>` whose
- * only child is `<strong>`, which is what Pandoc emits for that case. */
-article p:has(> strong:only-child) {
-  margin-top: 2rem;
-  margin-bottom: 0.6rem;
-  font-size: 1.1rem;
-  text-indent: 0;
-  line-height: 1.35;
-}
-article p:has(> strong:only-child) > strong {
-  font-weight: 600;
-  font-variant-caps: small-caps;
-  letter-spacing: 0.04em;
-  font-family: var(--serif);
-  color: var(--ink);
-}
+/* ---------- print ---------- */
 
-/* Scene break. The manuscript marks these with a centered asterisk, and a
- * default <hr> rule reads as a section divider rather than the pause the
- * author wrote. Mirrors the Typst treatment. */
-hr {
-  border: 0;
-  margin: 1.6rem 0;
-  text-align: center;
-  height: auto;
-}
-hr::after {
-  content: "*";
-  color: var(--ink-soft);
-  font-size: 1.15rem;
-  line-height: 1;
-}
+/* The print sheet is the book: 6 x 9 trim, running heads that carry the
+ * folio, the volume label on the verso. Named strings are a paged-media
+ * feature, so these rules do their work in WeasyPrint and are inert in a
+ * browser's own print dialogue, which is the expected trade. */
+.short-title-anchor { string-set: shorttitle content(); }
+.short-authors-anchor { string-set: shortauthors content(); }
+.volume-anchor { string-set: volumelabel content(); }
+.footer-anchor { string-set: pagefooter content(); }
+.short-title-anchor,
+.short-authors-anchor,
+.volume-anchor,
+.footer-anchor { position: absolute; left: -10000px; }
 
-/* Figures. Image centered at its authored size, caption below and separated
- * by a hairline rule, the whole block kept off a page break so an image never
- * parts from its caption. Mirrors the Typst treatment. */
-figure {
-  margin: 2.25rem 0;
-  text-align: center;
-  break-inside: avoid;
-  page-break-inside: avoid;
-}
-figure img {
-  max-width: 100%;
-  height: auto;
-}
-figure figcaption {
-  margin: 0.75rem 0 0;
-  padding-top: 0.7rem;
-  border-top: 1px solid var(--rule);
-  font-size: 0.85rem;
-  line-height: 1.45;
-  color: var(--ink-soft);
-  text-align: justify;
-  text-indent: 0;
-  hyphens: auto;
-  -webkit-hyphens: auto;
-}
-/* "FIGURE 1." set as a letterspaced label ahead of the caption proper. */
-figure figcaption .figure-label {
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-size: 0.9em;
-  font-weight: 600;
-  color: var(--ink);
-}
-
-/* Works cited (hanging indent). Closing rule below the entire list so
- * there's a visual separator before whatever follows (Notes section,
- * end of document). */
-/* No closing rule here. The Notes section draws its own rule above its
- * heading, and the two stacked into a double line at that boundary. Where
- * Works Cited is the last section, the end of the document needs no rule. */
-section.references {
-  padding-bottom: 1.5rem;
-  margin-bottom: 0;
-}
-section.references p {
-  margin: 0.4rem 0;
-  padding-left: 2em;
-  text-indent: -2em;
-  /* Block-aligned to match the article body. */
-  text-align: justify;
-  /* Hyphenation is disabled house-wide, but justified hanging-indent
-   * entries carrying long URLs open up unreadable word gaps without it.
-   * This is the one place it is deliberately turned back on. */
-  hyphens: auto;
-  -webkit-hyphens: auto;
-  /* A DOI or URL longer than the measure would otherwise push past the
-   * column edge rather than wrap. */
-  overflow-wrap: break-word;
-  font-size: 0.92rem;
-  line-height: 1.4;
-}
-
-/* Print: 6x9 book trim with running headers and a centered footer.
- * Headers use the journal's `short-title` / `short-authors` metadata,
- * passed through CSS named strings set by the Pandoc HTML template. */
-/* Running furniture mirrors the Typst PDF: verso carries the journal
- * locator, recto carries the article, and the folio sits at the outer edge
- * of each page so a spread reads like a bound book.
- *
- * These margin boxes are only honoured by paged-media engines such as
- * WeasyPrint (conversion.render_pdf_weasy). Browser printing ignores them;
- * the Typst path is the primary PDF renderer. */
 @page {
   size: 6in 9in;
-  margin: 0.85in 0.75in 0.95in 0.75in;
+  margin: 0.78in 0.78in 0.88in;
 }
 @page :left {
-  @top-left {
-    content: string(journal-locator);
-    font-family: "EB Garamond", "Garamond", Georgia, serif;
-    font-style: italic;
-    font-size: 9.5pt;
-    color: #4a4137;
-  }
-  @bottom-left {
-    content: counter(page) string(footer-lead);
-    font-family: "EB Garamond", "Garamond", Georgia, serif;
-    font-size: 9.5pt;
-    color: #4a4137;
-    font-feature-settings: "onum";
-  }
+  @top-left { content: counter(page) "  " string(shortauthors); font-family: var(--serif); font-style: italic; font-size: 9pt; }
 }
 @page :right {
-  @top-right {
-    content: string(short-title);
-    font-family: "EB Garamond", "Garamond", Georgia, serif;
-    font-style: italic;
-    font-size: 9.5pt;
-    color: #4a4137;
-  }
-  @bottom-right {
-    content: string(footer-text) counter(page);
-    font-family: "EB Garamond", "Garamond", Georgia, serif;
-    font-size: 9.5pt;
-    color: #4a4137;
-    font-feature-settings: "onum";
-  }
+  @top-right { content: string(shorttitle) "  " counter(page); font-family: var(--serif); font-style: italic; font-size: 9pt; }
 }
-
-/* Front matter carries no furniture at all, matching the Typst template.
- * A named page rather than `:first` because the abstract regularly runs to
- * a second page before the body break. */
-header.article-meta,
-aside.keywords,
-section.abstract {
-  page: frontmatter;
+@page :first {
+  @top-left { content: ""; }
+  @top-right { content: ""; }
+  @bottom-right { content: counter(page); font-family: var(--serif); font-size: 9pt; }
 }
-@page frontmatter {
-  @top-left { content: none; }
-  @top-right { content: none; }
-  @bottom-left { content: none; }
-  @bottom-right { content: none; }
-}
-
-/* Pull the named strings out of the document so @page rules can use them.
- * footer-text is rendered with a trailing separator so the page counter
- * follows naturally; when the article has no per-article footer, the
- * named string is empty and only the counter shows. */
-.short-title-anchor { string-set: short-title content(); position: absolute; left: -9999px; top: -9999px; }
-.short-authors-anchor { string-set: short-authors content(); position: absolute; left: -9999px; top: -9999px; }
-.journal-locator-anchor { string-set: journal-locator content(); position: absolute; left: -9999px; top: -9999px; }
-/* Two forms of the same note: `footer-text` carries its separator trailing,
- * for use before the folio on recto pages; `footer-lead` carries it leading,
- * for use after the folio on verso pages, where the folio sits outermost. */
-.footer-anchor { string-set: footer-text "" content() "  \00b7  ", footer-lead "  \00b7  " content(); position: absolute; left: -9999px; top: -9999px; }
 
 @media print {
-  html { font-size: 11.25pt; }
-  body { background: #fff; }
-  article {
-    max-width: none;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    box-shadow: none;
-    background: #fff;
+  :root {
+    --ink: #000000;
+    --ink-soft: #333333;
+    --paper: #ffffff;
+    --link: #000000;
+    --link-visited: #000000;
   }
-  header.article-meta {
-    margin-top: 1.25in;
-    padding-bottom: 1.25rem;
-  }
-  header.article-meta h1 { font-size: 22pt; }
-  /* The body opens on its own page, matching the Typst PDF. The metadata
-   * header's adjacent sibling is aside.keywords rather than a section, so
-   * the selector previously used here (header.article-meta + section)
-   * matched nothing and the rule never fired. */
-  section.abstract + section {
-    page-break-before: always;
-    break-before: page;
-  }
-  /* break-after keeps a heading from stranding at the foot of a page;
-   * break-inside keeps a two-line heading from splitting across one. */
-  h1, h2, h3 {
-    page-break-after: avoid;
-    break-after: avoid;
-    page-break-inside: avoid;
-    break-inside: avoid;
-  }
-  blockquote, figure, table { page-break-inside: avoid; break-inside: avoid; }
-  p { orphans: 3; widows: 3; }
-  section.references a::after { content: ""; }
-  a {
-    color: var(--ink);
-    border-bottom: 0;
+  html { font-size: 11pt; }
+  body { line-height: 1.2; }
+  article { max-width: none; margin: 0; padding: 0; }
+  .skip-link { display: none; }
+  /* A printed page has no hover and no clickable link, so the underline is
+   * noise; the URL is already in the entry. */
+  a { text-decoration: none; color: inherit; }
+  h2, h3, h4 { break-after: avoid; }
+  figure, blockquote, table { break-inside: avoid; }
+  p { orphans: 2; widows: 2; }
+}
+
+/* Accessibility: a reader who has asked for less motion gets none. Nothing
+ * here animates today; this keeps that true if something is added later. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
