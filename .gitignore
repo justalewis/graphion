@@ -32,6 +32,12 @@ content/**/_front_matter.typ
 content/**/_unfiled/
 # Per-article PDF preview rasters
 content/**/preview/
+# The per-journal template bundle holds source files whose names match the
+# generated artifacts above. A bundle's article.typ is the Typst template, not
+# a render intermediate, and it has to stay in git. The LiCS copy survives only
+# because it was tracked before that rule existed; without this negation a
+# journal scaffolded by new_journal.py silently loses its Typst template.
+!content/journals/*/template/article.typ
 _dropbox/
 *.log
 .DS_Store
