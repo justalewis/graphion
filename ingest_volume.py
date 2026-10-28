@@ -169,7 +169,8 @@ def existing_sources(journal_id: int) -> dict:
 
 
 def ingest_one(chapter: Chapter, journal: dict, defaults: dict,
-               replace: bool, by_source: dict) -> tuple:
+               replace: bool, by_source: dict,
+               teacher_mode: str = "separate") -> tuple:
     """Ingest one chapter. Returns (status, detail)."""
     existing = by_source.get(chapter.pdf.name)
     if existing is None:
@@ -205,6 +206,11 @@ def ingest_one(chapter: Chapter, journal: dict, defaults: dict,
         fm["title"] = chapter.title
     if chapter.authors:
         fm["author"] = [{"name": n} for n in chapter.authors]
+    if teacher_mode == "separate" and conversion.split_teacher_resources(body)[1].strip():
+        # The series puts a block addressed to instructors behind its own
+        # title page at the back of every chapter. Marking it here is what
+        # makes it render as a galley of its own.
+        fm.setdefault("teacher-resources", "separate")
     fm.setdefault("short-title", _short_title(fm.get("title") or chapter.slug))
     fm.setdefault("short-authors", _short_authors(fm.get("author") or []))
     conversion.write_article_metadata(apath, fm, body)
@@ -265,6 +271,10 @@ def main():
     parser.add_argument("--replace", action="store_true",
                         help="re-ingest chapters that already exist")
     parser.add_argument("--stop-on-error", action="store_true")
+    parser.add_argument("--teacher-resources", dest="teacher_mode",
+                        choices=("separate", "inline"), default="separate",
+                        help="render a chapter's Teacher Resources as its own "
+                             "galley (default) or leave it inside the chapter")
     args = parser.parse_args()
 
     pdf_dir = Path(args.pdf_dir)
@@ -307,7 +317,7 @@ def main():
         label = f"{c.number if c.number is not None else '?'} {c.pdf.name}"
         try:
             status, detail = ingest_one(c, journal, defaults, args.replace,
-                                        by_source)
+                                        by_source, args.teacher_mode)
         except Exception as exc:
             status, detail = "failed", f"{type(exc).__name__}: {exc}"
             if args.stop_on_error:

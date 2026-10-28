@@ -644,13 +644,22 @@ function Pandoc(doc)
   if FORMAT == "typst" or FORMAT:match("^html") then
     doc = doc:walk(url_filter)
   end
+  -- Which half of a split chapter this render is. A dropped initial opens a
+  -- chapter; the teacher material behind it is a separate document that the
+  -- printed series sets plainly, with no cap.
+  local part = doc.meta["graphion-part"]
+      and pandoc.utils.stringify(doc.meta["graphion-part"]) or "chapter"
   if FORMAT == "typst" then
     doc = collect_typst_endnotes(doc)
-    doc.blocks = inject_typst_dropcap(doc.blocks)
+    if part ~= "teacher" then
+      doc.blocks = inject_typst_dropcap(doc.blocks)
+    end
     doc.blocks = inject_typst_hanging_indent(doc.blocks, is_review)
     doc.blocks = adapt_typst_tables(doc.blocks)
   elseif FORMAT:match("^html") or FORMAT:match("^epub") then
-    doc.blocks = wrap_html_opening_para(doc.blocks)
+    if part ~= "teacher" then
+      doc.blocks = wrap_html_opening_para(doc.blocks)
+    end
     doc.blocks = demote_headings(doc.blocks)
     -- A meta description has to be plain text. Pandoc renders the abstract
     -- to HTML, so dropping it into an attribute puts markup where markup

@@ -487,6 +487,8 @@ class RenderResult:
     pdf_path: Optional[Path]
     errors: list
     epub_path: Optional[Path] = None
+    teacher_html_path: Optional[Path] = None
+    teacher_pdf_path: Optional[Path] = None
 
 
 def _citation_args(article_path: Path, journal_slug: str) -> list[str]:
@@ -734,11 +736,165 @@ def _repair_markdown_quirks_in_file(md_path: Path) -> bool:
     return False
 
 
-def render_html(article_path: Path, journal_slug: str) -> Path:
+# A chapter in a teaching series carries a block of material addressed to
+# the instructor rather than to the student: an overview and teaching
+# strategies, discussion questions, recommended activities. In print it sits
+# behind its own title page at the back of the chapter.
+TEACHER_HEADING_RE = re.compile(r"^#{1,6}[ \t]*Teacher\s+Resources\b.*$", re.M | re.I)
+
+
+def split_teacher_resources(body: str) -> tuple:
+    """Split a body at its Teacher Resources heading.
+
+    Returns (chapter, teacher). The teacher half keeps its own heading, and
+    an article without that section comes back whole with an empty second
+    half, so a caller can use this unconditionally.
+    """
+    match = TEACHER_HEADING_RE.search(body)
+    if not match:
+        return body, ""
+    chapter = body[:match.start()].rstrip() + "\n"
+    teacher = body[match.start():].strip() + "\n"
+    return _partition_footnotes(chapter, teacher)
+
+
+_FOOTNOTE_DEF_RE = re.compile(r"^\[\^([^\]\s]+)\]:", re.M)
+_FOOTNOTE_REF_RE = re.compile(r"\[\^([^\]\s]+)\](?!:)")
+
+
+def _partition_footnotes(chapter: str, teacher: str) -> tuple:
+    """Send each footnote definition to the half that refers to it.
+
+    Markdown lets a definition sit anywhere, so they collect at the end of
+    the document, which is behind the teacher material. Cutting the document
+    in two therefore hands every one of the chapter's notes to the teacher
+    galley, where Pandoc reports it as defined and unused and the chapter
+    loses the note entirely.
+    """
+    def blocks(text: str) -> list:
+        return re.split(r"\n{2,}", text.strip("\n"))
+
+    def is_definition(block: str) -> bool:
+        return bool(_FOOTNOTE_DEF_RE.match(block.lstrip()))
+
+    def keys(block: str) -> set:
+        return set(_FOOTNOTE_DEF_RE.findall(block))
+
+    kept: dict = {"chapter": [], "teacher": []}
+    defs: list = []
+    for half, text in (("chapter", chapter), ("teacher", teacher)):
+        for block in blocks(text):
+            if is_definition(block):
+                defs.append(block)
+            else:
+                kept[half].append(block)
+    if not defs:
+        return chapter, teacher
+
+    referenced = {
+        half: set(_FOOTNOTE_REF_RE.findall("\n\n".join(kept[half])))
+        for half in kept
+    }
+    for block in defs:
+        block_keys = keys(block)
+        # A note nobody refers to stays with the chapter rather than being
+        # dropped: losing an editor's content is worse than an unused note.
+        half = "teacher" if (block_keys & referenced["teacher"]) and not (
+            block_keys & referenced["chapter"]) else "chapter"
+        kept[half].append(block)
+
+    return ("\n\n".join(kept["chapter"]).strip() + "\n",
+            "\n\n".join(kept["teacher"]).strip() + "\n")
+
+
+def teacher_resources_separate(fm: dict) -> bool:
+    """Whether this article wants its teacher material as its own galley.
+
+    Opt-in per article rather than per journal, because it is a property of
+    how a piece is written: a chapter that addresses instructors in a block
+    at the back can be split, and one that weaves them through cannot.
+    """
+    return str(fm.get("teacher-resources") or "").strip().lower() == "separate"
+
+
+def _teacher_front_matter(fm: dict) -> dict:
+    """Front matter for the teacher galley, derived from the chapter's.
+
+    It is a document in its own right, so it gets its own title and running
+    head, and loses the things that belong to the chapter: the Overview, the
+    chapter number, the pagination assembly assigned it.
+    """
+    out = dict(fm)
+    title = plain_text(fm.get("title")) or ""
+    out["title"] = f"Teacher Resources for “{title}”" if title else "Teacher Resources"
+    out["short-title"] = "Teacher Resources"
+    for key in ("abstract", "chapter-number", "keywords", "doi", "subtitle",
+                "start-page", "end-page", "start-page-locked",
+                "teacher-resources"):
+        out.pop(key, None)
+    return out
+
+
+def part_sources(article_path: Path) -> dict:
+    """Markdown sources to render, keyed by part.
+
+    An article that does not ask for the split renders from article.md as it
+    always has. One that does gets two derived files beside it; they are
+    build intermediates, named with a leading dot and gitignored, because
+    article.md stays the one canonical copy an editor edits.
+    """
+    whole = {"chapter": article_path / "article.md"}
+    fm, body = read_article_metadata(article_path)
+    if not teacher_resources_separate(fm):
+        return whole
+    chapter_body, teacher_body = split_teacher_resources(body)
+    if not teacher_body.strip():
+        return whole
+
+    import yaml
+
+    def _dump(meta: dict, text: str, path: Path):
+        front = yaml.safe_dump(
+            meta, sort_keys=False, allow_unicode=True, width=10_000,
+        )
+        path.write_text(f"---\n{front}---\n\n{text.strip()}\n", encoding="utf-8")
+
+    chapter_md = article_path / ".chapter.md"
+    teacher_md = article_path / ".teacher.md"
+    _dump(fm, chapter_body, chapter_md)
+    # The "Teacher Resources for ..." heading becomes this document's title,
+    # so leaving it in the body prints it twice: once in the title block and
+    # again as the first heading under it.
+    _dump(_teacher_front_matter(fm), _strip_leading_heading(teacher_body), teacher_md)
+    return {"chapter": chapter_md, "teacher": teacher_md}
+
+
+def _strip_leading_heading(text: str) -> str:
+    """Drop a leading ATX heading, keeping everything after it."""
+    stripped = text.lstrip("\n")
+    if not stripped.startswith("#"):
+        return text
+    _, _, rest = stripped.partition("\n")
+    return rest.lstrip("\n")
+
+
+def _part_paths(article_path: Path, part: str, suffix: str) -> tuple:
+    """Resolve (source markdown, output file) for one part of an article."""
+    sources = part_sources(article_path)
+    if part not in sources:
+        raise ValueError(
+            f"{article_path.name} has no {part!r} part to render. Set "
+            "`teacher-resources: separate` in the front matter and give the "
+            "article a Teacher Resources heading."
+        )
+    stem = "teacher-resources" if part == "teacher" else "article"
+    return sources[part], article_path / f"{stem}{suffix}"
+
+
+def render_html(article_path: Path, journal_slug: str, part: str = "chapter") -> Path:
     _repair_media_paths_in_file(article_path / "article.md")
     _repair_markdown_quirks_in_file(article_path / "article.md")
-    md = article_path / "article.md"
-    out = article_path / "article.html"
+    md, out = _part_paths(article_path, part, ".html")
     tpl = template_dir(journal_slug)
     template = tpl / "article.html.j2"
     css = tpl / "article.css"
@@ -758,6 +914,7 @@ def render_html(article_path: Path, journal_slug: str) -> Path:
     short_name = journal_short_name(journal_slug)
     if short_name:
         extra.append(f"--metadata=journal-short:{short_name}")
+    extra.append(f"--metadata=graphion-part:{part}")
     fig_filter = tpl / "figures-filter.lua"
     if fig_filter.exists():
         extra.append(f"--lua-filter={fig_filter}")
@@ -969,7 +1126,7 @@ def _compile_typst(
     return False
 
 
-def render_pdf(article_path: Path, journal_slug: str) -> Path:
+def render_pdf(article_path: Path, journal_slug: str, part: str = "chapter") -> Path:
     """Render PDF via Pandoc (Typst template) + typst-py compile.
 
     Pandoc reads article.md, substitutes YAML front matter into the
@@ -990,15 +1147,18 @@ def render_pdf(article_path: Path, journal_slug: str) -> Path:
             "subdirectory), then re-render. Missing: "
             + ", ".join(sample) + more
         )
-    md = article_path / "article.md"
-    out = article_path / "article.pdf"
+    md, out = _part_paths(article_path, part, ".pdf")
     tpl = template_dir(journal_slug)
     typ_template = tpl / "article.typ"
     lua_filter = tpl / "journal-filter.lua"
     if not lua_filter.exists():
         # Backward compat: older bundles used the journal-specific name
         lua_filter = tpl / "lics-filter.lua"
-    typst_input = article_path / "article.typ"
+    # Separate intermediate per part, or the two renders overwrite each
+    # other's Typst source and the second one wins whichever ran last.
+    typst_input = article_path / (
+        ".teacher.typ" if part == "teacher" else "article.typ"
+    )
 
     extra = [f"--template={typ_template}"]
     # The verso running head needs the journal's short label, which lives on
@@ -1008,6 +1168,10 @@ def render_pdf(article_path: Path, journal_slug: str) -> Path:
     short_name = journal_short_name(journal_slug)
     if short_name:
         extra.append(f"--metadata=journal-short:{short_name}")
+    # Which half of a split article this is. A filter needs it: a dropped
+    # initial belongs at the start of a chapter, not at the start of the
+    # notes its author wrote for whoever teaches the chapter.
+    extra.append(f"--metadata=graphion-part:{part}")
     fig_filter = tpl / "figures-filter.lua"
     if fig_filter.exists():
         extra.append(f"--lua-filter={fig_filter}")
@@ -1027,6 +1191,10 @@ def render_pdf(article_path: Path, journal_slug: str) -> Path:
     # which we substitute here so embedded quotes in author names don't
     # blow up the Typst parser.
     fm, _ = read_article_metadata(article_path)
+    if part == "teacher":
+        # Derive the same way the part's source was written, or the teacher
+        # galley takes the chapter's short title into its running head.
+        fm = _teacher_front_matter(fm)
     typ_text = typst_input.read_text(encoding="utf-8")
     typ_text = _fill_typst_authors(typ_text, fm)
     # Drop any `#link(<label>)[...]` whose label isn't declared anywhere
@@ -1280,17 +1448,40 @@ def render_all(article_path: Path, journal_slug: str, formats: Optional[set] = N
         except Exception as exc:
             errors.append(f"EPUB: {type(exc).__name__}: {exc}")
 
+    # An article that keeps its teacher material as a separate galley gets it
+    # rendered alongside, in the same formats. Nothing asks for it: an editor
+    # who splits the chapter wants both halves, and a half that only appears
+    # when someone remembers to ask is a half that ships missing.
+    teacher_html_path = teacher_pdf_path = None
+    if "teacher" in part_sources(article_path):
+        if "html" in formats:
+            try:
+                teacher_html_path = render_html(article_path, journal_slug, part="teacher")
+            except Exception as exc:
+                errors.append(f"Teacher HTML: {type(exc).__name__}: {exc}")
+        if "pdf" in formats:
+            try:
+                teacher_pdf_path = render_pdf(article_path, journal_slug, part="teacher")
+            except Exception as exc:
+                errors.append(f"Teacher PDF: {type(exc).__name__}: {exc}")
+
     body = json.dumps(
         {
             "html": str(html_path) if html_path else None,
             "pdf": str(pdf_path) if pdf_path else None,
             "epub": str(epub_path) if epub_path else None,
+            "teacher_html": str(teacher_html_path) if teacher_html_path else None,
+            "teacher_pdf": str(teacher_pdf_path) if teacher_pdf_path else None,
             "errors": errors,
         },
         indent=2,
     )
     _append_log(article_path, "Stage 4: render", body)
-    return RenderResult(html_path=html_path, pdf_path=pdf_path, errors=errors, epub_path=epub_path)
+    return RenderResult(
+        html_path=html_path, pdf_path=pdf_path, errors=errors,
+        epub_path=epub_path, teacher_html_path=teacher_html_path,
+        teacher_pdf_path=teacher_pdf_path,
+    )
 
 
 # ---------- DB integration ----------

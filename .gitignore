@@ -11,6 +11,13 @@ content/**/article-raw.md
 content/**/article.html
 content/**/article.pdf
 content/**/article.typ
+# Derived sources and galleys for an article whose teacher material is
+# split out; article.md stays the one canonical copy.
+content/**/.chapter.md
+content/**/.teacher.md
+content/**/.teacher.typ
+content/**/teacher-resources.pdf
+content/**/teacher-resources.html
 content/**/article.epub
 content/**/conversion.log
 content/**/.versions/

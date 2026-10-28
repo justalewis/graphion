@@ -27,10 +27,11 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (156 functions: 75 in `test_cleanups.py`, 26 in `test_pdf_ingest.py`,
-17 in `test_ingest_volume.py`, 14 in `test_lint.py`, 10 in
-`test_metadata_roundtrip.py`, 6 in `test_standalone_html.py`, 5 in
-`test_pdf_ua.py`, 3 in `test_preprocessors.py`):
+Tests (176 functions: 75 in `test_cleanups.py`, 26 in `test_pdf_ingest.py`,
+20 in `test_teacher_resources.py`, 17 in `test_ingest_volume.py`, 14 in
+`test_lint.py`, 10 in `test_metadata_roundtrip.py`, 6 in
+`test_standalone_html.py`, 5 in `test_pdf_ua.py`, 3 in
+`test_preprocessors.py`):
 
 ```bash
 python -m pytest tests/ -q
@@ -124,6 +125,19 @@ how a chapter is recognised as already taken in; matching on the slug alone
 fails, because a slug is built from the title and the same PDF ingested with
 and without a manifest lands under two of them.
 
+**An article can render as two galleys.** `teacher-resources: separate` in
+the front matter splits a chapter at its `Teacher Resources` heading, so the
+material addressed to instructors renders as its own document
+(`teacher-resources.pdf` / `.html`) beside the chapter. It is opt-in per
+article, not per journal, because it is a property of how a piece is
+written. `article.md` stays the one canonical copy: the split writes derived
+`.chapter.md` / `.teacher.md` intermediates, which are gitignored. Footnote
+definitions move to whichever half refers to them, since Markdown collects
+them at the end of the document, behind the teacher material. `render_pdf`
+and `render_html` take a `part`, pass it to the filters as
+`graphion-part`, and write to separate intermediates; the Writing Spaces
+filter uses it to keep the drop cap out of the teacher galley.
+
 **YAML round-trips are validated.** `write_article_metadata()` refuses to write
 YAML that fails `safe_load`, and normalizes whitespace in scalar fields to
 prevent wraparound corruption. `safe_dump` uses `width=10_000` to keep scalars
@@ -151,7 +165,7 @@ Anything touching Claude (`stylize.py`, `llm_cleanup.py`) requires
 
 ## Layout notes
 
-- `app.py` (2672 lines) is the whole HTTP surface. `conversion.py` (1959) is the
+- `app.py` (2672 lines) is the whole HTTP surface. `conversion.py` (2156) is the
   pipeline. Those two hold most of the complexity.
 - Per-journal template bundles live at `content/journals/<slug>/template/`:
   CSS, Pandoc HTML template, Typst template, Lua filters, CSL stylesheet,
