@@ -1,0 +1,42 @@
+# Writing Spaces front-matter schema.
+# Lists required and optional metadata fields for a chapter.
+# Used by the editor to surface missing-field warnings.
+#
+# Writing Spaces is a book series, not a journal: a piece is a numbered
+# chapter inside a titled volume, so `volume-title` and `chapter-number`
+# stand where a journal would carry `issue` and `season`. The journal
+# fields are still listed as optional because the shared pipeline reads
+# them, and because a chapter that never sets them still has to render.
+
+required:
+  - title
+  - author          # list of {name, affiliation}
+  - abstract        # printed as the chapter's "Overview"
+  - volume-title    # e.g. "Writing Spaces 5"; sets the margin tab
+  - chapter-number  # hangs beside the title on the opening page
+
+optional:
+  - subtitle
+  - short-title     # running head, recto
+  - short-authors   # running head, verso
+  - keywords
+  - doi
+  - published-date
+  - license         # defaults to the series CC BY-NC-ND notice
+  - teacher-resources   # see note below
+  - volume          # inherited from the volume record
+  - year            # inherited from the volume record
+  - start-page      # computed by assembly
+  - end-page        # computed by assembly
+  - copyright
+
+# Every chapter in the series carries the same back matter, in this order:
+#
+#   Overview  ->  named body sections  ->  Works Cited  ->
+#   Teacher Resources for "<title>"  ->  Overview and Teaching Strategies,
+#   Discussion Questions, Recommended Activities
+#
+# Those are ordinary headings in article.md, not metadata; the schema does
+# not enforce them. `teacher-resources` is reserved for the decision about
+# whether that section renders as part of the chapter galley or as a galley
+# of its own, which is not settled yet.

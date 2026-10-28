@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="$if(lang)$$lang$$else$en-US$endif$" xml:lang="$if(lang)$$lang$$else$en-US$endif$">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>$pagetitle$</title>
+  $for(author)$
+  <meta name="author" content="$author.name$$if(author.affiliation)$&mdash;$author.affiliation$$endif$">
+  $endfor$
+  $if(keywords)$
+  <meta name="keywords" content="$for(keywords)$$keywords$$sep$, $endfor$">
+  $endif$
+  $if(doi)$
+  <meta name="citation_doi" content="$doi$">
+  $endif$
+  $if(journal)$
+  <meta name="citation_journal_title" content="$journal$">
+  $endif$
+  $if(volume)$
+  <meta name="citation_volume" content="$volume$">
+  $endif$
+  $if(issue)$
+  <meta name="citation_issue" content="$issue$">
+  $endif$
+  $for(css)$
+  <link rel="stylesheet" href="$css$">
+  $endfor$
+</head>
+<body>
+$if(short-title)$
+<span class="short-title-anchor" aria-hidden="true">$short-title$</span>
+$endif$
+$if(short-authors)$
+<span class="short-authors-anchor" aria-hidden="true">$short-authors$</span>
+$endif$
+$if(journal-short)$
+<span class="journal-locator-anchor" aria-hidden="true">$journal-short$$if(volume)$ / Vol. $volume$$endif$$if(issue)$ / No. $issue$$endif$</span>
+$endif$
+$if(footer)$
+<span class="footer-anchor" aria-hidden="true">$footer$</span>
+$endif$
+<article lang="$if(lang)$$lang$$else$en-US$endif$">
+  <header class="article-meta">
+    <h1>$title$</h1>
+    $if(subtitle)$<p class="subtitle">$subtitle$</p>$endif$
+    $for(author)$
+    <p class="byline">$author.name$$if(author.affiliation)$&mdash;$author.affiliation$$endif$</p>
+    $endfor$
+  </header>
+
+  $if(keywords)$
+  <aside class="keywords" aria-label="Keywords">
+    <h2>Keywords</h2>
+    <p>$for(keywords)$$keywords$$sep$; $endfor$</p>
+  </aside>
+  $endif$
+
+  $if(abstract)$
+  <section class="abstract" aria-label="Abstract">
+    <h2>Abstract</h2>
+    <p>$abstract$</p>
+  </section>
+  $endif$
+
+$body$
+</article>
+</body>
+</html>
