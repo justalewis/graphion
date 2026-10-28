@@ -27,8 +27,9 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (60 functions: 47 in `test_cleanups.py`, 8 in `test_lint.py`, 5 in
-`test_metadata_roundtrip.py`):
+Tests (102 functions: 75 in `test_cleanups.py`, 10 in
+`test_metadata_roundtrip.py`, 8 in `test_lint.py`, 6 in
+`test_standalone_html.py`, 3 in `test_preprocessors.py`):
 
 ```bash
 python -m pytest tests/ -q
@@ -118,7 +119,7 @@ Anything touching Claude (`stylize.py`, `llm_cleanup.py`) requires
 
 ## Layout notes
 
-- `app.py` (2253 lines) is the whole HTTP surface. `conversion.py` (1638) is the
+- `app.py` (2656 lines) is the whole HTTP surface. `conversion.py` (1833) is the
   pipeline. Those two hold most of the complexity.
 - Per-journal template bundles live at `content/journals/<slug>/template/`:
   CSS, Pandoc HTML template, Typst template, Lua filters, CSL stylesheet,
