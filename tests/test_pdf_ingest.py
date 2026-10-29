@@ -284,3 +284,45 @@ def test_spaces_come_from_the_supplied_text_not_the_gaps():
     chars = _chars([("a", "F", 11, 100), ("b", "F", 11, 100)])
     text, _, _ = pdf_ingest._line_text("a b", chars)
     assert text == "a b"
+
+
+# ---------- the opening page ----------
+
+
+def test_opening_page_body_keeps_everything_once_an_overview_is_found():
+    """A chapter's title furniture is already consumed by then, so what is
+    left below the Overview is body."""
+    lines = [_line("A few semesters back, I was working with a student.", page=1),
+             _line("Ana was searching for a topic.", page=1)]
+    kept = pdf_ingest.opening_page_body(lines, LAYOUT, has_overview=True)
+    assert kept == lines
+
+
+def test_opening_page_body_cuts_to_the_first_head_without_an_overview():
+    """On a chapter whose Overview was missed, what sits above the first head
+    is title furniture that was not recognised as any, so it is dropped
+    rather than run into the body as prose."""
+    stray = _line("Many college students write for one reason only.", page=1)
+    head = _line("Introduction: What Is Writing, Really?", size=12.0, page=1)
+    body = _line("A few semesters back, I was working with a student.", page=1)
+    assert pdf_ingest.classify(head, LAYOUT) == "head"
+    kept = pdf_ingest.opening_page_body([stray, head, body], LAYOUT,
+                                        has_overview=False)
+    assert kept == [head, body]
+
+
+def test_opening_page_body_keeps_a_page_that_has_no_head_at_all():
+    """Front and back matter prints its title and runs straight into prose.
+    The title is consumed as the title, so no head is left to cut to, and
+    cutting the page away lost the volume 5 acknowledgments its first page."""
+    dropcap = _line("T", size=30.0, page=1)
+    body = _line("hree years ago, in the spring of 2020, we put out a call.",
+                 page=1)
+    more = _line("That CFP marked a turning point for the project.", page=1)
+    kept = pdf_ingest.opening_page_body([dropcap, body, more], LAYOUT,
+                                        has_overview=False)
+    assert kept == [dropcap, body, more]
+
+
+def test_opening_page_body_of_an_empty_page_is_empty():
+    assert pdf_ingest.opening_page_body([], LAYOUT, has_overview=False) == []

@@ -689,6 +689,38 @@ def extract_front_matter(first_page_lines: list, layout: Layout) -> tuple:
     return fm, overview, consumed, notes
 
 
+def opening_page_body(body_lines: list, layout: Layout,
+                      has_overview: bool) -> list:
+    """Which of the opening page's leftover lines belong to the body.
+
+    A chapter's opening page is title furniture above an Overview, so once the
+    Overview has been found the leftovers below it are body and all of them
+    are kept.
+
+    Without one, the page is cut at its first head: on a chapter whose
+    Overview was missed, everything above that head is title furniture that
+    was not recognised, and letting it through puts the byline into the body
+    as a heading.
+
+    With no head either, the page is kept whole. That is not a chapter
+    opening at all; front and back matter prints its title and runs straight
+    into prose, and the title has already been consumed, so there is nothing
+    left to cut to. Discarding the page then loses a certain page of text to
+    be rid of an uncertain line of it. Reading the whole of Writing Spaces 5
+    is what turned this up: the acknowledgments came through missing 40% of
+    its words and the contributors list missing everyone from Blakesley to
+    Duffy, in both cases exactly page one, while every chapter was unharmed
+    because every chapter has an Overview.
+    """
+    if has_overview:
+        return body_lines
+    first_head = next((i for i, l in enumerate(body_lines)
+                       if classify(l, layout) in ("head", "title")), None)
+    if first_head is None:
+        return body_lines
+    return body_lines[first_head:]
+
+
 def _split_authors(byline: str) -> list:
     """Split a printed byline into names.
 
@@ -740,15 +772,10 @@ def extract(pdf_path: Path, genre_heads: Optional[tuple] = None) -> IngestResult
     else:
         notes.append("No Overview found on the opening page.")
 
-    body_lines = [l for l in first_page if id(l) not in consumed]
-    if not overview_lines:
-        # With no Overview to mark where the front matter ends, fall back to
-        # the first head on the page. Anything above it is title furniture
-        # that was not recognised, and letting it through would put the
-        # byline into the body as a heading.
-        first_head = next((i for i, l in enumerate(body_lines)
-                           if classify(l, layout) in ("head", "title")), None)
-        body_lines = body_lines[first_head:] if first_head is not None else []
+    body_lines = opening_page_body(
+        [l for l in first_page if id(l) not in consumed],
+        layout, bool(overview_lines),
+    )
     body_lines.extend(rest)
 
     blocks = assemble(body_lines, layout, vocab, compounds)
