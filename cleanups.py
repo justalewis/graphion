@@ -650,6 +650,9 @@ _NEW_ENTRY_RE = re.compile(
 # a figure cross-reference, which the figures filter depends on.
 _STRAY_AT_RE = re.compile(r"(?<![\w\\])@(?!fig:)(?=\w)")
 _URLISH_RE = re.compile(r"://|^<?www\.")
+# A URL Pandoc will read as a URI rather than as running text: an autolink, or
+# the destination half of an inline link.
+_LINKED_URL_RE = re.compile(r"^<|\]\(")
 
 
 def escape_stray_at_signs(text: str, log: CleanupLog) -> str:
@@ -661,7 +664,20 @@ def escape_stray_at_signs(text: str, log: CleanupLog) -> str:
     document does not contain a bibliography"). Escaping the @ keeps the
     text as written.
 
-    `@fig:` cross-references and anything inside a URL are left alone.
+    `@fig:` cross-references are left alone, and so is a URL that is linked:
+    inside an autolink (`<https://x.com/@lics>`) or a link destination
+    (`[Medium](https://medium.com/@user/...)`) Pandoc reads the whole thing as
+    a URI and never as a citation.
+
+    A URL written bare in running text is not safe, which is the correction
+    here. This pass used to exempt every URL, on the assumption that Pandoc
+    treated one atomically; it does not, because `autolink_bare_uris` is off
+    in the `markdown` reader this pipeline asks for. Volume 6 chapter 14 cites
+    `https://medium.com/@melodyma/a-brief-history-of-alt-text-...` in its
+    Works Cited, Pandoc read `@melodyma/a-brief-history-of-alt-text-...` as a
+    citation key, and the chapter's PDF would not compile at all. Escaping
+    prints the `@` as written, verified against pandoc 3.11.
+
     Idempotent: an escaped `\\@` is not matched again.
     """
     count = 0
@@ -669,7 +685,7 @@ def escape_stray_at_signs(text: str, log: CleanupLog) -> str:
     def fix_token(m: re.Match) -> str:
         nonlocal count
         token = m.group(0)
-        if _URLISH_RE.search(token):
+        if _URLISH_RE.search(token) and _LINKED_URL_RE.search(token):
             return token
         new, n = _STRAY_AT_RE.subn(r"\\@", token)
         count += n

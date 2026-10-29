@@ -791,11 +791,35 @@ def test_handle_at_sign_is_escaped():
 
 
 def test_at_signs_that_must_stay_are_left_alone():
+    """An email keeps its @ because the character before it is a word
+    character, and a linked URL keeps its because Pandoc reads an autolink or
+    a link destination as a URI. Checked against pandoc 3.11, which makes a
+    citation of none of these."""
     src = (
         "Email editor@example.org or see @fig:flow and [@fig:flow]. "
-        "Video at https://www.youtube.com/@KCHomelessUnion and <https://x.com/@lics>."
+        "Video at <https://x.com/@lics> and [Medium](https://medium.com/@ma/x)."
     )
     assert cleanups.escape_stray_at_signs(src, _log()) == src
+
+
+def test_a_bare_url_does_not_keep_its_at_sign():
+    """This pass used to exempt every URL, on the assumption that Pandoc read
+    one atomically. It does not: autolink_bare_uris is off in the markdown
+    reader, so @melodyma/a-brief-history in a Works Cited entry parsed as a
+    citation key and volume 6 chapter 14's PDF would not compile."""
+    src = ("Ma, Melody. “Alt Text.” *Medium.* 2018, "
+           "https://medium.com/@melodyma/a-brief-history-of-alt-text.")
+    out = cleanups.escape_stray_at_signs(src, _log())
+    assert r"medium.com/\@melodyma" in out
+    assert "@melodyma" not in out.replace(r"\@melodyma", "")
+
+
+def test_a_bare_youtube_handle_url_is_escaped_too():
+    """Same shape, and it was the case this pass's own test asserted had to
+    stay as it was."""
+    out = cleanups.escape_stray_at_signs(
+        "Video at https://www.youtube.com/@KCHomelessUnion here.", _log())
+    assert r"youtube.com/\@KCHomelessUnion" in out
 
 
 def test_escape_stray_at_signs_is_idempotent():
