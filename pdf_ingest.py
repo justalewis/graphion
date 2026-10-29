@@ -684,6 +684,14 @@ def extract_front_matter(first_page_lines: list, layout: Layout) -> tuple:
                 continue
             break
         if seen_head and kind in ("body", "quote"):
+            if overview and starts_paragraph(line, layout):
+                # "Everything between the Overview head and the first body
+                # head" holds only while the body opens with a head. Volume 5
+                # chapter 21 opens its body with a plain paragraph, and the
+                # overview ran 96 words into it and split a sentence across
+                # the two. The overview is one paragraph, so the next
+                # first-line indent ends it whether a head follows or not.
+                break
             overview.append(line)
             consumed.add(id(line))
 
@@ -699,6 +707,8 @@ def extract_front_matter(first_page_lines: list, layout: Layout) -> tuple:
             if kind in ("head", "title"):
                 break
             if kind in ("body", "quote"):
+                if overview and starts_paragraph(line, layout):
+                    break
                 overview.append(line)
         if overview:
             consumed.update(id(l) for l in overview)
@@ -716,6 +726,22 @@ _OVERVIEW_RE = re.compile(r"^overv\w*$", re.IGNORECASE)
 
 def is_overview_head(text: str) -> bool:
     return bool(_OVERVIEW_RE.match(text.strip().strip(":").strip()))
+
+
+def starts_paragraph(line: Line, layout: Layout) -> bool:
+    """Whether this line opens a paragraph, by its first-line indent.
+
+    The same rule `assemble` reads paragraph boundaries with, which is why it
+    can bound the overview: both are reading the one piece of geometry the
+    series is consistent about.
+
+    A dropped initial opens a paragraph too, and opens it with no indent at
+    all: the capital hangs in the margin at the text block's own left edge,
+    so the indent is exactly what it does not have. Volume 5 chapter 21 opens
+    its body with one, which is how its overview ran on into the chapter even
+    once the indent rule was bounding it.
+    """
+    return line.dropcap or line.x0 > layout.body_left + INDENT_MIN
 
 
 def opening_page_body(body_lines: list, layout: Layout,

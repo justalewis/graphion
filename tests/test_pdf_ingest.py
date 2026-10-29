@@ -373,3 +373,46 @@ def test_prose_under_the_byline_stops_at_the_first_head():
         [title, byline, over, head, body], LAYOUT)
     assert overview == [over]
     assert id(body) not in consumed
+
+
+def test_overview_ends_at_the_next_paragraph_indent():
+    """Volume 5 chapter 21 opens its body with a plain paragraph rather than
+    a head, so "up to the first body head" ran the overview 96 words into the
+    chapter and split a sentence across the two."""
+    head = _line("Overvew", size=12.0, page=1)
+    over = _line("From school to the workplace, managing team projects.", page=1)
+    over2 = _line("In this chapter, we guide students through the tools.", page=1)
+    body = _line("The notorious group project, bane of many students.",
+                 x0=58.5 + pdf_ingest.INDENT_MIN + 4, page=1)
+    _, overview, consumed, _ = pdf_ingest.extract_front_matter(
+        [head, over, over2, body], LAYOUT)
+    assert overview == [over, over2]
+    assert id(body) not in consumed
+
+
+def test_starts_paragraph_reads_the_first_line_indent():
+    flush = _line("a continuation line of the same paragraph.")
+    indented = _line("A new paragraph.", x0=58.5 + pdf_ingest.INDENT_MIN + 4)
+    assert not pdf_ingest.starts_paragraph(flush, LAYOUT)
+    assert pdf_ingest.starts_paragraph(indented, LAYOUT)
+
+
+def test_overview_ends_at_a_dropped_initial():
+    """Volume 5 chapter 21 opens its body with a dropped initial, which
+    begins a paragraph without indenting it, so the indent rule alone let the
+    overview run on into the chapter."""
+    head = _line("Overvew", size=12.0, page=1)
+    over = _line("From school to the workplace, managing team projects.", page=1)
+    body = _line("The notorious group project, bane of many students.",
+                 page=1, dropcap=True)
+    _, overview, consumed, _ = pdf_ingest.extract_front_matter(
+        [head, over, body], LAYOUT)
+    assert overview == [over]
+    assert id(body) not in consumed
+
+
+def test_starts_paragraph_counts_a_dropped_initial():
+    flush = _line("a continuation line of the same paragraph.")
+    cap = _line("The notorious group project.", dropcap=True)
+    assert not pdf_ingest.starts_paragraph(flush, LAYOUT)
+    assert pdf_ingest.starts_paragraph(cap, LAYOUT)
