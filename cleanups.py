@@ -133,6 +133,40 @@ def reassemble_heading_linebreaks(text: str, log: CleanupLog) -> str:
     return text
 
 
+def blank_line_before_heading(text: str, log: CleanupLog) -> str:
+    """Give every heading the blank line Pandoc needs to read it as one.
+
+    `blank_before_header` is on by default in the `markdown` reader this
+    pipeline asks for, so a heading sitting directly under a line of text is
+    not a heading at all: it is swallowed into the paragraph above, and the
+    galley prints a literal "# Teacher Resources for ..." in the middle of a
+    Works Cited entry.
+
+    PDF ingest produces exactly that. The series opens its instructor
+    material on a fresh page, so nothing in the geometry says to leave a
+    blank line, and every chapter of Writing Spaces 5 came through with the
+    Teacher Resources title welded to the last line of its bibliography. It
+    goes unnoticed while the article renders as two galleys, because the
+    split cuts at that heading and each half then begins cleanly; it appears
+    the moment the same article is rendered in one piece.
+
+    Fenced code is left alone, where a `#` is a comment and not a heading.
+    """
+    out: List[str] = []
+    fenced = False
+    count = 0
+    for line in text.split("\n"):
+        if line.startswith("```") or line.startswith("~~~"):
+            fenced = not fenced
+        elif (not fenced and re.match(r"^#{1,6} +\S", line)
+                and out and out[-1].strip()):
+            out.append("")
+            count += 1
+        out.append(line)
+    log.record("blank_line_before_heading", count)
+    return "\n".join(out)
+
+
 def strip_orphan_page_numbers(text: str, log: CleanupLog) -> str:
     """Drop a lone 1-3 digit number on its own line at end of file.
 
@@ -1437,6 +1471,10 @@ DEFAULT_PASSES: List[Pass] = [
     # Directly after the merge above, which cannot tell a wrapped citation
     # line from the start of a repeated-author entry and glues them together.
     split_repeated_author_entries,
+    # After every pass that can introduce a heading, which is
+    # restore_flattened_endnotes ("# Notes") and unfragment_works_cited
+    # ("# Works Cited"); pair_figure_captions below introduces none.
+    blank_line_before_heading,
     # Runs last so caption text has already had its dashes and quotes
     # normalized before it is folded into the image.
     pair_figure_captions,

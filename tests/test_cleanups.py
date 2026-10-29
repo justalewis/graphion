@@ -94,6 +94,41 @@ def test_strip_orphan_page_numbers_mid_file_kept():
     assert "42" in out
 
 
+def test_blank_line_before_heading():
+    """Pandoc swallows a heading that sits directly under a line of text, so
+    the galley prints a literal hash inside the paragraph above it. Every
+    chapter of Writing Spaces 5 ingested with its Teacher Resources title
+    welded to the last line of its Works Cited."""
+    src = ("Zimmerman, Barry. Self-Efficacy, 2006, pp. 45-69.\n"
+           "# Teacher Resources\n\nBody.\n")
+    out = cleanups.blank_line_before_heading(src, _log())
+    assert "pp. 45-69.\n\n# Teacher Resources\n" in out
+
+
+def test_blank_line_before_heading_leaves_a_spaced_one_alone():
+    src = "Body text.\n\n# Already Spaced\n\nMore.\n"
+    assert cleanups.blank_line_before_heading(src, _log()) == src
+
+
+def test_blank_line_before_heading_at_the_top_of_the_document():
+    src = "# First Thing\n\nBody.\n"
+    assert cleanups.blank_line_before_heading(src, _log()) == src
+
+
+def test_blank_line_before_heading_leaves_fenced_code_alone():
+    """Inside a fence a hash is a comment and not a heading."""
+    src = "Intro.\n\n```python\nx = 1\n# not a heading\n```\n"
+    assert cleanups.blank_line_before_heading(src, _log()) == src
+
+
+def test_blank_line_before_heading_is_idempotent():
+    src = ("Citation line.\n# Teacher Resources\ntext\n"
+           "## Discussion Questions\n")
+    once = cleanups.blank_line_before_heading(src, _log())
+    twice = cleanups.blank_line_before_heading(once, _log())
+    assert once == twice
+
+
 def test_normalize_dashes():
     src = "She said yes—then changed her mind."
     out = cleanups.normalize_dashes(src, _log())
