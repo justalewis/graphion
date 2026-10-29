@@ -678,7 +678,7 @@ def extract_front_matter(first_page_lines: list, layout: Layout) -> tuple:
         if kind == "head":
             if seen_head:
                 break
-            if line.plain.strip().lower().startswith("overview"):
+            if is_overview_head(line.plain):
                 seen_head = True
                 consumed.add(id(line))
                 continue
@@ -686,7 +686,36 @@ def extract_front_matter(first_page_lines: list, layout: Layout) -> tuple:
         if seen_head and kind in ("body", "quote"):
             overview.append(line)
             consumed.add(id(line))
+
+    if not overview:
+        # The series opens every chapter with an overview, but it does not
+        # always put a head on one: chapter 20 of volume 5 runs its straight
+        # on from the byline. Prose above the first head of a chapter whose
+        # title and byline have already been taken is that overview.
+        for line in first_page_lines:
+            if id(line) in consumed:
+                continue
+            kind = classify(line, layout)
+            if kind in ("head", "title"):
+                break
+            if kind in ("body", "quote"):
+                overview.append(line)
+        if overview:
+            consumed.update(id(l) for l in overview)
+            notes.append("Overview read from the prose under the byline; the "
+                         "opening page carries no head over it.")
     return fm, overview, consumed, notes
+
+
+# "Overview", and the misspellings of it the archive actually prints: volume
+# 5 chapter 21 heads its overview "Overvew". One word only, so that the
+# "Overview and Teaching Strategies" head in the teacher material, which is
+# not an abstract of anything, does not match.
+_OVERVIEW_RE = re.compile(r"^overv\w*$", re.IGNORECASE)
+
+
+def is_overview_head(text: str) -> bool:
+    return bool(_OVERVIEW_RE.match(text.strip().strip(":").strip()))
 
 
 def opening_page_body(body_lines: list, layout: Layout,

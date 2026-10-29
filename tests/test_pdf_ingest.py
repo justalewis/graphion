@@ -326,3 +326,50 @@ def test_opening_page_body_keeps_a_page_that_has_no_head_at_all():
 
 def test_opening_page_body_of_an_empty_page_is_empty():
     assert pdf_ingest.opening_page_body([], LAYOUT, has_overview=False) == []
+
+
+# ---------- the Overview ----------
+
+
+def test_overview_head_is_recognised_including_the_archive_misspelling():
+    """Volume 5 chapter 21 heads its overview "Overvew", so matching the
+    word exactly cost that chapter its abstract."""
+    assert pdf_ingest.is_overview_head("Overview")
+    assert pdf_ingest.is_overview_head("overview")
+    assert pdf_ingest.is_overview_head("Overvew")
+    assert pdf_ingest.is_overview_head("Overview:")
+
+
+def test_the_teacher_overview_head_is_not_an_overview():
+    """Every chapter's teacher material opens "Overview and Teaching
+    Strategies", which abstracts nothing and must not be read as one."""
+    assert not pdf_ingest.is_overview_head("Overview and Teaching Strategies")
+    assert not pdf_ingest.is_overview_head("Introduction")
+
+
+def test_overview_is_read_from_prose_under_the_byline_when_unheaded():
+    """Chapter 20 of volume 5 runs its overview straight on from the byline
+    with no head over it, and the whole paragraph was being dropped."""
+    title = _line("20 What's the Diff?", size=18.0, page=1)
+    byline = _line("Benjamin Miller", size=12.0, page=1, italic=True)
+    over1 = _line("This essay recommends that writers use digital tools.", page=1)
+    over2 = _line("These revisitable histories are helpful in several ways.", page=1)
+    fm, overview, consumed, _ = pdf_ingest.extract_front_matter(
+        [title, byline, over1, over2], LAYOUT)
+    assert fm["chapter-number"] == 20
+    assert overview == [over1, over2]
+    assert id(over1) in consumed and id(over2) in consumed
+
+
+def test_prose_under_the_byline_stops_at_the_first_head():
+    """Only what sits above the first head is the overview; the body that
+    follows that head is body."""
+    title = _line("20 What's the Diff?", size=18.0, page=1)
+    byline = _line("Benjamin Miller", size=12.0, page=1, italic=True)
+    over = _line("This essay recommends that writers use digital tools.", page=1)
+    head = _line("Introduction", size=12.0, page=1)
+    body = _line("Whether you know it or not, you revise as you write.", page=1)
+    _, overview, consumed, _ = pdf_ingest.extract_front_matter(
+        [title, byline, over, head, body], LAYOUT)
+    assert overview == [over]
+    assert id(body) not in consumed
