@@ -27,8 +27,8 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (180 functions: 75 in `test_cleanups.py`, 26 in `test_pdf_ingest.py`,
-20 in `test_teacher_resources.py`, 17 in `test_ingest_volume.py`, 14 in
+Tests (184 functions: 75 in `test_cleanups.py`, 26 in `test_pdf_ingest.py`,
+24 in `test_teacher_resources.py`, 17 in `test_ingest_volume.py`, 14 in
 `test_lint.py`, 10 in `test_metadata_roundtrip.py`, 6 in
 `test_standalone_html.py`, 5 in `test_pdf_ua.py`, 4 in
 `test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
@@ -146,9 +146,14 @@ are served from the article page; see `serve_teacher_pdf` in `app.py`.
 notice printed on its own opening page: a chapter whose footnote failed to
 extract would otherwise publish with no licence recorded. The HTML galley
 carries it as `rel="license"`, a `dcterms.rights` meta, and a visible
-statement closing the document. A Lua filter that walks the whole document
-reaches metadata too, which is how soft break points for long URLs ended up
-inside the licence href; walk `doc.blocks`, not `doc`.
+statement closing the document. The PDF gets a colophon, but only when
+`conversion.should_print_license()` finds the body silent: a published
+chapter prints its own terms as a footnote on its opening page and ingest
+recovers that, so printing the metadata licence as well would state it twice
+on one galley. Recovering it is not the same as guaranteeing it, which is
+what the colophon is for. A Lua filter that walks the whole document reaches
+metadata too, which is how soft break points for long URLs ended up inside
+the licence href; walk `doc.blocks`, not `doc`.
 
 **YAML round-trips are validated.** `write_article_metadata()` refuses to write
 YAML that fails `safe_load`, and normalizes whitespace in scalar fields to

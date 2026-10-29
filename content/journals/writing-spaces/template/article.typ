@@ -395,3 +395,24 @@ $endif$
 // ---------- Body ----------
 
 $body$
+
+$if(print-license)$
+// Licence colophon. The series prints its terms as a footnote on the
+// chapter's opening page, and ingest recovers that note from the published
+// PDF, so most chapters carry their licence in the body already. Recovering
+// it is not the same as guaranteeing it, though: a chapter whose note did
+// not come through would otherwise be published stating no terms at all.
+// conversion.should_print_license decides, and only sets `print-license`
+// when the body says nothing, so no galley states its licence twice.
+#block(width: 100%, above: 2.5em, below: 0pt, breakable: false, {
+  set par(first-line-indent: 0pt, justify: false, leading: 0.25em)
+  set text(hyphenate: false)
+  line(length: 100%, stroke: 0.4pt + rule-color)
+  v(0.7em)
+  text(size: 8.5pt, fill: ink-soft, [$license$])
+  $if(license-url)$
+  linebreak()
+  text(size: 8.5pt, fill: ink-soft, link("$license-url$")[$license-url$])
+  $endif$
+})
+$endif$

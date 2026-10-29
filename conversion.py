@@ -807,6 +807,33 @@ def _partition_footnotes(chapter: str, teacher: str) -> tuple:
             "\n\n".join(kept["teacher"]).strip() + "\n")
 
 
+# Marks of a licence notice already set in the text. A published chapter
+# usually prints its terms itself, as a footnote on the opening page, and
+# ingest recovers that: printing the metadata licence as well would state the
+# same thing twice on one document.
+_LICENCE_IN_BODY_RE = re.compile(
+    r"creativecommons\.org|creative\s+commons|is\s+licensed\s+under|"
+    r"\bCC\s?BY\b|all\s+rights\s+reserved",
+    re.I,
+)
+
+
+def body_states_license(body: str) -> bool:
+    """Whether the text already carries a licence notice of its own."""
+    return bool(_LICENCE_IN_BODY_RE.search(body or ""))
+
+
+def should_print_license(fm: dict, body: str) -> bool:
+    """Whether a galley needs the licence added to it.
+
+    The volume's terms are recorded in the metadata for every chapter, so a
+    chapter whose own notice failed to come out of the PDF still has one.
+    This decides whether it also has to be printed: it does, unless the text
+    already says it.
+    """
+    return bool(str(fm.get("license") or "").strip()) and not body_states_license(body)
+
+
 def teacher_resources_separate(fm: dict) -> bool:
     """Whether this article wants its teacher material as its own galley.
 
@@ -1172,6 +1199,14 @@ def render_pdf(article_path: Path, journal_slug: str, part: str = "chapter") -> 
     # initial belongs at the start of a chapter, not at the start of the
     # notes its author wrote for whoever teaches the chapter.
     extra.append(f"--metadata=graphion-part:{part}")
+    # Whether the template should print the licence. Decided here rather
+    # than in the template because it depends on the body text, which a
+    # Pandoc template cannot inspect.
+    _fm_for_license, _body_for_license = read_article_metadata(article_path)
+    if part == "teacher":
+        _body_for_license = split_teacher_resources(_body_for_license)[1]
+    if should_print_license(_fm_for_license, _body_for_license):
+        extra.append("--metadata=print-license:1")
     fig_filter = tpl / "figures-filter.lua"
     if fig_filter.exists():
         extra.append(f"--lua-filter={fig_filter}")

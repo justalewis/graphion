@@ -131,6 +131,39 @@ def test_an_unreferenced_note_is_kept_rather_than_dropped():
     assert "[^9]: Orphan." in chapter
 
 
+# ---------- licence ----------
+
+
+def test_a_body_that_states_its_licence_is_recognised():
+    """A published chapter prints its terms itself, and ingest recovers that
+    note, so printing the metadata licence as well says it twice."""
+    for text in (
+        "visit http://creativecommons.org/licenses/by-nc-nd/4.0/",
+        "This work is licensed under the Creative Commons Attribution",
+        "CC BY-NC-ND 4.0",
+        "All rights reserved.",
+    ):
+        assert conversion.body_states_license(text) is True, text
+
+
+def test_ordinary_prose_is_not_a_licence_notice():
+    for text in ("", "The chapter explores what it means to be a writer.",
+                 "Students licensed to drive may park here."):
+        assert conversion.body_states_license(text) is False, text
+
+
+def test_the_licence_prints_only_when_the_body_is_silent():
+    fm = {"license": "CC BY-NC-ND 4.0."}
+    assert conversion.should_print_license(fm, "Plain body text.") is True
+    assert conversion.should_print_license(
+        fm, "Body.\n\n[^1]: This work is licensed under CC BY-NC-ND 4.0.") is False
+
+
+def test_nothing_prints_when_no_licence_is_recorded():
+    assert conversion.should_print_license({}, "Plain body text.") is False
+    assert conversion.should_print_license({"license": "  "}, "Body.") is False
+
+
 # ---------- opt-in ----------
 
 
