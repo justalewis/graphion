@@ -531,3 +531,86 @@ def test_a_caption_is_not_collected_away_with_the_footnotes():
     assert markdown.index("Figure 7.1: Chair") < \
         markdown.index("Prose that follows")
     assert markdown.rstrip().endswith("A real footnote.")
+
+
+# ---------- tables ----------
+
+
+def test_a_table_caption_is_told_from_a_reference_to_one():
+    assert pdf_ingest.is_table_caption(
+        "Table 3.1. Abstracts Versus Executive Summaries")
+    assert pdf_ingest.is_table_caption("Table 1 A comparison between posters")
+    assert not pdf_ingest.is_table_caption(
+        "Table 3.1 provides some quick differences to keep in mind")
+    assert not pdf_ingest.is_table_caption("Table 4.1 is an example that")
+
+
+def test_clean_table_drops_empty_columns_and_rejoins_broken_words():
+    """A cell is wrapped as it was printed, so it arrives with the line
+    breaks and hyphens in it; "introduc- tion" has to come back together or
+    the table reads as badly as the prose it replaces."""
+    rows = pdf_ingest._clean_table([
+        ["", "Angel’s Poster", "Akeelah’s Poster", ""],
+        ["Organization", "Emphasizes the introduc-\ntion and conclusion", "", ""],
+    ])
+    assert rows[0] == ["", "Angel’s Poster", "Akeelah’s Poster"]
+    assert rows[1][1] == "Emphasizes the introduction and conclusion"
+
+
+def test_clean_table_escapes_a_pipe_inside_a_cell():
+    """An unescaped pipe would close the column it sits in."""
+    rows = pdf_ingest._clean_table([["a | b", "c"], ["d", "e"]])
+    assert rows[0][0] == r"a \| b"
+
+
+def test_table_to_markdown_gives_the_first_row_as_the_header():
+    """The header is what lets a screen reader say which column a cell is in,
+    and a table read as prose has no columns to name."""
+    markdown = pdf_ingest.table_to_markdown(
+        [["", "Abstracts", "Executive Summaries"],
+         ["Length", "One paragraph.", "One page maximum."]])
+    lines = markdown.split("\n")
+    assert lines[0] == "|  | Abstracts | Executive Summaries |"
+    assert lines[1] == "| --- | --- | --- |"
+    assert lines[2] == "| Length | One paragraph. | One page maximum. |"
+
+
+def test_lines_inside_a_table_are_taken_out_of_the_prose():
+    """Reading a two-column table across its columns interleaved the cells
+    into prose: "detailing as being the most import- lab procedures ant
+    while" is one word cut in half with a cell from the next column inside
+    it. Adding the table without removing those lines leaves both."""
+    inside = _line("Organization Emphasizes the introduc- Mirrors the IMRAD",
+                   page=5, top=200.0)
+    outside = _line("Ordinary prose further down the page.", page=5, top=400.0)
+    caption = _line("Table 1 A comparison between posters", page=5, top=150.0)
+    tables = {5: [((58.0, 160.0, 373.0, 320.0), [["a", "b"], ["c", "d"]])]}
+    kept, dropped = pdf_ingest.drop_lines_inside_tables(
+        [caption, inside, outside], tables)
+    assert dropped == 1
+    assert inside not in kept
+    assert caption in kept and outside in kept
+
+
+def test_a_table_is_placed_after_its_caption_in_reading_order():
+    """A table's caption is set above it and the two part company across a
+    page break, so they are paired in reading order rather than by page:
+    both of chapter 11's were on a different page from their table."""
+    blocks = [("body", "Prose."),
+              ("note", "Table 1 A comparison between posters"),
+              ("body", "More prose."),
+              ("note", "Table 2 The second one")]
+    tables = [{"page": 5, "index": 0, "rows": [["a", "b"], ["c", "d"]]},
+              {"page": 9, "index": 0, "rows": [["e", "f"], ["g", "h"]]}]
+    out, notes = pdf_ingest.place_tables(blocks, tables)
+    kinds = [kind for kind, _ in out]
+    assert kinds == ["body", "note", "table", "body", "note", "table"]
+    assert "placed 2" in notes[0]
+
+
+def test_a_table_with_no_caption_to_pair_with_is_reported():
+    blocks = [("body", "Prose with no table caption in it.")]
+    tables = [{"page": 3, "index": 0, "rows": [["a", "b"], ["c", "d"]]}]
+    out, notes = pdf_ingest.place_tables(blocks, tables)
+    assert any(kind == "table" for kind, _ in out)
+    assert any("matched no caption" in note for note in notes)

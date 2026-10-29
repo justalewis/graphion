@@ -27,9 +27,9 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (250 functions: 88 in `test_cleanups.py`, 28 in
-`test_teacher_resources.py`, 48 in `test_pdf_ingest.py`, 37 in
-`test_ingest_volume.py`, 21 in
+Tests (258 functions: 88 in `test_cleanups.py`, 28 in
+`test_teacher_resources.py`, 55 in `test_pdf_ingest.py`, 37 in
+`test_ingest_volume.py`, 22 in
 `test_lint.py`, 10 in `test_metadata_roundtrip.py`, 6 in
 `test_standalone_html.py`, 5 in `test_pdf_ua.py`, 4 in
 `test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
@@ -155,6 +155,30 @@ Figure, and the figures filter numbers every Figure from 1 in document order,
 which would print "Figure 1." over a caption reading "Figure 7.1" and leave
 every "see Figure 7.3" in the prose pointing at the wrong picture. A
 reconstruction keeps the printed numbering.
+
+**Tables are found by their rules, never by the alignment of their text.**
+`TABLE_SETTINGS` asks pdfplumber for the "lines" strategy only. This archive
+rules its tables, and the "text" strategy reads a page of ordinary prose as a
+48-row table. Missing an unruled table is the better failure, because a table
+that was never found leaves the prose alone.
+
+`drop_lines_inside_tables` is the half that matters. Read across its columns,
+a two-column table interleaves its cells into prose: chapter 11 of volume 5
+came through with "detailing as being the most import- lab procedures ant
+while", one word cut in half with a cell from the next column inside it. That
+is worse than a missing figure, because it is present and wrong, and no
+conformance check sees it: the text is there, so the galley passes. The lines
+a table is made of come out of the prose and the table goes in as a pipe
+table, whose header row is what lets a screen reader name the column a cell
+is in. It runs before the vocabulary is built, so shredded cells do not teach
+it their fragments as words.
+
+A table is paired with its caption in reading order, which is where this
+differs from the figures. A figure and its caption share a page by
+definition, since the caption is set under the picture; a table's caption is
+set above it and the two part company across a page break, as both of chapter
+11's did. pdfplumber also reports the cells inside a table as further tables,
+so anything inside another's box is dropped.
 
 Alt text comes from the caption with its label and any source credit removed.
 That is a starting point, not an answer: a caption says what a figure is

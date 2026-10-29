@@ -347,9 +347,14 @@ def check_alt_text(article: dict, fm: dict, body: str) -> LintResult:
         # takes the alt text from that caption. The two are not the same
         # thing: a caption says what a figure is called, alt text says what
         # is in it. Counted so the editing still owed is countable.
-        following = body[match.end():match.end() + 400]
+        # Compared on a prefix, not whole. These captions run to several
+        # hundred characters, so testing whether the alt text sits inside the
+        # caption meant testing a long string against a window that cut it
+        # off, and every long caption came back as a real description.
+        following = body[match.end():match.end() + 2000]
         caption = re.match(r"\\?\s*\n?(Figure [\d.]+[^\n]*)", following)
-        if caption and alt and alt.lower() in caption.group(1).lower():
+        probe = alt[:80].lower()
+        if caption and probe and probe in caption.group(1).lower():
             from_caption += 1
     if not total:
         return _ok("alt-text", "No images in the article.")

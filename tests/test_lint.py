@@ -175,6 +175,20 @@ def test_alt_text_taken_from_the_caption_is_a_warning():
     assert "need a written description" in result.summary
 
 
+def test_a_long_caption_is_still_recognised_as_the_alt_text():
+    """These captions run to several hundred characters. Testing the whole
+    alt text against a short window of the caption meant every long caption
+    came back as though someone had written a real description."""
+    long_caption = ("Angel’s scientific poster, mock examples created by "
+                    "the author. This poster has a lengthy introduction and a "
+                    "conclusion, uses the first person throughout, and sets "
+                    "its methods out in a single narrow column beside a "
+                    "cartoonish graphic of the laboratory bench.")
+    body = (f"![{long_caption}](assets/figure-p004-1.jpg)" + HARD_BREAK
+            + f"Figure 1: {long_caption}\n")
+    assert _alt(body).level == "warn"
+
+
 def test_alt_text_that_describes_more_than_the_caption_passes():
     body = ("![A truss bridge in elevation, with the load paths through each "
             "diagonal marked](assets/figure-p016-1.jpg)" + HARD_BREAK

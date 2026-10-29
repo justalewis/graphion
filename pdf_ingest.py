@@ -612,8 +612,9 @@ def blocks_to_markdown(blocks: list) -> str:
     """
     out, notes = [], []
     for kind, text in blocks:
-        if kind == "figure":
-            # Already Markdown: an image, and the caption that names it.
+        if kind in ("figure", "table"):
+            # Already Markdown: an image and the caption that names it, or a
+            # pipe table.
             out.append(text)
         elif kind in ("head", "title"):
             # "title" is a head the series sets off-centre, such as the
@@ -934,6 +935,112 @@ def place_figures(blocks: list, figures: list, caption_pages: dict) -> tuple:
     return out, notes
 
 
+# Tables are found by their rules and never by the alignment of their text.
+# This archive rules its tables, and asking pdfplumber to infer them from
+# whitespace instead reads a page of ordinary prose as a 48-row table: the
+# "text" strategy turned chapter 11's page 3, which holds no table at all,
+# into 27 rows of shredded sentences. Missing an unruled table is the better
+# failure, because a table that was never found leaves the prose alone.
+TABLE_SETTINGS = {"vertical_strategy": "lines", "horizontal_strategy": "lines"}
+# Below this it is a rule under a heading or a box around a pull quote, not a
+# table. Two columns and two rows is the smallest thing that is one.
+MIN_TABLE_ROWS = 2
+MIN_TABLE_COLS = 2
+_TABLE_CAPTION_RE = re.compile(
+    r"^Table\s+(?P<number>\d+(?:\.\d+)*)\s*[:.]?\s+(?=[A-Z])")
+
+
+def is_table_caption(text: str) -> bool:
+    return bool(_TABLE_CAPTION_RE.match(text.strip()))
+
+
+def find_page_tables(page) -> list:
+    """The ruled tables on one page, as (bbox, rows), largest first.
+
+    pdfplumber reports a table and then the cells inside it as further
+    tables, so anything sitting inside another's box is dropped: chapter 11's
+    page 11 came back as four tables of which three were pieces of the first.
+    """
+    try:
+        found = page.find_tables(table_settings=TABLE_SETTINGS)
+    except Exception:
+        return []
+    candidates = []
+    for table in found:
+        try:
+            rows = _clean_table(table.extract())
+        except Exception:
+            continue
+        if len(rows) < MIN_TABLE_ROWS:
+            continue
+        if max((len(r) for r in rows), default=0) < MIN_TABLE_COLS:
+            continue
+        candidates.append((tuple(table.bbox), rows))
+
+    candidates.sort(key=lambda pair: -_area(pair[0]))
+    kept: list = []
+    for bbox, rows in candidates:
+        if any(_inside(bbox, other) for other, _ in kept):
+            continue
+        kept.append((bbox, rows))
+    # Back into reading order, which is what pairs a table with its caption.
+    kept.sort(key=lambda pair: pair[0][1])
+    return kept
+
+
+def _area(bbox) -> float:
+    return abs(bbox[2] - bbox[0]) * abs(bbox[3] - bbox[1])
+
+
+def _inside(inner, outer, tol: float = 2.0) -> bool:
+    return (inner[0] >= outer[0] - tol and inner[1] >= outer[1] - tol
+            and inner[2] <= outer[2] + tol and inner[3] <= outer[3] + tol)
+
+
+def _clean_table(rows: list) -> list:
+    """Tidy extracted cells: rejoin broken words, drop empty rows and columns.
+
+    A cell's text is wrapped as it was printed, so it arrives with the line
+    breaks and the hyphens in it; "introduc- tion" has to come back together
+    or the table reads as badly as the prose it replaces. Columns that are
+    entirely empty come from rules pdfplumber counted as boundaries.
+    """
+    table = [[_clean_cell(cell) for cell in row] for row in rows if row]
+    table = [row for row in table if any(cell for cell in row)]
+    if not table:
+        return []
+    width = max(len(row) for row in table)
+    table = [row + [""] * (width - len(row)) for row in table]
+    keep = [i for i in range(width) if any(row[i] for row in table)]
+    return [[row[i] for i in keep] for row in table]
+
+
+def _clean_cell(cell) -> str:
+    text = re.sub(r"(\w)-\s*\n\s*(\w)", r"\1\2", str(cell or ""))
+    text = re.sub(r"\s*\n\s*", " ", text)
+    # A pipe inside a cell would close the column it sits in.
+    return re.sub(r"\s+", " ", text).replace("|", r"\|").strip()
+
+
+def table_to_markdown(rows: list) -> str:
+    """A pipe table, whose first row is the header.
+
+    The header matters more than the shape: it is what lets a screen reader
+    say which column a cell is in, and a table read as prose has no columns
+    to name. Where the first row is empty in its first cell, as a comparison
+    table's corner is, the cell is left empty rather than invented.
+    """
+    if not rows:
+        return ""
+    width = max(len(row) for row in rows)
+    body = [row + [""] * (width - len(row)) for row in rows]
+    out = ["| " + " | ".join(body[0]) + " |",
+           "|" + "|".join([" --- "] * width) + "|"]
+    for row in body[1:]:
+        out.append("| " + " | ".join(row) + " |")
+    return "\n".join(out)
+
+
 def undescribed_alt(page: int) -> str:
     """Alt text for a figure the page gave no caption to describe it with.
 
@@ -945,6 +1052,81 @@ def undescribed_alt(page: int) -> str:
     on a description.
     """
     return f"Undescribed figure from page {page} of the source"
+
+
+def drop_lines_inside_tables(lines: list, tables_by_page: dict) -> tuple:
+    """Take out the lines a table's cells are made of.
+
+    This is the half that matters. Reading a two-column table across its
+    columns interleaves the cells into prose: chapter 11 of volume 5 came
+    through with "detailing as being the most import- lab procedures ant
+    while", which is one word cut in half with a cell from the next column
+    inside it. Adding a table without removing those lines would leave the
+    galley holding both.
+
+    A caption is never dropped, even where it falls inside the box, because
+    it is what the table is placed against.
+    """
+    inside = []
+    out = []
+    for line in lines:
+        boxes = tables_by_page.get(line.page) or []
+        if boxes and not (is_table_caption(line.plain)
+                          or is_figure_caption(line.plain)):
+            centre = line.top
+            if any(bbox[1] - 2 <= centre <= bbox[3] + 2 for bbox, _ in boxes):
+                inside.append(line)
+                continue
+        out.append(line)
+    return out, len(inside)
+
+
+def place_tables(blocks: list, tables: list) -> tuple:
+    """Put each table after the caption that names it.
+
+    The series prints the caption above the table, so that is where it goes.
+    A pipe table has to begin a line, so it is its own block rather than
+    joined to the caption the way a figure is to its own.
+
+    Paired in reading order rather than by page, which is where this differs
+    from the figures. A figure and its caption are on one page by definition,
+    since the caption is set under the picture. A table's caption is set above
+    it and the two part company across a page break: both of chapter 11's did,
+    and pairing them by page matched neither. Tables come in page order and
+    captions in document order, so the nth of one is the nth of the other.
+    """
+    caption_positions = [
+        position for position, (kind, text) in enumerate(blocks)
+        if kind in ("body", "note", "quote") and is_table_caption(text)
+    ]
+
+    inserts: dict = {}
+    unplaced = 0
+    for index, table in enumerate(tables):
+        if index < len(caption_positions):
+            position = caption_positions[index]
+        else:
+            unplaced += 1
+            position = len(blocks) - 1
+        inserts.setdefault(position, []).append(table)
+
+    out: list = []
+    for position, block in enumerate(blocks):
+        out.append(block)
+        for table in inserts.pop(position, []):
+            out.append(("table", table_to_markdown(table["rows"])))
+    for position in sorted(inserts):
+        for table in inserts[position]:
+            out.append(("table", table_to_markdown(table["rows"])))
+
+    notes = []
+    if tables:
+        notes.append(f"Read {len(tables)} ruled table(s) as tables; "
+                     f"placed {len(tables) - unplaced} against a caption.")
+    if unplaced:
+        notes.append(f"{unplaced} table(s) matched no caption and follow the "
+                     f"text instead; check where they belong.")
+    return out, notes
 
 
 def _caption_key(text: str) -> str:
@@ -1012,12 +1194,16 @@ def extract(pdf_path: Path, genre_heads: Optional[tuple] = None,
     notes: list = []
     all_lines: list = []
     page_width = 0.0
+    tables_by_page: dict = {}
     with pdfplumber.open(str(pdf_path)) as pdf:
         if not pdf.pages:
             raise ValueError(f"{pdf_path.name} has no pages.")
         page_width = float(pdf.pages[0].width)
         for page_no, page in enumerate(pdf.pages, 1):
             all_lines.extend(_page_lines(page, page_no))
+            found = find_page_tables(page)
+            if found:
+                tables_by_page[page_no] = found
 
     if not all_lines:
         raise ValueError(
@@ -1028,6 +1214,13 @@ def extract(pdf_path: Path, genre_heads: Optional[tuple] = None,
     layout = learn_layout(all_lines, page_width)
     kept, dropped = strip_furniture(all_lines, layout)
     notes.append(f"Dropped {len(dropped)} line(s) of page furniture.")
+
+    # Before the vocabulary is built, so that cells shredded across columns
+    # do not teach it their fragments as words.
+    if tables_by_page:
+        kept, in_tables = drop_lines_inside_tables(kept, tables_by_page)
+        notes.append(f"Took {in_tables} line(s) out of the prose that belong "
+                     f"to a table, and read the table instead.")
 
     vocab, compounds = build_vocabulary(kept)
 
@@ -1048,6 +1241,14 @@ def extract(pdf_path: Path, genre_heads: Optional[tuple] = None,
     body_lines.extend(rest)
 
     blocks = assemble(body_lines, layout, vocab, compounds)
+
+    if tables_by_page:
+        tables = []
+        for page_no in sorted(tables_by_page):
+            for index, (_bbox, rows) in enumerate(tables_by_page[page_no]):
+                tables.append({"page": page_no, "index": index, "rows": rows})
+        blocks, table_notes = place_tables(blocks, tables)
+        notes.extend(table_notes)
 
     if assets_dir is not None:
         figures = extract_figures(Path(pdf_path), Path(assets_dir))
