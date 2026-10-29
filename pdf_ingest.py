@@ -808,8 +808,44 @@ def caption_alt_text(text: str) -> str:
     return text.strip().rstrip(".").strip()
 
 
+def image_digests(pdf_path: Path, min_px: int = MIN_FIGURE_PX):
+    """What images this PDF holds, by content, one count per distinct image.
+
+    For `ingest_volume.py`, which is the only thing that sees a whole volume
+    and so the only thing that can tell the series' own mark from a figure.
+    """
+    import collections
+    from pypdf import PdfReader
+
+    counts: collections.Counter = collections.Counter()
+    try:
+        reader = PdfReader(str(pdf_path))
+    except Exception:
+        return counts
+    for page in reader.pages:
+        try:
+            images = list(page.images)
+        except Exception:
+            continue
+        for image in images:
+            try:
+                width, height = image.image.size
+            except Exception:
+                continue
+            if width < min_px or height < min_px:
+                continue
+            counts[_digest(image.data)] += 1
+    return counts
+
+
+def _digest(data: bytes) -> str:
+    import hashlib
+    return hashlib.sha1(data).hexdigest()
+
+
 def extract_figures(pdf_path: Path, assets_dir: Path,
-                    min_px: int = MIN_FIGURE_PX) -> list:
+                    min_px: int = MIN_FIGURE_PX,
+                    skip_digests=frozenset()) -> list:
     """Write each embedded raster out, and say which page it came from.
 
     pypdf is asked for the rasters rather than pdfplumber because it resolves
@@ -838,6 +874,12 @@ def extract_figures(pdf_path: Path, assets_dir: Path,
             except Exception:
                 continue
             if width < min_px or height < min_px:
+                continue
+            if _digest(image.data) in skip_digests:
+                # The series' own mark, which opens every chapter of the
+                # volume. Size cannot tell it from a figure: volume 2's is
+                # 113 by 165 and volume 3's is 303 by 454, which is wider
+                # than a fifth of the real figures in the series.
                 continue
             suffix = Path(image.name or "").suffix.lower() or ".png"
             reencode = suffix not in WEB_IMAGE_SUFFIXES
@@ -1181,7 +1223,8 @@ def _split_authors(byline: str) -> list:
 
 
 def extract(pdf_path: Path, genre_heads: Optional[tuple] = None,
-            assets_dir: Optional[Path] = None) -> IngestResult:
+            assets_dir: Optional[Path] = None,
+            skip_image_digests=frozenset()) -> IngestResult:
     """Read a PDF chapter into front matter plus Markdown body.
 
     With `assets_dir`, the figures are written there and placed in the body.
@@ -1251,7 +1294,8 @@ def extract(pdf_path: Path, genre_heads: Optional[tuple] = None,
         notes.extend(table_notes)
 
     if assets_dir is not None:
-        figures = extract_figures(Path(pdf_path), Path(assets_dir))
+        figures = extract_figures(Path(pdf_path), Path(assets_dir),
+                                  skip_digests=skip_image_digests)
         # A caption is paired with a figure by page and by order down the
         # page, which is all the geometry needed when a page carries two.
         by_page: dict = {}

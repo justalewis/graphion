@@ -237,7 +237,8 @@ def ingest_docx(
     return IngestResult(raw_md_path=raw_md, log=body, has_tracked_changes=has_tracked)
 
 
-def ingest_pdf(pdf_path: Path, article_path: Path) -> IngestResult:
+def ingest_pdf(pdf_path: Path, article_path: Path,
+               skip_image_digests=frozenset()) -> IngestResult:
     """Reconstruct Markdown from a typeset PDF, write `article-raw.md`.
 
     A DOCX still knows what a paragraph is, so Pandoc can be handed the file.
@@ -266,7 +267,8 @@ def ingest_pdf(pdf_path: Path, article_path: Path) -> IngestResult:
         shutil.copy2(pdf_path, source_copy)
 
     t0 = time.time()
-    result = pdf_ingest.extract(source_copy, assets_dir=article_path / "assets")
+    result = pdf_ingest.extract(source_copy, assets_dir=article_path / "assets",
+                                skip_image_digests=skip_image_digests)
     dt = time.time() - t0
 
     raw_md = article_path / "article-raw.md"

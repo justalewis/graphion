@@ -102,6 +102,12 @@ COLLECTED_RE = re.compile(
 # while a collected volume runs 219 to 410. File size does not separate them,
 # because the longest chapter outweighs the shortest volume.
 COLLECTED_MIN_PAGES = 100
+# An image that appears byte for byte in this many of a volume's chapters is
+# the series' own mark and not anybody's figure. Size cannot tell them apart:
+# volume 2's opens every chapter at 113 by 165 and volume 3's at 303 by 454,
+# and the second is wider than a fifth of the real figures in the series.
+# Repetition can, and only this runner sees a whole volume to count it.
+FURNITURE_MIN_CHAPTERS = 3
 
 
 @dataclass
@@ -273,6 +279,24 @@ def plan(pdf_dir: Path, manifest: dict, volume: Optional[int] = None) -> list:
     return chapters
 
 
+def volume_furniture(chapters: list) -> frozenset:
+    """Which images repeat across the volume, and so are its furniture.
+
+    Counted once per chapter, so a figure a single chapter prints several
+    times is not mistaken for a mark on every chapter.
+    """
+    import collections
+    import pdf_ingest
+
+    counts: collections.Counter = collections.Counter()
+    for chapter in chapters:
+        if chapter.skip:
+            continue
+        counts.update(set(pdf_ingest.image_digests(chapter.pdf)))
+    return frozenset(digest for digest, seen in counts.items()
+                     if seen >= FURNITURE_MIN_CHAPTERS)
+
+
 def existing_sources(journal_id: int) -> dict:
     """Map each already-ingested (volume, source filename) to its article row.
 
@@ -305,7 +329,8 @@ def existing_sources(journal_id: int) -> dict:
 
 def ingest_one(chapter: Chapter, journal: dict, defaults: dict,
                replace: bool, by_source: dict,
-               teacher_mode: str = "separate") -> tuple:
+               teacher_mode: str = "separate",
+               furniture=frozenset()) -> tuple:
     """Ingest one chapter. Returns (status, detail)."""
     existing = by_source.get((defaults.get("volume"), chapter.pdf.name))
     if existing is None:
@@ -320,7 +345,7 @@ def ingest_one(chapter: Chapter, journal: dict, defaults: dict,
                            f"({existing['slug']})")
 
     apath = conversion.article_dir(journal["slug"], None, chapter.slug)
-    conversion.ingest_pdf(chapter.pdf, apath)
+    conversion.ingest_pdf(chapter.pdf, apath, skip_image_digests=furniture)
     conversion.run_cleanups(apath)
 
     fm, body = conversion.read_article_metadata(apath)
@@ -475,6 +500,11 @@ def main():
         return
 
     print()
+    furniture = volume_furniture(chapters)
+    if furniture:
+        print(f"{len(furniture)} image(s) repeat across this volume and are "
+              f"read as its own mark rather than as figures.")
+        print()
     by_source = existing_sources(journal["id"])
     counts: dict = {}
     for c in chapters:
@@ -485,7 +515,8 @@ def main():
             continue
         try:
             status, detail = ingest_one(c, journal, defaults, args.replace,
-                                        by_source, args.teacher_mode)
+                                        by_source, args.teacher_mode,
+                                        furniture)
         except Exception as exc:
             status, detail = "failed", f"{type(exc).__name__}: {exc}"
             if args.stop_on_error:

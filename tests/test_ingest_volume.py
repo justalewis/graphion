@@ -329,6 +329,46 @@ def test_a_manifest_slug_is_never_rescoped(tmp_path):
     assert chapter.slug == "hand-picked"
 
 
+# ---------- the series' own mark ----------
+
+
+def test_an_image_repeated_across_the_volume_is_furniture(monkeypatch):
+    """Volume 2 opens all 21 of its chapters with the same 113 by 165 mark and
+    volume 3 all 13 of its with the same 303 by 454 one, so every chapter was
+    taking the series logo in as an undescribed figure. Size cannot separate
+    them: the second is wider than a fifth of the real figures. Repetition
+    can, and this runner is the only thing that sees a whole volume."""
+    import pdf_ingest
+    marks = {
+        Path("a.pdf"): {"logo": 1, "chart": 1},
+        Path("b.pdf"): {"logo": 1},
+        Path("c.pdf"): {"logo": 1, "photo": 1},
+    }
+    monkeypatch.setattr(pdf_ingest, "image_digests",
+                        lambda path, **kw: marks[Path(path)])
+    chapters = [iv.Chapter(pdf=Path(name)) for name in ("a.pdf", "b.pdf", "c.pdf")]
+    assert iv.volume_furniture(chapters) == frozenset({"logo"})
+
+
+def test_a_figure_one_chapter_prints_twice_is_not_furniture(monkeypatch):
+    """Counted once per chapter, so a chapter that repeats its own figure
+    does not make it the volume's mark."""
+    import pdf_ingest
+    monkeypatch.setattr(pdf_ingest, "image_digests",
+                        lambda path, **kw: {"chart": 5})
+    chapters = [iv.Chapter(pdf=Path("only.pdf"))]
+    assert iv.volume_furniture(chapters) == frozenset()
+
+
+def test_a_skipped_collected_volume_does_not_vote_on_furniture(monkeypatch):
+    import pdf_ingest
+    monkeypatch.setattr(pdf_ingest, "image_digests",
+                        lambda path, **kw: {"logo": 1})
+    chapters = [iv.Chapter(pdf=Path(f"{n}.pdf"), skip=(n == "whole"))
+                for n in ("a", "b", "whole")]
+    assert iv.volume_furniture(chapters) == frozenset()
+
+
 def test_matter_slug_without_a_volume_is_left_alone(tmp_path):
     """--volume is optional, and a run without one still has to work."""
     _dir(tmp_path, "contributors.pdf")

@@ -27,8 +27,8 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (258 functions: 88 in `test_cleanups.py`, 28 in
-`test_teacher_resources.py`, 55 in `test_pdf_ingest.py`, 37 in
+Tests (261 functions: 88 in `test_cleanups.py`, 28 in
+`test_teacher_resources.py`, 55 in `test_pdf_ingest.py`, 40 in
 `test_ingest_volume.py`, 22 in
 `test_lint.py`, 10 in `test_metadata_roundtrip.py`, 6 in
 `test_standalone_html.py`, 5 in `test_pdf_ua.py`, 4 in
