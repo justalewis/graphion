@@ -297,3 +297,39 @@ def test_short_title_keeps_a_word_the_cut_landed_after():
                           "Assessment, Evaluation, and Low-Stakes Writing "
                           "Assignments")
     assert out == "“Is This for a Grade?” Understanding Assessment, Evaluation"
+
+
+# ---------- matter across volumes ----------
+
+
+def test_matter_slug_carries_the_volume(tmp_path):
+    """Every volume ships a contributors list, and volumes 4 and 6 both ship
+    a front.pdf. Named for what they are rather than for an author, they
+    collide: volume 6's contributors list was skipped as already ingested,
+    and the already-ingested one was volume 5's."""
+    _dir(tmp_path, "contributors.pdf", "front.pdf")
+    slugs = {c.pdf.name: c.slug for c in iv.plan(tmp_path, {}, volume=6)}
+    assert slugs["contributors.pdf"] == "contributors-volume-6"
+    assert slugs["front.pdf"] == "front-volume-6"
+
+
+def test_a_chapter_slug_does_not_carry_the_volume(tmp_path):
+    """A chapter's slug already has its author or its title in it, and those
+    are its own across the series."""
+    _dir(tmp_path, "19Irvin.pdf", "bunn--how-to-read.pdf")
+    slugs = {c.pdf.name: c.slug for c in iv.plan(tmp_path, {}, volume=5)}
+    assert slugs["19Irvin.pdf"] == "19-irvin"
+    assert slugs["bunn--how-to-read.pdf"] == "how-to-read"
+
+
+def test_a_manifest_slug_is_never_rescoped(tmp_path):
+    _dir(tmp_path, "contributors.pdf")
+    chapter = iv.plan(tmp_path, {"contributors.pdf": {"slug": "hand-picked"}},
+                      volume=6)[0]
+    assert chapter.slug == "hand-picked"
+
+
+def test_matter_slug_without_a_volume_is_left_alone(tmp_path):
+    """--volume is optional, and a run without one still has to work."""
+    _dir(tmp_path, "contributors.pdf")
+    assert iv.plan(tmp_path, {})[0].slug == "contributors"

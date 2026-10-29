@@ -224,8 +224,15 @@ def load_manifest(path: Optional[Path]) -> dict:
     return data
 
 
-def plan(pdf_dir: Path, manifest: dict) -> list:
-    """Work out what each PDF is, and in what order to take them."""
+def plan(pdf_dir: Path, manifest: dict, volume: Optional[int] = None) -> list:
+    """Work out what each PDF is, and in what order to take them.
+
+    `volume` scopes the slug of anything that is not a chapter. Every volume
+    in the series ships a "contributors.pdf", and volumes 4 and 6 both ship a
+    "front.pdf", so matter named for what it is rather than for its author
+    collides across volumes: volume 6's contributors list was skipped as
+    already ingested, the already-ingested one being volume 5's.
+    """
     chapters = []
     for pdf in sorted(pdf_dir.glob("*.pdf")):
         entry = manifest.get(pdf.name, {})
@@ -247,13 +254,18 @@ def plan(pdf_dir: Path, manifest: dict) -> list:
             skip = False
         title = entry.get("title")
         authors = entry.get("authors") or []
+        chapter_like = is_chapter or number is not None
         slug = entry.get("slug") or ""
         if not slug:
             slug = slugify(title) if title else filename_slug(pdf, number, surnames)
+            if not chapter_like and volume is not None:
+                # A chapter's slug carries its author or its title, which is
+                # its own across the series. Matter is named for what it is,
+                # so only the volume tells two of them apart.
+                slug = f"{slug}-volume-{volume}"
         chapters.append(Chapter(pdf=pdf, number=number, title=title,
                                 authors=authors, slug=slug, note=note,
-                                is_chapter=is_chapter or number is not None,
-                                skip=skip))
+                                is_chapter=chapter_like, skip=skip))
     # Numbered chapters in order, then anything unnumbered, by filename. A
     # volume's front and back matter sorts to the end rather than being
     # dropped: the editor decides whether to keep it.
@@ -262,12 +274,16 @@ def plan(pdf_dir: Path, manifest: dict) -> list:
 
 
 def existing_sources(journal_id: int) -> dict:
-    """Map each already-ingested source filename to its article row.
+    """Map each already-ingested (volume, source filename) to its article row.
 
     Matching on the slug alone is not enough. A slug is built from the title
     where one is known, so the same PDF ingested with and without a manifest
     lands under two different slugs and is taken in twice. `source-file` is
     what the chapter actually came from, and it does not move.
+
+    The volume is part of the key because the filename is not unique across
+    the series: volumes 4 and 6 each ship a "front.pdf", and they are not the
+    same document.
     """
     index: dict = {}
     for row in db.query_all(
@@ -283,7 +299,7 @@ def existing_sources(journal_id: int) -> dict:
             continue
         name = fm.get("source-file")
         if name:
-            index[str(name)] = dict(row)
+            index[(fm.get("volume"), str(name))] = dict(row)
     return index
 
 
@@ -291,7 +307,7 @@ def ingest_one(chapter: Chapter, journal: dict, defaults: dict,
                replace: bool, by_source: dict,
                teacher_mode: str = "separate") -> tuple:
     """Ingest one chapter. Returns (status, detail)."""
-    existing = by_source.get(chapter.pdf.name)
+    existing = by_source.get((defaults.get("volume"), chapter.pdf.name))
     if existing is None:
         row = db.query_one(
             "SELECT id, slug, project_path FROM articles "
@@ -431,7 +447,7 @@ def main():
         sys.exit(1)
     journal = dict(journal_row)
 
-    chapters = plan(pdf_dir, load_manifest(args.manifest))
+    chapters = plan(pdf_dir, load_manifest(args.manifest), args.volume)
     if not chapters:
         print(f"No PDFs found in {pdf_dir}.", file=sys.stderr)
         sys.exit(1)
