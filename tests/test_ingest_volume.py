@@ -50,6 +50,42 @@ def test_unrecognised_filename_gets_no_number():
     assert "no chapter number" in note
 
 
+def test_the_older_convention_gives_a_surname_and_a_title():
+    """Volumes 1 and 2 name a chapter for its author and an abbreviated
+    title, with no number anywhere in it."""
+    number, names, note = iv.parse_filename(Path("bunn--how-to-read.pdf"))
+    assert number is None
+    assert names == ["Bunn"]
+    assert "no chapter number" in note
+
+
+def test_the_older_convention_handles_two_authors():
+    _, names, _ = iv.parse_filename(Path("cecil-lemkin--on-revision.pdf"))
+    assert names == ["Cecil", "Lemkin"]
+
+
+def test_volume_three_names_a_chapter_for_its_author_alone():
+    number, names, note = iv.parse_filename(Path("gagich.pdf"))
+    assert number is None
+    assert names == ["Gagich"]
+    assert "no chapter number" in note
+
+
+def test_a_surname_that_carries_its_own_case_is_left_alone():
+    """Capitalizing a lowercased surname is safe. Recasing one that already
+    has case is not, because nothing recovers the capital inside McLeod."""
+    _, names, _ = iv.parse_filename(Path("21Cecil-Lemkin-Gluck.pdf"))
+    assert names == ["Cecil", "Lemkin", "Gluck"]
+
+
+def test_the_whole_volume_in_one_pdf_is_not_a_chapter():
+    """Several folders hold the collected book beside its chapters."""
+    number, _, note = iv.parse_filename(
+        Path("writing-spaces-readings-on-writing-vol-1.pdf"))
+    assert number is None
+    assert "not a chapter" in note
+
+
 # ---------- planning ----------
 
 
@@ -99,6 +135,34 @@ def test_plan_ignores_non_pdfs(tmp_path):
     _dir(tmp_path, "1Lester.pdf")
     (tmp_path / "notes.txt").write_text("not a chapter", encoding="utf-8")
     assert len(iv.plan(tmp_path, {})) == 1
+
+
+def test_a_collected_volume_is_planned_but_not_ingested(tmp_path):
+    """It stays in the plan so the editor can see it was found, and carries
+    the flag that keeps a few hundred pages from becoming one article."""
+    _dir(tmp_path, "19Irvin.pdf", "writing-spaces-readings-on-writing-vol-1.pdf")
+    by_name = {c.pdf.name: c for c in iv.plan(tmp_path, {})}
+    assert by_name["19Irvin.pdf"].skip is False
+    assert by_name["writing-spaces-readings-on-writing-vol-1.pdf"].skip is True
+
+
+def test_a_manifest_entry_overrides_the_decision_to_skip(tmp_path):
+    """Naming a file in the manifest is the editor saying they want it,
+    whatever its own name looks like to the runner."""
+    name = "writing-spaces-readings-on-writing-vol-1.pdf"
+    _dir(tmp_path, name)
+    chapter = iv.plan(tmp_path, {name: {"chapter-number": 1}})[0]
+    assert chapter.skip is False
+    assert chapter.number == 1
+
+
+def test_slug_comes_from_the_title_half_of_an_older_filename(tmp_path):
+    """The archive already put a usable title in those names, and
+    "bunn-how-to-read" would be the worse slug of the two."""
+    _dir(tmp_path, "bunn--how-to-read.pdf", "gagich.pdf")
+    slugs = {c.pdf.name: c.slug for c in iv.plan(tmp_path, {})}
+    assert slugs["bunn--how-to-read.pdf"] == "how-to-read"
+    assert slugs["gagich.pdf"] == "gagich"
 
 
 # ---------- manifest loading ----------

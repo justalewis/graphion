@@ -19,9 +19,12 @@ fetches anything, so a volume cannot be pulled down by accident, and an
 editor can see what they are about to ingest before it is ingested.
 
 Chapter order and authorship come from the manifest where one is given.
-Without it they are read from the filename, which that archive encodes as
-chapter number followed by surnames ("1Lester-Lucas-Doyle-Overcash.pdf").
-That is a convention, not a guarantee, so the runner reports what it
+Without it they are read from the filename, under the three conventions the
+archive has used across the series: a chapter number followed by surnames
+("19Irvin.pdf"), a surname and an abbreviated title ("bunn--how-to-read.pdf"),
+or a bare surname ("gagich.pdf"). Only the first carries an order, so the
+other two need a manifest to sit in the right place in a volume. All three
+are conventions rather than guarantees, so the runner reports what it
 inferred for each file and `--dry-run` shows the whole plan first.
 
 This is a reading of typeset pages, not a conversion of structured source.
@@ -45,8 +48,24 @@ import conversion
 import db
 
 
+# The archive has renamed its chapters twice over the life of the series, so a
+# volume arrives under whichever convention its folder happens to carry:
+#
+#   volumes 4-6   "19Irvin.pdf", "21Cecil-Lemkin-Gluck.pdf"
+#   volumes 1-2   "bunn--how-to-read.pdf"
+#   volume 3      "gagich.pdf"
+#
+# Only the first prints a chapter number. The other two sort by filename until
+# a manifest supplies the order, which is reported per file rather than left
+# for the editor to infer from the running order.
 # "1Lester-Lucas-Doyle-Overcash.pdf" -> chapter 1, surnames Lester, Lucas, ...
 FILENAME_RE = re.compile(r"^(?P<number>\d{1,3})(?P<names>[A-Za-z][A-Za-z\-']*)?$")
+# "bunn--how-to-read" -> surname Bunn, title slug "how-to-read"
+SURNAME_TITLE_RE = re.compile(r"^(?P<names>[A-Za-z][A-Za-z\-']*)--(?P<title>.+)$")
+# "gagich" -> surname Gagich. One word only: a dashed stem with no number and
+# no title half is as likely to be a scan of something else as a hyphenated
+# surname, and guessing wrong puts a stranger's name on a chapter.
+SURNAME_RE = re.compile(r"^(?P<names>[A-Za-z][A-Za-z']*)$")
 # Every chapter in a Writing Spaces volume carries the same terms, and the
 # series prints them as a footnote on each chapter's opening page. Setting
 # them once for the volume is more reliable than trusting that footnote to
@@ -62,6 +81,18 @@ DEFAULT_LICENSE_URL = "https://creativecommons.org/licenses/by-nc-nd/4.0/"
 # Files the archive ships alongside the chapters that are not chapters.
 NON_CHAPTER = {"acknowledgments", "contributors", "frontmatter", "front-matter",
                "introduction", "index", "cover", "toc", "copyright"}
+# Some volume folders also hold the whole book as one PDF beside its chapters.
+# Front and back matter is taken in and left for the editor to keep or drop,
+# but this is not that kind of judgement: reading a few hundred typeset pages
+# as a single article costs a long ingest and produces a draft nobody wants.
+# So it is planned, reported, and then not ingested.
+COLLECTED_RE = re.compile(r"readings-on-writing|(?:^|-)vol(?:ume)?[-_]?\d+$",
+                          re.IGNORECASE)
+# A chapter in this archive runs from about 80 KB to 2.5 MB. Size cannot tell
+# a long chapter from a short volume, so it decides nothing; it is reported
+# because a collected volume under an unrecognised name looks like any other
+# file in the plan, and this is the one cheap signal that it is not.
+LARGE_PDF_BYTES = 5_000_000
 
 
 @dataclass
@@ -73,6 +104,7 @@ class Chapter:
     slug: str = ""
     note: str = ""
     is_chapter: bool = True
+    skip: bool = False
 
 
 def slugify(text: str) -> str:
@@ -93,13 +125,49 @@ def parse_filename(pdf: Path) -> tuple:
     stem = pdf.stem.strip()
     if stem.lower() in NON_CHAPTER:
         return None, [], "not a chapter (front or back matter)"
+    if COLLECTED_RE.search(stem):
+        return None, [], "not a chapter (the whole volume in one PDF)"
     match = FILENAME_RE.match(stem)
-    if not match:
-        return None, [], "filename carries no chapter number"
-    number = int(match.group("number"))
-    raw = match.group("names") or ""
-    surnames = [n for n in raw.split("-") if n]
-    return number, surnames, f"chapter {number} from the filename"
+    if match:
+        number = int(match.group("number"))
+        return (number, _surnames(match.group("names") or ""),
+                f"chapter {number} from the filename")
+    match = SURNAME_TITLE_RE.match(stem)
+    if match:
+        return None, _surnames(match.group("names")), (
+            "surname and title from the filename; it carries no chapter number")
+    match = SURNAME_RE.match(stem)
+    if match:
+        return None, _surnames(match.group("names")), (
+            "surname from the filename; it carries no chapter number")
+    return None, [], "filename carries no chapter number"
+
+
+def _surnames(raw: str) -> list:
+    """Split a dashed run of surnames, capitalizing the ones the archive
+    stored in lower case so that a run report reads as a list of people.
+    A name that already carries case is left alone, because no general rule
+    recovers the one in "McLeod" once it has been lost."""
+    names = []
+    for name in raw.split("-"):
+        if name:
+            names.append(name.capitalize() if name.islower() else name)
+    return names
+
+
+def filename_slug(pdf: Path, number: Optional[int], surnames: list) -> str:
+    """A slug for a chapter with no manifest entry and no title off its pages.
+
+    The older convention carries an abbreviated title, which makes a better
+    slug than a surname does. The numbered one carries no title at all, so it
+    falls back to the number and the surnames that are there.
+    """
+    match = SURNAME_TITLE_RE.match(pdf.stem.strip())
+    if match:
+        return slugify(match.group("title"))
+    if number is not None and surnames:
+        return slugify(f"{number}-{'-'.join(surnames)}")
+    return slugify(pdf.stem)
 
 
 def load_manifest(path: Optional[Path]) -> dict:
@@ -131,22 +199,24 @@ def plan(pdf_dir: Path, manifest: dict) -> list:
         entry = manifest.get(pdf.name, {})
         number, surnames, note = parse_filename(pdf)
         is_chapter = "not a chapter" not in note
+        skip = "whole volume" in note
+        if not skip and pdf.stat().st_size > LARGE_PDF_BYTES:
+            note = f"{note}; unusually large for a chapter, so check it"
         if entry.get("chapter-number") is not None:
             number = int(entry["chapter-number"])
             note = "chapter number from the manifest"
+            # An entry naming this file is the editor saying they want it,
+            # which outranks the runner's reading of its name.
+            skip = False
         title = entry.get("title")
         authors = entry.get("authors") or []
         slug = entry.get("slug") or ""
         if not slug:
-            if title:
-                slug = slugify(title)
-            elif number is not None and surnames:
-                slug = slugify(f"{number}-{'-'.join(surnames)}")
-            else:
-                slug = slugify(pdf.stem)
+            slug = slugify(title) if title else filename_slug(pdf, number, surnames)
         chapters.append(Chapter(pdf=pdf, number=number, title=title,
                                 authors=authors, slug=slug, note=note,
-                                is_chapter=is_chapter or number is not None))
+                                is_chapter=is_chapter or number is not None,
+                                skip=skip))
     # Numbered chapters in order, then anything unnumbered, by filename. A
     # volume's front and back matter sorts to the end rather than being
     # dropped: the editor decides whether to keep it.
@@ -329,7 +399,8 @@ def main():
     print(f"{len(chapters)} chapter(s) from {pdf_dir}:")
     for c in chapters:
         num = f"{c.number:>3}" if c.number is not None else "  ?"
-        print(f"  {num}  {c.pdf.name:<44} -> {c.slug}")
+        print(f"  {num}  {c.pdf.name:<44} -> "
+              f"{'(not ingested)' if c.skip else c.slug}")
         if c.note:
             print(f"       ({c.note})")
     if args.dry_run:
@@ -341,6 +412,10 @@ def main():
     counts: dict = {}
     for c in chapters:
         label = f"{c.number if c.number is not None else '?'} {c.pdf.name}"
+        if c.skip:
+            counts["skipped"] = counts.get("skipped", 0) + 1
+            print(f"  {'skipped':<9} {label}  ({c.note})")
+            continue
         try:
             status, detail = ingest_one(c, journal, defaults, args.replace,
                                         by_source, args.teacher_mode)

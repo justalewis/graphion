@@ -8,6 +8,11 @@ Creates a journal row in the DB and copies the LiCS template bundle to
 journal at `/journals/<slug>/settings` (brand, front-matter content,
 CrossRef config) and edit the template bundle's CSS/Typst files to taste.
 
+Template bundles are versioned source, so a clone carries them while the
+gitignored database starts empty. `--adopt-template` registers a journal
+against the bundle already on disk rather than refusing to overwrite it,
+which is what a fresh database needs for a journal that already has one.
+
 The slug must be unique, kebab-case-friendly (letters, digits, dashes).
 """
 from __future__ import annotations
@@ -32,6 +37,7 @@ def main():
     parser.add_argument("--issn", help="ISSN (e.g., '2326-5620')", default=None)
     parser.add_argument("--short-name", help="Short name for running headers (e.g., 'MHRJ'). Defaults to initials of `name`.", default=None)
     parser.add_argument("--from", dest="starter", default=STARTER_JOURNAL_SLUG, help="Slug of an existing journal to copy the template bundle from. Default: lics.")
+    parser.add_argument("--adopt-template", action="store_true", help="Register the journal against the template bundle already at content/journals/<slug>/template/ instead of copying a new one. For a fresh database in a clone that already carries the bundle in git.")
     args = parser.parse_args()
 
     if not re.match(r"^[a-z0-9][a-z0-9-]*$", args.slug):
@@ -45,19 +51,23 @@ def main():
         print(f"Journal {args.slug!r} already exists (id={existing['id']}). Edit it at /journals/{args.slug}/settings.", file=sys.stderr)
         sys.exit(1)
 
-    src_tpl = CONTENT_DIR / "journals" / args.starter / "template"
-    if not src_tpl.exists():
-        print(f"Starter template not found: {src_tpl}. Pass --from <slug> to point at a different existing journal.", file=sys.stderr)
-        sys.exit(1)
-
     dest_tpl = CONTENT_DIR / "journals" / args.slug / "template"
-    if dest_tpl.exists():
-        print(f"Template directory already exists: {dest_tpl}. Remove it first or pick a different slug.", file=sys.stderr)
-        sys.exit(1)
-
-    print(f"Copying template bundle from {src_tpl} to {dest_tpl}...")
-    shutil.copytree(src_tpl, dest_tpl)
-    print("  copied article.css, article.html.j2, article.typ, journal-filter.lua, figures-filter.lua, mla.csl, and assets/")
+    if args.adopt_template:
+        if not dest_tpl.exists():
+            print(f"No template bundle to adopt at {dest_tpl}. Drop --adopt-template to copy one from {args.starter!r}.", file=sys.stderr)
+            sys.exit(1)
+        print(f"Adopting the template bundle already at {dest_tpl}...")
+    else:
+        src_tpl = CONTENT_DIR / "journals" / args.starter / "template"
+        if not src_tpl.exists():
+            print(f"Starter template not found: {src_tpl}. Pass --from <slug> to point at a different existing journal.", file=sys.stderr)
+            sys.exit(1)
+        if dest_tpl.exists():
+            print(f"Template directory already exists: {dest_tpl}. Pass --adopt-template to register the journal against it, or pick a different slug.", file=sys.stderr)
+            sys.exit(1)
+        print(f"Copying template bundle from {src_tpl} to {dest_tpl}...")
+        shutil.copytree(src_tpl, dest_tpl)
+        print("  copied article.css, article.html.j2, article.typ, journal-filter.lua, figures-filter.lua, mla.csl, and assets/")
 
     short_name = args.short_name or _initials(args.name)
 

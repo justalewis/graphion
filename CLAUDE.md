@@ -27,8 +27,8 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (188 functions: 75 in `test_cleanups.py`, 28 in
-`test_teacher_resources.py`, 26 in `test_pdf_ingest.py`, 17 in
+Tests (196 functions: 75 in `test_cleanups.py`, 28 in
+`test_teacher_resources.py`, 26 in `test_pdf_ingest.py`, 25 in
 `test_ingest_volume.py`, 14 in
 `test_lint.py`, 10 in `test_metadata_roundtrip.py`, 6 in
 `test_standalone_html.py`, 5 in `test_pdf_ua.py`, 4 in
@@ -127,6 +127,17 @@ as drafts. `ingest_pdf` stamps `source-file` into the front matter, which is
 how a chapter is recognised as already taken in; matching on the slug alone
 fails, because a slug is built from the title and the same PDF ingested with
 and without a manifest lands under two of them.
+
+The archive has renamed its chapters twice over the life of the series, so
+`parse_filename` reads three conventions: a chapter number followed by
+surnames (`19Irvin.pdf`, volumes 4 to 6), a surname and an abbreviated title
+(`bunn--how-to-read.pdf`, volumes 1 and 2), and a bare surname
+(`gagich.pdf`, volume 3). Only the first carries chapter order, so the
+earlier volumes need a manifest to sit in order within a volume. A volume
+folder may also hold the collected book as one PDF beside its chapters;
+`COLLECTED_RE` catches that, and the runner plans it, reports it, and then
+does not ingest it, because reading a few hundred typeset pages as a single
+article is a long ingest producing a draft nobody wants.
 
 **An article can render as two galleys.** `teacher-resources: separate` in
 the front matter splits a chapter at its `Teacher Resources` heading, so the
