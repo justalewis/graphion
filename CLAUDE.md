@@ -89,10 +89,20 @@ contextmanager and the `query_one` / `query_all` / `execute` helpers in `db.py`.
 **Cleanup passes are pure and idempotent.** Every Stage 2 pass in `cleanups.py`
 has the signature `(text: str, log: CleanupLog) -> str`, records its work via
 `log.record(name, count)` (an optional `note=` argument exists), and is
-registered in `DEFAULT_PASSES` (`cleanups.py:1410`). Running the pipeline twice
+registered in `DEFAULT_PASSES` (`cleanups.py:1444`). Running the pipeline twice
 must produce identical output.
 Any new pass needs a unit test in `tests/test_cleanups.py` with at least one
 input/output pair plus an idempotence assertion.
+
+**`run_cleanups()` is not the same thing, and it is not idempotent.** The
+passes are pure; the function around them rebuilds `article.md` from
+`article-raw.md`, so it discards everything written to the front matter after
+the first run: the volume facts `ingest_volume.py` stamps in, and any metadata
+an editor has typed. Every caller re-applies that itself. The re-clean route in
+`app.py` reads the front matter, runs the cleanups, and writes the metadata back
+(`app.py:2104`); `ingest_volume.py` is safe only because it enriches after
+cleaning, not before. Re-running it over already-ingested articles reverts them,
+and the only thing that gets the metadata back is `.versions/`.
 
 **Lint checks** follow the same shape in `lint.py`: return `_ok(...)` or
 `_warn(...)`, then register in `DEFAULT_CHECKS` (`lint.py:405`).
