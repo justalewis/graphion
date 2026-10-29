@@ -44,6 +44,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
 
+from pypdf import PdfReader
+
 import conversion
 import db
 
@@ -80,19 +82,26 @@ DEFAULT_LICENSE_URL = "https://creativecommons.org/licenses/by-nc-nd/4.0/"
 
 # Files the archive ships alongside the chapters that are not chapters.
 NON_CHAPTER = {"acknowledgments", "contributors", "frontmatter", "front-matter",
+               "front", "back", "backmatter", "back-matter", "editors",
                "introduction", "index", "cover", "toc", "copyright"}
-# Some volume folders also hold the whole book as one PDF beside its chapters.
+# Every volume folder also holds the whole book as one PDF beside its chapters.
 # Front and back matter is taken in and left for the editor to keep or drop,
 # but this is not that kind of judgement: reading a few hundred typeset pages
-# as a single article costs a long ingest and produces a draft nobody wants.
-# So it is planned, reported, and then not ingested.
-COLLECTED_RE = re.compile(r"readings-on-writing|(?:^|-)vol(?:ume)?[-_]?\d+$",
-                          re.IGNORECASE)
-# A chapter in this archive runs from about 80 KB to 2.5 MB. Size cannot tell
-# a long chapter from a short volume, so it decides nothing; it is reported
-# because a collected volume under an unrecognised name looks like any other
-# file in the plan, and this is the one cheap signal that it is not.
-LARGE_PDF_BYTES = 5_000_000
+# as a single article is a long ingest producing a draft nobody wants. So it is
+# planned, reported, and then not ingested.
+#
+# The collected file has been named three ways too, and the sixth volume names
+# it for the volume's theme ("technical.pdf"), which no filename rule reaches.
+COLLECTED_RE = re.compile(
+    r"readings-on-writing"
+    r"|writing[-_ ]?spaces[-_]?\d+$"
+    r"|(?:^|-)vol(?:ume)?[-_]?\d+$",
+    re.IGNORECASE)
+# So length decides it, and the archive leaves room for no argument: across all
+# six volumes a chapter runs 5 to 29 pages and front or back matter 1 to 8,
+# while a collected volume runs 219 to 410. File size does not separate them,
+# because the longest chapter outweighs the shortest volume.
+COLLECTED_MIN_PAGES = 100
 
 
 @dataclass
@@ -147,12 +156,35 @@ def _surnames(raw: str) -> list:
     """Split a dashed run of surnames, capitalizing the ones the archive
     stored in lower case so that a run report reads as a list of people.
     A name that already carries case is left alone, because no general rule
-    recovers the one in "McLeod" once it has been lost."""
+    recovers the one in "McLeod" once it has been lost.
+
+    The older convention joins two authors with "and" ("barton-and-klint"),
+    which is a word in the filename rather than anybody's name.
+
+    A hyphenated single surname is read as two people here and cannot be read
+    any other way from a filename: "singh-corcoran" and "vetter-moroz" are the
+    same shape, one person and two. That costs nothing, because these names
+    reach the run report and the slug and never the article's authors, which
+    come from the manifest or off the chapter's own opening page.
+    """
     names = []
     for name in raw.split("-"):
-        if name:
+        if name and name.lower() != "and":
             names.append(name.capitalize() if name.islower() else name)
     return names
+
+
+def page_count(pdf: Path) -> Optional[int]:
+    """How long the PDF is, or None where that cannot be read.
+
+    A file that will not open is not judged here. Ingest reports the failure
+    per chapter with a message naming the file, which is more use to an editor
+    than the planner quietly leaving it out of the plan.
+    """
+    try:
+        return len(PdfReader(str(pdf)).pages)
+    except Exception:
+        return None
 
 
 def filename_slug(pdf: Path, number: Optional[int], surnames: list) -> str:
@@ -200,8 +232,13 @@ def plan(pdf_dir: Path, manifest: dict) -> list:
         number, surnames, note = parse_filename(pdf)
         is_chapter = "not a chapter" not in note
         skip = "whole volume" in note
-        if not skip and pdf.stat().st_size > LARGE_PDF_BYTES:
-            note = f"{note}; unusually large for a chapter, so check it"
+        if not skip:
+            pages = page_count(pdf)
+            if pages is not None and pages >= COLLECTED_MIN_PAGES:
+                note = (f"not a chapter ({pages} pages, which is a volume "
+                        f"and not a chapter)")
+                is_chapter = False
+                skip = True
         if entry.get("chapter-number") is not None:
             number = int(entry["chapter-number"])
             note = "chapter number from the manifest"

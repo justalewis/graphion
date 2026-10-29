@@ -27,8 +27,8 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (196 functions: 75 in `test_cleanups.py`, 28 in
-`test_teacher_resources.py`, 26 in `test_pdf_ingest.py`, 25 in
+Tests (200 functions: 75 in `test_cleanups.py`, 28 in
+`test_teacher_resources.py`, 26 in `test_pdf_ingest.py`, 29 in
 `test_ingest_volume.py`, 14 in
 `test_lint.py`, 10 in `test_metadata_roundtrip.py`, 6 in
 `test_standalone_html.py`, 5 in `test_pdf_ua.py`, 4 in
@@ -133,11 +133,20 @@ The archive has renamed its chapters twice over the life of the series, so
 surnames (`19Irvin.pdf`, volumes 4 to 6), a surname and an abbreviated title
 (`bunn--how-to-read.pdf`, volumes 1 and 2), and a bare surname
 (`gagich.pdf`, volume 3). Only the first carries chapter order, so the
-earlier volumes need a manifest to sit in order within a volume. A volume
-folder may also hold the collected book as one PDF beside its chapters;
-`COLLECTED_RE` catches that, and the runner plans it, reports it, and then
-does not ingest it, because reading a few hundred typeset pages as a single
-article is a long ingest producing a draft nobody wants.
+earlier volumes need a manifest to sit in order within a volume. Volumes 5
+and 6 are numbered and need none.
+
+Every volume folder also holds the collected book as one PDF beside its
+chapters, and the runner plans it, reports it, and then does not ingest it:
+reading a few hundred typeset pages as a single article is a long ingest
+producing a draft nobody wants. `COLLECTED_RE` catches five of the six by
+name, but volume 6 names its copy for the volume's theme
+(`technical.pdf`), so length decides it. A chapter in this archive runs 5
+to 29 pages and matter 1 to 8, while a collected volume runs 219 to 410, so
+`COLLECTED_MIN_PAGES` sits at 100 with room either side. File size does not
+separate them; the longest chapter outweighs the shortest volume. A
+manifest entry naming a file overrides the skip, and a PDF that will not
+open is left in the plan for ingest to report by name.
 
 **An article can render as two galleys.** `teacher-resources: separate` in
 the front matter splits a chapter at its `Teacher Resources` heading, so the

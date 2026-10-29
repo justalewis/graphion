@@ -11,6 +11,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from pypdf import PdfWriter
+
 import ingest_volume as iv
 
 
@@ -18,6 +20,18 @@ def _dir(tmp_path, *names):
     for n in names:
         (tmp_path / n).write_bytes(b"%PDF-1.4\n")
     return tmp_path
+
+
+def _pdf(path, pages=1):
+    """A real PDF of a given length. The planner reads the page count to tell
+    a collected volume from a chapter, so some cases need a readable file
+    rather than the stub `_dir` writes."""
+    writer = PdfWriter()
+    for _ in range(pages):
+        writer.add_blank_page(width=468, height=648)
+    with open(path, "wb") as fh:
+        writer.write(fh)
+    return path
 
 
 # ---------- filenames ----------
@@ -78,12 +92,31 @@ def test_a_surname_that_carries_its_own_case_is_left_alone():
     assert names == ["Cecil", "Lemkin", "Gluck"]
 
 
+def test_the_older_convention_drops_the_and_between_two_authors():
+    """In "barton-and-klint" the middle token is a word in the filename, not
+    a third author."""
+    _, names, _ = iv.parse_filename(Path("barton-and-klint--a-students-guide.pdf"))
+    assert names == ["Barton", "Klint"]
+
+
 def test_the_whole_volume_in_one_pdf_is_not_a_chapter():
-    """Several folders hold the collected book beside its chapters."""
-    number, _, note = iv.parse_filename(
-        Path("writing-spaces-readings-on-writing-vol-1.pdf"))
-    assert number is None
-    assert "not a chapter" in note
+    """Every folder holds the collected book beside its chapters, and the
+    archive has named that file three ways as well."""
+    for name in ("writing-spaces-readings-on-writing-vol-1.pdf",
+                 "writingspaces3.pdf", "WritingSpaces5.pdf"):
+        number, _, note = iv.parse_filename(Path(name))
+        assert number is None, name
+        assert "not a chapter" in note, name
+
+
+def test_the_later_volumes_name_their_matter_differently():
+    """Volumes 3, 4 and 6 ship "front.pdf" and "editors.pdf" where volume 5
+    ships "Frontmatter.pdf"; all of it is matter, and read as a surname it
+    would publish as a chapter by Mr Front."""
+    for name in ("front.pdf", "editors.pdf"):
+        number, _, note = iv.parse_filename(Path(name))
+        assert number is None, name
+        assert "not a chapter" in note, name
 
 
 # ---------- planning ----------
@@ -154,6 +187,28 @@ def test_a_manifest_entry_overrides_the_decision_to_skip(tmp_path):
     chapter = iv.plan(tmp_path, {name: {"chapter-number": 1}})[0]
     assert chapter.skip is False
     assert chapter.number == 1
+
+
+def test_length_catches_a_volume_whose_name_gives_nothing_away(tmp_path):
+    """Volume 6 names its collected book for the volume's own theme,
+    "technical.pdf", which reads as a surname and which no filename rule
+    reaches. Across the six volumes a chapter runs 5 to 29 pages and a
+    collected volume 219 to 410, so length settles it where a name cannot."""
+    _pdf(tmp_path / "technical.pdf", pages=358)
+    _pdf(tmp_path / "17Acharya.pdf", pages=18)
+    by_name = {c.pdf.name: c for c in iv.plan(tmp_path, {})}
+    assert by_name["technical.pdf"].skip is True
+    assert "358 pages" in by_name["technical.pdf"].note
+    assert by_name["17Acharya.pdf"].skip is False
+
+
+def test_a_pdf_that_will_not_open_stays_in_the_plan(tmp_path):
+    """The planner does not judge a file it cannot read. Ingest reports that
+    failure against the chapter, naming the file, which is of more use to an
+    editor than a file quietly missing from the plan."""
+    _dir(tmp_path, "4Zhou.pdf")
+    assert iv.page_count(tmp_path / "4Zhou.pdf") is None
+    assert iv.plan(tmp_path, {})[0].skip is False
 
 
 def test_slug_comes_from_the_title_half_of_an_older_filename(tmp_path):
