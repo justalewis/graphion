@@ -164,6 +164,20 @@ def test_nothing_prints_when_no_licence_is_recorded():
     assert conversion.should_print_license({"license": "  "}, "Body.") is False
 
 
+def test_each_half_is_judged_on_its_own_text():
+    """A notice living only in the teacher material must not vouch for a
+    chapter that says nothing, or the chapter publishes with no terms."""
+    fm = {"license": "CC BY-NC-ND 4.0."}
+    body = (
+        "Chapter text with no licence notice at all.\n\n"
+        "# Teacher Resources\n\n"
+        "Instructor material, licensed under CC BY-NC-ND 4.0.\n"
+    )
+    chapter, teacher = conversion.split_teacher_resources(body)
+    assert conversion.should_print_license(fm, chapter) is True
+    assert conversion.should_print_license(fm, teacher) is False
+
+
 # ---------- opt-in ----------
 
 
@@ -245,6 +259,41 @@ def test_deriving_does_not_mutate_the_chapter_s_metadata():
     fm = {"title": "A Chapter", "abstract": "An overview."}
     conversion._teacher_front_matter(fm)
     assert fm["abstract"] == "An overview."
+
+
+# ---------- stale galleys ----------
+
+
+def test_an_article_that_stops_being_split_loses_its_teacher_galley(tmp_path):
+    """The article page offers the teacher galley when the file is there, so
+    a stale one sits beside the chapter looking current while the chapter
+    now contains that material itself."""
+    _write(tmp_path, CHAPTER + "\n" + TEACHER)
+    for name in ("teacher-resources.pdf", "teacher-resources.html",
+                 ".teacher.md", ".teacher.typ", ".chapter.md"):
+        (tmp_path / name).write_bytes(b"stale")
+
+    removed = conversion.clear_stale_parts(tmp_path, conversion.part_sources(tmp_path))
+
+    assert set(removed) == {"teacher-resources.pdf", "teacher-resources.html",
+                            ".teacher.md", ".teacher.typ", ".chapter.md"}
+    assert not (tmp_path / "teacher-resources.pdf").exists()
+    assert (tmp_path / "article.md").exists()
+
+
+def test_a_split_article_keeps_its_teacher_galley(tmp_path):
+    _write(tmp_path, CHAPTER + "\n" + TEACHER, **{"teacher-resources": "separate"})
+    (tmp_path / "teacher-resources.pdf").write_bytes(b"current")
+
+    removed = conversion.clear_stale_parts(tmp_path, conversion.part_sources(tmp_path))
+
+    assert removed == []
+    assert (tmp_path / "teacher-resources.pdf").exists()
+
+
+def test_clearing_is_quiet_when_there_is_nothing_to_clear(tmp_path):
+    _write(tmp_path, CHAPTER)
+    assert conversion.clear_stale_parts(tmp_path, {"chapter"}) == []
 
 
 # ---------- output paths ----------

@@ -11,7 +11,7 @@ import time
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
+from typing import Iterable, Optional
 
 import pypandoc
 
@@ -905,6 +905,33 @@ def _strip_leading_heading(text: str) -> str:
     return rest.lstrip("\n")
 
 
+def clear_stale_parts(article_path: Path, parts: Iterable) -> list:
+    """Remove galleys and intermediates for parts this article no longer has.
+
+    The article page offers the teacher galley when the file is on disk, so
+    an article that stops being split would otherwise keep offering a
+    document that no longer corresponds to it: the chapter now contains that
+    material, and the stale galley sits beside it looking current.
+
+    Returns the names removed, for the render log.
+    """
+    if "teacher" in set(parts):
+        return []
+    removed = []
+    for name in ("teacher-resources.pdf", "teacher-resources.html",
+                 ".teacher.md", ".teacher.typ", ".chapter.md"):
+        target = article_path / name
+        if target.exists():
+            try:
+                target.unlink()
+                removed.append(name)
+            except OSError:
+                # A galley left behind is untidy; a render that dies trying
+                # to tidy up is worse.
+                pass
+    return removed
+
+
 def _part_paths(article_path: Path, part: str, suffix: str) -> tuple:
     """Resolve (source markdown, output file) for one part of an article."""
     sources = part_sources(article_path)
@@ -1202,9 +1229,14 @@ def render_pdf(article_path: Path, journal_slug: str, part: str = "chapter") -> 
     # Whether the template should print the licence. Decided here rather
     # than in the template because it depends on the body text, which a
     # Pandoc template cannot inspect.
-    _fm_for_license, _body_for_license = read_article_metadata(article_path)
-    if part == "teacher":
-        _body_for_license = split_teacher_resources(_body_for_license)[1]
+    #
+    # Each galley is judged on its own half. Reading the whole article for
+    # the chapter would let a notice that lives only in the teacher material
+    # vouch for a chapter that says nothing, and the chapter would publish
+    # with no terms on it, which is the failure this exists to prevent.
+    _fm_for_license, _whole_body = read_article_metadata(article_path)
+    _chapter_body, _teacher_body = split_teacher_resources(_whole_body)
+    _body_for_license = _teacher_body if part == "teacher" else _chapter_body
     if should_print_license(_fm_for_license, _body_for_license):
         extra.append("--metadata=print-license:1")
     fig_filter = tpl / "figures-filter.lua"
@@ -1488,7 +1520,11 @@ def render_all(article_path: Path, journal_slug: str, formats: Optional[set] = N
     # who splits the chapter wants both halves, and a half that only appears
     # when someone remembers to ask is a half that ships missing.
     teacher_html_path = teacher_pdf_path = None
-    if "teacher" in part_sources(article_path):
+    parts = part_sources(article_path)
+    # Not an error: an article that stopped being split is tidied, and the
+    # render log records it so the removal is not silent.
+    stale = clear_stale_parts(article_path, parts)
+    if "teacher" in parts:
         if "html" in formats:
             try:
                 teacher_html_path = render_html(article_path, journal_slug, part="teacher")
@@ -1507,6 +1543,7 @@ def render_all(article_path: Path, journal_slug: str, formats: Optional[set] = N
             "epub": str(epub_path) if epub_path else None,
             "teacher_html": str(teacher_html_path) if teacher_html_path else None,
             "teacher_pdf": str(teacher_pdf_path) if teacher_pdf_path else None,
+            "removed_stale": stale or None,
             "errors": errors,
         },
         indent=2,
