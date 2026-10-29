@@ -765,6 +765,11 @@ def starts_paragraph(line: Line, layout: Layout) -> bool:
 # A figure smaller than this in either direction is a rule, a bullet or a
 # publisher's mark rather than a figure.
 MIN_FIGURE_PX = 80
+# What a browser will actually display. These PDFs carry JPEG 2000 and TIFF as
+# well, which Chrome and Firefox render neither of, so a galley that passed
+# them through would show a broken image to most readers: 14 of the 95 figures
+# in volumes 5 and 6 are one or the other. Those are re-encoded to PNG.
+WEB_IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
 # A caption names a figure; a sentence refers to one. The archive punctuates
 # captions three ways ("Figure 4.1: An exploded view", "Figure 3.3. Example of
 # a Scientific Abstract", "Figure 15.1 Pidgin Translation"), so the colon
@@ -834,10 +839,16 @@ def extract_figures(pdf_path: Path, assets_dir: Path,
             if width < min_px or height < min_px:
                 continue
             suffix = Path(image.name or "").suffix.lower() or ".png"
+            reencode = suffix not in WEB_IMAGE_SUFFIXES
+            if reencode:
+                suffix = ".png"
             name = f"figure-p{page_no:03d}-{index + 1}{suffix}"
             path = assets_dir / name
             try:
-                path.write_bytes(image.data)
+                if reencode:
+                    image.image.save(str(path), format="PNG")
+                else:
+                    path.write_bytes(image.data)
             except Exception:
                 continue
             out.append({"page": page_no, "index": index, "path": path,
@@ -891,7 +902,12 @@ def place_figures(blocks: list, figures: list, caption_pages: dict) -> tuple:
         pending = inserts.pop(position, [])
         replaced = False
         for figure, caption in pending:
-            alt = caption_alt_text(caption) if caption else \
+            # The alt text comes off the matched block, not off the line the
+            # caption was found on. A caption that wraps is several lines on
+            # the page and one block here, and the block is the joined,
+            # de-hyphenated text: reading the line instead cut 36 of the 95
+            # figures' alt text short, 13 of them mid-word on a hyphen.
+            alt = caption_alt_text(block[1]) if caption else \
                 undescribed_alt(figure["page"])
             image = f"![{alt}](assets/{figure['name']})"
             if caption:

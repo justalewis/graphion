@@ -480,6 +480,24 @@ def test_a_captioned_figure_joins_its_caption_in_one_block():
     assert "placed 1" in notes[0]
 
 
+def test_alt_text_comes_from_the_whole_caption_not_its_first_line():
+    """A caption that wraps is several lines on the page and one block here.
+    Reading the line the caption was found on cut 36 of the 95 figures' alt
+    text short, 13 of them mid-word on a hyphen."""
+    whole = ("Figure 1: Rowhouse displays outside of North Philadelphia's "
+             "Urban Crisis Response Center")
+    blocks = [("note", whole)]
+    figures = [{"page": 5, "index": 0, "name": "figure-p005-1.jpg"}]
+    # What the planner matched on is the first line, hyphenated as printed.
+    out, _ = pdf_ingest.place_figures(
+        blocks, figures,
+        {(5, 0): "Figure 1: Rowhouse displays outside of North Philadelphia's "
+                 "Urban Crisis Re-"})
+    text = [t for kind, t in out if kind == "figure"][0]
+    assert "Urban Crisis Response Center]" in text
+    assert "Crisis Re-]" not in text
+
+
 def test_an_uncaptioned_figure_is_kept_and_said_to_be_undescribed():
     """Dropping it costs the reader the figure and leaving its alt text empty
     costs the galley its conformance, so it is kept and counted."""
