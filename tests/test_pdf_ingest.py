@@ -416,3 +416,100 @@ def test_starts_paragraph_counts_a_dropped_initial():
     cap = _line("The notorious group project.", dropcap=True)
     assert not pdf_ingest.starts_paragraph(flush, LAYOUT)
     assert pdf_ingest.starts_paragraph(cap, LAYOUT)
+
+
+# ---------- figures ----------
+
+# A Markdown hard line break: a backslash, then the newline. The figure and
+# the caption printed under it share one paragraph, joined by this, so the
+# image stays an image: alone in a paragraph it would become a Pandoc Figure,
+# and the journal's figures filter numbers every Figure from 1 in document
+# order, which would print "Figure 1." over a caption reading "Figure 7.4"
+# and leave every "see Figure 7.3" in the prose pointing at the wrong one.
+HARD_BREAK = "\\" + "\n"
+
+
+def test_the_three_ways_the_archive_punctuates_a_caption():
+    for text in ("Figure 4.1: An exploded view drawing",
+                 "Figure 3.3. Example of a Scientific Abstract",
+                 "Figure 15.1 Pidgin Translation of BBC News"):
+        assert pdf_ingest.is_figure_caption(text), text
+
+
+def test_prose_referring_to_a_figure_is_not_a_caption():
+    """The punctuation cannot separate them, because the archive uses all
+    three. A caption continues with the figure's name and prose continues
+    with a verb, so the capital after the number is the test."""
+    for text in ("Figure 7.6 shows that sales tend to be highest",
+                 "Table 3.1 provides some quick differences",
+                 "Figure 11.1)."):
+        assert not pdf_ingest.is_figure_caption(text), text
+
+
+def test_a_table_caption_names_no_image():
+    """A table in this series is set as type, so pairing its caption with a
+    figure would put the wrong picture under it."""
+    assert not pdf_ingest.is_figure_caption(
+        "Table 3.1. Abstracts Versus Executive Summaries")
+
+
+def test_caption_alt_text_drops_the_label_and_the_credit():
+    """"Figure 4.1" describes nothing and neither does a source credit."""
+    assert pdf_ingest.caption_alt_text(
+        "Figure 4.1: An exploded view drawing (Source: USPTO)"
+    ) == "An exploded view drawing"
+    assert pdf_ingest.caption_alt_text("Figure 7.1: Chair") == "Chair"
+
+
+def test_undescribed_alt_names_the_page_it_came_from():
+    assert pdf_ingest.undescribed_alt(27) == \
+        "Undescribed figure from page 27 of the source"
+
+
+def test_a_captioned_figure_joins_its_caption_in_one_block():
+    blocks = [("body", "Prose before."),
+              ("note", "Figure 7.4: Schematic bridge diagram"),
+              ("body", "Prose after.")]
+    figures = [{"page": 16, "index": 0, "name": "figure-p016-1.jpg"}]
+    out, notes = pdf_ingest.place_figures(
+        blocks, figures, {(16, 0): "Figure 7.4: Schematic bridge diagram"})
+    assert [kind for kind, _ in out] == ["body", "figure", "body"]
+    assert out[1][1] == (
+        "![Schematic bridge diagram](assets/figure-p016-1.jpg)"
+        + HARD_BREAK + "Figure 7.4: Schematic bridge diagram")
+    assert "placed 1" in notes[0]
+
+
+def test_an_uncaptioned_figure_is_kept_and_said_to_be_undescribed():
+    """Dropping it costs the reader the figure and leaving its alt text empty
+    costs the galley its conformance, so it is kept and counted."""
+    figures = [{"page": 27, "index": 0, "name": "figure-p027-1.jpg"}]
+    out, notes = pdf_ingest.place_figures([("body", "Prose.")], figures, {})
+    figure_text = [t for kind, t in out if kind == "figure"][0]
+    assert "Undescribed figure from page 27" in figure_text
+    assert any("no caption" in note for note in notes)
+
+
+def test_a_caption_after_a_footnote_starts_its_own_block():
+    """A caption is set at footnote size, so it reads as a note, and a new
+    note only begins at a number. Carrying none, three of the seven captions
+    in volume 6 chapter 7 were appended to the footnotes of the page before
+    and vanished from the chapter."""
+    note = _line("3 The author thanks Matt Crouch for the brochure.", size=9.0)
+    caption = _line("Figure 7.1: Chair", size=10.0)
+    blocks = pdf_ingest.assemble([note, caption], LAYOUT, set(), set())
+    assert "Figure 7.1: Chair" in [text for _, text in blocks]
+
+
+def test_a_caption_is_not_collected_away_with_the_footnotes():
+    """blocks_to_markdown gathers notes at the end of the document, which is
+    right for a footnote and wrong for a caption: every caption in both
+    volumes was being moved to the back of its chapter."""
+    markdown = pdf_ingest.blocks_to_markdown([
+        ("note", "Figure 7.1: Chair"),
+        ("body", "Prose that follows the figure."),
+        ("note", "3 A real footnote."),
+    ])
+    assert markdown.index("Figure 7.1: Chair") < \
+        markdown.index("Prose that follows")
+    assert markdown.rstrip().endswith("A real footnote.")

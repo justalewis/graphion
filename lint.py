@@ -333,14 +333,24 @@ def check_alt_text(article: dict, fm: dict, body: str) -> LintResult:
     `conversion._compile_typst` instead. An explicit `{alt="..."}` attribute
     counts, since Pandoc passes that straight through to Typst.
     """
-    total = missing = 0
+    total = missing = undescribed = from_caption = 0
     for match in _IMAGE_RE.finditer(body):
         total += 1
-        if match.group("alt").strip():
+        alt = match.group("alt").strip()
+        if not alt and not _ALT_ATTR_RE.search(match.group("attrs") or ""):
+            missing += 1
             continue
-        if _ALT_ATTR_RE.search(match.group("attrs") or ""):
+        if _UNDESCRIBED_ALT_RE.match(alt):
+            undescribed += 1
             continue
-        missing += 1
+        # PDF ingest puts a figure above the caption printed under it and
+        # takes the alt text from that caption. The two are not the same
+        # thing: a caption says what a figure is called, alt text says what
+        # is in it. Counted so the editing still owed is countable.
+        following = body[match.end():match.end() + 400]
+        caption = re.match(r"\\?\s*\n?(Figure [\d.]+[^\n]*)", following)
+        if caption and alt and alt.lower() in caption.group(1).lower():
+            from_caption += 1
     if not total:
         return _ok("alt-text", "No images in the article.")
     if missing:
@@ -354,7 +364,65 @@ def check_alt_text(article: dict, fm: dict, body: str) -> LintResult:
                 "flagged in an accessibility audit.",
             ],
         )
+    if undescribed or from_caption:
+        details = []
+        if undescribed:
+            details.append(
+                f"{undescribed} came off a page that printed no caption, so "
+                f"the alt text says only that it is undescribed. A reader "
+                f"hearing it learns nothing about the figure."
+            )
+        if from_caption:
+            details.append(
+                f"{from_caption} carry their printed caption as alt text. "
+                f"That keeps the galley conformant and is a reasonable "
+                f"starting point, but a caption names a figure where alt "
+                f"text has to describe it."
+            )
+        return _warn(
+            "alt-text",
+            f"{undescribed + from_caption} of {total} image(s) need a "
+            f"written description.",
+            details,
+        )
     return _ok("alt-text", f"All {total} image(s) have alt text.")
+
+
+_UNDESCRIBED_ALT_RE = re.compile(r"^Undescribed figure from page \d+")
+
+
+def check_figure_coverage(article: dict, fm: dict, body: str) -> LintResult:
+    """Flag an article that refers to figures it does not contain.
+
+    check_alt_text cannot see this and reads it as a pass: it tests whether
+    an image lacks alt text, so an article whose figures were never extracted
+    holds no images to fail and comes back "No images in the article". Both
+    volumes of Writing Spaces passed that way while between them referring to
+    258 figures that were not there.
+    """
+    references = set(_FIGURE_NUMBER_RE.findall(body))
+    images = len(_IMAGE_RE.findall(body))
+    if not references:
+        return _ok("figure-coverage", "The text refers to no figures.")
+    if images:
+        return _ok(
+            "figure-coverage",
+            f"{len(references)} figure(s) referred to, {images} image(s) "
+            f"present.",
+        )
+    return _warn(
+        "figure-coverage",
+        f"The text refers to {len(references)} figure(s) and contains none.",
+        [
+            "A reader is told to look at something that is not in the galley.",
+            "Figures referred to: "
+            + ", ".join(sorted(references)[:12]),
+        ],
+    )
+
+
+# "Figure 7.3" anywhere in the prose, which is how this series refers to one.
+_FIGURE_NUMBER_RE = re.compile(r"\bFigure\s+(\d+(?:\.\d+)*)")
 
 
 _FIG_LABEL_RE = re.compile(r"!\[[^\]]*\]\([^)]+\)\s*\{[^}]*#(fig:[a-zA-Z0-9_-]+)")
@@ -414,6 +482,7 @@ DEFAULT_CHECKS: list[Callable] = [
     check_citations_match_references,
     check_unstripped_artifacts,
     check_alt_text,
+    check_figure_coverage,
     check_figure_references,
 ]
 

@@ -112,3 +112,71 @@ def test_no_images_passes():
 
 def test_alt_text_check_is_registered():
     assert lint.check_alt_text in lint.DEFAULT_CHECKS
+
+
+# ---------- figures the galley does not have ----------
+
+# A Markdown hard line break: a backslash, then the newline. PDF ingest puts
+# a figure and the caption printed under it in one paragraph joined by this,
+# so that the image stays an image. Alone in a paragraph it would become a
+# Pandoc Figure, and the journal's figures filter numbers every Figure from 1
+# in document order, which would print "Figure 1." over a caption reading
+# "Figure 7.4". Spelled out here because an escaped one is easy to lose.
+HARD_BREAK = "\\" + "\n"
+
+
+def _coverage(body: str):
+    return lint.check_figure_coverage({}, {}, body)
+
+
+def test_text_referring_to_figures_it_does_not_have_is_flagged():
+    """check_alt_text cannot see this and reads it as a pass, because what it
+    tests is whether an image lacks alt text. Both volumes of Writing Spaces
+    passed that way while referring to 258 figures that were not there."""
+    body = ("As Figure 7.1 shows, the sign stands for the thing.\n\n"
+            "Compare Figure 7.2 and Figure 7.3.\n")
+    result = _coverage(body)
+    assert result.level == "warn"
+    assert "3 figure(s)" in result.summary
+    assert lint.check_alt_text({}, {}, body).level == "pass"
+
+
+def test_figures_present_alongside_references_pass():
+    body = ("![A chair](assets/figure-p004-1.jpg)\\nFigure 7.1: Chair\n\n"
+            "As Figure 7.1 shows, the sign stands for the thing.\n")
+    assert _coverage(body).level == "pass"
+
+
+def test_text_referring_to_no_figures_passes():
+    assert _coverage("Plain prose with no figures in it.\n").level == "pass"
+
+
+def test_figure_coverage_is_registered():
+    assert lint.check_figure_coverage in lint.DEFAULT_CHECKS
+
+
+def test_an_undescribed_figure_is_a_warning_not_a_pass():
+    """Alt text that says only that the figure is undescribed keeps the
+    galley conformant and tells a reader nothing, so it is neither a failure
+    nor done."""
+    body = ("![Undescribed figure from page 27 of the source]"
+            "(assets/figure-p027-1.jpg)\n")
+    result = _alt(body)
+    assert result.level == "warn"
+    assert "1 of 1" in result.summary
+
+
+def test_alt_text_taken_from_the_caption_is_a_warning():
+    """A caption names a figure; alt text has to describe it."""
+    body = ("![Schematic bridge diagram](assets/figure-p016-1.jpg)" + HARD_BREAK
+            + "Figure 7.4: Schematic bridge diagram\n")
+    result = _alt(body)
+    assert result.level == "warn"
+    assert "need a written description" in result.summary
+
+
+def test_alt_text_that_describes_more_than_the_caption_passes():
+    body = ("![A truss bridge in elevation, with the load paths through each "
+            "diagonal marked](assets/figure-p016-1.jpg)" + HARD_BREAK
+            + "Figure 7.4: Schematic bridge diagram\n")
+    assert _alt(body).level == "pass"

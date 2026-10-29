@@ -266,7 +266,7 @@ def ingest_pdf(pdf_path: Path, article_path: Path) -> IngestResult:
         shutil.copy2(pdf_path, source_copy)
 
     t0 = time.time()
-    result = pdf_ingest.extract(source_copy)
+    result = pdf_ingest.extract(source_copy, assets_dir=article_path / "assets")
     dt = time.time() - t0
 
     raw_md = article_path / "article-raw.md"

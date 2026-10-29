@@ -546,6 +546,13 @@ def assemble(lines: list, layout: Layout, vocab: set, compounds: set) -> list:
                 in_list = False
 
         is_note_start = this == "note" and _NOTE_RE.match(line.text)
+        # A caption is set at footnote size, so it reads as a note, and a new
+        # note only begins at a number. A caption carries none, so it was
+        # being appended to whatever footnote happened to precede it: three of
+        # the seven in this chapter ended up inside the notes of the page
+        # before. A caption always begins its own block, and its own turn
+        # lines, carrying no number either, still join it.
+        is_caption = is_figure_caption(line.plain)
         if this in ("body", "list") and _is_list_start(line, layout):
             flush()
             kind = "list"
@@ -581,7 +588,7 @@ def assemble(lines: list, layout: Layout, vocab: set, compounds: set) -> list:
         prev_line = line
 
         if kind is not None and (this != kind or starts_para or is_note_start
-                                 or gap_break):
+                                 or is_caption or gap_break):
             flush()
         if kind is None:
             kind = this
@@ -605,12 +612,23 @@ def blocks_to_markdown(blocks: list) -> str:
     """
     out, notes = [], []
     for kind, text in blocks:
-        if kind in ("head", "title"):
+        if kind == "figure":
+            # Already Markdown: an image, and the caption that names it.
+            out.append(text)
+        elif kind in ("head", "title"):
             # "title" is a head the series sets off-centre, such as the
             # "Teacher Resources for ..." page. It is still a head.
             out.append("# " + text)
         elif kind == "quote":
             out.append("> " + text)
+        elif kind == "note" and is_figure_caption(text):
+            # The series sets a figure caption a point smaller than its body,
+            # which is the same thing it does to a footnote, so classify reads
+            # one as the other. The difference is where it belongs: a footnote
+            # is collected at the end, and a caption has to stay under the
+            # figure it names. Left as a note, every caption in the chapter
+            # was being moved to the back of it.
+            out.append(text)
         elif kind == "note":
             match = _NOTE_RE.match(text)
             if match:
@@ -744,6 +762,180 @@ def starts_paragraph(line: Line, layout: Layout) -> bool:
     return line.dropcap or line.x0 > layout.body_left + INDENT_MIN
 
 
+# A figure smaller than this in either direction is a rule, a bullet or a
+# publisher's mark rather than a figure.
+MIN_FIGURE_PX = 80
+# A caption names a figure; a sentence refers to one. The archive punctuates
+# captions three ways ("Figure 4.1: An exploded view", "Figure 3.3. Example of
+# a Scientific Abstract", "Figure 15.1 Pidgin Translation"), so the colon
+# cannot be the test. What separates them is the capital: a caption continues
+# with the figure's name, prose continues with a verb, as in "Figure 7.6 shows
+# that sales" or "Table 4.1 is an example". Only Figure, never Table: a table
+# in this series is set as type, so its caption belongs to no image.
+_FIGURE_CAPTION_RE = re.compile(
+    r"^Figure\s+(?P<number>\d+(?:\.\d+)*)\s*[:.]?\s+(?=[A-Z])")
+
+
+def is_figure_caption(text: str) -> bool:
+    return bool(_FIGURE_CAPTION_RE.match(text.strip()))
+
+
+def caption_alt_text(text: str) -> str:
+    """Alt text for a figure, from the caption printed under it.
+
+    The label goes, because "Figure 4.1" describes nothing, and so does a
+    trailing source credit. What is left is the caption's own description of
+    the figure, which is a real description written by the author and a
+    better starting point than anything inferred from the image.
+
+    It is a starting point and not an answer. A caption says what a figure is
+    called; alt text says what is in it, and for a figure carrying an argument
+    the two are not the same. lint.check_alt_text reports every figure still
+    holding its caption so the remaining work is countable.
+    """
+    text = re.sub(r"\s+", " ", text).strip()
+    match = _FIGURE_CAPTION_RE.match(text)
+    if match:
+        text = text[match.end():]
+    text = re.sub(r"\s*\((?:Source|Credit|Courtesy)[^)]*\)\s*$", "", text,
+                  flags=re.IGNORECASE)
+    return text.strip().rstrip(".").strip()
+
+
+def extract_figures(pdf_path: Path, assets_dir: Path,
+                    min_px: int = MIN_FIGURE_PX) -> list:
+    """Write each embedded raster out, and say which page it came from.
+
+    pypdf is asked for the rasters rather than pdfplumber because it resolves
+    the stream filters and names the format; pdfplumber is what reads the
+    captions, further down, since the lines are already being read there.
+
+    Returns one dict per figure: page, path, and the order it sits in on its
+    page. Page order plus order within the page is what pairs a figure with
+    its caption, and it assumes the content stream lists them down the page,
+    which is how these are typeset but not a guarantee.
+    """
+    from pypdf import PdfReader
+
+    assets_dir.mkdir(parents=True, exist_ok=True)
+    out: list = []
+    reader = PdfReader(str(pdf_path))
+    for page_no, page in enumerate(reader.pages, 1):
+        try:
+            images = list(page.images)
+        except Exception:
+            continue
+        index = 0
+        for image in images:
+            try:
+                width, height = image.image.size
+            except Exception:
+                continue
+            if width < min_px or height < min_px:
+                continue
+            suffix = Path(image.name or "").suffix.lower() or ".png"
+            name = f"figure-p{page_no:03d}-{index + 1}{suffix}"
+            path = assets_dir / name
+            try:
+                path.write_bytes(image.data)
+            except Exception:
+                continue
+            out.append({"page": page_no, "index": index, "path": path,
+                        "name": name, "size": (width, height)})
+            index += 1
+    return out
+
+
+def place_figures(blocks: list, figures: list, caption_pages: dict) -> tuple:
+    """Put each figure into the blocks, beside the caption that names it.
+
+    A captioned figure joins its caption in one block, as an image and a hard
+    line break above the caption text. That shape is deliberate: alone in a
+    paragraph the image would become a Pandoc Figure, and the journal's
+    figures filter numbers every Figure from 1 in document order, which would
+    print "Figure 1." over a caption reading "Figure 7.1" and leave every
+    "see Figure 7.3" in the prose pointing at the wrong picture. The printed
+    numbering is the one a reconstruction has to keep.
+
+    A figure with no caption has no anchor and no description. It follows the
+    last captioned figure before it, or closes the document if there is none,
+    and it is counted in the notes rather than dropped.
+    """
+    caption_at = {}
+    for position, (kind, text) in enumerate(blocks):
+        # "note" as well as "body": the series sets captions a point smaller
+        # than the body, so classify reads them as footnotes.
+        if kind in ("body", "note", "quote") and is_figure_caption(text):
+            caption_at.setdefault(_caption_key(text), position)
+
+    inserts: dict = {}
+    notes: list = []
+    unplaced = 0
+    last_captioned = None
+    for figure in figures:
+        caption = caption_pages.get((figure["page"], figure["index"]), "")
+        if caption:
+            position = caption_at.get(_caption_key(caption))
+        else:
+            position = None
+        if position is None:
+            unplaced += 1
+            target = last_captioned if last_captioned is not None else len(blocks)
+            inserts.setdefault(target, []).append((figure, ""))
+        else:
+            inserts.setdefault(position, []).append((figure, caption))
+            last_captioned = position
+
+    out: list = []
+    for position, block in enumerate(blocks):
+        pending = inserts.pop(position, [])
+        replaced = False
+        for figure, caption in pending:
+            alt = caption_alt_text(caption) if caption else \
+                undescribed_alt(figure["page"])
+            image = f"![{alt}](assets/{figure['name']})"
+            if caption:
+                out.append(("figure", f"{image}\\\n{block[1]}"))
+                replaced = True
+            else:
+                out.append(("figure", image))
+        if not replaced:
+            out.append(block)
+    for position in sorted(inserts):
+        for figure, caption in inserts[position]:
+            out.append(("figure",
+                        f"![{undescribed_alt(figure['page'])}]"
+                        f"(assets/{figure['name']})"))
+
+    placed = len(figures) - unplaced
+    if figures:
+        notes.append(f"Extracted {len(figures)} figure(s); placed {placed} "
+                     f"beside the caption naming it.")
+    if unplaced:
+        notes.append(f"{unplaced} figure(s) carry no caption, so they have no "
+                     f"alt text and sit after the figure before them; place "
+                     f"and describe them by hand.")
+    return out, notes
+
+
+def undescribed_alt(page: int) -> str:
+    """Alt text for a figure the page gave no caption to describe it with.
+
+    Not left empty, and not left out. Empty alt text costs the galley its
+    PDF/UA conformance, since Typst refuses an undescribed image and the
+    compile falls back; leaving the figure out costs the reader the figure.
+    This says what is true, reads as what it is to anyone who hears it, and
+    is phrased so `lint.check_alt_text` can count how many are still waiting
+    on a description.
+    """
+    return f"Undescribed figure from page {page} of the source"
+
+
+def _caption_key(text: str) -> str:
+    """A caption's first few words, which is enough to find it again."""
+    return " ".join(re.sub(r"\s+", " ", text).strip().split()[:8]).lower()
+
+
 def opening_page_body(body_lines: list, layout: Layout,
                       has_overview: bool) -> list:
     """Which of the opening page's leftover lines belong to the body.
@@ -790,8 +982,14 @@ def _split_authors(byline: str) -> list:
 # ---------- entry point ----------
 
 
-def extract(pdf_path: Path, genre_heads: Optional[tuple] = None) -> IngestResult:
-    """Read a PDF chapter into front matter plus Markdown body."""
+def extract(pdf_path: Path, genre_heads: Optional[tuple] = None,
+            assets_dir: Optional[Path] = None) -> IngestResult:
+    """Read a PDF chapter into front matter plus Markdown body.
+
+    With `assets_dir`, the figures are written there and placed in the body.
+    Without it the text comes through alone, which is what it did before
+    figures were extracted at all, and what the tests rely on.
+    """
     import pdfplumber
 
     genre_heads = genre_heads or GENRE_HEADS
@@ -834,6 +1032,26 @@ def extract(pdf_path: Path, genre_heads: Optional[tuple] = None) -> IngestResult
     body_lines.extend(rest)
 
     blocks = assemble(body_lines, layout, vocab, compounds)
+
+    if assets_dir is not None:
+        figures = extract_figures(Path(pdf_path), Path(assets_dir))
+        # A caption is paired with a figure by page and by order down the
+        # page, which is all the geometry needed when a page carries two.
+        by_page: dict = {}
+        for line in all_lines:
+            if is_figure_caption(line.plain):
+                by_page.setdefault(line.page, []).append(line)
+        caption_pages = {}
+        for page_no, lines in by_page.items():
+            lines.sort(key=lambda l: l.top)
+        for figure in figures:
+            lines = by_page.get(figure["page"], [])
+            if figure["index"] < len(lines):
+                caption_pages[(figure["page"], figure["index"])] = \
+                    lines[figure["index"]].plain
+        blocks, figure_notes = place_figures(blocks, figures, caption_pages)
+        notes.extend(figure_notes)
+
     body = blocks_to_markdown(blocks)
 
     hyphens = sum(1 for l in kept if l.text.endswith("-"))

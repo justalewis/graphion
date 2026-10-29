@@ -27,9 +27,9 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (233 functions: 88 in `test_cleanups.py`, 28 in
-`test_teacher_resources.py`, 38 in `test_pdf_ingest.py`, 37 in
-`test_ingest_volume.py`, 14 in
+Tests (249 functions: 88 in `test_cleanups.py`, 28 in
+`test_teacher_resources.py`, 47 in `test_pdf_ingest.py`, 37 in
+`test_ingest_volume.py`, 21 in
 `test_lint.py`, 10 in `test_metadata_roundtrip.py`, 6 in
 `test_standalone_html.py`, 5 in `test_pdf_ua.py`, 4 in
 `test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
@@ -128,6 +128,43 @@ new heuristics need a case in `tests/test_pdf_ingest.py`. The geometry is
 learned per document rather than hardcoded: a series that redesigns between
 volumes should degrade, not silently misread. Use pdfplumber, not PyMuPDF,
 which is AGPL and would reach the whole deployed app.
+
+**Figures come out too, and the caption is the hard part.** `extract()` takes
+an `assets_dir`; given one it writes every embedded raster there and places it
+in the body. pypdf is asked for the rasters because it resolves the stream
+filters and names the format; pdfplumber reads the captions, since the lines
+are already being read there. A figure is paired with a caption by page and by
+order down the page.
+
+Three things about captions are easy to get wrong, and each cost this archive
+figures. A caption is set a point smaller than the body, which is also what a
+footnote is, so `classify` reads one as the other: a caption therefore has to
+start its own block (`is_caption` in `assemble`) or it is appended to whatever
+footnote precedes it, and it has to be emitted in place in
+`blocks_to_markdown` or it is collected to the end of the chapter with the
+notes. And punctuation cannot tell a caption from a reference to one, because
+the archive writes all three of "Figure 4.1: ", "Figure 3.3. " and
+"Figure 15.1 "; what separates them is the capital that follows, since a
+caption continues with the figure's name and prose continues with a verb
+("Figure 7.6 shows that"). Only `Figure`, never `Table`: a table here is set
+as type.
+
+A figure goes in as an image and a hard line break above its caption, in one
+paragraph, and never as a lone image in one. A lone image becomes a Pandoc
+Figure, and the figures filter numbers every Figure from 1 in document order,
+which would print "Figure 1." over a caption reading "Figure 7.1" and leave
+every "see Figure 7.3" in the prose pointing at the wrong picture. A
+reconstruction keeps the printed numbering.
+
+Alt text comes from the caption with its label and any source credit removed.
+That is a starting point, not an answer: a caption says what a figure is
+called and alt text says what is in it. A figure whose page printed no caption
+gets `undescribed_alt()` rather than an empty string, because empty alt text
+costs the galley its PDF/UA conformance and leaving the figure out costs the
+reader the figure. `lint.check_alt_text` warns on both kinds so the writing
+still owed is countable, and `lint.check_figure_coverage` catches an article
+that refers to figures it does not contain, which `check_alt_text` cannot see
+and reads as a pass.
 
 `ingest_volume.py` runs a folder of chapter PDFs through that in one pass.
 It never fetches anything: the volume is downloaded by hand and the runner
