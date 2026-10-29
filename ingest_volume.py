@@ -355,9 +355,23 @@ def ingest_one(chapter: Chapter, journal: dict, defaults: dict,
 
 def _short_title(title: str) -> str:
     """A running head has about four inches to work with, so a long title is
-    cut at its subtitle rather than wrapped into the margin."""
+    cut at its subtitle rather than wrapped into the margin.
+
+    A title with no subtitle to cut at is cut at a word. Cutting at the 60th
+    character cut through one: volume 5 chapter 5 ran "the Myth of Sta" as its
+    running head on every page, and chapter 6 "How Writers Use Cod".
+    """
     text = re.sub(r"\s+", " ", str(title)).strip()
-    return text.split(":")[0].strip()[:60] or text[:60]
+    head = text.split(":")[0].strip() or text
+    if len(head) <= 60:
+        return head
+    cut = head[:60]
+    if not head[60].isspace():
+        # The cut landed inside a word, so that word goes. A cut that landed
+        # on the space after one keeps it; dropping a whole word to tidy a
+        # boundary that was already tidy cost chapter 3 its "Evaluation".
+        cut = cut.rsplit(" ", 1)[0]
+    return cut.rstrip(" ,;:-") or head[:60]
 
 
 def _short_authors(authors: list) -> str:

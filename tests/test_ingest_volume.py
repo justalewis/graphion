@@ -268,3 +268,32 @@ def test_short_authors_handles_one_and_two_names():
 
 def test_short_authors_of_nothing_is_empty():
     assert iv._short_authors([]) == ""
+
+
+def test_short_title_of_a_long_title_cuts_at_a_word():
+    """With no subtitle to cut at, cutting at the 60th character cut through
+    a word, and the result ran as a running head on every page."""
+    out = iv._short_title("What Color Is My Voice? Academic Writing and the "
+                          "Myth of Standard English")
+    assert out == "What Color Is My Voice? Academic Writing and the Myth of"
+    assert not out.endswith("Sta")
+
+
+def test_short_title_of_a_long_title_drops_no_partial_word():
+    out = iv._short_title("What Can I Add to Discourse Communities? How "
+                          "Writers Use Code-Meshing and Translanguaging")
+    assert out == "What Can I Add to Discourse Communities? How Writers Use"
+    assert len(out) <= 60
+
+
+def test_short_title_leaves_a_short_title_whole():
+    assert iv._short_title("Enabling the Reader") == "Enabling the Reader"
+
+
+def test_short_title_keeps_a_word_the_cut_landed_after():
+    """The cut falling on the space after a whole word is already a clean
+    boundary, so nothing needs dropping; only the comma goes."""
+    out = iv._short_title("“Is This for a Grade?” Understanding "
+                          "Assessment, Evaluation, and Low-Stakes Writing "
+                          "Assignments")
+    assert out == "“Is This for a Grade?” Understanding Assessment, Evaluation"

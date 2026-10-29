@@ -133,6 +133,32 @@ def reassemble_heading_linebreaks(text: str, log: CleanupLog) -> str:
     return text
 
 
+def close_up_broken_em_dashes(text: str, log: CleanupLog) -> str:
+    """Close up an em dash that a rejoined line break left a space after.
+
+    The series sets em dashes closed up, and its own table of contents says
+    so: volume 5 chapter 11 is "I Passed First-Year Writing---What Now?". PDF
+    ingest rejoins lines with a space, so a dash that ended a line arrives as
+    "Writing--- What Now?", in the running head and the ToC as well as the
+    body.
+
+    Only the asymmetric case is touched. A dash spaced on both sides is a
+    style, and a dash spaced only before it is this series' attribution line,
+    the "---Ryan" under a passage, which is right as it stands. Nothing sets a
+    dash closed on its left and open on its right, so that one is always the
+    artifact. Of 405 em dashes in Writing Spaces 5, 375 were already closed,
+    13 were attributions, and 17 were this.
+    """
+    # The lookbehind excludes a dash, so a longer run stays a run, and
+    # excludes whitespace, so a line-initial "---" (a thematic break, or a
+    # YAML delimiter) is left alone.
+    pattern = re.compile(r"(?<=[^\s\-])---[ \t]+(?=\S)")
+    count = len(pattern.findall(text))
+    text = pattern.sub("---", text)
+    log.record("close_up_broken_em_dashes", count)
+    return text
+
+
 def blank_line_before_heading(text: str, log: CleanupLog) -> str:
     """Give every heading the blank line Pandoc needs to read it as one.
 
@@ -1464,6 +1490,9 @@ DEFAULT_PASSES: List[Pass] = [
     conservative_list_normalization,
     strip_orphan_page_numbers,
     normalize_dashes,
+    # Directly after the pass that writes "---", since this one tidies what
+    # that leaves where a line break fell on a dash.
+    close_up_broken_em_dashes,
     repair_pandoc_bold_escape,
     normalize_smart_quotes,
     escape_stray_at_signs,

@@ -832,3 +832,42 @@ def test_works_cited_entry_starting_with_an_initialism_is_not_merged():
     )
     out = cleanups.unfragment_works_cited(text, cleanups.CleanupLog())
     assert "pp. 1--40.\n\nU.S. Government" in out
+
+
+def test_close_up_broken_em_dashes():
+    """Ingest rejoins lines with a space, so a dash that ended a line comes
+    through as "Writing--- What Now?" where the series sets it closed."""
+    src = "I Passed First-Year Writing--- What Now?"
+    out = cleanups.close_up_broken_em_dashes(src, _log())
+    assert out == "I Passed First-Year Writing---What Now?"
+
+
+def test_close_up_leaves_an_attribution_dash_alone():
+    """The series closes a passage with "---Ryan" on its own, which is right
+    as it stands."""
+    src = "composing choices against that backdrop.\n\n---Ryan\n"
+    assert cleanups.close_up_broken_em_dashes(src, _log()) == src
+
+
+def test_close_up_leaves_a_symmetrically_spaced_dash_alone():
+    """Spacing a dash on both sides is a style, not an artifact."""
+    src = "She said yes --- then changed her mind."
+    assert cleanups.close_up_broken_em_dashes(src, _log()) == src
+
+
+def test_close_up_leaves_a_thematic_break_alone():
+    src = "One paragraph.\n\n---\n\nAnother paragraph.\n"
+    assert cleanups.close_up_broken_em_dashes(src, _log()) == src
+
+
+def test_close_up_leaves_a_longer_rule_alone():
+    src = "A line.\n\n----- a rule\n"
+    assert cleanups.close_up_broken_em_dashes(src, _log()) == src
+
+
+def test_close_up_broken_em_dashes_is_idempotent():
+    src = "writer--- someone who recently sat where you sit--- in a class."
+    once = cleanups.close_up_broken_em_dashes(src, _log())
+    twice = cleanups.close_up_broken_em_dashes(once, _log())
+    assert once == twice
+    assert "--- " not in once
