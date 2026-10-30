@@ -14,6 +14,8 @@ volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 chapter-number: 21
+images-of-text:
+- figure-p008-1.png
 ---
 
 # Beyond Black on White: Document Design and Formatting in the
@@ -80,7 +82,7 @@ The example in Fig. 1 shows an unformatted resume. The lack of repetition, contr
 
 Fig. 2 shows the same content using the previously discussed design elements. The document is more visually appealing as well as being easier to review. Each individual design principle is involved, and their combination leads to a stronger design.
 
-![An unformatted resume](assets/figure-p008-1.png)\
+![A resume set in one typeface at one size with no emphasis anywhere: name, address, email and telephone, then education, employment with three positions and their duties, software skills, and clubs and organizations. Nothing distinguishes a heading from an entry, and the dates run into the text beside them.](assets/figure-p008-1.png)\
 Fig. 1. An unformatted resume.
 
 Repetition is shown through the consistent emphasis and text used in the various sections of the resume. There is contrast between the size of the author’s name and the contact information, clearly highlighting the most significant information. School and business names shown in bold create strong contrast within lines of text. Text is firmly and consistently aligned. Text is easy to read from the left justification, and the author’s name is highlighted as the only centered text on the page. Proximity makes finding information simple, as section headings are placed directly above their supporting information.

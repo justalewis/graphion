@@ -13,6 +13,9 @@ volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 chapter-number: 10
+images-of-text:
+- figure-p006-2.jpg
+- figure-p011-1.png
 ---
 
 # Introduction to Primary Research: | Observations, Surveys, and Interviews *Dana Lynn Driscoll*
@@ -75,10 +78,10 @@ The Research Timeline
 
 When you begin to conduct any kind of primary research, creating a timeline will help keep you on task. Because students conducting primary research usually focus on the collection of data itself, they often overlook the equally important areas of planning (invention), analyzing data, and writing. To help manage your time, you should create a research timeline, such as the sample timeline presented here.
 
-![The Research Process](assets/figure-p006-1.jpg)\
+![The research process in three bracketed stages. The invention stage runs background library research, narrowing the topic and creating research questions, creating a research timeline, creating materials. The data collection stage runs choosing a location or participants, then collecting data. The drafting and revision stage runs organizing and transcribing data, analyzing data, drafting results, revision. At the centre an oval reads ethical considerations impact all stages, with arrows reaching out to all three.](assets/figure-p006-1.jpg)\
 Fig. 1: The Research Process
 
-![A sample timeline for Jared’s research project](assets/figure-p006-2.jpg)\
+![A four-week timeline. Week one: background research on ABE, create research questions for interviews, email possible interviewees and set up interviews. Week two: set up interview times, interview an engineering professional and a student, transcribe the interviews. Week three: interview analysis, write a draft of the interview results with the background research. Week four: get feedback on the draft, revise it.](assets/figure-p006-2.jpg)\
 Fig. 2: A sample timeline for Jared’s research project.
 
 When Primary Research Is Useful or Appropriate
@@ -137,7 +140,7 @@ The first entry is biased and demonstrates judgment about the event. First, the 
 
 To avoid bias in your observations, you can use something called a “double-entry notebook.” This is a type of observation log that en-
 
-![Two sample entries from a double-entry notebook](assets/figure-p011-1.png)\
+![A two-column table headed Observations and Thoughts. First row: a student sits in the dining hall eating pizza that drips oil and says this pizza is good; beside it, the thought that the student enjoys the high-calorie content. Second row: in fifteen minutes at a cash register, of twenty-two students paying for meals, fifteen took a candy or granola bar and three had fruit; beside it, the thought that fruit is less accessible than candy, being further back in the dining court, and a question whether that is why.](assets/figure-p011-1.png)\
 Figure 3: Two sample entries from a double-entry notebook.
 
 courages you to separate your observations (the facts) from your feelings and judgments about the facts.
@@ -268,7 +271,7 @@ Describing Your Study Findings (Results)
 
 In a formal research paper, the results section is where you describe what you found. The results section can include charts, graphs, lists, direct quotes, and overviews of findings. Readers find it helpful if you are able to provide the information in different formats. For example, if you have any kind of numbers or percentages, you can talk about them in your written description and then present a graph or chart showing them visually. You should provide specific details as supporting evidence to back up your findings. These details can be in the form of direct quotations, numbers, or observations.
 
-![Graphic from Derek’s results section](assets/figure-p020-1.png)\
+![A bar chart headed Food Group Intakes Versus Recommendations Of Purdue Students. Servings run from zero to eight up the side; six food groups run along the foot: grains, vegetables, fruits, meat and protein, dairy, other. Three bars per group compare the average male, the average female and the USDA recommended minimum. Grains are the only group where both averages reach the minimum; vegetables, fruits and dairy all fall short of it.](assets/figure-p020-1.png)\
 Fig. 4: Graphic from Derek’s results section.
 
 Jared describes some of his interview results:

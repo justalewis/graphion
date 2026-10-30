@@ -16,6 +16,9 @@ license: This work is licensed under the Creative Commons Attribution-NonCommerc
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 chapter-number: 13
 teacher-resources: separate
+images-of-text:
+- figure-p010-1.jpg
+- figure-p012-1.png
 ---
 
 > • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/pages/writing-spaces • WAC Clearinghouse: http://wac.colostate.edu/books/
@@ -140,15 +143,15 @@ You have a zillion questions to ask. How many animal shelters are currently in o
 
 Following in the steps of dozens of your fellow classmates, you opened a Google search and typed in “animal shelter” (see figure 1). Among the top results, you saw links to your local animal shelters and other rescue organizations.
 
-![Google search for “animal shelter” shows several ad results, including “Humane Society of North Texas,” “Dallas Pets Alive Pet Rescue,” DFW Humane Society,” and “Houston SPCA.”](assets/figure-p010-1.jpg)\
+![A Google results page for animal shelter, about 1,450,000,000 results. Four advertisements head the list: the Humane Society of North Texas, Dallas Pets Alive Pet Rescue, Dfw Humane Society and Houston SPCA, each with its web address and two lines of description.](assets/figure-p010-1.jpg)\
 Figure 1. Google search for “animal shelter” shows several ad results, including “Humane Society of North Texas,” “Dallas Pets Alive Pet Rescue,” DFW Humane Society,” and “Houston SPCA.”
 
 When searching for “animal shelter,” you receive more than one billion results. You are now faced with a formidable evaluation task, but you can’t possibly look at all of these sources. You could choose to narrow your search terms to something like “animal shelters and lost pets” (which yields 66,200,000 results) or take Google’s apparent suggestion and focus your search on animal shelters in your local area. Let’s say you decide to focus on the Humane Society of North Texas, the first result from your original search (see figure 2).
 
-![The Humane Society of North Texas homepage shows the organization’s logo, a basic navigational menu, and a photo of a large dog looking out a car window into the camera. Text next to the dog encourages viewers to donate their vehicle in support of the Humane Society](assets/figure-p011-1.jpg)\
+![The Humane Society of North Texas home page. Its shield logo sits at the left of a menu reading Home, Adopt, Services, Volunteer, Donate and Contact Us, with social media icons at the right. Below, a photograph of a grey pit bull leaning out of a red car window beside a green panel headed Donate Your Vehicle and a Learn More button.](assets/figure-p011-1.jpg)\
 Figure 2. The Humane Society of North Texas homepage shows the organization’s logo, a basic navigational menu, and a photo of a large dog looking out a car window into the camera. Text next to the dog encourages viewers to donate their vehicle in support of the Humane Society.
 
-![Undescribed figure from page 12 of the source](assets/figure-p012-1.png)
+![A press release from the Humane Society of North Texas, dated 24 May 2019 and headed We Like Big Mutts and We Cannot Lie (Ok, Cats, Too). It announces a flight of 160 dogs and cats to Washington and Idaho with Wings of Rescue, GreaterGood.org and the ASPCA, explains that large dogs are surrendered constantly and are harder to adopt out locally, and quotes Cassie Lackey, Director of Communications, on needing to find homes for larger dogs. The contact block at the top gives her name, telephone and email.](assets/figure-p012-1.png)
 
 To guide you during this evaluation process are the critical reading questions that we discussed earlier.
 

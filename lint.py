@@ -516,6 +516,42 @@ def check_unreadable_characters(article: dict, fm: dict, body: str) -> LintResul
     )
 
 
+def check_images_of_text(article: dict, fm: dict, body: str) -> LintResult:
+    """Report figures whose content is text set as a picture.
+
+    This is WCAG 1.4.5, and it is a different failure from a missing
+    description: writing alt text satisfies 1.1.1 and leaves 1.4.5 exactly
+    where it was. The words are still unavailable to anyone who cannot see
+    the image, they cannot be searched, selected, translated or reflowed,
+    and they do not respond to a reader's own type size.
+
+    A figure is listed here by hand, in the article's `images-of-text` front
+    matter, because nothing can tell a photograph of a document from a
+    photograph of anything else without looking. 113 of this series' 196
+    figures are on that list, which is a property of what the books are:
+    a technical writing volume teaches a genre by showing one.
+
+    A warning rather than a failure. The galley is conformant and the
+    figure is described; what is wanted is that the shortfall stays
+    countable instead of being closed over by the alt text.
+    """
+    listed = fm.get("images-of-text") or []
+    if isinstance(listed, str):
+        listed = [listed]
+    images = len(_IMAGE_RE.findall(body))
+    if not listed:
+        return _ok("images-of-text", "No figure is recorded as text.")
+    return _warn(
+        "images-of-text",
+        f"{len(listed)} of {images} figure(s) carry text as a picture.",
+        [
+            "Described, but the words themselves are still only a picture "
+            "(WCAG 1.4.5); transcribing them into the chapter is the fix.",
+            "Figures: " + ", ".join(str(x) for x in listed[:12]),
+        ],
+    )
+
+
 DEFAULT_CHECKS: list[Callable] = [
     check_required_fields,
     check_orcid_format,
@@ -529,6 +565,7 @@ DEFAULT_CHECKS: list[Callable] = [
     check_unstripped_artifacts,
     check_unreadable_characters,
     check_alt_text,
+    check_images_of_text,
     check_figure_coverage,
     check_figure_references,
 ]

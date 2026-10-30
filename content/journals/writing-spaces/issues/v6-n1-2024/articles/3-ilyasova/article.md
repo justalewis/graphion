@@ -14,6 +14,12 @@ volume-title: Technical Writing Spaces 6
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 teacher-resources: separate
+images-of-text:
+- figure-p003-1.png
+- figure-p009-1.jpg
+- figure-p009-2.jpg
+- figure-p013-1.png
+- figure-p014-1.png
 ---
 
 What follows is a series of practical guidelines that help you understand the *why* and the *how* for three specific pieces of writing that often accompany reports and other professional and technical writing assignments. These three pieces of writing are cover memos, executive summaries, and abstracts. As you read the guidelines, you’ll come away understanding the goal, purpose or why of each piece of writing, the definition, and what aspects make each effective. Along the way, we’ll apply some of these guidelines to actual examples. You’ll also be able to get into the heads of other writers as they formulate their own approaches to how they write these specific pieces/assignments.
@@ -36,7 +42,7 @@ To understand why we write cover memos, let’s look at an example of one in Fig
 
 Additionally, see if you can tell whether or not this memo was for inside or outside of an organization, and the levels of formality and importance conveyed in the memo. Lastly, think about when you would write such a memo before or after you have completed a report?
 
-![Memos are basically the same in structure as emails](assets/figure-p003-1.png)\
+![A memorandum from HA Engineering Company, dated 11 November 2003, to Henriette Alexander, CEO, from Katherine Schmidt, Lead Engineer, on the solar options for C.Hill Industries. It encloses a report on converting the Springs facility to solar, says the generators will work but recommends a design that uses panel placement more efficiently so the refrigeration units can run off grid at nonpeak hours, asks for review and a conference call with their CEO, and gives an extension and email.](assets/figure-p003-1.png)\
 Figure 3.1. Memos are basically the same in structure as emails.
 
 The first thing you might notice with the content is that the memo is written to someone inside the company or organization. This memo lets the reader know that a report accompanies it, and what the report is about. What this means is that you should write this kind of cover memo *after* your report is done. Cover memos contain information about project updates or completion, ongoing and/or completed tasks, decisions from important meetings, and shorts proposals that either you are working on by yourself or with a team.
@@ -119,10 +125,10 @@ Finally, you’re at the conclusion. The conclusion should be short, and like th
 
 of the reader. These expectations include indicating that the memo is concluding (“Thank you for your attention to this important matter,” reminding the reader of the topic or urgency of the matter “I believe a contact-tracing plan should be developed as soon as possible,” and providing contact information and a clear request for what is the next step, “To get started, I would like to schedule an appointment . . . you or your assistant can reach me at ext.19 . . . .”.
 
-![This memo shows the main parts and moves of the correspondence. The header indicates the subject of the memo; the introduction sets up the subject, purpose, and main point; the body provides the details; and the conclusion restates the main point and/or provides next steps](assets/figure-p009-1.jpg)\
+![The first page of an annotated memo from Henderson Industries, dated 11 March 2020, to Michelle Henderson, CEO, from Chris Stanton, Compliance Lead, subject Contact-Tracing Plan. Labels in the margins name the parts: Header with initials and a descriptive subject line, then Introduction broken into subject, purpose and main point, then Body with reasoning and fact. The introduction reports the Directors' Board asking about a contact tracing plan and says none is approved yet; the body argues the virus could still spread among factory workers, citing a February 2020 WHO report that asymptomatic people can transmit it.](assets/figure-p009-1.jpg)\
 Figure 3.2. This memo shows the main parts and moves of the correspondence. The header indicates the subject of the memo; the introduction sets up the subject, purpose, and main point; the body provides the details; and the conclusion restates the main point and/or provides next steps.
 
-![Undescribed figure from page 9 of the source](assets/figure-p009-2.jpg)
+![The second page of the same annotated memo. Further reasoning recommends developing a contact-tracing plan and lists three actions: a decision tree for responding to an outbreak, an alert system telling managers how to identify symptoms, whom to notify and when to send employees home, and connections with local health authorities and testing facilities. A Conclusion, labelled thank you, restate main point and next step, asks for an appointment and gives an extension and email.](assets/figure-p009-2.jpg)
 
 # Guidelines for Writing Abstracts and Executive Summaries
 
@@ -177,7 +183,7 @@ Figure 3.3 provides an example of a scientific abstract. It contains all of the 
 
 When writing your executive summary, you need to keep in mind two main aspects of executive summaries that differ from writing abstract. First, you should paraphrase the main sections and main points of your report versus trying to use the same phrasing from the report as you would in an abstract.
 
-![Example of a Scientific Abstract. (Based on https://owl.purdue.edu/ owl/research_and_citation/using_research/writing_scientific_ abstracts_presentation.html)](assets/figure-p013-1.png)\
+![An annotated scientific abstract for Usability and User-Centered Theory for 21st Century OWLs by Driscoll, Brizee, Salvo and Sousa. Margin labels name purpose statement, main point and methodology, results, and conclusion. It reports two generations of usability tests on the Purdue OWL, finds participants took significantly less time with a user-centred prototype and responded more positively to it, and concludes that a user-centred site is more effective and that usability research is a productive source of ideas.](assets/figure-p013-1.png)\
 Figure 3.3. Example of a Scientific Abstract. (Based on https://owl.purdue.edu/ owl/research_and_citation/using_research/writing_scientific_ abstracts_presentation.html)
 
 Second, you should be thinking about the best way to organize your summary. This situation often means *not* following the organization of your report. Here are a few discussion questions to help you think through how to organize your summary:
@@ -192,7 +198,7 @@ Now that you’ve considered the needs of the reader and the most effective way 
 
 As you can see from this bulleted list, the organization of your executive summary might look very different than your report. Let’s now take a look at an example and see what this looks like (see Figure 3.4).
 
-![Example of an Executive Survey](assets/figure-p014-1.png)\
+![An annotated executive summary of a student report on converting Osborne Hall at Colorado College to solar heating. Margin labels name relevant background, purpose statement, main point, three blocks of key information in order of importance, and thank you and next step. It concludes that a combination of skylights and solar panels would meet almost all the building's heating needs with a backup heater for cold spells, sets out a five-step research plan, and reports that solar remodelling would pay for itself in five to six years.](assets/figure-p014-1.png)\
 Figure 3.4. Example of an Executive Survey
 
 The goal of an executive summary is that it is written in such a way that it can stand alone, apart from the rest of the report. And, as we saw, CEOs and managers may not have time to read your full report but still need to know key takeaways to make a decision. Hence, taking some time to figure out how to write an effective executive summary is a crucial skill for you to have. Here, writing and clear organization is key to drafting an effective executive summary.

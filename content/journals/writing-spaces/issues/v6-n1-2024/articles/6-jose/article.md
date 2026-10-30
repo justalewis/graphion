@@ -13,6 +13,8 @@ source-file: 6Jose.pdf
 volume-title: Technical Writing Spaces 6
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+images-of-text:
+- figure-p014-1.jpg
 ---
 
 College classes often involve some level of collaborative work. Technical writing courses are no different. In fact, collaboration has long been identified as one of the key components of technical and professional writing courses (Allen and Benninghoff). Yet, many of us have experienced times of anxiety and even dread when we mark the days on the class calendar that precede the start of the group project. From communication issues to fear of unequal workload distribution or scheduling difficulties, let’s be honest, there are many reasons for being leery about group work.
@@ -175,7 +177,7 @@ The methods outlined earlier offer a framework to build sound collaborative prac
 
 If you end up with a non-contributing member, start by addressing the issue during one of the check-in moments. Give the person a chance to explain the situation first. Incomplete or no work is not always a sign of a freeloader.
 
-![The Collaborative Process Visualized](assets/figure-p014-1.jpg)\
+![A project cycle drawn as a ring of six arrows, with speech bubbles at the corners reading let's get started, it takes shape, almost done and we did it. Each stage gives a what and a how. One, initiating: establishing common ground and setting goals and policies, in a live meeting. Two, planning: assigning roles and making a schedule, live. Three, developing content: drafting given the policies and work distribution, synchronous or asynchronous. Four, checking and norming: discussing and taking turns adding to the work, synchronous or asynchronous. Five, finalizing and delivering: reading through and checking as a team before delivery, synchronous or asynchronous. Six, reflecting: writing an individual reflection, worked alone.](assets/figure-p014-1.jpg)\
 Figure 6.1: The Collaborative Process Visualized
 
 Sometimes, a person does not contribute because their schedule or other unexpected factors get in the way. Sometimes they may also have difficulties finding the information for completing a task, or they do not fully understand what is expected from them. Having a conversation as a group will give you a chance to identify the source of the issue, provide support, and make necessary adjustments.

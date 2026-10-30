@@ -14,6 +14,11 @@ volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 chapter-number: 20
+images-of-text:
+- figure-p003-1.jpg
+- figure-p005-1.png
+- figure-p006-1.png
+- figure-p010-1.png
 ---
 
 # A Student’s Guide to Collaborative
@@ -34,7 +39,7 @@ Unfortunately, Madison and Dakota are commuters from different towns, and their 
 
 When Dakota gets home late that evening, he logs into his Twitter account and begins to micro-blog on the topic. During the drive home he was listening to National Public Radio (NPR) and heard an interesting discussion about health care reform. His first post, or Tweet on the topic goes something like this: “All this talk about health care on the news---great topic for paper.” Since Dakota is using Twitter, his messages must be short---only 140 characters! However, he can Tweet as often as he likes, so just before bed he adds another post: “I work full time and go to school. I am uninsured.”
 
-![Twitter is a great way to send brief messages to friends and colleagues. Many students use it to share information with their friends and classmates about their hobbies, social activities, classes, and assignments](assets/figure-p003-1.jpg)\
+![A Twitter home page. The compose box asks what's happening and holds the question how can Twitter help me write my paper for composition. Below it a timeline of short posts from several accounts; a sidebar shows the account mattbarton with its follower counts, direct messages, saved searches and trending topics.](assets/figure-p003-1.jpg)\
 Fig. 1. Twitter is a great way to send brief messages to friends and colleagues. Many students use it to share information with their friends and classmates about their hobbies, social activities, classes, and assignments.
 
 The next morning, Madison checks her email and finds an invitation from Dakota to join Twitter. Madison completes the registration process and selects the option to “follow” Dakota, so she will be notified when Dakota posts any more Tweets. She also notices the RSS logo on Dakota’s Twitter homepage, so she adds the feed to her Google Reader account. Now Dakota’s Tweets will show up alongside her daily dose of news and blog posts. Since she has to go to work soon, Madison downloads the Twitter application for her mobile phone so that she can respond to Dakota during her breaks. For now, though, she replies to Dakota’s Tweet with, “That sounds great! My mom has breast cancer and the family is really struggling.”
@@ -49,7 +54,7 @@ Now Dakota needs a way to share articles with Madison. He could email the links 
 
 Even though they’ve only talked face-to-face a few times, Dakota and Madison’s research into public options is going well. The sheer
 
-![Google Scholar is a lot like Google, but it searches academic, government, and legal documents. Some of the links it finds are freely or cheaply available online, but others are available only to paying members or subscribers. Before paying for access to an article, you should check to see if it is available at your school’s library](assets/figure-p005-1.png)\
+![A Google Scholar results page for the search insurance public option. Five results are listed, each with its authors, journal, year, a short extract, and links for the number of times it has been cited, related articles and other versions; two show a link to a PDF at the right.](assets/figure-p005-1.png)\
 Fig. 2. Google Scholar is a lot like Google, but it searches academic, government, and legal documents. Some of the links it finds are freely or cheaply available online, but others are available only to paying members or subscribers. Before paying for access to an article, you should check to see if it is available at your school’s library.
 
 number of Tweets Dakota sends out is, unfortunately, starting to overwhelm Madison. Madison sends Dakota a Tweet that says, “Overwhelmed need to meet driving past your town thurs. U use doodle?”
@@ -60,7 +65,7 @@ Outside of the polling option within Doodle, Dakota discovers where Madison was 
 
 Dakota and Madison now have a good idea of what they want to write about, but how will they draft their document? Dakota decides to open a Google Document. Google Docs is a tool that makes it easy to draft and collaborate online. Dakota shares the new file with Madison, and now they can draft and edit the document together. However, Dakota tries drafting an introduction and thesis statement, but ends up with a case of writer’s block. He sends out another Tweet asking for help organizing his thoughts.
 
-![Google Docs is a free, easy-to-use word processor that stores your documents online. You can then share them with friends and classmates. It’s a much better solution for collaborative writing than emailing documents back and forth between group members](assets/figure-p006-1.png)\
+![A word processor window with a formatting toolbar, holding a document headed Writing Spaces Style Usage. It gives three house rules: first year composition and first year writing rather than hyphenated or freshman forms, username rather than user name, and website rather than web-site.](assets/figure-p006-1.png)\
 Fig. 3. Google Docs is a free, easy-to-use word processor that stores your documents online. You can then share them with friends and classmates. It’s a much better solution for collaborative writing than emailing documents back and forth between group members.
 
 Darrin sees the Tweet and suggests that Dakota use Mindomo, a free online mind-mapping tool. Mind maps will allow Dakota to see how his ideas are connected, and possibly find new ways they are related. Furthermore, he will be able to share his map with whomever he wants, and get feedback too. For the next few hours, Dakota works on a map, making topics and subtopics. He’s having lots of fun, and eventually gets an idea---the debate over the public option seems to have a lot to do with business and politics. Some of the articles Dakota read argued that such a move would amount to socialism, with the government interfering in free trade. However, his research showed that similar arguments were made about Medicare and Social Security, which turned out to be very popular programs.
@@ -93,7 +98,7 @@ Madison took advantage of RSS feeds to kept tabs on Twitter and several other ap
 
 Dakota also used Facebook (http://facebook.com), a popular social networking site originally designed for college students. While many students use Facebook to keep in touch with friends or to find parties, you can also use it to find study partners or to get help with your homework. You can do this by posting status updates or messages to
 
-![Google Reader is an RSS Feed Reader with a large variety of features. You can use it to quickly find and share blog posts and news items with your friends and classmates, as well as take notes and organize important information](assets/figure-p010-1.png)\
+![A Google Reader window. The sidebar lists subscriptions and the people the reader follows; the main pane shows one article from Engadget about a Qualcomm processor, with its text, a photograph, and controls to star, like, share, email and tag it.](assets/figure-p010-1.png)\
 Fig. 4. Google Reader is an RSS Feed Reader with a large variety of features. You can use it to quickly find and share blog posts and news items with your friends and classmates, as well as take notes and organize important information.
 
 your wall (or your friends’ walls). Facebook Chat is a synchronous tool, which means that you have to be online at the same time as your friend to use it. There are many other tools that allow for synchronous chatting, such as AOL Instant Messenger (AIM) or Google Talk. If you have a webcam and a microphone you could use a program such as Skype (http://skype.com) to connect through a VOIP-based (Voice Over Internet Protocol) system. VOIP-based programs like Skype will allow you see each other, talk to each other, and also do basic instant messaging, if you have a high-speed Internet connection.

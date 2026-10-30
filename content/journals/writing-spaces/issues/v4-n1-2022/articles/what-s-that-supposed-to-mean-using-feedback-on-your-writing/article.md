@@ -14,6 +14,17 @@ volume-title: Writing Spaces 4
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 teacher-resources: separate
+images-of-text:
+- figure-p005-1.png
+- figure-p006-1.png
+- figure-p007-1.png
+- figure-p013-1.png
+- figure-p014-1.jpg
+- figure-p014-2.png
+- figure-p015-1.png
+- figure-p016-1.png
+- figure-p017-1.png
+- figure-p017-2.png
 ---
 
 As an early college writer, you have already received lots of feedback on your writing---from high school teachers, college professors, peers, writing tutors. And you already know that you’re supposed to read and use that feedback. But it’s likely that at least some of the time, you looked through your feedback and felt confused. And it’s also likely that at some point the feedback you received hurt your feelings. Maybe the feedback made you feel like a failure. Maybe that feedback confirmed
@@ -76,7 +87,7 @@ Judging comments are an assessment of how well you are doing a particular thing.
 
 You can see another example of what a positive judgment looks like from an actual student paper in figure 1.
 
-![Image of Nicole’s paper with an example of a judging comment from the instructor in the right-hand margin. Image captured by Jillian Grauman](assets/figure-p005-1.png)\
+![A page of a student essay about editors with two instructor comments in the right margin, both from Jillian Grauman. The first says: an explicit citation for a discussion board post, that's great. The second says: I also love this metaphor, very creative and fitting.](assets/figure-p005-1.png)\
 Figure 1. Image of Nicole’s paper with an example of a judging comment from the instructor in the right-hand margin. Image captured by Jillian Grauman.
 
 You may think of praise as a waste of time (“Just tell me what to do!”), but it is helpful for learning where your strengths lie---and intentionally replicating that success elsewhere. If you’ve got a negative judgment, or critique, you know there’s at least one thing you may want to revise. If, like in the bulleted example above, the comment notes a confusing transition, that may encourage you to reconsider how your different ideas fit together.
@@ -89,7 +100,7 @@ Coaching comments offer suggestions. Research (Haswell; Lizzio and Wilson) tells
 
 You can see another example of what a coaching comment looks like from an actual student paper in figure 2.
 
-![Nicole’s paper with an example of a coaching comment from the instructor in the margin. Image captured by Jillian Grauman](assets/figure-p006-1.png)\
+![A page of the same essay, on the stages of editing, with a long instructor comment in the margin: that this detail about the different stages of editing seems a bit beside the point, and a briefer explanation would likely work just as well.](assets/figure-p006-1.png)\
 Figure 2. Nicole’s paper with an example of a coaching comment from the instructor in the margin. Image captured by Jillian Grauman.
 
 Sometimes coaching comments are written indirectly, as questions. These questions may feel frustrating since they don’t usually come with instructions, but an important thing that questions do is keep *you* in charge of your writing. Lil Brannon and C. H. Knoblauch explain that students have a right to compose their work as they wish, so your reviewer is not presuming to know what to do best, but instead leaving that decision to you, the author (158).
@@ -102,7 +113,7 @@ Reacting comments explain your reviewer’s understanding of the paper or reacti
 
 Find another example of a reacting comment from an actual student paper in figure 3.
 
-![Yonik’s paper with an example of a reacting comment from the instructor. Image captured by Jillian Grauman](assets/figure-p007-1.png)\
+![A page of a different student's essay, on spelling and an editor's connection with the reader, with two instructor comments. The first says the writer has used two sources in the paragraph and that it adds depth to the idea. The second asks whether the point being made, that the editor's job is to preserve the author's credibility, is present in the current introduction or thesis.](assets/figure-p007-1.png)\
 Figure 3. Yonik’s paper with an example of a reacting comment from the instructor. Image captured by Jillian Grauman.
 
 When you encounter comments that explain the reader’s understanding of the paper, you may be inclined to shrug your shoulders and say, “Ok, whatever---moving on!” But don’t do it! These are some of the most helpful bits of feedback you can receive on your writing because they give you a window into your readers’ thoughts as they were reading. If, as in the example above, the reader noted something they thought was unexpected, you can consider the impact you wanted your writing to have and whether it aligns with this reaction. If it’s not, you will need to revise accordingly.
@@ -191,28 +202,28 @@ In Nicole’s overview of her own work for peer review, she said that she wanted
 
 Here’s Nicole’s original introduction paragraph:
 
-![Screen capture of the introduction paragraph from Nicole’s initial draft. Image captured by Jillian Grauman](assets/figure-p013-1.png)\
+![A student's first draft introduction, headed Important Roles of an Editor: one paragraph asking what best-selling authors have in common, answering that writing is a process and editing crucial to it, and listing what a good editor does.](assets/figure-p013-1.png)\
 Figure 4. Screen capture of the introduction paragraph from Nicole’s initial draft. Image captured by Jillian Grauman.
 
 As you can see, it’s relatively short, and a bit off-focus since much of this paragraph is focused on what authors do, rather than what editors should do. We can also see that she has a thesis statement at the end of this paragraph.
 
 Yonik, one of Nicole’s peer review partners, took Nicole’s concern about her introduction seriously enough to offer some notes on it. Here’s what Yonik had to say:
 
-![Screen capture of Nicole’s introduction paragraph with Yonik’s comments and suggestions in the right-hand margin. Image captured by Jillian Grauman](assets/figure-p014-1.jpg)\
+![The same introduction with a peer's tracked suggestions in it, marked by underlining and change bars in the margin: a new sentence calling writing multi-layered with sectors such as thought-building and communication, and a clause tying editing to the class materials.](assets/figure-p014-1.jpg)\
 Figure 5. Screen capture of Nicole’s introduction paragraph with Yonik’s comments and suggestions in the right-hand margin. Image captured by Jillian Grauman.
 
 His first in-text comment is a judgement---a positive one. He praises Nicole’s choice of starting off the paper with a quotation and offers a bit of reassurance by stating that she might be overly negative about her introduction. He later reinforces that positive judgment by noting that the thesis is clear. In the middle of the paragraph, Yonik suggests an idea for expanding on the idea of what editing does. His suggested language includes a reference to materials from the class---a solid suggestion since this assignment required students to include references to class readings and discussions.
 
 The following shows Nicole’s revisions to her original introduction paragraph---what she ultimately submitted as the final draft. The underlined text indicates additions or replacements she made to her peer review draft:
 
-![Screen capture of Nicole’s revised introduction paragraph with changes indicated by underlined text. Image captured by Jillian Grauman](assets/figure-p014-2.png)\
+![The revised introduction, now headed Communication is Key, with the changes underlined throughout: writing described as multi-layered with numerous sectors, a quotation from Amy Einsohn's The Copyeditor's Handbook on the four C's, and a closing line about helping authors succeed with no recognition.](assets/figure-p014-2.png)\
 Figure 6. Screen capture of Nicole’s revised introduction paragraph with changes indicated by underlined text. Image captured by Jillian Grauman.
 
 You can see that Nicole followed her own instincts by making a number of changes to the introduction, despite Yonik’s assurances that it was all right. Nicole did take some of his other advice though. She used some of Yonik’s suggested language and took his suggestion to reference work we read in the class.
 
 And finally, below shows my response to Nicole’s introduction in her final draft:
 
-![Screen capture of Nicole’s introduction paragraph with a comment from the instructor in the right-hand margin. Image captured by Jillian Grauman](assets/figure-p015-1.png)\
+![The final version of that introduction, clean, with one instructor comment in the margin: thesis statement here at the end of the paragraph, the preceding paragraph leads up to it pretty well.](assets/figure-p015-1.png)\
 Figure 7. Screen capture of Nicole’s introduction paragraph with a comment from the instructor in the right-hand margin. Image captured by Jillian Grauman.
 
 I wrote a reacting comment, a comment that shows how I was understanding her writing, by identifying where the thesis statement is. My intention is to help Nicole check herself against my reading; she can see whether or not I identified her thesis correctly and act accordingly. The second sentence is a positive judgement, recognizing that the previous paragraph does a good job of preparing the reader for that thesis.
@@ -223,7 +234,7 @@ Nicole’s work here shows a positive revision trajectory. She started with a dr
 
 During her peer review for the same paper, Lauren assessed her work as “half-done and super choppy,” (a perfectly fine way to go into peer review, by the way!) so she needed to work on idea development and organization. Here’s the first part of her peer review draft.
 
-![Screen capture of three paragraphs from Lauren’s peer review draft. Image captured by Jillian Grauman](assets/figure-p016-1.png)\
+![Three paragraphs from another student's peer review draft, comparing copy editors to side kicks, ring leaders and bar tenders, citing Jenell Talley on copy editors as proofreaders, fact checkers and project managers, and on perfectionism being a rare instance where it is an asset.](assets/figure-p016-1.png)\
 Figure 8. Screen capture of three paragraphs from Lauren’s peer review draft. Image captured by Jillian Grauman.
 
 You can see some of that choppiness between the second and third paragraphs; she moves straight from discussing one source into the next without much of a connection.
@@ -234,12 +245,12 @@ During peer review, Nicole took note of Lauren’s concern about the choppiness 
 
 Lauren’s final version of the document looks quite different from the original. She added more ideas throughout, and she also worked to smooth out the transitions between the paragraphs, as Nicole suggested.
 
-![Screen capture showing revisions Lauren made to her paper, indicated by underlined text. Image captured by Jillian Grauman](assets/figure-p017-1.png)\
+![The same passage after revision, the additions underlined: a new opening on maintaining good relationships with writers and needing a deep understanding of English, and a new paragraph on an article advising from eight top academic editors.](assets/figure-p017-1.png)\
 Figure 9. Screen capture showing revisions Lauren made to her paper, indicated by underlined text. Image captured by Jillian Grauman.
 
 This was a big improvement, but I did notice some of that original choppiness still hanging on in the final version, which I commented on below.
 
-![Screen capture of Lauren’s final draft with a comment from the instructor in the right-hand margin. Image captured by Jillian Grauman](assets/figure-p017-2.png)\
+![The final draft of that passage with one instructor comment in the margin: how do the key ideas in this paragraph fit with the ideas in the other paragraph, each source kind of stands alone.](assets/figure-p017-2.png)\
 Figure 10. Screen capture of Lauren’s final draft with a comment from the instructor in the right-hand margin. Image captured by Jillian Grauman.
 
 Similar to Nicole, Lauren’s revisions also show positive change. She identified an issue in her own writing, an issue that her reviewer agreed with, and she made good revisions. While she could still do more to connect her ideas together, the final version showed improvement.

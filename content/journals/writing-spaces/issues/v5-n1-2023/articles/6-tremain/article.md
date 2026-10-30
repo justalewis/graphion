@@ -42,7 +42,7 @@ The term *meme* is derived from the Greek word *memeia* - that which is imitated
 
 Consider the (now pretty ancient) LOLcat meme (fig. 1).
 
-![An image of a small, gray and white kitten standing on its hind legs and looking up at the photographer, with the words “CAN I HAZ” placed at the top of the photo, and “CHEEZBURGER PLZ” at the bottom of the photo](assets/figure-p004-1.jpg)\
+![A meme: a small grey and white kitten stands on its hind legs looking up at the camera, with CAN I HAZ across the top and CHEEZBURGER PLZ across the bottom in white block capitals.](assets/figure-p004-1.jpg)\
 Figure 1. An image of a small, gray and white kitten standing on its hind legs and looking up at the photographer, with the words “CAN I HAZ” placed at the top of the photo, and “CHEEZBURGER PLZ” at the bottom of the photo.
 
 So, why the cat? Why does the cat ask to *haz* as opposed to *have* a *cheezburger*? What does this meme *mean*? Though we know that cats don’t really eat cheeseburgers (or *cheez*burgers), there are literally thousands of cat memes with “haz” in place of “have” in them, including memes of cats asking, “I can haz cat memes?” This genre is culturally known as the LOLcats meme (https://en.wikipedia.org/wiki/Lolcat), and this particular image was made with a meme generator for a burger restaurant (https:// tinyurl.com/274akjmh). LOLcats memes are cousins of (or intertextual with) other genres, such as viral cat videos and cute kitten images and gifs---and they are one of the earliest examples of the internet meme.
@@ -51,7 +51,7 @@ A function of the LOLcats is that they present us with an archive of early inter
 
 Other discourse communities have taken up the genre of the LOLcat meme to speak internally to their members. In fact, while the first LOLcats memes appeared long before there were meme generator sites, now we can play Minecraft in LOLcat language (https://www.youtube.com/ watch?v=Nbgjaoww4Rs). We can also see how specific discourse communities with specialized languages (the lexis) meshed their discourses with the language of the LOLcats, like this example (fig. 2):
 
-![A brown cat who has apparently crawled inside of a computer tower pokes its head out, with the words “REDUNDANT VARIABLE CAT IZ IN UR DATASET” placed at the top of the photo, and “BOOSTIN UR R^2” at the bottom of the photo (https://tinyurl.com/mr3fxudy)](assets/figure-p006-1.png)\
+![A meme: a brown cat pokes its head out of an open computer tower, with REDUNDANT VARIABLE CAT IZ IN UR DATASET above and BOOSTIN UR R^2 below.](assets/figure-p006-1.png)\
 Figure 2. A brown cat who has apparently crawled inside of a computer tower pokes its head out, with the words “REDUNDANT VARIABLE CAT IZ IN UR DATASET” placed at the top of the photo, and “BOOSTIN UR R^2” at the bottom of the photo (https://tinyurl.com/mr3fxudy).
 
 Whether you understand the specialized language in this LOLcat meme or not (which uses the lexis of statistics), you can see the LOLcat language conventions of *iz* and *ur*. This meme is also highly representative of the statistics discourse community. It uses the disciplinary terms *redundant variable, dataset,* and *r^2*, and the joke in it makes little sense to those of us outside of its membership.

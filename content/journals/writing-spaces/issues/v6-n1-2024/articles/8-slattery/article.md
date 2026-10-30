@@ -14,6 +14,9 @@ volume-title: Technical Writing Spaces 6
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 teacher-resources: separate
+images-of-text:
+- figure-p007-1.jpg
+- figure-p008-1.jpg
 ---
 
 As a technical or scientific writer, you will need to be able to prepare different kinds of documents to meet the needs of audiences who have varying needs and goals. Presentations are often extensions of other technical writing ‘products,’ such as technical reports, product specifications, and user manuals, so you will need to think carefully about the purpose of your presentation and adapt the content, and your approach, accordingly. For example, a technical report about a new vaccine that is written for people in medical fields would need to provide detailed information about the vaccine (the ingredients, possible side effects, and the results of the clinical trials), whereas an oral presentation about that technical report might only summarize the *key* findings from the clinical trials, if the goal was to encourage the general public to get vaccinated. In other words, you need to
@@ -90,10 +93,10 @@ As discussed earlier, the tone you adopt and the language you use should be info
 
 In Figure 8.2, note how a table has been used to present essentially the same information as Figure 8.1, but in a more user-friendly way. It is better to use a table to present multiple numerical values as you can present the information in a relatively small space and the audience will find it easier to compare the values (Rubens 336-337). A table will also help you during your presentation as you won’t have to remember the data and can elaborate on what the data means, in your own words.
 
-![Example of a Poorly Designed Slide](assets/figure-p007-1.jpg)\
+![A slide headed Rationale for the Typography Choices, filled with a single dense paragraph: that blue, hex 00A6FF, was chosen for main headings and sub-headings because it matches the original brochure's logo and contrasts well with white, that body text and figure captions were black, hex 000000, and that the sizes used were 30 for main headings, 24 for sub-headings, 20 for body text and 16 for figure and table captions.](assets/figure-p007-1.jpg)\
 Figure 8.1: Example of a Poorly Designed Slide
 
-![Example of an Improved Slide Design](assets/figure-p008-1.jpg)\
+![The same slide redesigned: the heading kept, the paragraph replaced by a four-row table with columns for type size and type colour. Main headings 30, hex 00A6FF. Sub-headings 24, hex 00A6FF. Main body text 20, hex 000000. Figure and table captions 16, hex 000000. A bracket at the right notes that to make this more appealing the first two rows would be shown in blue type.](assets/figure-p008-1.jpg)\
 Figure 8.2: Example of an Improved Slide Design
 
 You can often use figures, diagrams, and charts to explain complex concepts and to appeal to attendees who prefer visuals to text. If you are presenting the results of a survey, for example, you might use a pie chart or bar graph to convey the data, rather than present the figures on their own. If you are presenting a workflow or process, a flowchart can work well.

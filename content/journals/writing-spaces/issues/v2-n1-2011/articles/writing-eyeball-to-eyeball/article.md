@@ -135,7 +135,7 @@ How do you begin? Let’s say your group has been asked to select a campus-wide 
 
 Much more than a pro-con list, the affinity diagram puts some multi-faceted wisdom into the decision-making by showing you the magnitude of your campus concerns (who is affected by the problem), the availability of sources to support your research, and the feasibility
 
-![Affinity diagram for deciding on a topic](assets/figure-p012-1.png)\
+![An affinity diagram headed Campus Concerns. Four columns, one per concern, each a rounded box above the same four diamonds: who is affected, research sources, possible solutions, topic challenges.](assets/figure-p012-1.png)\
 Fig. 1. Affinity diagram for deciding on a topic.
 
 of what needs to be done to remedy the problem. Filling in these categories above may help you to see more clearly what challenges may lie ahead for you if you decide to take on any one of these campus concerns. Thus, once you’ve enriched your diagram, you can begin to see together which topics have the most promise in terms of enjoyment, challenge, and sustainability. Moreover, as Green and Duerden found to be true for their students, don’t hesitate to give the diagram some time to “incubate” (4). That is, if class time is only an hour or so, get the diagram started, but check back in with group members later in the day, or even the next day. Talk to others, do some initial online research, let the ideas marinate so that you can best represent them in the diagram before you make a decision together about which topic you want to tackle.

@@ -218,3 +218,28 @@ def test_ordinary_prose_passes_the_unreadable_check():
     body = "A check \u2713, an arrow \u2192, a circle \u25cb, a bullet \u2022."
     result = lint.check_unreadable_characters({}, {}, body)
     assert result.level == "pass"
+
+
+def test_images_of_text_are_reported_even_once_described():
+    """WCAG 1.4.5 is a different failure from a missing description, and
+    writing alt text leaves it exactly where it was."""
+    fm = {"images-of-text": ["figure-p008-1.png", "figure-p011-1.png"]}
+    body = ("![An unformatted resume](assets/figure-p008-1.png)\n\n"
+            "![A two-column table](assets/figure-p011-1.png)")
+    result = lint.check_images_of_text({}, fm, body)
+    assert result.level == "warn"
+    assert "2 of 2" in result.summary
+    assert "figure-p008-1.png" in result.details[1]
+
+
+def test_an_article_with_no_images_of_text_passes():
+    body = "![A cheeseburger in close-up](assets/figure-p003-1.jpg)"
+    assert lint.check_images_of_text({}, {}, body).level == "pass"
+
+
+def test_a_single_image_of_text_may_be_given_as_a_string():
+    result = lint.check_images_of_text(
+        {}, {"images-of-text": "figure-p008-1.png"},
+        "![A resume](assets/figure-p008-1.png)")
+    assert result.level == "warn"
+    assert "1 of 1" in result.summary

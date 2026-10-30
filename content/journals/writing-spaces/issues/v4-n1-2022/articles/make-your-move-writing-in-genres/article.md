@@ -16,6 +16,8 @@ volume-title: Writing Spaces 4
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 teacher-resources: separate
+images-of-text:
+- figure-p002-1.png
 ---
 
 If you are like most students, you’ve probably had to miss a class at some point. Maybe you were sick, stayed up too late the night before, or just weren’t prepared. When you’ve found yourself in this situation, have you emailed your professor about your absence? If so, how much information did you share? Did you include an apology, or maybe an explanation of how you plan to make up any missed work?
@@ -28,7 +30,7 @@ You encounter many genres every day. In your personal life, these might include 
 
 Texts within a genre category aren’t identical, but they often resemble each other in many ways. For example, they might use similar kinds of vocabulary and grammar, design features, content, and patterns for organizing their content. Because of these resemblances, we can often recognize texts as belonging to a particular genre---as in figure 1.
 
-![Four-star restaurant review of Boca Tacos & Tequila, posted April 19, 2020. Text reads: “The food was amazing! Had ‘The Burro’ hands down one of the best carne asada burros I’ve had. Extremely huge could easily feed two people. Their salsa was amazing as well. Jalepeño crème was delicious! It was a little on the pricey side $80 for 5 entrees but certainly very top notch food.” *Yelp*; Yelp.com, 19 Apr. 2020, https://www.yelp.com/biz/boca-tacos-y-tequila-tucson](assets/figure-p002-1.png)\
+![A four-star review dated 19 April 2020. The food was amazing, The Burro one of the best carne asada burros the writer has had, huge enough to feed two people, the salsa amazing and the jalapeno crema delicious; a little on the pricey side at eighty dollars for five entrees but certainly very top notch food.](assets/figure-p002-1.png)\
 Figure 1: Four-star restaurant review of Boca Tacos & Tequila, posted April 19, 2020. Text reads: “The food was amazing! Had ‘The Burro’ hands down one of the best carne asada burros I’ve had. Extremely huge could easily feed two people. Their salsa was amazing as well. Jalepeño crème was delicious! It was a little on the pricey side $80 for 5 entrees but certainly very top notch food.” *Yelp*; Yelp.com, 19 Apr. 2020, https://www.yelp.com/biz/boca-tacos-y-tequila-tucson
 
 If you recognized this text as a consumer restaurant review, you likely have read similar reviews before, and you’ve started to get a sense of what they “look like.” This is how genres work: When we repeatedly encounter texts within a genre, we get a sense of the language and content they tend to use, as well as how they arrange that language and content. Successful writers have a good idea of how to write effectively in particular genres---this means satisfying readers’ expectations for the genre but maybe also making a text fresh and interesting. Can you think of a time you had to write in a new or unfamiliar genre for the first time? You might have gotten stuck with where to start or what to include. Writing in a new genre can be hard if you don’t yet know the expectations for content, language, and organization. In this chapter, we’ll share a specific strategy that can help you through these kinds of challenges. More specifically, we will look at how to identify and analyze the *rhetorical moves* of a genre.

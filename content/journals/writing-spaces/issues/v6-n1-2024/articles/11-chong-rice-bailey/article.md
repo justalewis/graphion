@@ -15,6 +15,15 @@ volume-title: Technical Writing Spaces 6
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 teacher-resources: separate
+images-of-text:
+- figure-p006-1.jpg
+- figure-p007-1.jpg
+- figure-p011-1.jpg
+- figure-p013-1.jpg
+- figure-p014-1.jpg
+- figure-p020-1.jpg
+- figure-p021-1.jpg
+- figure-p022-1.jpg
 ---
 
 Usability testing refers to the task of observing users who are performing planned, purposeful tasks with a product for the purpose of collecting data about how the user interacts with and responds to the product. So, asking a person to use a new app to send a text and then observing how easily and effectively they can perform that task is usability testing. For example, if there is no “Reply” button on the screen, and the user has to scroll through a menu of options to reply, your observing that scrolling behavior (and the possible ensuing frustration) is an example of usability testing.
@@ -79,7 +88,7 @@ The first task you perform is to create a user profile. For the “Faster Food�
 
 > • Eat fast food • Have experience using a mobile app • Be an adult age 18 or over
 
-![Example of Mobile App](assets/figure-p006-1.jpg)\
+![A phone showing a food ordering app on a confirmation screen headed Your order, with a Cancel button. A photograph of a double burger carries the name Bailey's Burgers. Below: 1 Double Burger 5.99, order subtotal 5.99, estimated sales tax 0.36, total 6.35, then a button reading Place my order, 6.35, and a line saying that by placing the order you agree to Faster Food's terms of use and privacy agreement, with oder misspelled.](assets/figure-p006-1.jpg)\
 Figure 11.1: Example of Mobile App
 
 In your user profile, you also identify two categories of users:
@@ -94,7 +103,7 @@ Sean and Roxanne are composites that you created based on data from web analytic
 
 The personas of Sean and Roxanne are important throughout the design and development of your “Faster Food” App to create reliable and realistic representations of your users as you decide what will meet their needs and expectations. For example, in the “Faster Food” app, you might decide to highlight inexpensive restaurants that might be popular with Sean, who has a limited income and lives in the dorms. Alternatively, you might choose to highlight nearby restaurants for Roxanne, who prefers to have her lunch delivered quickly from a restaurant that is near her workplace.
 
-![Example of Personas](assets/figure-p007-1.jpg)\
+![Two user personas side by side, each with a photograph. Sean, 19: single, a sophomore, yearly income 4,000 dollars, a novice who has used social media apps but never ordered food with one, lives in the dorm and never cooks, sleeps late finishing homework, wants the fastest service and affordable consistent food. Roxanne, 32: married, an administrative assistant, yearly income 25,000 dollars, highly experienced and using delivery apps two or three times a week, often too busy for a full lunch hour and ordering to her office, wants restaurants closest to work and highly rated quality food.](assets/figure-p007-1.jpg)\
 Figure 11.2: Example of Personas
 
 # Understanding Testing and Test Plans
@@ -153,7 +162,7 @@ The first part of the test plan (Figure 11.3) is to articulate the product goal 
 
 4. Navigate to the home address screen.
 
-![Example of Simple Usability Test Plan](assets/figure-p011-1.jpg)\
+![A simple usability test plan for the Faster Food mobile app. Product goal: help users order food from local fast food restaurants. Test objectives: verify the navigation is clear and determine how enjoyable the app is. User profile: eats fast food, has used a mobile app, adult 18 or over. Methodology: a think-aloud protocol with five participants, two novice and three advanced, described aloud and recorded by a note-taker, fifteen minutes each. Four tasks: navigate from the homepage to restaurant selection, return to the home screen from a restaurant page, navigate to the pay screen, navigate to the home address screen.](assets/figure-p011-1.jpg)\
 Figure 11.3: Example of Simple Usability Test Plan
 
 # Additional Sections Included in an Advanced Test Plan
@@ -190,10 +199,10 @@ A pilot test will allow you to see if you are testing for the correct questions.
 
 Often, students wonder how many participants they need for a usability study. Nielsen makes a sound argument for aiming for three to five users (Nielsen). They explain that you will learn the most from the first user. The second and third user will do many of the same things that you already observed with the first user. The third user will generate a small amount of new data, but not as much as the first and second user. As you add users, you will continue to observe the same behaviors and will learn less with each additional user. As Nielsen explains, “After the fifth user, you are wasting your time by observing the same findings repeatedly but not learning much new.”
 
-![Advanced Test Plan Part 1](assets/figure-p013-1.jpg)\
+![The first part of the advanced version of the same test plan. The product goal is unchanged. Five test goals: that buttons and icons are consistent and intuitively positioned, that text is readable and understandable, that costs, fees and delivery times are clearly visible, that navigation is clear, and how enjoyable the app is. The same three-point user profile. Methodology: five participants, two novice and three advanced, each session 30 minutes, made up of a five-minute introduction, twenty minutes of task scenarios and five minutes of debriefing.](assets/figure-p013-1.jpg)\
 Figure 11.4: Advanced Test Plan Part 1
 
-![Advanced Test Plan Part 2](assets/figure-p014-1.jpg)\
+![The second part of the advanced test plan. Test procedure: an introduction, the scenarios, then debriefing. Scenario 1 asks the participant to order a Big Mac value meal with a large Diet Coke from the nearest highest-rated McDonald's, then change the drink to a Sprite, add a special delivery instruction for the east entrance, and check out. Scenario 2 asks for a Greek salad and a large tea from Panera Bread, then a chocolate chip cookie from the dessert menu, and checkout. Testing environment: a campus classroom, the researcher's phone, sessions recorded by laptop webcam, moderator and notetaker nearby. Evaluation: qualitative data from the think-aloud protocol, and quantitative data counting successful completion, critical and non-critical errors, time taken, and ease of use on a five-point Likert scale.](assets/figure-p014-1.jpg)\
 Figure 11.5: Advanced Test Plan Part 2
 
 One of the greatest challenges to conducting a usability test is recruiting participants. Research (Chong, “Implementing Usability Testing”) shows that nearly one quarter of students reported that finding users to participate in a usability test was a challenge. To make this process more manageable, it is important that you define specific criteria for potential participants and think broadly about the recruitment process.
@@ -274,7 +283,7 @@ Similar to analyzing the primary research data in other projects, you will need 
 
 To analyze the results of the “Faster Food” app simple usability test, you look at the data you collected from the participants’ think-aloud protocol statements. This data is found in the notes or transcript of the participants’ statements. Figure 11.6 shows these comments from three of the five participants who followed the think-aloud protocol while they completed our usability test.
 
-![Example of Qualitative Findings](assets/figure-p020-1.jpg)\
+![A table of qualitative findings with columns for participant, screen and comment. Roxanne, on the home screen, likes the colour scheme for the icons; on restaurant, asks how to find the ratings then finds them; on menu, asks how to change the drink order to a Sprite; on order, finds special instructions easy and asks whether they take Apple Pay, concluding not. Sean, on restaurant, likes that the list is sorted by distance; on order, notes a lot of scrolling to find drinks and likes being able to save card details. Trisha, on home, says nice images; on restaurant, does not see McDonald's then finds it on the next page; on menu, is surprised the full menu is available for delivery.](assets/figure-p020-1.jpg)\
 Figure 11.6: Example of Qualitative Findings
 
 By creating a column that identifies the screen the participant was on when they made the comment, you could look for patterns in the data. For instance, Figure 11.6 shows that while on the restaurant selection screen, two of our participants initially questioned how to find a specific restaurant. This also shows that two participants gave favorable feedback on the home screen.
@@ -285,7 +294,7 @@ For a more advanced usability test, which might include quantitative data, you w
 
 Figure 11.7 shows some of the quantitative data from the usability tests. Notice that all three participants spent the least amount of time selecting the restaurant and the most amount of time changing the Diet Coke to a Sprite. Also, notice that the task of selecting the Big Mac Meal shows the most occurrences of using the “back” button, which may suggest that this screen is not as intuitive or user-centered as you would have expected.
 
-![Example of Quantitative Data](assets/figure-p021-1.jpg)\
+![A table of quantitative data, three tasks by three participants, with columns for number of times using the back button, number of times returning to the home page, length of time to complete, and ease of use from 1 to 5. Task 1, selecting the highest rated McDonald's: Roxanne 0, 0, 20 seconds, 4; Sean 1, 0, 22 seconds, 5; Trisha 1, 0, 31 seconds, 4. Task 2, selecting the Big Mac value meal: Roxanne 1, 0, 40 seconds, 3; Sean 1, 0, 30 seconds, 4; Trisha 2, 1, 110 seconds, 2. Task 3, changing the Diet Coke to a Sprite: Roxanne 0, 0, 42 seconds, 4; Sean 1, 1, 128 seconds, 1; Trisha 0, 0, 117 seconds, 3.](assets/figure-p021-1.jpg)\
 Figure 11.7: Example of Quantitative Data
 
 # Developing Recommendations
@@ -298,7 +307,7 @@ Your recommendations may be informally or formally presented depending on your a
 
 Figure 11.8 shows the executive summary of the “Faster Food” app advanced usability testing. This summary includes an introduction to the project, a brief summary of our methods and findings, and the recommendations that these findings suggest.
 
-![Example of Executive Summary](assets/figure-p022-1.jpg)\
+![An executive summary of the usability testing. Introduction: the app helps adults aged 18 and over order delivery from local fast food restaurants; five users aged 19 to 50 were tested in a Rochester, Michigan lab. Methods: qualitative data from the think-aloud protocol during scenario 1, quantitative data counting back-button use and returns to the home page. Positive findings: four of five found the app attractive, all five found checkout easy, three of five found restaurant selection straightforward. Negative findings: four of five found the ordering screen difficult to navigate with higher than expected back-button use, three of five found changing orders cumbersome. Recommendations: keep the colour scheme and icons, add a large button reading change my order, and default to the closest highest-rated restaurant.](assets/figure-p022-1.jpg)\
 Figure 11.8: Example of Executive Summary
 
 # Conclusion

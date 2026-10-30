@@ -15,6 +15,8 @@ volume-title: Writing Spaces 5
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 teacher-resources: separate
+images-of-text:
+- figure-p002-1.png
 ---
 
 You!?,” James P. Purdy introduces us to the idea that the online ency-
@@ -23,7 +25,7 @@ clopedia, often devalued in educational spaces, can serve as a starting place fo
 
 # Introduction
 
-![A screenshot of a tweet dated February 2021 from Jamie Withorne (\@jamiewithorne) reads, “My middle school teacher who yelled that ‘Wikipedia wasn’t a reliable source’ every day is sharing vaccine conspiracy theories on Facebook.”](assets/figure-p002-1.png)\
+![A tweet by Jamie Withorne, 11 February 2021: her middle school teacher who yelled every day that Wikipedia was not a reliable source is now sharing vaccine conspiracy theories on Facebook. 41.7 thousand retweets, 1,317 quote tweets, 424.5 thousand likes.](assets/figure-p002-1.png)\
 Figure 1. A screenshot of a tweet dated February 2021 from Jamie Withorne (\@jamiewithorne) reads, “My middle school teacher who yelled that ‘Wikipedia wasn’t a reliable source’ every day is sharing vaccine conspiracy theories on Facebook.”
 
 Check out the tweet above. After you read the actual text, you might notice that, at the time we took the screenshot, this tweet had been liked over 424,500 times and retweeted 41,700 times. Maybe it’s gotten even more engagement since.
@@ -100,10 +102,10 @@ Like Abby, Cheyenne’s first reaction to being told that she would edit a Wikip
 
 As a first-year college student, Cheyenne often traveled back and forth between campus and her parents’ house to see friends and family on the weekend. Once we realized that she was visiting the town that she was writing about, we suggested to her that she take some photos of the historical features of Meadville and upload them to Wikimedia Commons. Since this is the database used by Wikipedia for images and other media, Cheyenne could also add pictures of the landmarks she was writing about to her article (see Figures 2 and 3).
 
-![This image of the Meadville Market House appears in Wikipedia’s article “Meadville, Pennsylvania” titled “The Meadville Market House.” Via Wikimedia Commons, CC-BY-SA 4.0](assets/figure-p012-1.png)\
+![A Wikipedia image panel: a two-storey red brick market hall with a covered walkway along the front, a van parked outside and a bare tree at the left, captioned The Meadville Market House.](assets/figure-p012-1.png)\
 Figure 2. This image of the Meadville Market House appears in Wikipedia’s article “Meadville, Pennsylvania” titled “The Meadville Market House.” Via Wikimedia Commons, CC-BY-SA 4.0.
 
-![An image of a monument in Meadville, Pennsylvania, with a caption that reads, “A monument in the shape of a scroll dedicated to the founder of Meadville, David Mead.” Via Wikimedia Commons, CC-BY-SA 4.0](assets/figure-p013-1.png)\
+![A Wikipedia image panel: a granite monument carved as an unrolled scroll on a stone plinth cut with the dates 1797 and 1907, standing on grass before a yellow clapboard house. Captioned as a monument in the shape of a scroll dedicated to the founder of Meadville, David Mead.](assets/figure-p013-1.png)\
 Figure 3. An image of a monument in Meadville, Pennsylvania, with a caption that reads, “A monument in the shape of a scroll dedicated to the founder of Meadville, David Mead.” Via Wikimedia Commons, CC-BY-SA 4.0.
 
 What Cheyenne’s account tells us is this. First, personal experience (in Cheyenne’s case, growing up in Meadville, Pennsylvania) can help students create a unique connection to and improve Wikipedia. Second, adding your photos to a Wikipedia article is a wonderful way to improve the encyclopedia. Finally, while Cheyenne was hesitant about the project at first, she ultimately realized its potential, writing in her reflection, “In my opinion, Wikipedia has a bright future coming if professors keep promoting it out to their students.”

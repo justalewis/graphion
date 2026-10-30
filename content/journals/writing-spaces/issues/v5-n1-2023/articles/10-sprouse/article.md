@@ -14,6 +14,12 @@ volume-title: Writing Spaces 5
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 teacher-resources: separate
+images-of-text:
+- figure-p004-1.png
+- figure-p005-1.png
+- figure-p006-1.png
+- figure-p007-1.png
+- figure-p009-1.png
 ---
 
 Easing open the cover of J.D. Salinger’s *Nine Stories* that I annotated two decades ago, I can see in the rounded letters of my adolescent handwriting are notes about Salinger’s life and the underlined heading “3 Themes” followed by the bulleted points “communication, innocence of children, perversion of adults.” Squeezed on the bottom of a page
@@ -60,12 +66,12 @@ You might help your classmates, for example, notice the significance of a term t
 
 My students were reviewing research papers for our class and encountered a number of citation strategies. In their readings, Elizabeth and Tom[^1] used their annotations to raise important questions about the citation strategies they were encountering (Fig. 1):
 
-![Screenshot of student annotations exploring citation strategies. (Permission to use this image was obtained from students.)](assets/figure-p004-1.png)\
+![Two pairs of student annotations in a reading tool. In the first, one student asks whether citations go whenever a name is mentioned or at the end of the sentence, and another asks whether this is the format for this kind of paper. In the second, one notes that another strategy is to use numbers to refer to works cited, and another says they are a little bit confused about how the process works.](assets/figure-p004-1.png)\
 Figure 1. Screenshot of student annotations exploring citation strategies. (Permission to use this image was obtained from students.)
 
 Your classmates might also ask questions to which you can respond. In the annotations below (Fig. 2), Elizabeth is able to answer Cole’s question about an author’s cultural background.
 
-![Screenshot of annotations with replies to student questions. (Permission to use this image was obtained from students.)](assets/figure-p005-1.png)\
+![A thread of three annotations. One student says they thought the discussion was about Chinese families and asks why not use the same introduction; a second answers that many people in Singapore are Chinese and the author is drawing on those experiences; the first replies that it is good to know and makes more sense.](assets/figure-p005-1.png)\
 Figure 2. Screenshot of annotations with replies to student questions. (Permission to use this image was obtained from students.)
 
 Community is an important aspect of social annotation. So that you and your peers can learn well together, it is important to establish and follow norms for respectful communication. Treat the margins of your shared text like you would a physical classroom space, as a place where different opinions and experiences can be valued and discussed safely.
@@ -78,14 +84,14 @@ Have you ever wondered about the inspiration for the lyrics to your favorite son
 
 As I’m drafting this chapter, Harry Style’s song “As It Was” is number one on the Genius list. The first annotation (Fig. 3) combines the work of four contributors who have crafted an explanation of the introduction using quotes from interviews, links to his music video, and an analysis of how the line might fit with broader themes in Styles’ music (“Harry Styles As It Was Lyrics”). Ratings for the annotation as a whole and individual contributors help other readers evaluate the annotation.
 
-![Screenshot of public annotation of Harry Styles’ “As It Was” lyrics by four contributors. This image does not fall within the CC license for this work](assets/figure-p006-1.png)\
+![A Genius lyrics page for a Harry Styles song, with one line of the opening highlighted and several more marked as annotated. The annotation panel at the right, credited to four contributors, explains that the child's voice on the lead single is his goddaughter Ruby, quotes an interview in which he describes her calling him every night before bed, and offers an alternative reading in which the child is speaking from the other side of a door.](assets/figure-p006-1.png)\
 Figure 3. Screenshot of public annotation of Harry Styles’ “As It Was” lyrics by four contributors. This image does not fall within the CC license for this work.
 
 Public social annotation can help us to understand and share our interpretations of texts. Shared annotations can also help us to understand the responses readers might have to an authors’ writing choices.
 
 Figure 4 is an example of an annotation contributed to the UM Press Annotates project where readers were invited to add annotations to open access ebooks around several themes, including disability studies.
 
-![Screenshot of wmcleod’s annotation of Susan Antebi’s Embodied Archive with the hashtags #UMPAnnotates and #DisabilityStudies. This image does not fall within the CC license for this work](assets/figure-p007-1.png)\
+![A public annotation by wmcleod, dated 8 March, on a passage from Susan Antebi's Embodied Archive about geopolitically rendered frameworks and eugenic itineraries. The annotator says that as someone with ADHD they have trouble processing dense language like this even after looking up the words, that a word like eugenics cannot be replaced because it is central, but that plain language matters when writing disability history so more disabled people can engage with their own stories. Tagged #UMPAnnotates and #DisabilityStudies.](assets/figure-p007-1.png)\
 Figure 4. Screenshot of wmcleod’s annotation of Susan Antebi’s Embodied Archive with the hashtags #UMPAnnotates and #DisabilityStudies. This image does not fall within the CC license for this work.
 
 Social annotator wmcleod responds to a passage in Susan Antebi’s *Embodied Archive: Disability in Post-Revolutionary Mexican Cultural Production* with a critique of the author’s language choices for her intended audience. As a writer, you can use this annotation to reflect on when and how you might choose to use technical vocabulary to make your own writing more accessible for a wider audience.
@@ -108,14 +114,14 @@ Whereas I could hardly squeeze three words into the margins of the inexpensive p
 
 Use this extra space to share enough of your thinking so that others, including your future self, can converse with your ideas. Compare Evan’s two annotations below (Figs. 5-6). First, he makes a brief response that would fit into the margins of a trade paperback.
 
-![Screenshot of brief student annotation, “Very interesting point.” (Permission to use this image was obtained from student.)](assets/figure-p008-1.png)\
+![A single short annotation in a reading tool reading Very interesting point, with an anonymous grey avatar beside it.](assets/figure-p008-1.png)\
 Figure 5. Screenshot of brief student annotation, “Very interesting point.” (Permission to use this image was obtained from student.)
 
 While we can read how a bit about what he’s thinking, there’s not much to respond to. Visually, we can see too that there’s space for him to elaborate.
 
 Now read Evan’s longer annotation (Fig. 6).
 
-![Screenshot of longer student annotation, “I was really able to connect to the author in this story as me too, leaving for college, have left my house behind. I wonder what will change in my house while I am gone.” (Permission to use this image was obtained from student.)](assets/figure-p009-1.png)\
+![A longer annotation reading that the student was really able to connect to the author in this story, as they too have left their house behind for college, and that they wonder what will change in their house while they are gone. A timestamp and a score field run along the foot.](assets/figure-p009-1.png)\
 Figure 6. Screenshot of longer student annotation, “I was really able to connect to the author in this story as me too, leaving for college, have left my house behind. I wonder what will change in my house while I am gone.” (Permission to use this image was obtained from student.)
 
 Notice how this longer annotation more fully explains Evan’s thinking. In the expansive digital margins, more complete thoughts actually open space for a dialogue to develop. You might add to the conversation about how your home might change if you too are away for college.

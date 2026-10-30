@@ -16,6 +16,8 @@ volume-title: Writing Spaces 4
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 teacher-resources: separate
+images-of-text:
+- figure-p007-1.png
 ---
 
 Okay, we get it. You hate group projects. We’re sure you’ve heard teachers say, “Group work is inevitable.” But have you considered why you hate group work so much? Is it because you hate people? Yeah, people can be difficult to work with, but that seems a little harsh. When asked, students often talk about the following:
@@ -38,10 +40,10 @@ To better understand how professional writers build goodwill, two of us, Rin and
 
 nCino is a cloud-based software company that builds an innovative Bank Operating System. Understanding this software isn’t as important as understanding how the writing process has changed. In most writing classes, your project will be organized in what’s called the *waterfall method*, which should look very familiar to you:
 
-![Waterfall vs. Agile. Image shows the two design methods and their steps.“Waterfall_Vs_Agile” via Wikimedia Commons is licensed under CC BY-SA 4.0](assets/figure-p003-1.jpg)\
+![Waterfall versus Agile. At the left, five boxes descending like a staircase: requirements, design, implementation, testing, maintenance. At the right, a ring of five segments turning through design, define, analyse, test and back, with Agile at the centre, Backlog entering it and Deploy leaving by an arrow.](assets/figure-p003-1.jpg)\
 Figure 1. Waterfall vs. Agile. Image shows the two design methods and their steps.“Waterfall_Vs_Agile” via Wikimedia Commons is licensed under CC BY-SA 4.0
 
-![Undescribed figure from page 7 of the source](assets/figure-p007-1.png)
+![A company values page headed at nCino, we are guided by six core values, with an illustrated badge for each: Bring Your A-game, Do the Right Thing, Respect Each Other, Make Someone's Day, Have Fun, Be a Winner.](assets/figure-p007-1.png)
 
 The waterfall system can’t always be trusted, especially for collaborative work. As your projects get larger and more complex, this idea of a draft becomes more intimidating.
 
@@ -138,7 +140,7 @@ Creating a Kanban system is one of the easiest ways to accomplish this. Though t
 
 > Inbox or Backlog → To Do (or Next) → Doing → Done
 
-![Kanban Board showing the “To Do,” “Doing,” and “Done” columns](assets/figure-p010-1.jpg)\
+![A whiteboard ruled into three columns headed To Do, Doing and Done. Sticky notes sit in each: under To Do, use Kanban and try Kanban tool; under Doing, learn about Kanban; under Done, get some sticky notes and get a whiteboard.](assets/figure-p010-1.jpg)\
 Figure 3. Kanban Board showing the “To Do,” “Doing,” and “Done” columns. Image by Jeff.lasovski licensed under CC BY-SA 3.0.
 
 As a team, everyone decides what are the most important tasks and places them in the To-Do or Next column. When a team member is looking for a new task, they simply go to this column and find the most important. They write their name on the sticky note and move it to the Doing column. Everyone knows that task is being worked on and can move on to a different task. This also provides a sense of accountability, especially if a task is dependent on someone else finishing their work.

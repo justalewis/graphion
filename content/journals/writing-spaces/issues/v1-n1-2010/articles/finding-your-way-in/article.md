@@ -210,7 +210,7 @@ Exercise 4
 
 Take some time to draw your own visual outline using the ideas developed from your critical freewriting. Think about reoccurring cen-
 
-![Tree Outline](assets/figure-p014-1.png)\
+![A mind map growing upward from a single rounded box at the foot reading Text Messaging As Alternative Writing. Four branches rise from it. Social Impacts carries reduces social anxiety and texting versus talking; Other Values carries entertainment, efficiency and literacy; Personal Experiences carries in college and back home; Keeping in Touch carries family and friends.](assets/figure-p014-1.png)\
 Figure 1. Tree Outline
 
 tral theme(s) that surface. Decide which ones can be foundational in building supporting arguments or potential alternative perspectives.

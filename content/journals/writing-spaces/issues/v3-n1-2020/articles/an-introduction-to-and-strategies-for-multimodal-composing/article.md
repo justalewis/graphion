@@ -13,6 +13,14 @@ volume-title: Writing Spaces 3
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 chapter-number: 5
+images-of-text:
+- figure-p005-1.jpg
+- figure-p006-1.png
+- figure-p007-1.png
+- figure-p015-1.png
+- figure-p016-1.png
+- figure-p017-1.png
+- figure-p018-1.png
 ---
 
 > • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/pages/writing-spaces • WAC Clearinghouse: http://wac.colostate.edu/books/
@@ -45,27 +53,27 @@ In the mid-1990s, a group of scholars gathered in New London, New Hampshire and,
 
 The visual mode refers to what an audience can see, such as moving and still images, colors, and alphabetical text size and style. Social media photos (see figure 1) exemplify the visual mode.
 
-![Photo of my dog taken from my Facebook page that represents the visual mode](assets/figure-p005-1.jpg)\
+![A Facebook post by Melanie Gagich reading that it is a beautiful evening to cook out and play with her dog, and that she is happy the semester has closed. Below it a photograph of a black and white collie lying on autumn grass beside a yellow frisbee, in front of a wooden fence.](assets/figure-p005-1.jpg)\
 Figure 1. Photo of my dog taken from my Facebook page that represents the visual mode.
 
 The linguistic mode refers to alphabetic text or spoken word. Its emphasis is on language and how words are used (verbally or written). A traditional five paragraph essay relies on the linguistic mode; however, this mode is also apparent in some digital texts. Figure 2 shows a student’s linguistic text included in their website created to promote game-based language learning.
 
-![A student’s digital text that emphasizes the linguistic mode. Photo shows a Pinterest pin that uses text to briefly explain the differences among TESOL, TEFL, and TESL. Permission to use this image was obtained from the student](assets/figure-p006-1.png)\
+![A Pinterest pin headed How is English taught in the global classroom?, set over a pale fern illustration. Three sections define the acronyms: TESOL, teaching English to speakers of other languages, for non-native speakers living in English-speaking countries; TEFL, teaching English as a foreign language, more academic and focused on vocabulary and grammar; and TESL, teaching English as a second language, a term the pin calls largely outdated because English may be a learner's third or fourth language.](assets/figure-p006-1.png)\
 Figure 2. A student’s digital text that emphasizes the linguistic mode. Photo shows a Pinterest pin that uses text to briefly explain the differences among TESOL, TEFL, and TESL. Permission to use this image was obtained from the student.
 
 The spatial mode refers to how a text deals with space. This also relates to how other modes are arranged, organized, emphasized, and contrasted in a text. Figure 3, an infographic, is an example of the spatial mode in use because it emphasizes certain percentages and words to achieve its goal.
 
-![Infographic emphasizing the spatial mode. The infographic uses different sizes of text and different shapes to emphasize statistics surrounding can-](assets/figure-p007-1.png)\
+![A CDC infographic. Worldwide 14.1 million new cancer cases are diagnosed each year; 57 percent, or 8 million, are in less developed regions. Five coloured ovals give the most common types in those regions: lung 1.1 million cases, breast 883,000, stomach 677,000, liver 648,000, colorectal 624,000.](assets/figure-p007-1.png)\
 Figure 3. Infographic emphasizing the spatial mode. The infographic uses different sizes of text and different shapes to emphasize statistics surrounding can-
 
 cer diagnoses and common types. (“Cancer Infographic” by CDC Global licensed under CC BY 2.0)
 
 The gestural mode refers to gesture and movement. This mode is often apparent in delivery of speeches in the way(s) that speakers move their hands and fix their facial features and in other texts that capture movement such as videos, movies, and television. Figure 4 shows Michelle Obama’s gestures at a speech she gave in London.
 
-![Picture taken of Michelle Obama while giving a speech that captures the gestural mode. She is standing at a microphone, looking out into the audience, and smiling with her hands clasped against her heart. (“US First Lady, Michelle Obama, speaking at Mulberry School for Girls, London” by DFID licensed under CC BY 2.0)](assets/figure-p008-1.jpg)\
+![Michelle Obama speaks at a lectern lettered Let Girls Learn, both hands pressed flat to her chest and her head tilted, smiling. A microphone is angled toward her and an American flag stands behind.](assets/figure-p008-1.jpg)\
 Figure 4. Picture taken of Michelle Obama while giving a speech that captures the gestural mode. She is standing at a microphone, looking out into the audience, and smiling with her hands clasped against her heart. (“US First Lady, Michelle Obama, speaking at Mulberry School for Girls, London” by DFID licensed under CC BY 2.0)
 
-![Undescribed figure from page 9 of the source](assets/figure-p009-1.png)
+![A SoundCloud player for a file named New Podcast Project, showing an orange and red illustration of a microphone on a stand with the audio waveform drawn across the lower third.](assets/figure-p009-1.png)
 
 The aural mode refers to what an audience member can or cannot hear. Music is the most obvious representation of the aural mode, but an absence of sound (silence) is also aural. Examples of texts that emphasize the aural mode include podcasts, music videos, concerts, television series, movies, and radio talk shows. Figure 5 is a screenshot of my student’s podcast created to convince teachers to integrate podcasts into their language arts classrooms. A podcast exemplifies the aural mode because of its reliance on sound.
 
@@ -159,7 +167,7 @@ Once you have determined your rhetorical situation and examined other multimodal
 
 A multimodal text should include content (key pieces of information that support your message), which means you will need to conduct some research. The extent of the research depends on the type of assignment; some instructors might want your multimodal text to include scholarly research while others might not. Therefore, be sure to read the assignment closely and then conduct the necessary research. For example, my student created a website and videos discussing the similarities between American music and K-pop (see figure 6). Her content research includes a scholarly article from the journal *World Englishes* and a popular article from *Billboard.com.*
 
-![A screen shot of a student’s video that illustrates her use of scholarly content. Video shows an animation of a teacher standing at a chalkboard. On the chalkboard, there is text explaining the musical influences on Post-Choson-Dynasty Korea. (Permission to use this image was obtained from the student)](assets/figure-p015-1.png)\
+![A still from a student's animated video on a site called K-Pop N Linguistics. An illustrated presenter stands beside a blackboard headed Post-Choson-Dynasty Korea: Musical Influence, which summarises John Lie's argument that Japanese influence before liberation brought western classical and ballad music called Chanson, and that enka or Korean trot emerged as a fusion with African and European music from blues, bluegrass, jazz and country.](assets/figure-p015-1.png)\
 Figure 6. A screen shot of a student’s video that illustrates her use of scholarly content. Video shows an animation of a teacher standing at a chalkboard. On the chalkboard, there is text explaining the musical influences on Post-Choson-Dynasty Korea. (Permission to use this image was obtained from the student).
 
 # Collect Visual and Aural Materials
@@ -170,10 +178,10 @@ In addition to textual information, you should also collect images, sounds, vide
 
 When searching for visual and aural materials, you want to consider using openly licensed materials. According to *Yearofopen.org*, open licenses are “a set of conditions applied to an original work that grant permission for anyone to make use of that work as long as they follow the conditions of the license” (“What are Open Licenses”). A well-known and commonly used example of an open license are Creative Commons licenses, identified by CC. Creative Commons licenses provide the creator or author with a copyright, ensuring that they receive credit for their work, while also allowing “others to copy, distribute, and make uses of their work -- at least non-commercially” (“About the Licenses”). Essentially, if a work has one of the four basic creative commons licenses (see figure 7), then a creator/ author can use the licensed item in their own creative texts.
 
-![The four basic Creative Commons licenses including explanations for each. (Image was created by the author using “About Licenses” by Creative Commons licensed under CC BY 4.0)](assets/figure-p016-1.png)\
+![The four basic Creative Commons licences, each with its badge, name and a short explanation. Attribution (CC BY), the most open, allows any use with attribution. Attribution-NonCommercial (CC BY-NC) allows any use with attribution but no commercial gain. Attribution-ShareAlike (CC BY-SA) requires the new work to carry the same licence. Attribution-NoDerivs (CC BY-ND) requires the work be used in its original form with no changes.](assets/figure-p016-1.png)\
 Figure 7. The four basic Creative Commons licenses including explanations for each. (Image was created by the author using “About Licenses” by Creative Commons licensed under CC BY 4.0)
 
-![Undescribed figure from page 17 of the source](assets/figure-p017-1.png)
+![A slide headed Discovering Open or Public Domain Resources showing logos for CC Search, the Free Music Archive, Project Gutenberg, Flickr and the Digital Public Library of America. At the foot, a line reading Image taken from Goodsett PowerPoint is ringed in red, with a note that the attribution lacks a title, clear author, source link and licence.](assets/figure-p017-1.png)
 
 There are various websites such as CC Search, Free Music Archive (FMA), or Digital Public Library of America (DPLA) where you can find openly licensed work. You may also set filters on Flickr or Google Images to locate openly licensed work.
 
@@ -187,7 +195,7 @@ After researching content and collecting materials, think about how you will giv
 
 When citing openly licensed images, videos, sounds, animations, screenshots, etc., it is important to provide an attribution. According to the CC Wiki, an appropriate attribution should include the title, author, source (hyperlinked to the original website), and license (hyperlinked to the license information). Figure 8 represents example of an inappropriate attribution and figure 9 an ideal one.
 
-![An example of an inappropriate attribution that lacks title, clear author, source link, and license. (Image was created by the author using “Creative Commons Licensing” by Mandi Goodsett licensed under CC BY 4.0)](assets/figure-p018-1.png)\
+![The same slide of open-resource logos, now with the attribution reading Discovering Open or Public Domain Resources by Amanda Goodsett, licensed under CC BY 4.0, ringed in red, and a note that the attribution provides the relevant content.](assets/figure-p018-1.png)\
 Figure 8. An example of an inappropriate attribution that lacks title, clear author, source link, and license. (Image was created by the author using “Creative Commons Licensing” by Mandi Goodsett licensed under CC BY 4.0)
 
 Figure 9. An example of an ideal attribution, which includes a hyperlinked title for the image, a clear author name, and license information that is also hyperlinked. (Image was created by the author using “Creative Commons Licensing” by Mandi Goodsett licensed under CC BY 4.0)

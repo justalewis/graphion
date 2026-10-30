@@ -14,6 +14,12 @@ volume-title: Technical Writing Spaces 6
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 teacher-resources: separate
+images-of-text:
+- figure-p006-1.jpg
+- figure-p007-1.jpg
+- figure-p010-1.jpg
+- figure-p013-1.jpg
+- figure-p014-1.jpg
 ---
 
 A key concern for technical communicators working on documentation projects is ensuring that the project is “accessible” or usable by everyone regardless of disability. Since technical communicators help users to comprehend and utilize specialized information and products that would otherwise be unclear, they are in the position to empower those who are too often left behind, such as those with disabilities. In this way, accessibility concerns are central concerns for the field of technical communication.
@@ -80,7 +86,7 @@ An easy way to make sure that your documentation project does not run the risk o
 
 Let’s say you’ve just started a new job at a brand-new coffee shop in your town called Campus Coffee. The shop has created a new menu (see Figure 14.1), and as a student in technical communication, you can’t help but notice right away how inaccessible the menu is for many users.
 
-![Original Coffee Shop Menu](assets/figure-p006-1.jpg)\
+![A coffee shop menu headed Campus Coffee, Coffee for Homework, with the prices centred under two headings. Hot drinks: hot tea 3.50, cappuccino 4.50, espresso 5.00, cafe mocha 4.75, cafe latte 4.50. Cold drinks: cold brew coffee 3.50, herbal iced tea 2.50, iced vanilla latte 4.75, iced mocha 4.75. Three speech balloons float around the edges reading ask about our daily drink specials, we have oat milk, and students get 10 percent off on Fridays. A small coffee cup sits at the foot.](assets/figure-p006-1.jpg)\
 Figure 14.1: Original Coffee Shop Menu
 
 The background color and the font color for menu items are close in shade and tone, and nothing offsets important information other than slight color variation. In fact, as you work through your first shifts, some customers ask you to read or to clarify menu items that are difficult to read. After overhearing your new boss lamenting that she has no time to fix the issues with the menu and that she did her best to make it, you volunteer for the job. Why not, you think? It’ll make a nice portfolio piece later on.
@@ -89,7 +95,7 @@ You want to use a consistent font, but you choose a simple pattern of hyphens to
 
 You decide that it will enhance your design to use the teal for the headings, yet you rely on the line of hyphens to do the work of communicating the important information that a new section of the menu has started. Taking these small steps leads to a design you are quite proud of (see Figure 14.2).
 
-![Revised Coffee Shop Menu](assets/figure-p007-1.jpg)\
+![The same menu redesigned: headings ranged left above ruled lines, every item on its own line with the price in an aligned column. Hot drinks and cold drinks as before, then a new Add-Ons section with almond milk and oat milk at 0.50. The three floating balloons are replaced by one boxed panel at the right reading ask about our daily specials and students get 10 percent off every Friday.](assets/figure-p007-1.jpg)\
 Figure 14.2: Revised Coffee Shop Menu
 
 Not only are colorblind guests better served, but the menu looks better and is more usable.
@@ -116,7 +122,7 @@ As part of a community-based technical communication course focused on the healt
 
 Taking these simple steps has ensured that any students with dyslexia will be able to benefit from learning more about the clinic’s services. Your design is clean and easy to read; a wide variety of students at the high school will be able to get the information they need from reading it on the bulletin board.
 
-![Flyer for Health Clinic](assets/figure-p010-1.jpg)\
+![A flyer for the Tidewater City Free Clinic, set over pale circles and dot patterns. Large type reads Free, Confidential Health Services, then Learn more at TWClinic.com, then Text for an appointment, 555-555-1212.](assets/figure-p010-1.jpg)\
 Figure 14.3: Flyer for Health Clinic
 
 # How You Can Apply Considerations of Dyslexia to Your Schoolwork, Internships, Jobs
@@ -153,15 +159,15 @@ Imagine your internship provider, a local nonprofit focused on downtown revitali
 
 You decide to use Microsoft Word to create a draft of this documentation. You interview the existing team, asking them to work backwards from closing out the event to all the stages and steps that went into getting them there. You go into the document properties to adjust the metadata. The screenshot in Figure 14.4 shows what you see when you go into the property summary in Word, which you can access by selecting “File,” and then “Properties” from the dropdown menu.
 
-![Properties Menu in MS Word](assets/figure-p013-1.jpg)\
+![The Summary tab of a word processor's Properties dialog with every field empty: title, subject, author, manager, company, category, keywords, comments and hyperlink base. The template is Normal.dotm and Save preview picture with this document is ticked.](assets/figure-p013-1.jpg)\
 Figure 14.4: Properties Menu in MS Word
 
-![Filled In Properties Menu in MS Word](assets/figure-p014-1.jpg)\
+![The same dialog filled in. Title: Documentation for Annual Fundraiser. Subject: Ti. Author: Debbie Smith. Company: Tidewater Downtown Revitilization Council. Category: training. Keywords: event planning; fundraising; procedures and roles. Comments: this document helps new users to understand the flow of activities involved in annual fundraising activities.](assets/figure-p014-1.jpg)\
 Figure 14.5: Filled In Properties Menu in MS Word
 
-![Undescribed figure from page 16 of the source](assets/figure-p016-1.jpg)
+![A meme: a cat sits beside a stone cherub statue with an open book between them, one paw raised to the page. Across the lower half, in white block capitals, for the love of God, turn the page, you are like the slowest reader ever.](assets/figure-p016-1.jpg)
 
-![Undescribed figure from page 16 of the source](assets/figure-p016-2.jpg)
+![A meme: a kitten lies on its back on a sofa with its paws curled over its chest, head tilted back toward the camera. Across the top, i big scary monster, and across the bottom, raaaar.](assets/figure-p016-2.jpg)
 
 You change the author’s name to your internship coordinator’s name. You add a specific title, such as “Documentation for Annual Fundraiser”; keywords such as: event planning; fundraising; procedures and roles. You fill in the comments with more contextual information for users. You add “training” for the category (see Figure 14.5).
 
@@ -211,7 +217,7 @@ After collecting images from your client’s personal files and scanning samples
 
 For one of the gowns, you’ve chosen this image from the client photos the seamstress is allowing your class to use (see Figure 14.8). When you insert the image on WordPress, a plugin generates the alt text: “A person posing for a picture.” However, you want to add something more descriptive. Making use of the “show, don’t tell” principle, you say, “a woman stands with one hand on her hip . . .” Thinking of the yellow test, you add, “she’s staring straight ahead with a lifted chin, confidently.” Thinking back on your purpose---to inspire seamstresses and fashion design students to make these dresses, you add “a woman in an intricate lace, sweetheart neckline, sleeveless bridal gown . . .” Notice how the new alt text in this exercise will do a far better job of conveying the visual information the original photo is meant to communicate to potential audiences.
 
-![Wedding Dress Image](assets/figure-p018-1.jpg)\
+![A retailer's photograph of a wedding dress: a model stands with one hand on her hip in a lace A-line gown with cap sleeves, a jewelled band at the empire waist and a long train, against a dark panelled wall. A website watermark runs across the middle of the image.](assets/figure-p018-1.jpg)\
 Figure 14.8: Wedding Dress Image
 
 # How You Can Apply This to Your Schoolwork, Internships, Jobs

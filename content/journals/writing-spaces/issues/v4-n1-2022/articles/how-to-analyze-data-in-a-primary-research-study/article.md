@@ -15,6 +15,10 @@ volume-title: Writing Spaces 4
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 teacher-resources: separate
+images-of-text:
+- figure-p005-1.png
+- figure-p022-1.png
+- figure-p023-1.png
 ---
 
 At this point in your education, you are familiar with what is known as secondary research or what many students think of as library research. Secondary research makes use of sources most often found in the library or, these days, online (books, journal articles, magazines, and many others). There’s another kind of research that you may or may not be familiar with: primary research. *The Purdue OWL* defines primary research as “any type of research you collect yourself” and lists examples as interviews, observations, and surveys (“What is Primary Research”).
@@ -55,7 +59,7 @@ If you were to ask the “Yes, No, Sometimes” question about YouTube to 20 of 
 
 Now that you have data, it’s time to think about analyzing and presenting that data. Luckily, the Pew Research Center conducted a similar study that can be used as an example. The Pew Research Center is a “nonpartisan fact tank that informs the public about the issues, attitudes and trends shaping the world. It conducts public opinion polling, demographic research, media content analysis and other empirical social science research” (“About Pew Research Center”). The information provided below comes from their public dataset “Teens, Social Media, and Technology, 2018” (Anderson and Jiang). This example is used to show how you might analyze this type of data once collected and what that data might look like. “Teens, Social Media, and Technology 2018” reported responses to questions related to which online platforms teens use and which they use most often. In figure 1 below, Pew researchers show the final product of their analysis of the data:
 
-![Social Media Usage Statistics from Pew’s “Teens, Social Media, and Technology 2018” dataset. Figure shows popularity of social media platforms from most to least popular: YouTube, Instagram, Snapchat, Facebook, Twitter, Tumblr, Reddit. Used with permission from Pew Research Center](assets/figure-p005-1.png)\
+![A Pew Research Center chart headed YouTube, Instagram and Snapchat are the most popular online platforms among teens. Two columns of bars give the percentage of US teens who say they use each platform and who use it most often: YouTube 85 and 32, Instagram 72 and 15, Snapchat 69 and 35, Facebook 51 and 10, Twitter 32 and 3, Tumblr 9 and under 1, Reddit 7 and 1, none of the above 3 and 3. A note explains that figures total more than 100 because multiple responses were allowed; the survey ran 7 March to 10 April 2018.](assets/figure-p005-1.png)\
 Figure 1. Social Media Usage Statistics from Pew’s “Teens, Social Media, and Technology 2018” dataset. Figure shows popularity of social media platforms from most to least popular: YouTube, Instagram, Snapchat, Facebook, Twitter, Tumblr, Reddit. Used with permission from Pew Research Center.
 
 Pew analyzed their data and organized the findings by percentages to show what they discovered. They had 743 teens who responded to these questions, so presenting their findings in percentages helps readers better “see” the data overall (rather than saying YouTube = 631 and Instagram = 535). However, results can be represented in different ways. When the Pew researchers were deciding how to present their data, they could have reported the frequency, or the number of people who said they used You-Tube, Instagram, and Snapchat.
@@ -282,7 +286,7 @@ Below we offer some guiding questions to help move students through the chapter 
 
 4. Google Trends (figure 2 below) also allows researchers to look at web search data over time, by continent and related inquiries. On this site, we searched “teens and social media” and found another piece of data that shows interest over time. What does this graphic tell you? What other questions arise while looking at this data?
 
-![Google Trends for “Teens and Social Media.” A line graph from Google Trends, showing how teen social media use has increased over time. Screenshot by authors](assets/figure-p021-1.png)\
+![A Google Trends line graph of interest over time from January 2004 to April 2019. The line is low and spiky through 2004 to 2009, rises unevenly from about 2012, and runs high and jagged between roughly 60 and 100 from late 2014 to the end.](assets/figure-p021-1.png)\
 Figure 2. Google Trends for “Teens and Social Media.” A line graph from Google Trends, showing how teen social media use has increased over time. Screenshot by authors.
 
 5. When analyzing data from open-ended questions, which step seems most challenging to you? Explain.
@@ -295,7 +299,7 @@ Infographics can be a great way to help you see and understand data, while also 
 
 Figure 3, titled “The Plagiarism Spectrum,” provides you with the “severity” and “frequency” based on survey findings of nearly 900 high school and college instructors from around the world. TurnItIn encourages educators to print this infographic and hang in their classroom:
 
-![Plagiarism Spectrum. Infographic from TurnItIn illustrates the rates of student plagiarism, categorized by type of offense. Used with permission](assets/figure-p022-1.png)\
+![A TurnItIn infographic ranking ten kinds of plagiarism by severity, each with an icon, a definition and a frequency bar scored out of ten. Clone, submitting someone else's work word for word, 9.5. CTRL-C, significant portions from one source unaltered, 8.9. CTRL-F, find and replace of key words, 3.9. Remix, paraphrased material from several sources, 5.6. Recycle, reusing one's own previous work uncited, 5.5. Hybrid, cited and copied passages combined, 0.5. Mosaic, copied material made to fit, 9.1. 404 Error, citing non-existent or inaccurate sources, 0.6. RSS Feed, proper citation but no original work, 2.8. Re-Post, proper citation but relying too closely on the original wording, 4.4. Based on a survey of nearly 900 educators.](assets/figure-p022-1.png)\
 Figure 3. Plagiarism Spectrum. Infographic from TurnItIn illustrates the rates of student plagiarism, categorized by type of offense. Used with permission.
 
 This infographic provides some great data analysis examples: specific categories with definitions (and visual representation of their categories), frequency counts with bar graphs, and color gradient bars to show higher vs. lower numbers.
@@ -310,7 +314,7 @@ In Alice Zhao’s *Huffington Post* piece, she analyzes text messages that she c
 
 These first graphics are word clouds. In figure 4, Zhao put her textual data into a program that creates these images based on the most frequently occurring words. Word clouds are another option for analyzing your data. If you have a lot of textual data and want to know what participants said the most, placing your data into a word cloud program is an easy way to “see” the data in a new way. This is usually one of the first steps of analysis, and additional analysis is almost always needed.
 
-![Zhao’s Word Cloud Sampling of Zhao’s word clouds from analyzing text messages with her boyfriend; the larger the word, the more frequently that word appeared in the text. “Hey,” “home,” and “Ok” appear as frequently used words. Used with permission](assets/figure-p023-1.png)\
+![Four word clouds comparing a couple's text messages, labelled Me in 2008, Him in 2008, Me in 2014 and Him in 2014, the commoner words set larger. Hey, good, call, home and see dominate the 2008 clouds; home, ok, just, now and yeah dominate the 2014 ones.](assets/figure-p023-1.png)\
 Figure 4. Zhao’s Word Cloud Sampling of Zhao’s word clouds from analyzing text messages with her boyfriend; the larger the word, the more frequently that word appeared in the text. “Hey,” “home,” and “Ok” appear as frequently used words. Used with permission.
 
 1. What do you notice about the texts from 2008 to 2014?
@@ -319,14 +323,14 @@ Figure 4. Zhao’s Word Cloud Sampling of Zhao’s word clouds from analyzing te
 
 she saw as the most frequently occurring words from the word clouds. This could be another step in your data analysis procedure: zooming in on a few key aspects and digging a bit deeper.
 
-![Zhao’s Bar Graph of Frequently Occurring Words. Zhao’s bar graph from her word clouds to show the most frequently occurring words they used when dating versus when married. Used with permission](assets/figure-p024-1.png)\
+![A bar chart headed The Content of Our Text Messages While Dating versus Married, with occurrence percentage up the side. Six words compared: hey, each other's name, love and home all fall sharply from dating to married, home is about level, dinner rises a little, and ok rises steeply to become the commonest.](assets/figure-p024-1.png)\
 Figure 5. Zhao’s Bar Graph of Frequently Occurring Words. Zhao’s bar graph from her word clouds to show the most frequently occurring words they used when dating versus when married. Used with permission.
 
 1. What do you make of this data? Why might the word “hey” occur more frequently in the dating time frame and the word “ok” occur more frequently in the married time frame? As part of her research, Zhao also looked at the time of day text mes-
 
 sages were sent, shown below in figure 6:
 
-![Zhao’s Plot Graph of Time of Day. Zhao created a plot graph to show what time of day they texted most frequently, over the time period from dating to marriage. Used with permission](assets/figure-p024-2.png)\
+![A plot chart headed The Time of Day We Send Text Messages, with three rows for the month after their first date, their engagement and their wedding. Blocks mark the hours used: the first-date row is busy around midnight to 3 am and again from mid afternoon to midnight; the later two rows start around 6 am and fill the working day and evening.](assets/figure-p024-2.png)\
 Figure 6. Zhao’s Plot Graph of Time of Day. Zhao created a plot graph to show what time of day they texted most frequently, over the time period from dating to marriage. Used with permission.
 
 Here, Zhao looked at messages sent a month after their first date, a month after their engagement, and a month after their wedding.

@@ -14,6 +14,11 @@ volume-title: Writing Spaces 4
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 teacher-resources: separate
+images-of-text:
+- figure-p003-1.jpg
+- figure-p005-1.jpg
+- figure-p012-1.jpg
+- figure-p013-1.jpg
 ---
 
 Have you ever had a writing assignment to work on but you find yourself scrolling through social media instead? You might think of social media as completely separate from the writing you do for college, but the truth is, the two aren’t that different. Sure, social media posts aren’t multiple pages long, double-spaced, or in MLA or APA Style. But the choices you make as a composer of text and images online are the same choices you need to make as a college writer. In this essay, I’ll show you how to take what you already know from writing on social media and use it to level up as a writer. I want to make college writing less of a mystery
@@ -32,7 +37,7 @@ So why do intertextuality and interdiscursivity matter? Both these concepts are 
 
 Here’s what I mean: Let’s say I’m writing a tweet about a restaurant I just tried (see figure 1). The *intertextual* parts of the tweet are the places where I specifically reference something else, like the chef, the tv show *Guy’s Grocery Games*, the name of the restaurant, and the city I live in. If I were to throw in a quote from a judge on the tv show or from the restaurant menu, that would also be intertextual content. Think of how each reference puts what I’m writing into a relationship with other texts in the world. Each makes my piece of writing one point in a big web of information that references these same things.
 
-![Example drafted tweet with intertextual and interdiscursive content. The text reads: “No wonder Chef Brenner won #guysgrocerygames. Food at @ redgravyco rocks! Meatballs and fig pizza ftw. #coloradospringseats Image credit: Ann N. Amicucci](assets/figure-p003-1.jpg)\
+![A Twitter compose box holding a drafted tweet: no wonder Chef Brenner won #guysgrocerygames, the food at @redgravyco rocks, meatballs and fig pizza ftw, #coloradospringseats. The toolbar and Tweet button sit below.](assets/figure-p003-1.jpg)\
 Figure 1. Example drafted tweet with intertextual and interdiscursive content. The text reads: “No wonder Chef Brenner won #guysgrocerygames. Food at @ redgravyco rocks! Meatballs and fig pizza ftw. #coloradospringseats Image credit: Ann N. Amicucci.
 
 The *interdiscursive* parts of the tweet are the places where I use rhetorical moves I’m borrowing from other writers, like using hashtags, tagging the restaurant with its Twitter handle, and using the abbreviation “ftw” in place of “for the win.” These moves also put what I’m writing into a relationship with other texts and writers. Using hashtags shows I’m familiar with Twitter discourse, and using the abbreviation “ftw” might signal that I’m a gamer. Each interdiscursive move is a chance to get “in” with certain groups or to show that I’m not cool enough to be part of them. More on this in a minute.
@@ -49,7 +54,7 @@ Here’s an example. In the 2020 Stand Up Challenge popularized by Demi Bagby, t
 
 When you start working on a college essay, pick an essay you admire to be your “challenge” essay that---like a TikTok challenge---you can replicate and make your own. You might pick a published essay you’ve read for class or an example student essay shared by your teacher. Your job isn’t to copy the essay, but to figure out its moves and meet the challenge by replicating those moves in your own way (see figure 2). As Craig A. Meyer explains, “In studying several authors or samples, we learn from each one’s strengths and weaknesses. Imitation is more than just copying down a selection of writing---it’s digging into the prose, pulling it apart, and understanding why it works the way that it does” (124). When you riff off a challenge essay, you’re still writing your own text---you’re simply using a successful formula to do so. Of course, you don’t want to simply copy a successful formula without considering the context for your writing. As you become more comfortable imitating successful rhetorical choices, you should reflect on how to adapt the rhetorical moves you riff off from other essays to best fit each writing project you take on.
 
-![Questions to ask to replicate an essay’s rhetorical moves. The text reads: “Intro”: “What move does the essay start with?” “For example: an epigraph, a question, an obscure fact.” “Moves”: “What is the main thing the essay does again and again?” “For example: tells stories, analyzes examples, makes an argument.” “Sections”: “How does the essay break its task into chunks?” “For example: How many ideas does it analyze? How many paragraphs does it spend analyzing each?” “Your Take”: “In what ways is the author’s personal style evidence in the essay?” “For example: humor, talking directly to the reader, or using personal anecdotes.” “Outro”: “What move does the essay end with?” “For example: a call to action, an unexpected twist, a call back to the intro.”](assets/figure-p005-1.jpg)\
+![Five labelled rows of questions for taking apart an essay. Intro: what move does the essay start with, for example an epigraph, a question, an obscure fact. Moves: what is the main thing the essay does again and again, for example tells stories, analyzes examples, makes an argument. Sections: how does the essay break its task into chunks. Your Take: in what ways is the author's personal style evident. Outro: what move does the essay end with, for example a call to action, an unexpected twist, a call back to the intro.](assets/figure-p005-1.jpg)\
 Figure 2. Questions to ask to replicate an essay’s rhetorical moves. The text reads: “Intro”: “What move does the essay start with?” “For example: an epigraph, a question, an obscure fact.” “Moves”: “What is the main thing the essay does again and again?” “For example: tells stories, analyzes examples, makes an argument.” “Sections”: “How does the essay break its task into chunks?” “For example: How many ideas does it analyze? How many paragraphs does it spend analyzing each?” “Your Take”: “In what ways is the author’s personal style evidence in the essay?” “For example: humor, talking directly to the reader, or using personal anecdotes.” “Outro”: “What move does the essay end with?” “For example: a call to action, an unexpected twist, a call back to the intro.” Image credit: Ann N. Amicucci.
 
 # Know Your Hashtag Audiences
@@ -66,19 +71,19 @@ Discourse communities work the same way on social media. We use language in spec
 
 For example, in a post about her latest mural, artist Jeresneyka Rose, whose handle is \@ArtByRizzo, selects a series of photos showing herself painting the mural and the completed project (see figure 3). She captions the photo, “Growing & Glowing 🌼 First Mural of 2020 💙.
 
-![Instagram post showing use of multiple hashtags. Post by \@artbyrizzo (Jeresneyka Rose)](assets/figure-p007-1.jpg)\
+![An Instagram post by artbyrizzo from Colorado Springs. The photograph shows the artist standing beside her mural of a Black woman growing out of a sunflower, lettered Growing & Glowing. The caption names it her first mural of 2020 and runs fifteen hashtags, among them #blackart, #coloradospringsartist, #blackwomanart and #southsidecolorado.](assets/figure-p007-1.jpg)\
 Figure 3. Instagram post showing use of multiple hashtags. Post by \@artbyrizzo (Jeresneyka Rose).
 
 Timelapse uploaded to IGTV!” and includes nineteen hashtags at the end of the caption. Her hashtags include general tags like #indoormural, tags specific to who she is as an artist like #blackwomanart, and tags specific to her community like #coloradospringsartist.
 
 Rose’s post as a whole has a purpose: to celebrate and circulate her art. What’s more, each part of the post involves specific interdiscursive rhetorical choices that have multiple, finer-grained purposes of linking the post with discourse communities. Think about how each hashtag represents a different community and the ways those communities overlap. For example, #blackart represents a huge worldwide community of Black artists, #coloradospringsartist represents a much smaller, local community, and some artists belong to both (see figure 4). When Rose uses multiple hashtags, she is composing content that works in each tag separately as well as in the space where tags intersect.
 
-![A Venn diagram showing how four hashtag communities overlap](assets/figure-p008-1.png)\
+![A Venn diagram of four overlapping hashtag communities, sized by how many posts each holds: #blackart with 3 million, #coloradoartist with 296,000, #blackwomanart with 30,000 inside #blackart, and #coloradospringsartist with 16,000 in the overlap of #blackart and #coloradoartist.](assets/figure-p008-1.png)\
 Figure 4. A Venn diagram showing how four hashtag communities overlap. Image credit: Ann N. Amicucci.
 
-![Undescribed figure from page 10 of the source](assets/figure-p010-1.jpg)
+![A Snapchat story: a woman smiling at the camera indoors, captioned one hour hike in the books, with a cartoon runner sticker and the words I CAN, I WILL in pink and blue, and a date stamp down the left edge.](assets/figure-p010-1.jpg)
 
-![Undescribed figure from page 10 of the source](assets/figure-p010-2.jpg)
+![A Snapchat story: the same woman lying back on a sofa with a bear-ears filter, a dripping sticker reading Tired above her head, captioned heading for a nap after that workout.](assets/figure-p010-2.jpg)
 
 The content of Rose’s photo and what she writes in her caption not only need to make sense for the groups she’s connecting to; this content also needs to get those groups’ attention and work within those groups’ shared goals. The positive message of Rose’s mural---which shows a Black woman nourishing herself from a watering can of self love---combined with Rose’s smile, the peace sign she makes with her fingers, and the flower and heart emoji in her caption all show her desire to work toward a goal of empowerment of and positivity among Black women and artists.
 
@@ -106,14 +111,14 @@ You can use either of these filters for your ethos, and the central argument in 
 
 On social media, we use emoji and stickers to add meaning to the words and images we share. If I post about traffic making me late to a family event and include a sad face emoji, you’d know I’m disappointed (see figure 7). But if I include a winking face and a celebration emoji, you’d understand that I’m happy to be late to the picnic---and you might even wonder if I’m making up the traffic as an excuse (see figure 7). Emoji and other symbols tell readers how the content of your writing on social media should be read.
 
-![The same drafted tweet shown with different emoji that change the tweet’s message](assets/figure-p012-1.jpg)\
+![The same drafted tweet twice, reading never going to get to the picnic on time because of this #traffic. The first ends with a winking face; the second adds a party popper after it, which turns the complaint into a joke.](assets/figure-p012-1.jpg)\
 Figure 7. The same drafted tweet shown with different emoji that change the tweet’s message. Image credit: Ann N. Amicucci.
 
 Look at the tweet in Figure 8 from my campus, which shows an image of students in the 1960s waiting in line to register for classes. The surprised face emoji that appears in the tweet tells us to be shocked by what we see: by both the length of the line and the fact that people had to show up to a particular building to register for classes in person.
 
 Now, notice the other composing choices that went into this post. The picture is a black and white photo from the 1960s, and no words or stickers have been added to it. The middle third of the photo shows students in line, but the photo hasn’t been cropped to focus only on the line of students. Instead, the parts of the photo that show us features of campus at the time---trees, grass, a building---have been left in to show that my university’s alumni association is interested not only in saying something about how registration worked at the time but in giving us a view of campus in the 1960s as well. Take a moment to imagine how you could shift the message of this post if you used different emoji, chose punctuation other than a period at the end of the tweet, or cropped the photo.
 
-![A tweet from a college alumni association. Tweet by \@UCCSAlumni (University of Colorado Colorado Springs Alumni Association)](assets/figure-p013-1.jpg)\
+![A tweet from @UCCSAlumni reading: this is what early registration looked like in the late 60's, with a surprised face and #ThrowbackThursday. Below it a black and white photograph of students queuing along a path beside a modernist building. Posted 9 July 2020, with 3 retweets and 14 likes.](assets/figure-p013-1.jpg)\
 Figure 8. A tweet from a college alumni association. Tweet by \@UCCSAlumni (University of Colorado Colorado Springs Alumni Association). Image credit: University of Colorado Colorado Springs.
 
 So how can you apply similar choices to your college writing? Let’s say you need to write an essay about something you’ve observed at your college. It’s unlikely that you’ll use emoji in your essay, but you will use punctuation to signal to your readers how to interpret your message. Kevin Cassell explains that when you notice punctuation while you read, you’ll discover how punctuation marks work rhetorically. Referring to a paragraph in his *Writing Spaces* essay, Cassell writes:

@@ -14,6 +14,8 @@ volume-title: Writing Spaces 5
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 teacher-resources: separate
+images-of-text:
+- figure-p007-1.png
 ---
 
 # Introduction
@@ -74,7 +76,7 @@ Luckily, many writing tools with version trackers let you add “named versions�
 
 you are relative to some point in the process, as in “first draft” or “500 words to go”; or, even better, you can use the notes to briefly describe what’s changing, and why. A note like “first draft” doesn’t tell you, if you look back at it later, how far you’d gotten by the first draft. By contrast, a note like “reorder Sommers quote from third page to first” or “finished section on barracudas” tells you what you’ve actually done. A glance back through a series of such notes when the essay is complete can help you call to mind all the highlights of your process and reflect on what you learned---or what you want to ask for feedback on.
 
-![One form of annotated revision history (“named versions”), from a Google Docs version of this chapter. Even the limited space of the annotation allows various kinds of notes: descriptions of what’s changed (“Finished section on examples of diffs”), status updates (“Just a little note to self”), plans for future working sessions (“next: name your own! swap with friends!”), etc. Screenshot shows a list of five timestamped versions of a document, with labels including text quoted in the figure caption. An option to show only named versions is unselected. Screenshot by author](assets/figure-p007-1.png)\
+![A Google Docs version history. The document pane shows a passage on version history with insertions and deletions marked in colour and an author's name tagged beside an edit. The panel at the right lists named versions with their times and author, among them added a list of revision strategies, finished section on examples of diffs, and add intro motivating new section; a menu at the top offers All versions or Named versions, and Show changes is ticked at the foot.](assets/figure-p007-1.png)\
 Figure 1. One form of annotated revision history (“named versions”), from a Google Docs version of this chapter. Even the limited space of the annotation allows various kinds of notes: descriptions of what’s changed (“Finished section on examples of diffs”), status updates (“Just a little note to self”), plans for future working sessions (“next: name your own! swap with friends!”), etc. Screenshot shows a list of five timestamped versions of a document, with labels including text quoted in the figure caption. An option to show only named versions is unselected. Screenshot by author.
 
 But even before the essay is complete, these notes can be powerful. Pausing to describe what you were just working on---even pausing to decide *whether* to describe what you were working on---opens up a space for reflection. Version notes invite you to think actively about how you’re writ-

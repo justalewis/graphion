@@ -13,6 +13,8 @@ volume-title: Writing Spaces 1
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 chapter-number: 16
+images-of-text:
+- figure-p013-1.png
 ---
 
 # Collaborating Online: Digital Strategies for Group Work *Anthony T. Atkins*
@@ -81,12 +83,12 @@ In Projects A and B, the wiki serves as a “house,” meaning this is where all
 
 3. Significantly, each member should contribute to the wiki in their specified area, or in their own room, but should also be visiting the other members’ areas---or rooms---to provide helpful feedback and ideas as needed.
 
-![The wiki for Project A](assets/figure-p007-1.jpg)\
+![A Wikispaces page called newsletterproject99, open on a tab reading Project A Example Wiki. Tabs across the top offer page, discussion, history and notify me; a sidebar lists Newsletter Content, Newsletter Design and Newsletter Development; a column of advertisements runs down the right.](assets/figure-p007-1.jpg)\
 Figure 1. The wiki for Project A.
 
 Similarly, Project B integrates wikis and Google Docs by following similar principles. For example, in Project B, each of the three students created their own page (room) within the wiki (house) that the teacher created for them. Each of their projects was located within the wiki, making it easy for the members of Project B to read and respond to each other’s work (visit each other’s rooms).
 
-![The wiki for Project B](assets/figure-p008-1.jpg)\
+![A Google Docs presentation open in the editor, Web 2.0, Research, and Video, on slide 2 of 7. The slide, styled as a blackboard, is headed Web 2.0 and Research and lists expanding and organising research, integrating visuals, collaborating with others, sharing ideas and findings, and organising websites and bookmarks. Thumbnails of the other slides run down the left.](assets/figure-p008-1.jpg)\
 Figure 2. The wiki for Project B.
 
 In Project B, all three students were expected to create their own projects, but were encouraged to collaborate with the other students working on individual projects for help with revising, brainstorming research questions, and finding articles or other multimedia files that could help another student. Working together was the best course of action because each group member had a detailed project that required a high quality product. The wiki allowed group members to post and share information with each other. Together, Project B group members felt that using a wiki would be the best technology to use for collaborating and sharing each others’ work and progress.
@@ -139,15 +141,15 @@ The posters were created by another software program that was also shared electr
 
 As you will discover in your own projects, creating presentations in Google Docs functions like a review system that allows you and your classmates to access the presentations from home, encourages group
 
-![An example Google Doc presentation in edit mode](assets/figure-p012-1.jpg)\
+![A Google Docs presentation open in the editor, titled Newsletter Presentation, on its only slide. The slide is styled as a blackboard and reads Newsletter Presentation above a selected text box containing Group 4.](assets/figure-p012-1.jpg)\
 Figure 3. An example Google Doc presentation in edit mode.
 
-![Project B’s Google Doc presentation in edit mode](assets/figure-p012-2.jpg)\
+![A Wikispaces site called atkins2008-2009, open on a home page reading "Wiki site for students and their individual projects". The sidebar lists student pages and the stages of a project; a column of advertisements runs down the right.](assets/figure-p012-2.jpg)\
 Figure 4. Project B’s Google Doc presentation in edit mode.
 
 members to participate, and increases the quality of work produced by the group. When presentations are meant to be interactive, having the project and presentation in an electronic format will allow others to participate in your project and further illustrate the time, work, and effort put into a specific project.
 
-![Final version of the poster. (© 2008 Amanda Cosgrove.)](assets/figure-p013-1.png)\
+![A conference poster by Amanda Cosgrove for the UNCW Department of English, headed Revisiting Grammar and Punctuation in the Writing Classroom: The Perspective Student. Two panels, Grammar and E-Grammar, each hold survey statements above bar charts: whether students and teachers are addressing grammar in English 101 and 201, whether English professors do and should spend class time teaching formal grammar, and whether texting and instant messaging influence or should change formal grammar rules. A screenshot of an instant-message window sits between them.](assets/figure-p013-1.png)\
 Figure 5. Final version of the poster. (© 2008 Amanda Cosgrove.)
 
 # Review

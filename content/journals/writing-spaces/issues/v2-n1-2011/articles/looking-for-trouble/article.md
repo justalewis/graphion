@@ -111,7 +111,7 @@ Articulating Problems
 
 This naturally led me to consider what hangs on my walls. At the time, an image I took while on vacation in Nicaragua was hanging on my office wall. Here’s the image:
 
-![Nicaraguan woman on a side street in Granada](assets/figure-p010-1.jpg)\
+![A woman sits on a low stool against a painted wall on a side street, one hand raised toward the camera. Beside her a small folding table holds trays of sweets for sale.](assets/figure-p010-1.jpg)\
 *Fig. 1. Nicaraguan woman on a side street in Granada.*
 
 Once hooks’ ideas entered my office, trouble was not hard to find. I hung this picture on my wall because it appealed to me aesthetically: the vibrant pastel colors, the distinct patterns, the candid look on the woman’s face. After reading hooks’ essay, this 16” x 20” framed image hanging on my office wall became fraught with tension. I genuinely became troubled by it and worried I that I should take it down. Here are some problems, or germs of problems, that I brainstormed:

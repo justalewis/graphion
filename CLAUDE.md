@@ -27,9 +27,9 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (285 functions: 88 in `test_cleanups.py`, 28 in
+Tests (288 functions: 88 in `test_cleanups.py`, 28 in
 `test_teacher_resources.py`, 76 in `test_pdf_ingest.py`, 40 in
-`test_ingest_volume.py`, 25 in
+`test_ingest_volume.py`, 28 in
 `test_lint.py`, 10 in `test_metadata_roundtrip.py`, 6 in
 `test_standalone_html.py`, 5 in `test_pdf_ua.py`, 4 in
 `test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
@@ -240,6 +240,17 @@ reader the figure. `lint.check_alt_text` warns on both kinds so the writing
 still owed is countable, and `lint.check_figure_coverage` catches an article
 that refers to figures it does not contain, which `check_alt_text` cannot see
 and reads as a pass.
+
+Writing alt text satisfies WCAG 1.1.1 and leaves 1.4.5 exactly where it
+was. 113 of this series' 196 figures carry text as a picture, which is a
+property of what the books are: a technical writing volume teaches a genre
+by showing one, and volume 2 reproduces student essays as collages. Nothing
+can tell a photograph of a document from a photograph of anything else
+without looking, so each one is listed by hand in the article's
+`images-of-text` front matter and `lint.check_images_of_text` warns on the
+list. A warning, not a failure: the galley conforms and the figure is
+described, and what is wanted is that the shortfall stays countable rather
+than being closed over by the alt text.
 
 `ingest_volume.py` runs a folder of chapter PDFs through that in one pass.
 It never fetches anything: the volume is downloaded by hand and the runner

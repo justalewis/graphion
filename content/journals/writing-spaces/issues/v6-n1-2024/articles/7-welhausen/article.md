@@ -14,6 +14,11 @@ volume-title: Technical Writing Spaces 6
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 teacher-resources: separate
+images-of-text:
+- figure-p020-1.jpg
+- figure-p027-1.jpg
+- figure-p028-1.jpg
+- figure-p029-1.jpg
 ---
 
 As this example demonstrates, text and visuals often work together persuasively to make arguments and construct information in particular ways. Indeed, the visual and linguistic (text-based) *rhetorical* or argumentative choices that the creators of this cover made---using the white, plastic grocery bag; manipulating it to look like an iceberg; positioning it at eye-level; using a light to dark blue color gradient for the water; writing the caption---are all highly intentional. Because any number of images could have been used to show the plastic pollution problem---an empty beach strewn with trash, a
@@ -42,7 +47,7 @@ From afar, you couldn’t hear their conversation. But you knew they had not see
 
 Generally speaking, a sign---words, gestures, images---is something that stands for something else. Because we can’t read each other’s minds, we need to use signs to communicate. The word *chair*, for instance, is a linguistic sign that refers to a piece of furniture with four legs and a back---like the image in Figure 7.1.
 
-![Chair](assets/figure-p004-1.jpg)\
+![A high-contrast black and white drawing of a wooden side chair: a shaped back with three tall openings, a caned seat, turned front legs and stretchers between them.](assets/figure-p004-1.jpg)\
 Figure 7.1: Chair
 
 Swiss linguist Ferdinand de Saussure theorized that signs are comprised of a *signifier* (e.g., the sign) and a *signified* (the thing or concept the signifier refers to). More specifically, the word *chair* and the image in Figure 7.1 are both *signifiers.* These linguistic and visual signs refer to the concept of *chair* (the *signified*). The image of the chair in Figure 7.1 is more specific than the word *chair* because it shows a particular style of chair. However, if we were talking about chairs, we could also add an adjective or two to be more specific such as *office* chair or *red, lounge* chair or *old, vintage* chair like the visual sign in Figure 7.1.
@@ -103,7 +108,7 @@ Bachman stated that he felt “very humble to capture an image that tells the st
 
 At the same time, this photo has also become iconic---representative of this event and arguably others like it---because it visually promotes a particular narrative laden with American cultural values: individualism, opposing injustice, non-violent protest---to name a few. Indeed, this image has been compared to another photograph taken nearly thirty years earlier, “Tank Man,” which showed a lone man blocking a line of tanks during protests in 1989 against the Chinese government at Tiananmen Square.[^9] The context in which this earlier photo was taken is different as is the subject matter. However, arguably the underlying message is the same. As a commenter on social media put it: Evans is “speaking truth to power,” although she never says a word.[^10]
 
-![Migrant Mother (Dorothea Lange, 1936. Public domain.)](assets/figure-p011-1.jpg)\
+![Dorothea Lange's Migrant Mother. A woman in a worn jacket sits with her hand raised to her chin, looking past the camera, her brow drawn. Two children lean into her shoulders with their faces turned away, and a baby sleeps in her lap. Canvas sags behind them.](assets/figure-p011-1.jpg)\
 Figure 7.2: Migrant Mother (Dorothea Lange, 1936. Public domain.)
 
 Iconic photographs, journalism professors Robert Hariman and John Lucaites have argued, need “no caption.” Like other photographs, these images capture a moment in time. But more importantly, they come to represent the historical significance of that moment. For instance, you have probably seen “Migrant Mother” (see Figure 7.2), the now famous photograph captured by a documentary photographer during the Great Depression in the US.
@@ -140,14 +145,14 @@ In theory, you *could* use a photograph to explain this process. However, it wou
 
 Photographs can also be difficult to modify in an office setting where you may have a limited amount of time to explain a procedure. More specifically, as you explain the medical procedure to the patient, you might want to circle the value that needs to be repaired or add notes and/or details. In Figure 7.3 the differently shaded areas and the arrows showing the direction that blood is moving make it easier for you to explain to the patient how the heart functions because the components and processes of the heart are visually simplified.
 
-![Illustration of the human heart](assets/figure-p015-1.jpg)\
+![A cutaway illustration of the human heart in flat grey tones, the chambers and valves shown in section. Arrows mark the direction of blood flow: in through the vessels at the left and lower right, and out through the great vessels at the top.](assets/figure-p015-1.jpg)\
 Figure 7.3: Illustration of the human heart
 
 # Sketches
 
 Indeed, because they are less *real*, abstracted images like drawings, illustrations, and sketches are also more *ideal.* That is, they allow for more flexibility in the way they are interpreted, and they can be modified more easily. These images also often remove a lot of non-essential visual information from an image and allow individuals to focus *only* on those visual elements that they need to understand an idea. To illustrate, the sketch in Figure 7.4 shows a fictional schematic drawing for a bridge. The perspective grid lines that divide the image allow viewers to see how the structure will occupy space once it is built. And because this visual is a sketch, changes can continue to be made to the overall design (either digitally or on a printed copy). Indeed, the lack of contextual details---where the bridge will be built, how it might affect the landscape and other built structures---allow the creator to focus on the details of the design.
 
-![Schematic bridge diagram](assets/figure-p016-1.jpg)\
+![A wireframe rendering of a curving road bridge seen from below one end: the deck drawn as a mesh sweeping away to the right, carried on tall tapered piers of diminishing height, with two cable-stayed towers beyond, all on a gridded ground plane.](assets/figure-p016-1.jpg)\
 Figure 7.4: Schematic bridge diagram
 
 Creating such visual forms allows professionals in design-oriented fields like engineering and architecture to solve problems and explore ideas. As Donald Schön, who was a philosopher and professor of urban planning characterized it, design work involves “reflection-in-action” wherein creators work through different design options. Indeed, a structural engineer might have created the sketch in Figure 7.4 to assess and make decisions about the height and width of the pylons---as well as other components of the structure---as she fleshed out the details in the design of this bridge.
@@ -170,12 +175,12 @@ Finally, as a working professional, you might also need to visualize quantitativ
 
 For instance, let’s say you’re a local sales manager for a company that manufactures several different kinds of widgets. The company’s older models (A, B, and C) sold well last year. However, your boss---the regional sales manager---wants to increase sales this year for the newer models (D and E). You schedule a meeting with your marketing team to brainstorm ideas. In preparation, you create the bar graph shown in Figure 7.5 that includes total sales for each model over the past year. During the meeting, you and your team use this chart to discuss strategies to increase sales for models D and E.
 
-![Yearly sales for each widget model](assets/figure-p018-1.jpg)\
+![A horizontal bar chart of yearly sales by model, the axis running from zero to 150,000 dollars. Model A 110,000, Model B 120,000, Model C 140,000, Model D 95,000, Model E 75,000.](assets/figure-p018-1.jpg)\
 Figure 7.5: Yearly sales for each widget model
 
 In this fictional scenario, you created a bar chart so you and your team could compare total sales by model for the year. Creating a different type of graphic---like a line graph---would be useful if your group wanted to see sales by month for one or more of these models as shown in Figure 7.6. While Figure 7.5 allowed your group to compare sales totals, Figure 7.6 allows you and your team to see trends in sales over the year by month. Figure 7.6 shows that sales for all models tend to be highest in the summer with a dramatic increase for all in July in particular. Sales then tend to drop off in August and continue to decline into the fall and winter.
 
-![Sales by month by model for last year](assets/figure-p018-2.jpg)\
+![A line chart of sales by month for five models over a year, the axis running from zero to 25,000 dollars. All five run between about 3,000 and 20,000 with no clear trend: Model E opens highest in January at 15,000 and peaks again at 20,000 in September, Model B and Model C peak together in July near 17,000 and 18,000, and all five fall away through November and December.](assets/figure-p018-2.jpg)\
 Figure 7.6: Sales by month by model for last year
 
 # Thematic Maps
@@ -186,14 +191,14 @@ If your team is also interested in where most of the sales were occurring in a p
 
 This idea can be seen in two infographics (see Figure 7.7) that were published in July of 2020 during the COVID-19 pandemic. More specifically, the Georgia Department of Public Health came under fire for publishing what some argued were misleading thematic maps when Andisheh Nouraee, an Atlanta-based communications and marketing expert, tweeted screenshots of the infographics shown in Figure 7.7.[^11] His tweet, which quickly went viral, pointed out that the number of COVID-19 cases by county in the state increased by 49% between July 2 (left) and July 17 (right). However, visually, we do not perceive much (if any) change in the shading used in the maps because as Nouraee points out, the scale of the legend has changed (see note 11 below for a link to a color version of these maps). On July 2, red (not shown) was used to show counties with between 2,961 to 4,661 cases. But on July 17, red (not shown) was used for counties with 3,769 to 5,165 cases---a 49% increase, he notes. These changes are not visually evident when comparing these maps.
 
-![Infographics created by the Georgia Department of Health during the COVID-19 pandemic](assets/figure-p020-1.jpg)\
+![A tweet by Andisheh Nouraee, 17 July 2020, saying that in just 15 days total COVID-19 cases in Georgia are up 49 percent but you would not know it from the state's data visualization map, asking whether the reader can see a 50 percent increase or spot how they are hiding it. Below, two county maps of Georgia headed Cases per 100K that look almost identical in shading, because the legend ranges have been changed between them: the first runs to 4,661 cases, the second to 5,165.](assets/figure-p020-1.jpg)\
 Figure 7.7: Infographics created by the Georgia Department of Health during the COVID-19 pandemic
 
-![Undescribed figure from page 27 of the source](assets/figure-p027-1.jpg)
+![The outside of a folded brochure for Auburn University Rural Studio's Breathing Wall Mass Timber Research, printed over a photograph of the end grain of a timber beam. A Research Team panel introduces four architecture students with their photographs, home towns and a paragraph each. A Learn More panel answers eight questions in text set sideways, among them what kind of building the system suits, whether it has to be timber, whether it works in summer, how big the holes are, how the walls are held together, whether the airflow can be felt, whether it is patented, and where the timber comes from. An About Rural Studio panel describes the off-campus design-build programme founded in 1993, with a map of Alabama marking Newbern.](assets/figure-p027-1.jpg)
 
-![Undescribed figure from page 28 of the source](assets/figure-p028-1.jpg)
+![The inside of the same brochure. A cutaway drawing of a test building fills the centre, with warm air rising through the roof vent and cool air drawn in through the walls, a figure on a ladder for scale. Labelled panels run around it: What is a Breathing Wall, explaining a mathematically optimized grid of holes that turns the envelope into a heat exchanger; Heat Exchanger; Thermally Active Surface; Buoyancy Ventilation; Sustainable Construction; and Why Mass Timber, with a county map shaded by percentage of timberland. Contact details and social media handles run along the foot.](assets/figure-p028-1.jpg)
 
-![Undescribed figure from page 29 of the source](assets/figure-p029-1.jpg)
+![A Rural Studio Farm harvest calendar. A band of horizontal bars across the top shows when each of 25 crops is harvested from January to June. Below, a grid gives what is growing each month in the greenhouse and in the field. The lower half, headed What Are We Growing, sets out 32 crops as photographs with cultivar, origin and a note of fact for each, reporting that the first season grew 32 food crops and produced 5,613 pounds of organic produce.](assets/figure-p029-1.jpg)
 
 In a local news story, a representative from the state health department responded: “These maps are not designed to show increases over time, but rather to show density by location and difference between counties.”[^12] The organization also acknowledged the confusion and claimed that they were in the process of redesigning the maps to make them more accessible for non-expert audiences. Yet, arguably, the intended audience for these maps---that is, the general public---only cares about “density by location” and not about “difference between counties.” To put it bluntly, if you live in the state of Georgia and you’re looking at these maps, it’s for one reason and one reason only---to determine if COVID-19 cases are increasing in your area. Because you may want to use this visual information to decide what actions to take to prevent exposure to the virus such as engaging in social distancing, staying at home, getting vaccinated, and/or wearing a mask in public areas. You don’t need to know whether cases are higher in your county compared to other counties in the state. The information presented in the maps in Figure 7.7 does not enable viewers to make those decisions. Thus, the maps do not effectively convey the visual information that viewers need to know to make decisions and take actions.
 

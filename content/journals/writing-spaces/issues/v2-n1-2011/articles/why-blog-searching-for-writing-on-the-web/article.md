@@ -13,6 +13,8 @@ volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 chapter-number: 19
+images-of-text:
+- figure-p016-1.jpg
 ---
 
 # Why Blog? Searching for Writing
@@ -161,12 +163,12 @@ The banner is your opportunity to create a strong identity for your site. As you
 
 The colors that dominate your banner will then inform the color choices that you make elsewhere. For example, the blues and grays in the banner image appear as font and background colors in the sidebar. My sidebar includes several widgets. There’s Tungle, which is a web application where my students can make appointments to meet with me. I also have my Twitter feed and a “blog roll” (a list of blogs I read), which is powered by Delicious. In addition, I have a list of recent comments posted to my blog (see more on commenting below). Though my blogging application, like all blogging applications, has its own commenting system, I use Disqus, another social media site, which allows commenters to create identities that they can carry from one blog to another (wherever Disqus is used). Finally, the primary part of the blog is the main text column. I have taken my own advice and
 
-![A screen capture of my current blog, www.alex-reid.net. Figs. 2--6. Examples of different banners I have used for my blog](assets/figure-p016-1.jpg)\
+![A blog called alex-reid.net, headed digital digs over a banner of code. A long post on Latour and post-critical composition fills the main column. A sidebar holds an About section, links to the author's other sites, a book cover for The Two Virtuals, purchase links, and recent short posts.](assets/figure-p016-1.jpg)\
 Fig. 1. A screen capture of my current blog, www.alex-reid.net. Figs. 2--6. Examples of different banners I have used for my blog.
 
-![Undescribed figure from page 16 of the source](assets/figure-p016-2.jpg)
+![A blog banner reading digital digs in a brush script over a photograph of ripples spreading in water, with the line an archeology of the future beneath it.](assets/figure-p016-2.jpg)
 
-![Undescribed figure from page 17 of the source](assets/figure-p017-1.jpg)
+![A blog banner in a shallow strip: a close-up photograph of a telephone keypad, with digital digs: an archeology of the future and a.s. reid set small in the top left corner.](assets/figure-p017-1.jpg)
 
 used dark text on a light background. You should experiment with font, font size, and spacing. Because my posts tend to be long, I have emphasized readability by selecting a simple font and adding some additional spacing between the lines (i.e., more than single-spaced).
 

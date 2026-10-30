@@ -14,6 +14,8 @@ license: This work is licensed under the Creative Commons Attribution-NonCommerc
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 chapter-number: 7
 teacher-resources: separate
+images-of-text:
+- figure-p006-1.png
 ---
 
 > • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/pages/writing-spaces • WAC Clearinghouse: http://wac.colostate.edu/books/
@@ -76,7 +78,7 @@ One of the most common ways discourse communities share information and meet the
 
 The guitar jam group used two primary genres to meet the goals of the community. The Meetup.com site was one important genre that was critical in the formation of the group and to help it recruit new members. It was also the genre that delivered information to the members about what the community was about and where and when the community would be meeting. The other important genre to the guitar jam group were the handouts with song chords and lyrics. I’m sharing an example of a song I brought to the group to show you what this genre looks like.
 
-![Lyrics and chord changes for “Heart of Gold” by Neil Young with a fingering chart for an E minor 7 chord](assets/figure-p006-1.png)\
+![A guitar lead sheet for Neil Young's Heart of Gold: the verses set out in two columns with chord names printed above the words, and a fingering chart for an E minor 7 chord in the lower left, showing which strings are stopped at which frets.](assets/figure-p006-1.png)\
 Figure 1: Lyrics and chord changes for “Heart of Gold” by Neil Young with a fingering chart for an E minor 7 chord
 
 This genre of the chord and lyrics sheet was needed to make sure everyone could play along and follow the singer. The conventions of this genre---the “norms”---weren’t just arbitrary rules or formulas. As with all genres, the conventions developed because of the social action of the genre. The sheets included lyrics so that we could all sing along and make sure we knew when to change chords. The sheets included visuals of unusual chords, like the Em7 chord (E minor seventh) in my example, because there were some beginner guitarists who were a part of the community. If the community members were all expert guitarists, then the inclusion of chord shapes would never have become a convention. A great resource to learn more about the concept of genre is the essay “Navigating Genres” by Kerry Dirk in volume 1 of *Writing Spaces*.

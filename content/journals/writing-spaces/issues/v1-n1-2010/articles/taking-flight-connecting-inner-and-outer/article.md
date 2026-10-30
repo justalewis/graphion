@@ -51,14 +51,14 @@ While thinking about an idea and devising a way to write about it, you may find 
 
 In Figure 1, I’ve outlined some key areas that will generally fall under each category. You might think of other key areas to include. Figure 2 shows an example of what your actual diagram might look like.
 
-![Diagram of Personal and Social Topical Aspects](assets/figure-p004-1.png)\
+![A bird drawn in ink from the front, wings spread. Words run out along the left wing under the heading Personal: goals, motivation, emotions, reflection, experience. Along the right wing, under Social: communities, conversations, policies, fields of study, action.](assets/figure-p004-1.png)\
 Figure 1. Diagram of Personal and Social Topical Aspects
 
 This diagram can be used with either a list of interests you are using to try to find an idea, or it can be used to focus or develop an idea once you have a general direction.
 
 Here is the diagram I made that lists several possible ideas:
 
-![Diagram of Personal Interests and Social Components](assets/figure-p005-1.png)\
+![The same winged diagram with the author's handwriting filling it in. On the personal side: sadness and anger at animals dying in shelters, community and belonging, using and developing her gifts, peace and building bridges, empathy. On the social side each becomes a question: what strategies make no-kill shelters successful and how more shelters could use them, how a community is built or encouraged, how education can help students find directions that fit their gifts and goals.](assets/figure-p005-1.png)\
 Figure 2. Diagram of Personal Interests and Social Components.
 
 Here, I listed a few of the ideas or causes that are personally important to me, and then tried to pair those with the issues in the outside world by asking questions that I could explore in the process of building an essay. For example, an issue that I have a strong personal and emotional response to is the killing of healthy and potentially adoptable animals in shelters and animal control facilities. To link this to a context beyond myself, I listed the issue of kill versus no-kill shelters in the right-hand column, and in the left-hand column, I asked how the strategies used by no-kill shelters could also help other shelters to increase adoption rates and reduce euthanasia. I now have a question I can research and write about.
@@ -123,14 +123,14 @@ During invention, no aspect of who you are is off limits, though you need to dec
 
 I have learned that feelings and ideas are very closely related during invention, and so it’s a good idea to pay attention to them. One of my hobbies is collecting gemstones and crystals, which are to me an inspiring form of natural artwork. Part of what gives me such a sense of delight when looking at stones comes from seeing them through an artist’s eye. Consider, for instance, a polished stone made from polychromatic jasper and how my observations led me to think about writing.
 
-![Polychromatic Jasper](assets/figure-p010-1.jpg)\
+![A polished oval stone photographed against black, its face crossed by broad curving bands of light and dark that meet along a ridge.](assets/figure-p010-1.jpg)\
 Figure 3. Polychromatic Jasper.
 
 One day, I picked up this stone and took a careful look at it. The bands of color reminded me of the seashore and a beach of pink sand. Since it was late at night, I imagined what it would be like to stand on such a beach, silhouetted by the twilight, and stare out to sea, an endless dark sky stretching into the distance with a single bright star illuminating the silent silvery waves. The scene, if one could touch it, would be soft and even soothing, like velvet. The meaning of this scene to me is one of potential waiting to be explored. It felt like standing on the shores of a world that was waiting to be created, imagined into being. And I thought about people who write stories, and how they create, in their imagination, the worlds they write into being---which in some sense is always what we do when we write. We are creating a picture of the world for our audience, and it is colored and stylized by how it emerges from our own perspectives.
 
 The artist in me also wanted to try to paint this scene. And this is one of the most natural forms of invention of all---we see something and our imagination responds. We feel a desire to create something in response to what we have seen, whether that creation is a painting, a poem, or an essay. Often in a writing class, we are responding to texts, but our response could really be to anything.
 
-![Landscape Painting Inspired by Polychromatic Jasper](assets/figure-p011-1.jpg)\
+![A loose painting in greys: a spiral of brushstrokes high at the right against a dark sky, and a wide pale band of horizontal strokes running across the lower half.](assets/figure-p011-1.jpg)\
 Figure 4. Landscape Painting Inspired by Polychromatic Jasper.
 
 My quick painting is far from photorealistic, and if you saw the painting by itself, I very much doubt that “polychromatic jasper” would spring to mind. But that is the beauty of invention. As an artist, photorealism is not, and likely never will be, my style. I accept that about myself, and instead of seeing it as a limitation, I choose to celebrate my own unique style. One of my art teachers back in high school once told the class that if a perfect recreation of reality was the goal, then one might as well take a photograph, because painting is more about interpreting the world through the artist’s vision and way of seeing. I’d like to suggest the same principle to you: your writing is not about trying to recreate what is out there in the world, or to write what someone else---some imaginary perfect writer---could write, but rather to see the subject of your writing through your own vision of it. Even when we write non-fiction, we are recreating a vision of the world with our words and putting that portrayal out there to share with our audience. As my art teacher told the class that day, what you create will be unique because you are unique.
@@ -201,10 +201,10 @@ I find that being slightly distracted helps with invention, and that sometimes, 
 
 I do find that activities involving sound can help. I have a Bodhran, which is an Irish frame drum, and a singing bowl. If I seriously need to de-stress, I go and bang on my drum. Both of these instruments require movement to produce the sound. The drum has to be stuck with fast, rhythmic movements using a stick called a cipin or beater, and the singing bowl is made to sing, or produce harmonic tones, by rubbing the outside rim of the bowl with a suede covered striking tool or mallet. Listening to the drumbeat or whirring of the bowl is calming, giving the mind one thing to focus on, and the arm movement releases tension by using up excess adrenaline.
 
-![Bodhran](assets/figure-p018-1.jpg)\
+![A close-up of a shallow frame drum. A ring of Celtic knotwork is printed on the skin head, tacks run round the rim, and a wooden beater lies across the face.](assets/figure-p018-1.jpg)\
 Figure 5. Bodhran
 
-![Singing Bowl](assets/figure-p018-2.jpg)\
+![A hammered metal bowl resting on a dark cushion, with a wooden mallet standing inside it.](assets/figure-p018-2.jpg)\
 Figure 6. Singing Bowl
 
 Once you’ve indulged in a few of these methods of intentional distraction, bring yourself back to the page or screen. I have found that it is important to make the very small step of writing something, even if it is not much. Even if it is only a word or two, or one sentence, write it down. Take a break, and come back in five minutes and write down another few words or another line. Eventually, you’ll find you have more to say.

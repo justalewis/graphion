@@ -13,6 +13,11 @@ volume-title: Writing Spaces 1
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 chapter-number: 14
+images-of-text:
+- figure-p007-1.png
+- figure-p007-2.png
+- figure-p013-1.png
+- figure-p016-1.png
 ---
 
 # Wikipedia Is Good for You!? *James P. Purdy*
@@ -75,7 +80,7 @@ Not only is Wikipedia potentially useful for generating ideas, finding sources, 
 
 Before proceeding, let me offer an overview of the Wikipedia interface so that the following discussion, which points to specific aspects of the interface, makes sense. A Wikipedia article’s interface has four tabs, as shown in figure 3. These tabs are labeled “article,” “discussion,” “edit this page,” and “history.” The “article” tab contains the content of the article. This content is what displays automatically when you open an article in Wikipedia. The “discussion” tab provides access to the conversation surrounding the article, how it is being written, and the topic being written about. On this page users can, among other things, suggest changes to an article, justify changes they made to an article, and ask why other users made changes to an article. You can participate in this conversation. The “edit this page” tab provides a space for users to add, delete, or revise content of an article. This page is where people write the content that is displayed on the “article” page. You can make these changes. Finally, the “history” tab lists all the versions of the article, when they were written, who updated them, and what changes each user made (each author can provide a summary of his or her changes). On the “history” tab users can also compare and contrast selected article versions.
 
-![A Wikipedia article interface’s four tabs as shown for the Web 2.0 article](assets/figure-p009-1.png)\
+![The top of a Wikipedia article showing its four tabs: article, discussion, edit this page, and history. Below them the title Web 2.0 and the opening of the entry.](assets/figure-p009-1.png)\
 Figure 3. A Wikipedia article interface’s four tabs as shown for the Web 2.0 article
 
 Each of the sections below is devoted to a practice common to both successful Wikipedia contributions and research-based writing. In each, I explain how Wikipedia authors engage in that practice, outline how you can learn from what Wikipedians do to engage in that practice for your research-based writing, and finally provide a specific way you can use Wikipedia for help with that practice.
@@ -100,7 +105,7 @@ I end this section suggesting a way you can use Wikipedia to help you with this 
 
 Let’s consider an example. If you read the discussion page for the Wikipedia article *History of the board game Monopoly*, a section of which is shown in figure 5, you will find that contributors argue about when the game originated and the role Elizabeth Magie played in its creation; they ask questions about the rules for players selling property to one another; and they think information on the volume of game sales, McDonald’s Monopoly games/promotions, and the World Monopoly Championships is missing and should be addressed more fully. Were you to write about the history of the board game Monopoly, you now have several avenues (no pun intended!) to read about and know what you might need to review in making an argument on the topic.
 
-![Section of the discussion page from Wikipedia’s *History of the board* *game Monopoly* article](assets/figure-p013-1.png)\
+![Part of a Wikipedia discussion page. A thread headed The First Paragraph asks why the opening does not say which country the article is about, with three replies nested under it arguing about whether a board game needs a geography. A second exchange asks how the game can be traced to Elizabeth Magie if several designs appeared over thirty years, and is answered that Monopoly was built up in versions much as a Wikipedia article is.](assets/figure-p013-1.png)\
 Figure 5. Section of the discussion page from Wikipedia’s *History of the board* *game Monopoly* article
 
 # Conversing
@@ -121,7 +126,7 @@ Again, I end this section offering a suggestion for how you can use Wikipedia to
 
 Another practice that is part of successful Wikipedia and research-based writing is revising. Effective Wikipedia contributors revise articles frequently. They take advantage of the wiki capability to edit the articles they read. To be successful, they do not give up when other people delete or change their contributions but instead revise in response to the feedback they receive (be that from posts to the discussion page, change summaries on the history page, or administrator explanations for why something was removed). The history page for nearly any Wikipedia article provides evidence of how frequently Wikipedians revise. Figure 6, for instance, shows that authors made eleven revisions to the *Michael Jackson* article in one hour on 28 June 2009. As this page illustrates, making an enduring contribution to a Wikipedia article is an ongoing process of negotiation with the reading audience. Moreover, those contributors who revise the most and have their article contributions last for a long time can gain in status
 
-![Section of the history page from Wikipedia’s *Michael Jackson* article](assets/figure-p016-1.png)\
+![Part of a Wikipedia revision history: fifteen edits to the Michael Jackson article made within two hours on 28 June 2009. Each row gives the time, the editor's name, the article's size in bytes and a short summary of the change, several of which argue about whether a current-event tag belongs on the page.](assets/figure-p016-1.png)\
 Figure 6. Section of the history page from Wikipedia’s *Michael Jackson* article.
 
 among the Wikipedia community and be promoted to administrators. It is, in other words, through revising that Wikipedia contributors earn respect.
@@ -190,7 +195,7 @@ Seigenthaler, John. “A False Wikipedia Biography.” *USA Today.* Gannett Co.,
 
 Wilson, Mark A. “Professors Should Embrace Wikipedia.” *Inside Higher Ed.* Inside Higher Ed, 1 April 2008. Web. 1 April 2008.
 
-“Writing.” *Wikipedia.* Wikimedia Foundation, 11:13, 9 June 2004. Web. 9 Nov. 2004. ![Undescribed figure from page 7 of the source](assets/figure-p007-1.png) ![Undescribed figure from page 7 of the source](assets/figure-p007-2.png) This essay is available under a Creative Commons License subject to the Writing Spaces Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2010 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
+“Writing.” *Wikipedia.* Wikimedia Foundation, 11:13, 9 June 2004. Web. 9 Nov. 2004. ![A Wikipedia references section set in two columns: twenty-five numbered citations for the Web 2.0 article, each ending in an external-link icon.](assets/figure-p007-1.png) ![A Wikipedia Further reading section: seven entries, among them a history of writing from hieroglyph to multimedia, three ERIC digests on writing instruction, a German discussion of Barthes, Breton, Deleuze and Federman, and links on the origins and history of writing. A tooltip shows one entry's URL.](assets/figure-p007-2.png) This essay is available under a Creative Commons License subject to the Writing Spaces Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2010 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
 
 [^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
 

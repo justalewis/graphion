@@ -13,6 +13,8 @@ volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 chapter-number: 14
+images-of-text:
+- figure-p012-1.png
 ---
 
 # Googlepedia: Turning Information Behaviors into Research Skills
@@ -245,7 +247,7 @@ Susan
 
 Susan begins her research where most students do, on Google. Interestingly, Susan does not start with the general topic of outsourcing, opting instead to let the search engine recommend related search terms. As Susan types in the term “outsourcing,” Google as a search engine builds on character recognition software providing several “suggestions” or related search terms, terms that Susan expects to be provided for her, and one---“outsourcing pros and cons”---quickly catches her attention. Commenting on this choice instead of searching by the general concept of outsourcing, Susan notes, “I would have to sort through too much stuff [on Google] before deciding what to do.” She selects “pros and cons” from the many related and limiting search terms suggested to her; Susan states, “I want both sides of the story because I don’t know much about it.”
 
-![Outsourcing suggestions from Google](assets/figure-p012-1.png)\
+![A Google search box part-way through the word outsourcing, with a suggestion list offering outsourcing, outsourcing pros and cons, outsourcing tv show and outsourcing companies. Below it, about 25,800,000 results: three sponsored links, then the Wikipedia entry for outsourcing, an article on how it is transforming industries, and a brief guide to what outsourcing is.](assets/figure-p012-1.png)\
 Fig. 1. Outsourcing suggestions from Google.
 
 Susan next moves into examining the top ten returns provided on the first page of her Google search for outsourcing pros and cons. Doing what is now common practice for most Web users, Susan immediately selects the link for the first item returned in the query. I believe most search engine users are wired this way, even though they are likely familiar with the emphasis given to commercial sites on Google and other search engines. Quickly unsatisfied with this source, Susan jumps around on the first page of returns, stopping on the first visual she encounters on a linked page: a table illustrating pros and cons. Asked why she likes the visual, Susan responds that she is trying to find out how many arguments exist for and against outsourcing. On this page, Susan notes the author provides seven pros and four cons for outsourcing. This finding leads Susan to believe that more pros likely exist and that her essay should be in support of outsourcing.

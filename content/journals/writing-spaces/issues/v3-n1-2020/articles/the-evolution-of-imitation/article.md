@@ -14,6 +14,9 @@ license: This work is licensed under the Creative Commons Attribution-NonCommerc
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 teacher-resources: separate
 chapter-number: 8
+images-of-text:
+- figure-p009-1.jpg
+- figure-p009-2.jpg
 ---
 
 > • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/pages/writing-spaces • WAC Clearinghouse: http://wac.colostate.edu/books/
@@ -86,10 +89,10 @@ The other aspects of contextual imitation refer to the where and why authors mak
 
 In what follows (see figure 1), we have an excerpt from a short creative nonfiction piece. As we look at the piece, focus on where the author is deciding to *do* certain things---the comments along the side offer some guidance to help us along. He is describing a baseball game during, what we learn is, a critical moment: the last inning, the author’s team is up by one run, and he’s the catcher. We pick up the action with an intimidating and athletic player on first base---called by the author “big boy”---and a batter having let pass two pitches:
 
-![Image of essay with marginal comments explaining some of the writer’s rhetorical choices](assets/figure-p009-1.jpg)\
+![The first page of a creative nonfiction excerpt about a batter at the plate, with phrases highlighted and six comment balloons ranged down the right margin. The comments name the rhetorical move each phrase makes: a short sentence summarising the paragraph, a shift of position from catcher to outfield, active verbs raising tension, a sentence whose tension is powerful but silent.](assets/figure-p009-1.jpg)\
 Fig. 1. Image of essay with marginal comments explaining some of the writer’s rhetorical choices. Source: Craig A. Meyer, “Finding My Team.”
 
-![Undescribed figure from page 9 of the source](assets/figure-p009-2.jpg)
+![The second page of the same annotated excerpt, the batter driving into a linebacker and going down. Five comment balloons name the moves: a distinction quickly dismissed, a violent image of a massive force balancing the narrator's own, the collision as the turn of the paragraph, the diction setting a short sentence against a long one, and a closing line that completes the scene.](assets/figure-p009-2.jpg)
 
 This author, as we see by the comments on the right, decided to create almost a mini story at the end of each paragraph. This is a powerful technique (and one you can imitate). Think of it like this: imagine going to a movie that is two hours long. The first 110 minutes are horrible. You consider walking out but your friend insists that you stay, and she has the car keys. So you stay and suffer. But the last ten minutes feature the best piece of cinematography you’ve ever witnessed; it’s exciting---these ten minutes of the movie bring everything together and ends with an unforeseen twist that you find brilliant and unforgettable.
 

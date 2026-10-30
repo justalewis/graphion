@@ -14,26 +14,30 @@ volume-title: Technical Writing Spaces 6
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 teacher-resources: separate
+images-of-text:
+- figure-p002-1.jpg
+- figure-p013-3.jpg
+- figure-p013-5.jpg
 ---
 
 Now, we are amid an age of heightened awareness and cognizance of cross-cultural presence (e.g., consider the recent emergence of the Black Lives Matter movement) and the related rising advocacy and clarion calls for diversity, equity, access, inclusion, and justice. Within the current age of decolonization (i.e., the dismantling of a culture’s domination over others), readers, the people served through our technical instructions, are culturally diverse human beings who need and want information that speaks their culture-based languages or can be accessed in a tech-mediated way that translates information into their respective languages. An example of
 
 how this cultural phenomenon is manifesting can be found in the pidgin translation of BBC’s news captured as a screenshot in Figure 15.1. As a result of these cross-cultural influences on the reading of information today, technical instructions must enable cross-cultural resonance, that is, an ability to communicate effectively with people of many different cultures.
 
-![Pidgin Translation of BBC News’ Most Popular Articles and its Privacy and Cookies Policy Update on Wednesday, June 9, 2021. Image Courtesy Audrey G. Bennett](assets/figure-p002-1.jpg)\
+![The BBC News Pidgin site on its Most popular tab, headed De one we dem de read well well, listing seven numbered headlines in Nigerian Pidgin on a woman who gave birth to ten babies, the new Nigerian passport process, reaction to Prophet TB Joshua's death, Mark Zuckerberg on the Buhari Twitter ban, and a Ghanaian presidential visit. A banner across the foot reads We don update our Privacy and Cookies Policy, saying important changes have been made and explaining what they mean for you and your personal information, with buttons OK and Find out wetin don change.](assets/figure-p002-1.jpg)\
 Figure 15.1 Pidgin Translation of BBC News’ Most Popular Articles and its Privacy and Cookies Policy Update on Wednesday, June 9, 2021. Image Courtesy Audrey G. Bennett
 
-![Undescribed figure from page 12 of the source](assets/figure-p012-1.jpg)
+![An eight-pointed star quilt block on a pale ground, each point built from rows of small diamonds that shade from dark at the centre through mid greys to light at the tips, with a small eight-pointed star at the very centre and four dark diamonds set at the corners.](assets/figure-p012-1.jpg)
 
-![Undescribed figure from page 13 of the source](assets/figure-p013-1.jpg)
+![Two panels. At the left, a plain eight-pointed white star on black, drawn from eight narrow diamonds meeting at a point. At the right, three stacked Scratch-style programming blocks reading repeat 8, stamp, edge flip.](assets/figure-p013-1.jpg)
 
-![Undescribed figure from page 13 of the source](assets/figure-p013-2.jpg)
+![A still from a video: a woman in a patterned dress stands on a dark mat in a corridor, looking down at something in her hands. A play button overlays the centre and a progress bar runs along the foot.](assets/figure-p013-2.jpg)
 
-![Undescribed figure from page 13 of the source](assets/figure-p013-3.jpg)
+![The CSDT website on a page headed Anishinaabe Quilts, with a sidebar listing Background, Gee's Bend, Appalachian, Lakota, Anishinaabe, Four Directions and AfroFuturism. The text begins by saying the Anishinaabe are Indigenous peoples including the Odawa and others, and goes on to a circle divided into four quarters.](assets/figure-p013-3.jpg)
 
-![Undescribed figure from page 13 of the source](assets/figure-p013-4.jpg)
+![A still from a video filling the frame with woven kente cloth: a grid of dark blocks alternating with blocks of narrow pale stripes, the strips sewn edge to edge. A play button overlays the centre.](assets/figure-p013-4.jpg)
 
-![Undescribed figure from page 13 of the source](assets/figure-p013-5.jpg)
+![A CSDT lesson page split in two. At the left, step 1, Setting up Your Script, with the instruction to create the first part of an Anishinaabe quilt script, a More info link, and an embedded video paused at 55 seconds reading let's set up the program. At the right, a quilting tutorial workspace showing a stack of Scratch-style blocks: when clicked, repeat 40, go to x y, point at angle, rotate by degrees, switch to costume, set colour effect to, reflect across y axis, set size to 100 percent, clear, make a block, and out, stamp, back, radius 150. A bar above reads you completed 0 out of 7 lessons.](assets/figure-p013-5.jpg)
 
 # When Cultural Dissonance Deters Access to Meaning
 

@@ -67,7 +67,7 @@ What’s the moral here? Developing your “writer’s sense” about communicat
 
 Figure 1, depicting the writing situation, presents the best image I know of describing all the complexities involved in the writing situation.
 
-![Source: “A Social Model of Writing.” Writing@CSU. 2010. Web. 10 March 2010. Used by permission from Mike Palmquist](assets/figure-p005-1.jpg)\
+![Three nested ovals name the contexts writing sits inside: physical within social within cultural. At the centre, a page labelled Documents and Genres takes arrows from a panel of photographs of writers at the left and passes them on to a panel of readers at the right. Three arrows point inward from each side: Influences (interests, needs, beliefs, knowledge, values, requirements, limitations, opportunities), Purposes, and each side's interpretation of the other.](assets/figure-p005-1.jpg)\
 Figure 1. Source: “A Social Model of Writing.” Writing@CSU. 2010. Web. 10 March 2010. Used by permission from Mike Palmquist.
 
 *Looking More Closely at the “Academic Writing” Situation*

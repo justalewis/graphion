@@ -14,6 +14,8 @@ license: This work is licensed under the Creative Commons Attribution-NonCommerc
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 teacher-resources: separate
 chapter-number: 2
+images-of-text:
+- figure-p007-1.jpg
 ---
 
 > • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/pages/writing-spaces • WAC Clearinghouse: http://wac.colostate.edu/books/
@@ -34,17 +36,17 @@ Visuals can dramatically impact our understanding of a rhetorical situation. In 
 
 It’s Friday night and you’re hungry.* So, you corral some friends and you all decide that you’d like to go out to eat somewhere new. You hop online to explore your options, and, in the process, you find a wealth of information from menus and visitor reviews to hours and locations. But there’s one factor that has an especially strong influence on your choice: the pictures of the food.
 
-![A cheeseburger is held in a close-up shot](assets/figure-p003-1.jpg)\
+![A hand holds a cheeseburger close to the camera against a grey brick wall: a glossy bun, frilled lettuce, tomato, melted orange cheese and a dark patty.](assets/figure-p003-1.jpg)\
 Figure 1. A cheeseburger is held in a close-up shot. Photo by Jenae Cohn.
 
-![A hamburger and fries meal at Shake Shack in Palo Alto, California](assets/figure-p003-2.jpg)\
+![A metal tray on a slatted wooden table holding crinkle-cut fries in a paper boat, a cheeseburger in branded wrapping, a small pot of ketchup and a plastic cup of pale beer, shot from above in even daylight.](assets/figure-p003-2.jpg)\
 Figure 2. A hamburger and fries meal at Shake Shack in Palo Alto, California. Photo by Jenae Cohn.
 
 You check out a review page for a hamburger joint and find yourself drooling over a close-up shot of a juicy burger with a slice of cheese oozing over the edge (see figure 1). You click to the next shot and see a cascade of golden french fries on a tray with an ombre-tinted iced tea and lemonade (see figure 2). You click one more time and find yet another delectable shot: a frosty milkshake with a mountain of whipped cream on top. You’re feeling increasingly convinced that this restaurant is where you’ll suggest that you and your friends go out to eat.
 
 You decide to click through to see one more picture, expecting to see yet another culinary delight (see figure 3). But this next photo surprises you: it’s a picture of someone’s tray of food, but it’s dimly lit and a little hard to tell what’s there. The hamburger looks squished and flat, the meat greasy and paltry. The french fries curled up next to the burger look a bit dried out. There’s a mysterious puddle of sauce in a bowl next to the plate burger, and it’s not totally clear what’s in it. The meal suddenly doesn’t look so appetizing after all.
 
-![A poorly lit, squished hamburger and fries](assets/figure-p004-1.jpg)\
+![The same meal photographed close and badly lit: the bun creased and squashed, the fries crowding in from the left, the frame tilted and the colours flat.](assets/figure-p004-1.jpg)\
 Figure 3. A poorly lit, squished hamburger and fries. Photo by Jenae Cohn.
 
 You find yourself confused. All of these pictures are supposedly of food at the same restaurant, but the pictures look so different from each other. Knowing that the images may not accurately reflect the reality of the restaurant experience, you feel angry and misled: how can you possibly know which photos capture the “real” experience at the restaurant? Why trust any photos of restaurant food at all?
@@ -67,7 +69,7 @@ We’ll explore a few more examples of what visual rhetoric can look like in a f
 
 Let’s think back to the restaurant example one more time. You’ve picked a restaurant for your Friday night dinner and now you’re with your friends and are seated at the dining table. A waiter hands you a menu and guess what? You’re seeing yet another example of visual rhetoric in action. This particular menu comes from a real restaurant, called Oren’s Hummus, which has locations around the San Francisco Bay Area in California (see figure 4).
 
-![An image of a menu for Oren’s Hummus with three columns containing various menu items](assets/figure-p007-1.jpg)\
+![A restaurant menu for Oren's Hummus on one page. Three columns of dishes grouped under headings: hummus bowls, salads, bourekas, grilled entrees, Israeli specialties, pita sandwiches, dips and sides, and fries, with beer and wine lists along the foot. The restaurant's name and the line Rip, Scoop, Eat! sit in a panel at the top right, and the addresses of three branches run across the bottom.](assets/figure-p007-1.jpg)\
 Figure 4. An image of a menu for Oren’s Hummus with three columns containing various menu items. Menu image courtesy of Mistie Cohen.
 
 This restaurant menu doesn’t have pictures on it, but it makes visual choices that may impact which food items you decide to order. For example, separating certain food items under headers, like “Hummus Bowls” and “Grilled Entrees” gives you some quick visual information about what items you can expect to find in those sections. Even more noticeably, the section titled “Dips & Sides” is separated from the other menu items by a green box. While the words “Dips & Sides” may have helped us understand that the items in that section would be smaller-sized than the menu items outside the green box, the use of the green box is a rhetorical tool; it makes it really obvious to the restaurant goer that if they order an item from the Dips & Sides section, it’s going to be smaller than the items that are not inside the green box.
@@ -94,7 +96,7 @@ Here are six elements of visual design you may want to consider in order to unde
 
 Lines are visual markers that are often used to divide different sections of an image or document into multiple parts. Lines can create order in something disorderly, offering the eyes a sense of where to go or how to differentiate between different elements. Many artists and graphic designers often rely on grids of lines to help them determine where to place particular elements in a picture or a graphic to ensure that the viewer can understand where to focus their attention or where to differentiate one piece of information from another (see figure 5).
 
-![The edge of an orange fence casts a shadow on the sidewalk. Image is titled “lines” by Charlotte Kinzie (www.flickr.com/photos/ckinzie/252835206) and is licensed under CC BY-NC-ND 2.0](assets/figure-p010-1.jpg)\
+![A red metal railing on a yellow painted kerb, photographed from above at an angle. The uprights throw long diagonal shadows across pale concrete, and a strip of grey asphalt runs behind.](assets/figure-p010-1.jpg)\
 Figure 5. The edge of an orange fence casts a shadow on the sidewalk. Image is titled “lines” by Charlotte Kinzie (www.flickr.com/photos/ckinzie/252835206) and is licensed under CC BY-NC-ND 2.0
 
 When you look at a visual, consider asking questions about line in the following ways:
@@ -111,7 +113,7 @@ Lots of resources online exist to help designers keep particular cultural associ
 
 You may not be able to account for all of the different situations where colors may signify different things to different viewers, but as a reader and composer, you will want to be attentive to how and where color is used, even if the possibilities for interpretation may vary.
 
-![An abstract pattern of rectangles in a variety of muted earth tones, ranging from oranges to greens, blues, and browns. Image is titled “color swatches” by Nancy Muller (www.flickr.com/photos/kissabug/2469838932) and is licensed under CC BY-NC-ND 2.0](assets/figure-p012-1.jpg)\
+![A painted grid of short vertical brushstrokes in four rough bands, running through oranges, deep blues, greens, creams, browns and dusty pinks. The strokes are uneven and the paint is visibly laid by hand.](assets/figure-p012-1.jpg)\
 Figure 6. An abstract pattern of rectangles in a variety of muted earth tones, ranging from oranges to greens, blues, and browns. Image is titled “color swatches” by Nancy Muller (www.flickr.com/photos/kissabug/2469838932) and is licensed under CC BY-NC-ND 2.0.
 
 When you look at a visual, consider asking questions about color in the following ways:
@@ -126,7 +128,7 @@ Many other shapes build off of these three fundamental shape types. For example,
 
 Shapes that come from the real world---like the clouds and trees or the light bulbs and rocket ships---tend to be culturally situated in the same way that colors can have different cultural associations. Yet as readers of visuals, we can analyze the roles that shapes play based on our own understanding of the audience’s needs and purposes when accessing the visual.
 
-![A pattern of circles, squares, and triangles in bright colors contrasted on an asphalt surface. Image is titled “DSC_1384” by Michael Poitrenaud (www. flickr.com/photos/michel_poitrenaud/10595502904) and is licensed under CC BY-NC-SA 2.0](assets/figure-p013-1.jpg)\
+![Circles, squares, rectangles and triangles painted in bright pink, blue, green, orange, yellow and white, scattered across black asphalt and photographed at a low angle.](assets/figure-p013-1.jpg)\
 Figure 7. A pattern of circles, squares, and triangles in bright colors contrasted on an asphalt surface. Image is titled “DSC_1384” by Michael Poitrenaud (www. flickr.com/photos/michel_poitrenaud/10595502904) and is licensed under CC BY-NC-SA 2.0.
 
 When you look at a visual, consider asking questions about shapes in the following ways:
@@ -137,7 +139,7 @@ When you look at a visual, consider asking questions about shapes in the followi
 
 In visuals, different elements may be large while other elements may be small. Typically, the elements that are larger sizes than other elements are of greater importance than the elements that are smaller sizes. But larger things are not always more valuable; the other elements in the visual may visually draw attention to smaller-sized items so that we don’t lose sight of the smaller parts of the visual entirely. Large images next to small images may also be used to help us compare two parts so that we can see how they are related to each other (see figure 8).
 
-![A row of three giraffes, ranging from a small giraffe to a larger one, line up outside of a doorway. Image is titled “Giraffes” by Smallbrainfield (www. flickr.com/photos/smallbrainfield/3378461407) and is licensed under CC BY-NC 2.0](assets/figure-p014-1.jpg)\
+![Three giraffes stand outside a timber doorway in a stone wall, smallest at the left and tallest at the right, the tallest bending its head down through the doorway. A height scale on the door frame is marked 2.5 metres, 3.0 metres and 4.0 metres.](assets/figure-p014-1.jpg)\
 Figure 8. A row of three giraffes, ranging from a small giraffe to a larger one, line up outside of a doorway. Image is titled “Giraffes” by Smallbrainfield (www. flickr.com/photos/smallbrainfield/3378461407) and is licensed under CC BY-NC 2.0.
 
 When you look at a visual, consider asking questions about size in the following ways:
@@ -150,7 +152,7 @@ In between or around the elements in a particular visual, there is always some e
 
 Even in a document that is mostly text, space signifies meaning. For example, when you split paragraphs into their individual units, the space before and after the paragraph indicates that one thought is about to begin while another thought ends. Similarly, in other kinds of visuals, space might help a certain element stand out from other parts or it might help you understand where one part of the image begins and another part ends (see figure 9).
 
-![Two red apples are clustered in one corner of a wooden table, drawing attention to the fruit in an open space. Image is titled “apples” by Paul Bausch (*www.flickr.com/photos/pb/6129499766/*) and is licensed under CC BY-NC-SA 2.0](assets/figure-p015-1.jpg)\
+![Two red apples sit together in the lower right corner of a bare, pale wooden table. The rest of the frame is empty grain.](assets/figure-p015-1.jpg)\
 Figure 9. Two red apples are clustered in one corner of a wooden table, drawing attention to the fruit in an open space. Image is titled “apples” by Paul Bausch (*www.flickr.com/photos/pb/6129499766/*) and is licensed under CC BY-NC-SA 2.0.
 
 When you look at a visual, consider asking questions about space in the following ways:
@@ -163,7 +165,7 @@ Value refers to the lightness or darkness of a particular element in a visual. F
 
 Value is a comparative function by default; a dark color by itself may not mean anything unless a lighter color is present by comparison. Similarly, a “dark” visual may not necessarily have greater value than a “light” visual; however, if there are both dark and light elements in a particular visual, those shades signify differing levels of importance or attention in the visual itself. Sometimes, the dark elements may be meant to obscure information and make the lighter elements more visible. At other times, darker shades of a particular color may draw more attention to them than lighter shades of a color (see figure 10).
 
-![Light illuminates a dirt pathway in a forest; the trees around the pathway are shaded. Image is titled “West Highland Way” by tomsflickrfotos2 (flickr. com/photos/tomsflickrfotos2/453754005/) and is licensed under CC BY-NC-SA 2.0](assets/figure-p017-1.jpg)\
+![A narrow dirt path curves away through a dark conifer wood. Sunlight falls on the bright moss banking the path and on the trees at the far end; the near trunks are in deep shade.](assets/figure-p017-1.jpg)\
 Figure 10. Light illuminates a dirt pathway in a forest; the trees around the pathway are shaded. Image is titled “West Highland Way” by tomsflickrfotos2 (flickr. com/photos/tomsflickrfotos2/453754005/) and is licensed under CC BY-NC-SA 2.0.
 
 When you look at a visual, consider asking questions about value in the following ways:
@@ -174,7 +176,7 @@ When you look at a visual, consider asking questions about value in the followin
 
 We may think of texture primarily from a tactile perspective initially. When we touch different objects, we tend to notice texture right away: silk tend to be smooth to the touch while burlap tends to be rough and bumpy. But we can look at a picture and detect different surfaces just by the look of it too, and the conveyance of those textures may also impact our orientation and understanding of what the image conveys. For example, a visual that includes lots of tiny dots may convey a bumpy texture while a visual that includes lots of wavy lines and wavy images may convey a smoother or more “watery” texture. Textures might be used to evoke particular sensations in the viewer, but they may also be used to distinguish one visual element from another (see figure 11).
 
-![A craggy-textured rock is on the rippled sandy shore of a beach. Image is titled “Beach on the Chang Jiang (Yangtze)” by Eul Mulot (https://www.flickr. com/photos/mulot/3315444069) and is licensed under CC BY-NC-SA 2.0](assets/figure-p018-1.jpg)\
+![A single dark, pitted rock sits on grey sand rippled into long soft waves, its shadow thrown to the left. Grains of sand catch the light across the whole frame.](assets/figure-p018-1.jpg)\
 Figure 11. A craggy-textured rock is on the rippled sandy shore of a beach. Image is titled “Beach on the Chang Jiang (Yangtze)” by Eul Mulot (https://www.flickr. com/photos/mulot/3315444069) and is licensed under CC BY-NC-SA 2.0.
 
 When you look at a visual, consider asking questions about texture in the following ways:

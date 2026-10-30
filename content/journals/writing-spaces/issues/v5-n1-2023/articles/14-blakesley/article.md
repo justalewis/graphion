@@ -50,10 +50,10 @@ In 1644, preacher and rhetorician John Bulwer represented these two hands in his
 
 In *Magic, Rhetoric, and Literacy*, William A. Covino suggests that the open hand and closed fist convey rhetoric’s function as the intermediary between the sensible and the conceptual, between what we see and what we know. Working with ideas furnished by the imagination (what the Greeks called “phantasy” or “phantasms”), rhetoric, Covino says, presents external impressions to the mind for assent or agreement. Zeno of Citium used the open hand for rhetoric to suggest that it makes the world of the imagination “graspable,” understandable, or believable. Rhetoric is “an agency for speculation” (35). As an art of invention and wonder, rhetoric grasps; it reaches out for the probable, to the uncertain as a method for discovering the available or possible means of persuasion or identification, which can in turn inform the practical application of rhetoric (in argument and other genres) to specific situations. In the image of the open hand, we see the external impressions from divergent sources coalescing in the palm, which is the concept born of experience, the manifestation of the graspable. Rhetoric also works outward, from the conceptual to the impressionable, and through systematic invention, generates multiple perspectives from the common source of experience.
 
-![The open hand of eloquence and the closed fist of logic. From *Chirologia: or The naturall language of the hand* (1644) by John Bulwer. https://bit.ly/ chirologia](assets/figure-p005-1.png)\
+![A woodcut from Bulwer's Chirologia, divided in two by a rule. On the left an open hand, fingers spread and palm turned out, lettered Eloquentia. On the right a closed fist, lettered Logica.](assets/figure-p005-1.png)\
 Figure 1. The open hand of eloquence and the closed fist of logic. From *Chirologia: or The naturall language of the hand* (1644) by John Bulwer. https://bit.ly/ chirologia
 
-![Undescribed figure from page 12 of the source](assets/figure-p012-1.png)
+![A composited photograph seen from directly above: a girl in a grey knitted hat stands in snow with her head tipped back and her tongue out to catch falling flakes, her own footprints leading up behind her. Two blackbirds perch on branches that reach across the top and right of the frame, as though the viewer were in the tree.](assets/figure-p012-1.png)
 
 # From Invention to Elaboration
 

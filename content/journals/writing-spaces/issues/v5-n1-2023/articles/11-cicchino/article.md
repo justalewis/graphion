@@ -14,6 +14,9 @@ volume-title: Writing Spaces 5
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 teacher-resources: separate
+images-of-text:
+- figure-p003-1.png
+- figure-p004-1.png
 ---
 
 # Introduction
@@ -50,10 +53,10 @@ Angel had used writing strategies that had worked well for them in the past: the
 
 Before we move on, let’s look at the posters created by Angel and Akleelah. What differences do you notice? Table 1 summarizes several differences as well.
 
-![Angel’s scientific poster, mock examples created by the author. This poster has a lengthy introduction with an attention grabber to start. The research and lab work section discusses the student’s experience in the lab, not the scientific methods or lab processes. The conclusion offers a quick summary of the points already explored. Research is cited in MLA format, and the only visual is a microbe cartoon](assets/figure-p003-1.png)\
+![A mock scientific poster headed Microbiomes in Soil by Angel Martinez. Four panels: a long Introduction on antibiotic resistance and the Tiny Earth project; Research and Lab Work describing soil samples from the Auburn River, aseptic technique, plating and staining; a Conclusion that two isolates capable of producing antibiotics were found but insufficient data prevented further work; and Works Cited. A cartoon bacterium sits at the right.](assets/figure-p003-1.png)\
 Figure 1: Angel’s scientific poster, mock examples created by the author. This poster has a lengthy introduction with an attention grabber to start. The research and lab work section discusses the student’s experience in the lab, not the scientific methods or lab processes. The conclusion offers a quick summary of the points already explored. Research is cited in MLA format, and the only visual is a microbe cartoon.
 
-![Akeelah’s scientific poster, mock examples created by the author. This poster starts with an abstract. Its introduction is short, offering brief context for the project. The methods are a simple list that focuses on scientific lab processes and includes a figure showing the three stages of development. The results also include a single takeaway with an image showing the antimicrobial activity in its microscopic form. There is a section on limitations. The conclusion offers a brief summary and calls for the Tiny Earth project to be continued to promote pharmaceutical research among young scientists. References are in APA format](assets/figure-p004-1.png)\
+![A second mock poster, Microbiome Presence in Riverbank Soil by Akeelah Jones, laid out quite differently. A banner abstract runs across the top, then Introduction, Methods as a numbered list with photographs of samples, Results with a microscope image of three plates, Study Limitations, Conclusion and References in three columns, with Acknowledgements as a band across the foot.](assets/figure-p004-1.png)\
 Figure 2: Akeelah’s scientific poster, mock examples created by the author. This poster starts with an abstract. Its introduction is short, offering brief context for the project. The methods are a simple list that focuses on scientific lab processes and includes a figure showing the three stages of development. The results also include a single takeaway with an image showing the antimicrobial activity in its microscopic form. There is a section on limitations. The conclusion offers a brief summary and calls for the Tiny Earth project to be continued to promote pharmaceutical research among young scientists. References are in APA format.
 
 Angel’s challenge isn’t uncommon for students as they move into their discipline-specific courses (also called courses in the major). Angel’s composition professor had taught them the importance of audience, purpose, and genre, and they had been successful applying those concepts in their composition course. However, it was more difficult for Angel to apply those concepts and manage their writing process in this new discipline-specific course. Prof. Smith expected Angel to do the work of learning about writing within the scientific community and the genre of a scientific poster more independently. Prof. Smith also didn’t provide checkpoints in draft development like Angel’s composition professor had, making it easy for Angel to wait to begin the project until just before it was due.
