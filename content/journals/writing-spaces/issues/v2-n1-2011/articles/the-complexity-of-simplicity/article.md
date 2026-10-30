@@ -1,11 +1,13 @@
 ---
 title: 'The Complexity of Simplicity: Invention Potentials for Writing Students'
+author:
+- name: Colin Charlton
 abstract: '*by Colin Charlton* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 2, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.'
 short-title: The Complexity of Simplicity
 short-authors: Charlton
 volume: 2
 year: 2011
-start-page: 103
+start-page: 102
 source-file: charlton--complexity-of-simplicity.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).

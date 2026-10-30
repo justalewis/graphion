@@ -7,7 +7,7 @@ short-title: The Sixth Paragraph
 short-authors: Lynch
 volume: 2
 year: 2011
-start-page: 288
+start-page: 289
 source-file: lynch--the-sixth-paragraph.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).

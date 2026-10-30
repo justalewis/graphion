@@ -264,7 +264,6 @@ In this chapter, I have introduced technical definitions and descriptions and di
 
 # Works Cited
 
-
 Butterfield, Andrew, et al. *A Dictionary of Computer Science*. 7th ed., Oxford UP, 2016.
 
 Center for Disease Control and Prevention. *About COVID-19*. https://www.cdc.gov/ coronavirus/2019-ncov/cdcresponse/about-COVID-19.html. 16 June 2020.

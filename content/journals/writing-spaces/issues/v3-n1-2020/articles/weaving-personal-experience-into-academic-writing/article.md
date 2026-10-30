@@ -7,7 +7,7 @@ short-title: Weaving Personal Experience into Academic Writing
 short-authors: Stewart
 volume: 3
 year: 2020
-start-page: 148
+start-page: 149
 source-file: stewart.pdf
 volume-title: Writing Spaces 3
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).

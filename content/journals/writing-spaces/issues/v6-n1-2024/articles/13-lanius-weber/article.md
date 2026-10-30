@@ -8,7 +8,7 @@ short-title: “Not So Fast”
 short-authors: Lanius and Weber
 volume: 6
 year: 2024
-start-page: 248
+start-page: 249
 chapter-number: 13
 source-file: 13Lanius-Weber.pdf
 volume-title: Technical Writing Spaces 6
@@ -118,7 +118,6 @@ SeeClickFix began as a product designed to meet a user need. Founder Ben Berkowi
 User-centered design can help avoid assumptions about what audiences need and help avoid creating products, such as documents, websites, infographics, etc., that individuals cannot use. By placing the user of a product at the center of the design process, user-centered design makes the processes of design, product development, or writing documents more effective and more successful. The ideas presented in this chapter introduced you to the core concepts and practices of user-centered design. By applying these ideas, you can gain a better understanding of your audience and create documents, designs, and even technologies they can more successfully use.
 
 # Works Cited
-
 
 “Poor Use of SeeClickFix Input.” *SeeClickFix Issues*, 14 Mar. 2018, https://seeclickfix.com/issues/4236008-poor-use-of-seeclickfix-input.
 

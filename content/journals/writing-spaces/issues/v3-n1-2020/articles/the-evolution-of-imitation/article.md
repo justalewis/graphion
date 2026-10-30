@@ -1,5 +1,7 @@
 ---
 title: 'The Evolution of Imitation: Building Your Style'
+author:
+- name: Craig A. Meyer
 abstract: 'Craig A. Meyer This essay is a chapter in *Writing Spaces: Readings on Writing*, Volume 3, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from any of these sites:'
 short-title: The Evolution of Imitation
 short-authors: Meyer
@@ -96,7 +98,6 @@ As you’re walking out to the car, someone asks, “So, what did you think of i
 In studying several authors or samples, we learn from each one’s strengths and weaknesses. Imitation is more than just copying down a selection of writing---it’s digging into the prose, pulling it apart, and understanding *why* it works the way that it does. More importantly, other scholars teach us *how they* write, *how they* combine words, phrases, paragraphs, and *how they* handle the writing problems they encounter. *Then*, we practice and transfer that understanding to our *own* prose. These exercises do not take over our writing; they become part of it and make it stronger. Just like Data, we can take radically different styles to develop our own style. The learning process derived from imitation takes time and dedication. Like many things, the process becomes easier with practice and persistence. Take the Erasmus example again; imagine writing a hundred different ways of telling someone you enjoyed their letter. Of course, that would take time and really focusing on the task at hand---it would not be easy. Yet, with each attempt to create a new version, something changes in us constructing it, and in that process, we stretch a little more outside the confines of the original sentence. It is this stretching where *imitative* learning takes place and it is how we grow as writers.
 
 # Works Cited
-
 
 Carson, Rachel. *Silent Spring*. Houghton, 1962. Crowley, Sharon, and Debra Hawhee. *Ancient Rhetorics for Contemporary Students*. 4th ed., Pearson, 2009.
 

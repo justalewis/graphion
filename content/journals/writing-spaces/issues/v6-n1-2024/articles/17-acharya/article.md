@@ -7,7 +7,7 @@ short-title: Composing Technical Documents for Localized Usability in the
 short-authors: Acharya
 volume: 6
 year: 2024
-start-page: 323
+start-page: 324
 chapter-number: 17
 source-file: 17Acharya.pdf
 volume-title: Technical Writing Spaces 6

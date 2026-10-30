@@ -7,7 +7,7 @@ short-title: Murder! (Rhetorically Speaking)
 short-authors: Boyd
 volume: 2
 year: 2011
-start-page: 88
+start-page: 87
 source-file: boyd--murder-rhetorically-speaking.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).

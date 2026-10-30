@@ -1,5 +1,7 @@
 ---
 title: Understanding Visual Rhetoric Jenae Cohn
+author:
+- name: Jenae Cohn
 abstract: 'This essay is a chapter in *Writing Spaces: Readings on Writing*, Volume 3, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from any of these sites:'
 short-title: Understanding Visual Rhetoric
 short-authors: Cohn
@@ -188,7 +190,6 @@ As you look ahead to thinking capaciously about the strategies you might use to 
 A picture is often worth a thousand words because it implies so much and can give us a lot of information quickly. Seeing may not always be believing, but visual rhetoric can be a pretty powerful way to help people understand an idea differently than they may have otherwise.
 
 # Works Cited
-
 
 Handa, Carolyn. *Visual Rhetoric in a Digital World: A Critical Sourcebook*. Bedford/St. Martins, 2004.
 

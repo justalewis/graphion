@@ -1,11 +1,14 @@
 ---
 title: A Student’s Guide to Collaborative Writing Technologies
+author:
+- name: Matt Barton
+- name: Karl Klint
 abstract: '*by Matt Barton and Karl Klint* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 2, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.'
 short-title: A Student’s Guide to Collaborative Writing Technologies
 short-authors: Barton and Klint
 volume: 2
 year: 2011
-start-page: 320
+start-page: 322
 source-file: barton-and-klint--a-students-guide.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
@@ -138,8 +141,6 @@ There are new social media tools, features, and concepts being developed every d
 # Software Referenced
 
 This essay is available under a Creative Commons License subject to the Writing Spaces' Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2011 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
-
-
 
 [^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
 

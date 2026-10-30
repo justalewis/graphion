@@ -9,7 +9,7 @@ short-title: Assessing Source Credibility for Crafting a Well-Informed
 short-authors: Warrington, Kovalyova, and King
 volume: 3
 year: 2020
-start-page: 173
+start-page: 174
 source-file: warrington.pdf
 volume-title: Writing Spaces 3
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).

@@ -4,7 +4,7 @@ abstract: Keshab Raj Acharya is affiliated with the University at Buffalo---the 
 short-title: Contributors
 volume: 6
 year: 2024
-start-page: 340
+start-page: 341
 source-file: contributors.pdf
 volume-title: Technical Writing Spaces 6
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).

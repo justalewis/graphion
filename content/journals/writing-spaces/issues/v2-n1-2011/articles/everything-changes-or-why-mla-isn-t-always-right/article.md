@@ -7,7 +7,7 @@ short-title: Everything Changes, or Why MLA Isn’t (Always) Right
 short-authors: Walker
 volume: 2
 year: 2011
-start-page: 258
+start-page: 259
 source-file: walker--everything-changes.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).

@@ -1,5 +1,7 @@
 ---
 title: 'Ten Ways To Think About Writing: Metaphoric Musings for College Writing Student'
+author:
+- name: E. Shelley Reid
 abstract: '*by E. Shelley Reid* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 2, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.'
 short-title: Ten Ways To Think About Writing
 short-authors: Reid

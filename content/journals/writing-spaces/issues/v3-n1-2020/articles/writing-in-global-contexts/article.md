@@ -7,7 +7,7 @@ short-title: Writing in Global Contexts
 short-authors: St.Amant
 volume: 3
 year: 2020
-start-page: 133
+start-page: 134
 source-file: stamant.pdf
 volume-title: Writing Spaces 3
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).

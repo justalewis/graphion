@@ -196,7 +196,6 @@ This chapter introduced you to data storytelling and to strategies that will hel
 
 # Works Cited
 
-
 Ball, Cheryl E., et al. *Writer/Designer: A Guide to Making Multimodal Projects*. 2nd ed., Bedford/St. Martin’s, 2018.
 
 Blevins, Brenta. “Visualizing Data through Infographics.” *Digital Rhetoric Collaborative*. 14 Nov. 2013, https://www.digitalrhetoriccollaborative.org/2013/ 11/14/visualizing-data-through-infographics/. Accessed 15 June 2021.
@@ -277,12 +276,9 @@ Having students reverse engineer a data story in class or as homework is useful 
 | 2 | Great Good Bad Horrible |  |
 | 3 | Great Good Bad Horrible |  |
 | 4 | Great Good Bad Horrible |  |
-
 | 5 | Great Good Bad Horrible |
 | --- | --- |
 | 6 | Great Good Bad Horrible |
-
-
 
 [^1]: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
 

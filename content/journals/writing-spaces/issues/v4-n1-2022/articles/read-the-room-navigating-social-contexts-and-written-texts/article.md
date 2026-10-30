@@ -120,7 +120,6 @@ Regardless of the discourse community, gaining membership and authority involves
 
 # Works Cited
 
-
 Barbaro, Michael. “Cancel Culture, Part 1: Where It Came From.” *The Daily,* The New York Times, 10 Aug. 2020. *The New York Times,* https://www.nytimes.com/2020/08/10/podcasts/the-daily/cancel-culture.html. Accessed 10 Aug. 2020.
 
 Becker, Alton L. *Beyond Translation: Essays Toward a Modern Philology*. University of Michigan Press, 1995.

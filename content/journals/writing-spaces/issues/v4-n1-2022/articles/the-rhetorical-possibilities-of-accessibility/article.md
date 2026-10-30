@@ -94,7 +94,6 @@ My hope is that you take the knowledge from this essay and keep learning about w
 
 # Works Cited
 
-
 Dolmage, Jay. “Universal Design: Places to Start.” *Disability Studies Quarterly*, vol. 35, no. 5, 2015. https://dsq-sds.org/article/view/4632/3946
 
 Donegan, Rachel. “Microsoft Word Screenshot.” 6 Jan 2021. Hogue, J. “Accessibility: Images, ‘Alt’ Tags, and the ‘Out Loud’ Experience.” *Oomph*, 25 January 2019, https://www.oomphinc.com/insights/images-alttags-out-loud-experience-oomph-inc/. Accessed 2 Jan 2021.

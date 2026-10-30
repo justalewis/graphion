@@ -205,7 +205,6 @@ Since all writing is collaborative one way or another, all writing is about buil
 
 # Works Cited
 
-
 Beck, Kent, et al. “Manifesto for Agile Software Development.” *Agile Manifesto*, 2001, http://www.agilemanifesto.org. Accessed 29 Mar. 2021.
 
 “Culture and Careers.” *nCino*, 2021, https://www.ncino.com/culture-careers/. Accessed 29 Mar. 2021.

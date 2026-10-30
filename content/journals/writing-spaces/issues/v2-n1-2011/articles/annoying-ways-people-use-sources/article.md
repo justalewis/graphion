@@ -7,7 +7,7 @@ short-title: Annoying Ways People Use Sources
 short-authors: Stedman
 volume: 2
 year: 2011
-start-page: 242
+start-page: 243
 source-file: stedman--annoying-ways.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).

@@ -136,7 +136,6 @@ The next time you’re scrolling through social media instead of working on an e
 
 # Works Cited
 
-
 \@ArtByRizzo (Jeresneyka Rose). “Growing & Glowing.” *Instagram,* 2 Apr. 2020, https://www.instagram.com/p/B-fY4zAgBZz/.
 
 Cassell, Kevin. “Punctuation’s Rhetorical Effects.” *Writing Spaces: Readings on* *Writing*, vol. 3, edited by Dana Driscoll, Mary Stewart, and Matthew Vetter, Parlor Press, 2020, pp. 3-17. \@demibagby (Demi Bagby). “Stand up challenge!!!” *TikTok,* 21 Jan. 2020, https:// www.tiktok.com/\@demibagby/video/6784536387992440070?lang=en. Krypto9095. “Krypto9095 Ft. D3Mstreet Woah (Official Song to Woah Dance).” *YouTube,* 3 Nov. 2018, https://www.youtube.com/watch?v=afRki2_aNKg.

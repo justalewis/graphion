@@ -7,7 +7,7 @@ short-title: How to Write for Global Audiences
 short-authors: Meex
 volume: 6
 year: 2024
-start-page: 305
+start-page: 306
 chapter-number: 16
 source-file: 16Meex.pdf
 volume-title: Technical Writing Spaces 6

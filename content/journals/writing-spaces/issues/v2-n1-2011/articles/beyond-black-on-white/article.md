@@ -1,11 +1,14 @@
 ---
 title: 'Beyond Black on White: Document Design and Formatting in the Writing Classroom'
+author:
+- name: Michael J. Klein
+- name: Kristi L. Shackelford
 abstract: '*by Michael J. Klein and Kristi L. Shackelford* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 2, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.'
 short-title: Beyond Black on White
 short-authors: Klein and Shackelford
 volume: 2
 year: 2011
-start-page: 334
+start-page: 335
 source-file: klein-and-shackelford--beyond-black-on-white.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
@@ -212,8 +215,8 @@ Style guides define typographical and design rules for you as a writer and a rea
 
 # Works Cited
 
-
 Modern Language Association of America. *The MLA Handbook for Writers of* *Research Papers.* 7th ed. New York: MLA, 2009. Print. This essay is available under a Creative Commons License subject to the Writing Spaces' Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2011 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
+
 [^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
 
 * This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.

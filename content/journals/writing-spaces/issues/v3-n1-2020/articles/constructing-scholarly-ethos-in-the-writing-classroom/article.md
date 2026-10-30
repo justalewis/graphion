@@ -7,7 +7,7 @@ short-title: Constructing Scholarly Ethos in the Writing Classroom
 short-authors: Ryan
 volume: 3
 year: 2020
-start-page: 118
+start-page: 119
 source-file: ryan.pdf
 volume-title: Writing Spaces 3
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
