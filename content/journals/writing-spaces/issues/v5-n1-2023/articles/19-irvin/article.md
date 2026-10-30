@@ -7,7 +7,7 @@ short-title: Changing Your Mindset About Revision
 short-authors: Irvin
 volume: 5
 year: 2023
-start-page: 266
+start-page: 296
 chapter-number: 19
 source-file: 19Irvin.pdf
 volume-title: Writing Spaces 5
@@ -78,6 +78,9 @@ Dave Anish and David Russell believe even the term “draft” may be a source o
 
 Now let me dig in a bit deeper into why your first version should never be your final version, and why a clean-up of your first version is not enough. The difficulty of writing and why we never write perfect first drafts is found in the simple truth that there is a difference between what we mean and what we say in writing. Researchers Carl Bereiter and Marlene Scardamalia described two spaces writers negotiate as they compose: what we mean (the Content Space which represents the thinking and meaning in the writer’s head) and what we say (the Rhetorical Space which represents the words on the page) (302-303). The miracle of writing and language is that we are able to transfer what we think and feel inside our consciousness and put it into little black marks on a white page.
 
+![The relationship between Content Space and Rhetorical Space. There are two squares. The one on the left has the words “What We Mean” inside of it and the words “Content Space” above it. The one on the right has the words “What We Say” inside of it and “Rhetorical Space” above it. There are two arrows connecting the squares, each pointing to the other to show that the two ideas inform one another](assets/figure-p007-1.png)\
+Figure 1. The relationship between Content Space and Rhetorical Space. There are two squares. The one on the left has the words “What We Mean” inside of it and the words “Content Space” above it. The one on the right has the words “What We Say” inside of it and “Rhetorical Space” above it. There are two arrows connecting the squares, each pointing to the other to show that the two ideas inform one another.
+
 When we believe writing is just a matter of getting it down in a one-shot draft, we mistake that we can perfectly (or adequately) get down what we mean on the page in one draft. That’s the myth of the 3-D Printing model of writing. But we all know writing does not operate this way. We always experience a gap between what we mean and what we say.
 
 A big step then in appreciating the need for revision is to acknowledge (and respect) this fundamental truth about writing: writing is about getting our thinking and meaning on the page, and there will always be a divergence between what we mean in our head and what we say on the page. To say “writing is an inquiry process” means it is a developmental process in which we discover ways to get what we mean closer to what we say and what we say closer to what we mean.
@@ -99,6 +102,9 @@ Understanding this concept helps you see that issues you identify in your writin
 I’ll close this section with a diagram to illustrate how revision is an inquiry process. It emphasizes these two points I’ve been making:
 
 > #1: Revision is about developing both our thinking and writing. #2: Revision helps us get closer to saying in writing what we mean and appropriately meeting the writing situation.
+
+![Growth of thinking and writing with revision. There is a large arrow to the left of this image, pointing in an arch towards the right. Along the arrow, there are dots labeled “draft 1,” “draft 2”, and “draft 3” to demonstrate a progression. The arrow points to an image that has two rectangles, one near the bottom labeled “Less Developed” and one near the top labeled “More Developed.” A second arrow, labeled “Thinking,” points between these two rectangles, showing that “less developed” leads to “more developed.”](assets/figure-p009-1.png)\
+Figure 2. Growth of thinking and writing with revision. There is a large arrow to the left of this image, pointing in an arch towards the right. Along the arrow, there are dots labeled “draft 1,” “draft 2”, and “draft 3” to demonstrate a progression. The arrow points to an image that has two rectangles, one near the bottom labeled “Less Developed” and one near the top labeled “More Developed.” A second arrow, labeled “Thinking,” points between these two rectangles, showing that “less developed” leads to “more developed.”
 
 # Revision as Troublesome Knowledge
 
@@ -205,7 +211,3 @@ Other resources: There are so many good resources about revision and teaching re
 6. How does this essay help you understand what you have been learning about writing and revision so far in this class? How do you think it will affect how you will go about revision in the future?
 
 [^1]: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
-
-Figure 1. The relationship between Content Space and Rhetorical Space. There are two squares. The one on the left has the words “What We Mean” inside of it and the words “Content Space” above it. The one on the right has the words “What We Say” inside of it and “Rhetorical Space” above it. There are two arrows connecting the squares, each pointing to the other to show that the two ideas inform one another.
-
-Figure 2. Growth of thinking and writing with revision. There is a large arrow to the left of this image, pointing in an arch towards the right. Along the arrow, there are dots labeled “draft 1,” “draft 2”, and “draft 3” to demonstrate a progression. The arrow points to an image that has two rectangles, one near the bottom labeled “Less Developed” and one near the top labeled “More Developed.” A second arrow, labeled “Thinking,” points between these two rectangles, showing that “less developed” leads to “more developed.”

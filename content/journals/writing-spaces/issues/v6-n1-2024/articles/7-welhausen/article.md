@@ -7,7 +7,7 @@ short-title: Worth a Thousand Words
 short-authors: Welhausen
 volume: 6
 year: 2024
-start-page: 104
+start-page: 121
 chapter-number: 7
 source-file: 7Welhausen.pdf
 volume-title: Technical Writing Spaces 6
@@ -41,6 +41,9 @@ Envision that it’s the first week of the fall semester. You’re walking acros
 From afar, you couldn’t hear their conversation. But you knew they had not seen each other in a while (and were happy to be reunited) because you *read* their body language. Such non-verbal communication cues are key to the ways that humans communicate with each other. We also use other semiotic modes or *sign systems* like language (both spoken and written) and visuals.
 
 Generally speaking, a sign---words, gestures, images---is something that stands for something else. Because we can’t read each other’s minds, we need to use signs to communicate. The word *chair*, for instance, is a linguistic sign that refers to a piece of furniture with four legs and a back---like the image in Figure 7.1.
+
+![Chair](assets/figure-p004-1.jpg)\
+Figure 7.1: Chair
 
 Swiss linguist Ferdinand de Saussure theorized that signs are comprised of a *signifier* (e.g., the sign) and a *signified* (the thing or concept the signifier refers to). More specifically, the word *chair* and the image in Figure 7.1 are both *signifiers.* These linguistic and visual signs refer to the concept of *chair* (the *signified*). The image of the chair in Figure 7.1 is more specific than the word *chair* because it shows a particular style of chair. However, if we were talking about chairs, we could also add an adjective or two to be more specific such as *office* chair or *red, lounge* chair or *old, vintage* chair like the visual sign in Figure 7.1.
 
@@ -100,6 +103,9 @@ Bachman stated that he felt “very humble to capture an image that tells the st
 
 At the same time, this photo has also become iconic---representative of this event and arguably others like it---because it visually promotes a particular narrative laden with American cultural values: individualism, opposing injustice, non-violent protest---to name a few. Indeed, this image has been compared to another photograph taken nearly thirty years earlier, “Tank Man,” which showed a lone man blocking a line of tanks during protests in 1989 against the Chinese government at Tiananmen Square.[^9] The context in which this earlier photo was taken is different as is the subject matter. However, arguably the underlying message is the same. As a commenter on social media put it: Evans is “speaking truth to power,” although she never says a word.[^10]
 
+![Migrant Mother (Dorothea Lange, 1936. Public domain.)](assets/figure-p011-1.jpg)\
+Figure 7.2: Migrant Mother (Dorothea Lange, 1936. Public domain.)
+
 Iconic photographs, journalism professors Robert Hariman and John Lucaites have argued, need “no caption.” Like other photographs, these images capture a moment in time. But more importantly, they come to represent the historical significance of that moment. For instance, you have probably seen “Migrant Mother” (see Figure 7.2), the now famous photograph captured by a documentary photographer during the Great Depression in the US.
 
 In this image, the clothing of the mother and her children is worn and tattered, visual signs that signify poverty. The children’s faces are hidden from the viewer, burrowing behind the woman. One child’s folded arm hangs on the woman’s shoulder. The woman leans forward, her right hand cupping the bottom of her face, indicating deep and troubled thought, visually signified by her furrowed brow. She faces the viewer, but her gaze fixates past us on something further away on the horizon. Something far more important. More urgent. The struggle she is experiencing at this moment? The economic hardships yet to come?
@@ -134,9 +140,15 @@ In theory, you *could* use a photograph to explain this process. However, it wou
 
 Photographs can also be difficult to modify in an office setting where you may have a limited amount of time to explain a procedure. More specifically, as you explain the medical procedure to the patient, you might want to circle the value that needs to be repaired or add notes and/or details. In Figure 7.3 the differently shaded areas and the arrows showing the direction that blood is moving make it easier for you to explain to the patient how the heart functions because the components and processes of the heart are visually simplified.
 
+![Illustration of the human heart](assets/figure-p015-1.jpg)\
+Figure 7.3: Illustration of the human heart
+
 # Sketches
 
 Indeed, because they are less *real*, abstracted images like drawings, illustrations, and sketches are also more *ideal.* That is, they allow for more flexibility in the way they are interpreted, and they can be modified more easily. These images also often remove a lot of non-essential visual information from an image and allow individuals to focus *only* on those visual elements that they need to understand an idea. To illustrate, the sketch in Figure 7.4 shows a fictional schematic drawing for a bridge. The perspective grid lines that divide the image allow viewers to see how the structure will occupy space once it is built. And because this visual is a sketch, changes can continue to be made to the overall design (either digitally or on a printed copy). Indeed, the lack of contextual details---where the bridge will be built, how it might affect the landscape and other built structures---allow the creator to focus on the details of the design.
+
+![Schematic bridge diagram](assets/figure-p016-1.jpg)\
+Figure 7.4: Schematic bridge diagram
 
 Creating such visual forms allows professionals in design-oriented fields like engineering and architecture to solve problems and explore ideas. As Donald Schön, who was a philosopher and professor of urban planning characterized it, design work involves “reflection-in-action” wherein creators work through different design options. Indeed, a structural engineer might have created the sketch in Figure 7.4 to assess and make decisions about the height and width of the pylons---as well as other components of the structure---as she fleshed out the details in the design of this bridge.
 
@@ -158,7 +170,13 @@ Finally, as a working professional, you might also need to visualize quantitativ
 
 For instance, let’s say you’re a local sales manager for a company that manufactures several different kinds of widgets. The company’s older models (A, B, and C) sold well last year. However, your boss---the regional sales manager---wants to increase sales this year for the newer models (D and E). You schedule a meeting with your marketing team to brainstorm ideas. In preparation, you create the bar graph shown in Figure 7.5 that includes total sales for each model over the past year. During the meeting, you and your team use this chart to discuss strategies to increase sales for models D and E.
 
+![Yearly sales for each widget model](assets/figure-p018-1.jpg)\
+Figure 7.5: Yearly sales for each widget model
+
 In this fictional scenario, you created a bar chart so you and your team could compare total sales by model for the year. Creating a different type of graphic---like a line graph---would be useful if your group wanted to see sales by month for one or more of these models as shown in Figure 7.6. While Figure 7.5 allowed your group to compare sales totals, Figure 7.6 allows you and your team to see trends in sales over the year by month. Figure 7.6 shows that sales for all models tend to be highest in the summer with a dramatic increase for all in July in particular. Sales then tend to drop off in August and continue to decline into the fall and winter.
+
+![Sales by month by model for last year](assets/figure-p018-2.jpg)\
+Figure 7.6: Sales by month by model for last year
 
 # Thematic Maps
 
@@ -167,6 +185,15 @@ If your team is also interested in where most of the sales were occurring in a p
 # Infographics
 
 This idea can be seen in two infographics (see Figure 7.7) that were published in July of 2020 during the COVID-19 pandemic. More specifically, the Georgia Department of Public Health came under fire for publishing what some argued were misleading thematic maps when Andisheh Nouraee, an Atlanta-based communications and marketing expert, tweeted screenshots of the infographics shown in Figure 7.7.[^11] His tweet, which quickly went viral, pointed out that the number of COVID-19 cases by county in the state increased by 49% between July 2 (left) and July 17 (right). However, visually, we do not perceive much (if any) change in the shading used in the maps because as Nouraee points out, the scale of the legend has changed (see note 11 below for a link to a color version of these maps). On July 2, red (not shown) was used to show counties with between 2,961 to 4,661 cases. But on July 17, red (not shown) was used for counties with 3,769 to 5,165 cases---a 49% increase, he notes. These changes are not visually evident when comparing these maps.
+
+![Infographics created by the Georgia Department of Health during the COVID-19 pandemic](assets/figure-p020-1.jpg)\
+Figure 7.7: Infographics created by the Georgia Department of Health during the COVID-19 pandemic
+
+![Undescribed figure from page 27 of the source](assets/figure-p027-1.jpg)
+
+![Undescribed figure from page 28 of the source](assets/figure-p028-1.jpg)
+
+![Undescribed figure from page 29 of the source](assets/figure-p029-1.jpg)
 
 In a local news story, a representative from the state health department responded: “These maps are not designed to show increases over time, but rather to show density by location and difference between counties.”[^12] The organization also acknowledged the confusion and claimed that they were in the process of redesigning the maps to make them more accessible for non-expert audiences. Yet, arguably, the intended audience for these maps---that is, the general public---only cares about “density by location” and not about “difference between counties.” To put it bluntly, if you live in the state of Georgia and you’re looking at these maps, it’s for one reason and one reason only---to determine if COVID-19 cases are increasing in your area. Because you may want to use this visual information to decide what actions to take to prevent exposure to the virus such as engaging in social distancing, staying at home, getting vaccinated, and/or wearing a mask in public areas. You don’t need to know whether cases are higher in your county compared to other counties in the state. The information presented in the maps in Figure 7.7 does not enable viewers to make those decisions. Thus, the maps do not effectively convey the visual information that viewers need to know to make decisions and take actions.
 
@@ -201,6 +228,7 @@ Green is not a dominant color in the brochure because the focus is on wood and s
 This chapter has sought to discuss several visual communication genres and to provide strategies that you can use to create persuasive visual forms. As with other technical communication artifacts, as you create visual communication, it’s important to continually keep your audience and their informational needs and expectations in mind. Be aware that your viewers are not passive observers of visual information but rather active *users*. They use your information to make decisions and take actions. So, aim to create visual forms that enable them to do so.
 
 # Works Cited
+
 
 Amare, Nicole and Alan Manning. “Teaching Form and Color as Emotion Triggers.” *Designing Texts: Teaching Visual Communication,* edited by Eva Brumberger and Kathryn Northcut, Routledge, 2013, pp. 181-195.
 
@@ -240,7 +268,7 @@ The following questions and activities prompt students to engage with the materi
 
 2. Find an advertisement (digital or printed) that has few if any words and *read* the ad using the information in the semiotics and/ or photography sections of this chapter. What visual signs do you see, and what do they mean? How do you know? If the ad uses pictures, why do you think the photographer chose the particular subject matter selected? How are you interpreting the camera angles used and the composition of the photograph? How do these choices add to the meaning of the ad?
 
-3. Envision you are a manager at an investment firm. Your supervisor has asked you to prepare a report that analyzes the financial portfolios of your firm’s four most profitable clients. Visualize the data provided below that gives percentages for the portfolio for each company. Explain why you chose to visualize the data using a particular format and compare your visualization with those created by your peers. { Company A: mutual funds, 18.5; annuities, 32.8; real estate, 3.1; stocks, 1.2; bonds, 44.4. { Company B: mutual funds, 20.3; annuities, 26.9; real estate, 3.8; stocks, 4.0; bonds, 45.0. { Company C: mutual funds, 23.5; annuities, 23.8; real estate, 7.3; stocks, 4.1; bonds, 41.3. { Company D: mutual funds, 20.3; annuities, 25.2; real estate, 9.6; stocks, 6.3; bonds, 38.6.
+3. Envision you are a manager at an investment firm. Your supervisor has asked you to prepare a report that analyzes the financial portfolios of your firm’s four most profitable clients. Visualize the data provided below that gives percentages for the portfolio for each company. Explain why you chose to visualize the data using a particular format and compare your visualization with those created by your peers. ○ Company A: mutual funds, 18.5; annuities, 32.8; real estate, 3.1; stocks, 1.2; bonds, 44.4. ○ Company B: mutual funds, 20.3; annuities, 26.9; real estate, 3.8; stocks, 4.0; bonds, 45.0. ○ Company C: mutual funds, 23.5; annuities, 23.8; real estate, 7.3; stocks, 4.1; bonds, 41.3. ○ Company D: mutual funds, 20.3; annuities, 25.2; real estate, 9.6; stocks, 6.3; bonds, 38.6.
 
 4. Find a short set of instructions (between 6-8 steps) that uses visuals that are difficult to understand. Assess the rhetorical situation and explain why the visuals are difficult to understand. Then redesign the visuals to address the issues you identified.
 
@@ -250,23 +278,15 @@ The following questions and activities prompt students to engage with the materi
 
 1 Due to copyright restrictions, this image cannot be reproduced here. But it can be found on National Geographic’s website at https://nationalgeographicbackissues.com/ product/national-geographic-june-2018/. 2 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
 
-3 The author thanks Matt Crouch who created the Breathing Wall brochure and Natalie Butts-Ball who created the Harvest Calendar for allowing me to include and discuss their design work in this chapter. Both can be foujnd in the appendix. The author also thanks the students of the Rural Studio Program who contributed to these documents. Figure 7.1: Chair
+3 The author thanks Matt Crouch who created the Breathing Wall brochure and Natalie Butts-Ball who created the Harvest Calendar for allowing me to include and discuss their design work in this chapter. Both can be foujnd in the appendix. The author also thanks the students of the Rural Studio Program who contributed to these documents.
 
 4 This term is a combination of “deep learning” and “fake.” It refers to an image or a video of one person that has been altered to look like a different person such as superimposing the head of one person onto the body of someone else.
 
 5 Due to copyright restrictions, this image cannot be reproduced here, but it can be found at this location: https://www.bbc.com/news/36766799 6 See https://www.bbc.com/news/world-us-canada-36759711
 
-7 See https://www.bbc.com/news/world-us-canada-36759711 8 See https://www.bbc.com/news/world-us-canada-36759711 9 Due to copyright restrictions, this image cannot be reproduced here, but it can be found at this location: https://en.wikipedia.org/wiki/Tank_Man 10 Due to copyright restrictions, this image cannot be reproduced here, but it can be found at this location: https://www.bbc.com/news/36766799 Figure 7.2: Migrant Mother (Dorothea Lange, 1936. Public domain.)
+7 See https://www.bbc.com/news/world-us-canada-36759711 8 See https://www.bbc.com/news/world-us-canada-36759711 9 Due to copyright restrictions, this image cannot be reproduced here, but it can be found at this location: https://en.wikipedia.org/wiki/Tank_Man 10 Due to copyright restrictions, this image cannot be reproduced here, but it can be found at this location: https://www.bbc.com/news/36766799
 
-Figure 7.3: Illustration of the human heart
-
-Figure 7.4: Schematic bridge diagram
-
-Figure 7.5: Yearly sales for each widget model
-
-Figure 7.6: Sales by month by model for last year
-
-11 Nouraee’s tweet is no longer available on Twitter. A copy of the maps, and a discussion of his tweet can be found at https://www.maproomblog.com/2020/07/ georgias-covid-19-maps-bad-faith-or-bad-design/. Figure 7.7: Infographics created by the Georgia Department of Health during the COVID-19 pandemic
+11 Nouraee’s tweet is no longer available on Twitter. A copy of the maps, and a discussion of his tweet can be found at https://www.maproomblog.com/2020/07/ georgias-covid-19-maps-bad-faith-or-bad-design/.
 
 12 See https://www.wsbtv.com/news/georgia/public-health-experts-call-out-confusing-covid-19-data-maps-dph-set-make-changes/ KZPBOLBG2BG2TAMI2N4CQGWESA/.
 

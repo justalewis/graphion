@@ -3,12 +3,12 @@ title: You Are Good for Wikipedia
 author:
 - name: Matthew A. Vetter
 - name: Oksana Moroz
-abstract: In a previous *Writing Spaces* essay entitled, “Wikipedia Is Good for You!?,” James P. Purdy introduces us to the idea that the online encyclopedia, often devalued in educational spaces, can serve as a starting place for research and a process guide to research-based writing.[^1] By observing how Wikipedia editors review each other’s work, have conversations about that work, and then revise accordingly, students like you can gain first-hand access and insights into professional writing and research practices that can be applied to research projects. In this chapter, we build on Purdy’s essay by acknowledging not only how Wikipedia is good for you but, conversely, how you are good for Wikipedia. This chapter differs from Purdy’s contribution in that we discuss how you can become more engaged in the Wikipedia community through various editing and evaluating practices. We want you to consider how you are good for the encyclopedia project in three ways. First, you can diversify the encyclopedia through your participation. Second, you can leverage your access to reputable academic sources of knowledge to improve coverage of certain topics. Third, you can apply critical thinking skills you learn in your writing class to help evaluate information in Wikipedia. Finally, we conclude the essay by providing two examples of our former students who effectively contributed to Wikipedia by connecting their own experiences and identities to their work in the encyclopedia.
+abstract: In a previous *Writing Spaces* essay entitled, “Wikipedia Is Good for
 short-title: You Are Good for Wikipedia
 short-authors: Vetter and Moroz
 volume: 5
 year: 2023
-start-page: 233
+start-page: 263
 chapter-number: 17
 source-file: 17Vetter-Moroz.pdf
 volume-title: Writing Spaces 5
@@ -17,7 +17,14 @@ license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 teacher-resources: separate
 ---
 
+You!?,” James P. Purdy introduces us to the idea that the online ency-
+
+clopedia, often devalued in educational spaces, can serve as a starting place for research and a process guide to research-based writing.[^1] By observing how Wikipedia editors review each other’s work, have conversations about that work, and then revise accordingly, students like you can gain first-hand access and insights into professional writing and research practices that can be applied to research projects. In this chapter, we build on Purdy’s essay by acknowledging not only how Wikipedia is good for you but, conversely, how you are good for Wikipedia. This chapter differs from Purdy’s contribution in that we discuss how you can become more engaged in the Wikipedia community through various editing and evaluating practices. We want you to consider how you are good for the encyclopedia project in three ways. First, you can diversify the encyclopedia through your participation. Second, you can leverage your access to reputable academic sources of knowledge to improve coverage of certain topics. Third, you can apply critical thinking skills you learn in your writing class to help evaluate information in Wikipedia. Finally, we conclude the essay by providing two examples of our former students who effectively contributed to Wikipedia by connecting their own experiences and identities to their work in the encyclopedia.
+
 # Introduction
+
+![A screenshot of a tweet dated February 2021 from Jamie Withorne (\@jamiewithorne) reads, “My middle school teacher who yelled that ‘Wikipedia wasn’t a reliable source’ every day is sharing vaccine conspiracy theories on Facebook.”](assets/figure-p002-1.png)\
+Figure 1. A screenshot of a tweet dated February 2021 from Jamie Withorne (\@jamiewithorne) reads, “My middle school teacher who yelled that ‘Wikipedia wasn’t a reliable source’ every day is sharing vaccine conspiracy theories on Facebook.”
 
 Check out the tweet above. After you read the actual text, you might notice that, at the time we took the screenshot, this tweet had been liked over 424,500 times and retweeted 41,700 times. Maybe it’s gotten even more engagement since.
 
@@ -92,6 +99,12 @@ Like Abby, Cheyenne’s first reaction to being told that she would edit a Wikip
 > When my professor originally introduced to us that we would be picking an article of something that interests ourselves...I thought let’s look up Meadville (which is my hometown). When I got to the page, I noticed that most of the information was correct but what could be a section that I could add to make the history of Meadville more interesting. It came across my mind when I thought I should add an attractions portion of it but only of things that Meadville did or has educational purposes. When editing my article, I felt like I was helping students and anyone else who would look up Meadville on Wikipedia to get true and real information while also sourcing my work as I go along.
 
 As a first-year college student, Cheyenne often traveled back and forth between campus and her parents’ house to see friends and family on the weekend. Once we realized that she was visiting the town that she was writing about, we suggested to her that she take some photos of the historical features of Meadville and upload them to Wikimedia Commons. Since this is the database used by Wikipedia for images and other media, Cheyenne could also add pictures of the landmarks she was writing about to her article (see Figures 2 and 3).
+
+![This image of the Meadville Market House appears in Wikipedia’s article “Meadville, Pennsylvania” titled “The Meadville Market House.” Via Wikimedia Commons, CC-BY-SA 4.0](assets/figure-p012-1.png)\
+Figure 2. This image of the Meadville Market House appears in Wikipedia’s article “Meadville, Pennsylvania” titled “The Meadville Market House.” Via Wikimedia Commons, CC-BY-SA 4.0.
+
+![An image of a monument in Meadville, Pennsylvania, with a caption that reads, “A monument in the shape of a scroll dedicated to the founder of Meadville, David Mead.” Via Wikimedia Commons, CC-BY-SA 4.0](assets/figure-p013-1.png)\
+Figure 3. An image of a monument in Meadville, Pennsylvania, with a caption that reads, “A monument in the shape of a scroll dedicated to the founder of Meadville, David Mead.” Via Wikimedia Commons, CC-BY-SA 4.0.
 
 What Cheyenne’s account tells us is this. First, personal experience (in Cheyenne’s case, growing up in Meadville, Pennsylvania) can help students create a unique connection to and improve Wikipedia. Second, adding your photos to a Wikipedia article is a wonderful way to improve the encyclopedia. Finally, while Cheyenne was hesitant about the project at first, she ultimately realized its potential, writing in her reflection, “In my opinion, Wikipedia has a bright future coming if professors keep promoting it out to their students.”
 
@@ -182,7 +195,3 @@ Suppose you would like to provide your students with a sample student reflection
 5. As a group activity, create a plan for finding an article that needs improvement due to its lack of diverse representation or problematic positioning by adding an additional source, rephrasing some sentences, and/or expanding the topic. Next, look for credible sources in library databases and study them carefully. Finally, contribute to the article by adding an extra source or go big and edit some sentences, adding new relevant information.
 
 [^1]: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
-
-Figure 1. A screenshot of a tweet dated February 2021 from Jamie Withorne (\@jamiewithorne) reads, “My middle school teacher who yelled that ‘Wikipedia wasn’t a reliable source’ every day is sharing vaccine conspiracy theories on Facebook.”
-
-Figure 2. This image of the Meadville Market House appears in Wikipedia’s article “Meadville, Pennsylvania” titled “The Meadville Market House.” Via Wikimedia Commons, CC-BY-SA 4.0. Figure 3. An image of a monument in Meadville, Pennsylvania, with a caption that reads, “A monument in the shape of a scroll dedicated to the founder of Meadville, David Mead.” Via Wikimedia Commons, CC-BY-SA 4.0.

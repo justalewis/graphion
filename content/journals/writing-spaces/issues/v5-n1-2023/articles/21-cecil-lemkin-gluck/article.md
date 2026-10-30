@@ -8,7 +8,7 @@ short-title: Navigating Your Collaborative Project
 short-authors: Cecil-Lemkin and Gluck
 volume: 5
 year: 2023
-start-page: 294
+start-page: 326
 chapter-number: 21
 source-file: 21Cecil-Lemkin-Gluck.pdf
 volume-title: Writing Spaces 5
@@ -203,9 +203,7 @@ Collaborative projects offer you the opportunity to expand your skill set, gener
 
 > assignment criteria, contains many errors, and the quality of the assignment does not meet the expectations of the group, the project manager will contact that group member and give them a one day extension to fix all problems of the assignment. If the team member is having trouble with the assignment they should ask the teacher or the other groupmates to help in completing the assignment with acceptable quality.
 
-# Appendix 2: Project Schedule Example
-
-# Works Cited
+# Appendix 2: Project Schedule Example Works Cited
 
 Bruffee, Kenneth. “Collaborative Learning and the ‘Conversation of Mankind.’” *College English*, vol. 46, no. 7, 1984, pp. 635--52.
 
@@ -249,6 +247,32 @@ Below, we offer five questions that you can use to help facilitate a discussion 
 
 5. Working with a team requires coordinating tasks on both a team and individual level. This chapter has provided some recommendations on how to coordinate work on a team level. Given these recommendations, how do you plan on managing your own tasks for the project?
 
-[^1]: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
+| Deadline | Task | Assigned to | Complexity |
+| --- | --- | --- | --- |
+| 10/2 | First group meeting to discuss everyone’s role and Team Contract | Juan, Olivia, Lex |  |
+| 10/7 | Brainstorm ideas for the Team Contract and Project Schedule | Olivia, Juan, Lex |  |
+| 10/9 | Edit Team Contract | Lex | 1 |
+| 10/9 | Edit Project Schedule | Juan | 1 |
+| 10/10 | Meet at the library at 5:00pm to discuss Proposal | Juan, Olivia, Lex |  |
+| 10/13 | Write initial Proposal | Juan | 2 |
+| 10/13 | Make comments on the Proposal | Lex | 1 |
+| 10/13 | Edit Proposal | Oliva | 1 |
+| 10/14 | Final Team Contract and Project Schedule | Olivia | 1 |
+| 10/14 | Final Proposal | Olivia, Juan, Lex |  |
+| 10/14 | Start working on Annotated Bibliography at the library | Olivia, Juan, Lex |  |
+| 10/21 | Each find 4 sources | Olivia, Juan, Lex |  |
+| 10/21 | Work on Annotated Bibliography (in class) | Olivia, Juan, Lex |  |
+| 10/24 | Write first draft of annotations for sources (4 per team member) | Olivia, Juan, Lex |  |
+| 10/27 | Edit citations for Annotated Bibliography | Juan | 1 |
+| 10/27 | Edit annotations for Annotated Bibliography | Lex | 1 |
+| 10/28 | Final Annotated Bibliography is due | Olivia, Juan, Lex |  |
+| 10/30 | Work on overall rough draft (in class) | Olivia, Juan, Lex |  |
+| 11/3 | Meet at the library to finish rough draft (5:00pm) | Olivia, Juan, Lex |  |
+| --- | --- | --- | --- |
+| 11/4 | Rough draft due | Olivia | 1 |
+| 11/11 | Edit the rough draft | Juan | 1 |
+| 11/11 | Comment on rough draft | Lex | 1 |
+| 11/11 | Take note of their adjustments and make changes | Olivia | 1 |
+| 11/13 | Final Paper is Due! | Olivia, Juan, Lex |  |
 
-Deadline Task Assigned to Complexity 10/2 First group meeting to discuss Juan, Olivia, everyone’s role and Team Lex Contract 10/7 Brainstorm ideas for the Team Olivia, Juan, Contract and Project Schedule Lex 10/9 Edit Team Contract Lex 1 10/9 Edit Project Schedule Juan 1 10/10 Meet at the library at 5:00pm Juan, Olivia, to discuss Proposal Lex 10/13 Write initial Proposal Juan 2 10/13 Make comments on the Lex 1 Proposal 10/13 Edit Proposal Oliva 1 10/14 Final Team Contract and Olivia 1 Project Schedule 10/14 Final Proposal Olivia, Juan, Lex 10/14 Start working on Annotated Olivia, Juan, Bibliography at the library Lex 10/21 Each find 4 sources Olivia, Juan, Lex 10/21 Work on Annotated Bibliog- Olivia, Juan, raphy (in class) Lex 10/24 Write first draft of annota- Olivia, Juan, tions for sources (4 per team Lex member) 10/27 Edit citations for Annotated Juan 1 Bibliography 10/27 Edit annotations for Annotat- Lex 1 ed Bibliography 10/28 Final Annotated Bibliography Olivia, Juan, is due Lex 10/30 Work on overall rough draft Olivia, Juan, (in class) Lex 11/3 Meet at the library to finish Olivia, Juan, rough draft (5:00pm) Lex 11/4 Rough draft due Olivia 1 11/11 Edit the rough draft Juan 1 11/11 Comment on rough draft Lex 1 11/11 Take note of their adjust- Olivia 1 ments and make changes 11/13 Final Paper is Due! Olivia, Juan, Lex
+[^1]: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.

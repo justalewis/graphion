@@ -7,7 +7,7 @@ short-title: What Is Rhetoric? A “Choose Your Own Adventure” Primer
 short-authors: Duffy
 volume: 5
 year: 2023
-start-page: 204
+start-page: 233
 chapter-number: 15
 source-file: 15Duffy.pdf
 volume-title: Writing Spaces 5

@@ -7,7 +7,7 @@ short-title: Basic Approaches to Creating Accessible Documentation
 short-authors: Molloy
 volume: 6
 year: 2024
-start-page: 225
+start-page: 261
 chapter-number: 14
 source-file: 14Molloy.pdf
 volume-title: Technical Writing Spaces 6
@@ -80,11 +80,17 @@ An easy way to make sure that your documentation project does not run the risk o
 
 Let’s say you’ve just started a new job at a brand-new coffee shop in your town called Campus Coffee. The shop has created a new menu (see Figure 14.1), and as a student in technical communication, you can’t help but notice right away how inaccessible the menu is for many users.
 
+![Original Coffee Shop Menu](assets/figure-p006-1.jpg)\
+Figure 14.1: Original Coffee Shop Menu
+
 The background color and the font color for menu items are close in shade and tone, and nothing offsets important information other than slight color variation. In fact, as you work through your first shifts, some customers ask you to read or to clarify menu items that are difficult to read. After overhearing your new boss lamenting that she has no time to fix the issues with the menu and that she did her best to make it, you volunteer for the job. Why not, you think? It’ll make a nice portfolio piece later on.
 
 You want to use a consistent font, but you choose a simple pattern of hyphens to offset headings such that readers can easily see where cold drinks begin and hot beverages end. After doing some research, you choose a color palette that fits the overall motif of the coffee shop (warm browns and creams) yet offers you some ways to create more contrast. You go with three colors: cream, medium coffee brown, and deep teal.
 
 You decide that it will enhance your design to use the teal for the headings, yet you rely on the line of hyphens to do the work of communicating the important information that a new section of the menu has started. Taking these small steps leads to a design you are quite proud of (see Figure 14.2).
+
+![Revised Coffee Shop Menu](assets/figure-p007-1.jpg)\
+Figure 14.2: Revised Coffee Shop Menu
 
 Not only are colorblind guests better served, but the menu looks better and is more usable.
 
@@ -109,6 +115,9 @@ Choosing fonts that are easier for the user to manipulate (to change the size or
 As part of a community-based technical communication course focused on the health sciences, you’ve been tasked with creating a brochure for a local free clinic such that a nearby high school that serves socioeconomically disadvantaged teenagers can be made aware of available services. The client has asked for paper flyers such that they can be placed on a bulletin board with other student-focused information just outside the school’s cafeteria. Knowing that you will not be able to offer readers a version of the flyer where they will be able to easily manipulate the font (change it to a font that they find more readable), and thinking about users with dyslexia for whom some fonts work better than others, you create your flyer using Verdana fonts, you avoid italics, and you also include the website URL on the flyer (see Figure 14.3).
 
 Taking these simple steps has ensured that any students with dyslexia will be able to benefit from learning more about the clinic’s services. Your design is clean and easy to read; a wide variety of students at the high school will be able to get the information they need from reading it on the bulletin board.
+
+![Flyer for Health Clinic](assets/figure-p010-1.jpg)\
+Figure 14.3: Flyer for Health Clinic
 
 # How You Can Apply Considerations of Dyslexia to Your Schoolwork, Internships, Jobs
 
@@ -143,6 +152,16 @@ Ask yourself: What are the major elements you wish to cover? Consider these wort
 Imagine your internship provider, a local nonprofit focused on downtown revitalization, has asked you to take notes on how they run their annual fundraiser. Recognizing that they’ll soon be hiring new staff and saying goodbye to two senior staffers, they want to document how they’ve done things in the past such that future leadership teams and interns will have a better idea of the steps, stages, timelines, activities, and roles that will most likely lead to a successful event.
 
 You decide to use Microsoft Word to create a draft of this documentation. You interview the existing team, asking them to work backwards from closing out the event to all the stages and steps that went into getting them there. You go into the document properties to adjust the metadata. The screenshot in Figure 14.4 shows what you see when you go into the property summary in Word, which you can access by selecting “File,” and then “Properties” from the dropdown menu.
+
+![Properties Menu in MS Word](assets/figure-p013-1.jpg)\
+Figure 14.4: Properties Menu in MS Word
+
+![Filled In Properties Menu in MS Word](assets/figure-p014-1.jpg)\
+Figure 14.5: Filled In Properties Menu in MS Word
+
+![Undescribed figure from page 16 of the source](assets/figure-p016-1.jpg)
+
+![Undescribed figure from page 16 of the source](assets/figure-p016-2.jpg)
 
 You change the author’s name to your internship coordinator’s name. You add a specific title, such as “Documentation for Annual Fundraiser”; keywords such as: event planning; fundraising; procedures and roles. You fill in the comments with more contextual information for users. You add “training” for the category (see Figure 14.5).
 
@@ -191,6 +210,9 @@ Imagine a local bridal gown seamstress has asked your technical communication cl
 After collecting images from your client’s personal files and scanning samples of the physical patterns she’s created, you work with your classmates and professor to create a website that documents the processes used to create each custom gown. You carefully design alt text to insert under each image such that visually impaired users will have a better idea of what they might expect if they were to follow the patterns for these dresses.
 
 For one of the gowns, you’ve chosen this image from the client photos the seamstress is allowing your class to use (see Figure 14.8). When you insert the image on WordPress, a plugin generates the alt text: “A person posing for a picture.” However, you want to add something more descriptive. Making use of the “show, don’t tell” principle, you say, “a woman stands with one hand on her hip . . .” Thinking of the yellow test, you add, “she’s staring straight ahead with a lifted chin, confidently.” Thinking back on your purpose---to inspire seamstresses and fashion design students to make these dresses, you add “a woman in an intricate lace, sweetheart neckline, sleeveless bridal gown . . .” Notice how the new alt text in this exercise will do a far better job of conveying the visual information the original photo is meant to communicate to potential audiences.
+
+![Wedding Dress Image](assets/figure-p018-1.jpg)\
+Figure 14.8: Wedding Dress Image
 
 # How You Can Apply This to Your Schoolwork, Internships, Jobs
 
@@ -280,14 +302,4 @@ over how to apply the ideas presented in the chapter within the context of their
 
 1 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
 
-Figure 14.1: Original Coffee Shop Menu
-
-Figure 14.2: Revised Coffee Shop Menu
-
-Figure 14.3: Flyer for Health Clinic
-
-Figure 14.4: Properties Menu in MS Word Figure 14.5: Filled In Properties Menu in MS Word
-
 Figures 14.6 and 14.7: Cat Memes 1 and 2
-
-Figure 14.8: Wedding Dress Image

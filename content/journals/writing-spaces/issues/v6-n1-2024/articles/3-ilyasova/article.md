@@ -36,6 +36,9 @@ To understand why we write cover memos, let’s look at an example of one in Fig
 
 Additionally, see if you can tell whether or not this memo was for inside or outside of an organization, and the levels of formality and importance conveyed in the memo. Lastly, think about when you would write such a memo before or after you have completed a report?
 
+![Memos are basically the same in structure as emails](assets/figure-p003-1.png)\
+Figure 3.1. Memos are basically the same in structure as emails.
+
 The first thing you might notice with the content is that the memo is written to someone inside the company or organization. This memo lets the reader know that a report accompanies it, and what the report is about. What this means is that you should write this kind of cover memo *after* your report is done. Cover memos contain information about project updates or completion, ongoing and/or completed tasks, decisions from important meetings, and shorts proposals that either you are working on by yourself or with a team.
 
 One question students have about memos is what the difference is between them and sending emails. As you might have noticed, the formatting is quite similar (both share similar basic features: TO, FROM, SUBJECT, and a MESSAGE). However, the spread-ability or reach are the main differences between memos and emails. Emails can be sent instantaneously to many people by one person, memos have less reach or spread since they need to be printed on paper and delivered to one person or a few individuals. Usually, the reach or spread is determined by whether the email or memo is for someone outside or inside your organization. In today’s workplace, emails have replaced memos as the quickest way to communicate *informal* messages, particularly to people inside your organization. For people outside the organization, emails are more often expected to have a higher level of formality. In other words, the differences between emails and memos are dependent on audience and purpose.
@@ -116,6 +119,11 @@ Finally, you’re at the conclusion. The conclusion should be short, and like th
 
 of the reader. These expectations include indicating that the memo is concluding (“Thank you for your attention to this important matter,” reminding the reader of the topic or urgency of the matter “I believe a contact-tracing plan should be developed as soon as possible,” and providing contact information and a clear request for what is the next step, “To get started, I would like to schedule an appointment . . . you or your assistant can reach me at ext.19 . . . .”.
 
+![This memo shows the main parts and moves of the correspondence. The header indicates the subject of the memo; the introduction sets up the subject, purpose, and main point; the body provides the details; and the conclusion restates the main point and/or provides next steps](assets/figure-p009-1.jpg)\
+Figure 3.2. This memo shows the main parts and moves of the correspondence. The header indicates the subject of the memo; the introduction sets up the subject, purpose, and main point; the body provides the details; and the conclusion restates the main point and/or provides next steps.
+
+![Undescribed figure from page 9 of the source](assets/figure-p009-2.jpg)
+
 # Guidelines for Writing Abstracts and Executive Summaries
 
 Next, let’s review the process of writing abstracts and executive summaries. To examine these kinds of writing, we’ll focus on three factors:
@@ -135,6 +143,13 @@ As you might have already figured out, you can only write these abstracts and ex
 Table 3.1 provides some quick differences to keep in mind between abstracts and executive summaries.
 
 Finally, before you get started drafting either an abstract or executive summary it is a good idea to do the following four steps as outlined by Purdue Online Writing Lab (see https://tinyurl.com/5n8za6bt).
+
+|  | Abstracts | Executive Summaries |
+| --- | --- | --- |
+| Length | Typically about one robust paragraph. | Often about one page maximum. |
+| Types | Two types: informative and descriptive. The descriptive does NOT include results, conclusions, or recommendations. | Only one type. |
+| Order | Follows the organization of the report. | Does NOT follow the organization of the report. |
+| Phrasing | Uses the phrasing in the report | Does NOT use the exact phrasing of the report. |
 
 Reread your report with the purpose of abstracting in mind. Look specifically for these main parts: purpose, methods, scope, results, conclusions, and recommendations. You might even want to mark your report so you can find those places once you start writing.
 
@@ -162,6 +177,9 @@ Figure 3.3 provides an example of a scientific abstract. It contains all of the 
 
 When writing your executive summary, you need to keep in mind two main aspects of executive summaries that differ from writing abstract. First, you should paraphrase the main sections and main points of your report versus trying to use the same phrasing from the report as you would in an abstract.
 
+![Example of a Scientific Abstract. (Based on https://owl.purdue.edu/ owl/research_and_citation/using_research/writing_scientific_ abstracts_presentation.html)](assets/figure-p013-1.png)\
+Figure 3.3. Example of a Scientific Abstract. (Based on https://owl.purdue.edu/ owl/research_and_citation/using_research/writing_scientific_ abstracts_presentation.html)
+
 Second, you should be thinking about the best way to organize your summary. This situation often means *not* following the organization of your report. Here are a few discussion questions to help you think through how to organize your summary:
 
 > • What does my reader need to know? • What are the main points I need to highlight in order to inform my reader? • What is an effective order that I organize these key points and why?
@@ -173,6 +191,9 @@ Now that you’ve considered the needs of the reader and the most effective way 
 > • Relevant background information to explain why a report was created. • The purpose statement, placed early in the summary • The main point, also placed up front (this might be the conclusion and recommendation) • The key information from major sections in order of importance (this might be your results or findings) • Thank your reader for their time and attention to your report, along with a way to reach you.
 
 As you can see from this bulleted list, the organization of your executive summary might look very different than your report. Let’s now take a look at an example and see what this looks like (see Figure 3.4).
+
+![Example of an Executive Survey](assets/figure-p014-1.png)\
+Figure 3.4. Example of an Executive Survey
 
 The goal of an executive summary is that it is written in such a way that it can stand alone, apart from the rest of the report. And, as we saw, CEOs and managers may not have time to read your full report but still need to know key takeaways to make a decision. Hence, taking some time to figure out how to write an effective executive summary is a crucial skill for you to have. Here, writing and clear organization is key to drafting an effective executive summary.
 
@@ -216,12 +237,4 @@ reports and consider how to apply the ideas presented in each section to craftin
 
 1 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
 
-Figure 3.1. Memos are basically the same in structure as emails.
-
-Figure 3.2. This memo shows the main parts and moves of the correspondence. The header indicates the subject of the memo; the introduction sets up the subject, purpose, and main point; the body provides the details; and the conclusion restates the main point and/or provides next steps.
-
-Table 3.1. Abstracts Versus Executive Summaries Abstracts Executive Summaries Length Typically about one ro- Often about one page maximum. bust paragraph. Types Two types: informative and Only one type. descriptive. The descriptive does NOT include results, conclusions, or recommendations. Order Follows the organization of Does NOT follow the organizathe report. tion of the report. Phrasing Uses the phrasing in the report Does NOT use the exact phrasing of the report.
-
-Figure 3.3. Example of a Scientific Abstract. (Based on https://owl.purdue.edu/ owl/research_and_citation/using_research/writing_scientific_ abstracts_presentation.html)
-
-Figure 3.4. Example of an Executive Survey
+Table 3.1. Abstracts Versus Executive Summaries

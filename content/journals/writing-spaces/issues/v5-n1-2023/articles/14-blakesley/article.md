@@ -2,12 +2,12 @@
 title: Elaborate Rhetorics
 author:
 - name: David Blakesley
-abstract: 'This essay presents a working definition of rhetoric, then explores its key terms to help you understand rhetoric’s nature as both an applied art of performance and a heuristic art of invention and creation.[^1] The definition also situates rhetoric in the social processes of identification and division. The definition goes as follows: “Rhetoric is the art of elaborating or exploiting ambiguity to foster identification or division.” The chapter develops the meaning of rhetoric, art, elaboration, exploitation, identification, and division, modeling a process that anyone can follow with their own definitions of this or any complex concept. In the end, you should see rhetoric as more than “mere rhetoric” or “the art of persuasion.” You will learn to see rhetoric’s presence in all situations that involve people using words and images to teach, delight, persuade, or identify and divide. You will also learn the value of rhetorical listening for understanding the social, cultural, and plural nature of identity and, thus, our capacity for identification (or division) across contexts. You are a writer, so I’m going to presume that you don’t need to hear much about *why* you should bother learning more about rhetoric. Instead, I hope to illuminate its nature as an art so that you can put it to work to change the world or to reimagine it or even re-create it. People use rhetoric everyday for a wide variety of purposes: to persuade, move, entertain, teach, plead, divide, portray, protest, amuse, complain, inspire, empathize, debate, inquire, charm, and to do just about anything one person can communicate to others with words and other symbols, sounds, or images. This essay presumes that, as a writer yourself, you’ll'
+abstract: 'This essay presents a working definition of rhetoric, then explores its key terms to help you understand rhetoric’s nature as both an applied art of performance and a heuristic art of invention and creation.[^1] The definition also situates rhetoric in the social processes of identification and division. The definition goes as follows: “Rhetoric is the art of elaborating or exploiting ambiguity to foster identification or division.” The chapter develops the meaning of rhetoric, art, elaboration, exploitation, identification, and division, modeling a process that anyone can follow with their own definitions of this or any complex concept. In the end, you should see rhetoric as more than “mere rhetoric” or “the art of persuasion.” You will learn to see rhetoric’s presence in all situations that involve people using words and images to teach, delight, persuade, or identify and divide. You will also learn the value of rhetorical listening for understanding the social, cultural, and plural nature of identity and, thus, our capacity for identification (or division) across contexts.'
 short-title: Elaborate Rhetorics
 short-authors: Blakesley
 volume: 5
 year: 2023
-start-page: 188
+start-page: 215
 chapter-number: 14
 source-file: 14Blakesley.pdf
 volume-title: Writing Spaces 5
@@ -15,6 +15,10 @@ license: This work is licensed under the Creative Commons Attribution-NonCommerc
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 teacher-resources: separate
 ---
+
+You are a writer, so I’m going to presume that you don’t need to hear much about *why* you should bother learning more about rhetoric. Instead, I hope to illuminate its nature as an art so that you can put it to work to change the world or to reimagine it or even re-create it.
+
+People use rhetoric everyday for a wide variety of purposes: to persuade, move, entertain, teach, plead, divide, portray, protest, amuse, complain, inspire, empathize, debate, inquire, charm, and to do just about anything one person can communicate to others with words and other symbols, sounds, or images. This essay presumes that, as a writer yourself, you’ll
 
 benefit from a better understanding of what the term *rhetoric* means---its definition---because it can help you not only decide what to write (invention) and how to write it but also make sense of (analyze) what you and others write and why it matters. Understanding rhetoric will help you become a better writer and reader. Like most complex concepts, people have widely divergent ideas about what rhetoric means. That’s okay and to be expected. At the same time, and because we think *with* concepts and not just *about* them, developing your own workable definition of rhetoric---drawing from what others say about it---can make your writing and reading more purposeful, more of a habit or art than a happy accident.
 
@@ -45,6 +49,11 @@ What else can we say about rhetoric as both an applied and theoretical art? Zeno
 In 1644, preacher and rhetorician John Bulwer represented these two hands in his book, *Chirologia: or The naturall language of the hand*. He labeled them “eloquentia” (eloquence, which was associated with rhetoric) and “logica” (logic, associated with dialectic). See figure 1.
 
 In *Magic, Rhetoric, and Literacy*, William A. Covino suggests that the open hand and closed fist convey rhetoric’s function as the intermediary between the sensible and the conceptual, between what we see and what we know. Working with ideas furnished by the imagination (what the Greeks called “phantasy” or “phantasms”), rhetoric, Covino says, presents external impressions to the mind for assent or agreement. Zeno of Citium used the open hand for rhetoric to suggest that it makes the world of the imagination “graspable,” understandable, or believable. Rhetoric is “an agency for speculation” (35). As an art of invention and wonder, rhetoric grasps; it reaches out for the probable, to the uncertain as a method for discovering the available or possible means of persuasion or identification, which can in turn inform the practical application of rhetoric (in argument and other genres) to specific situations. In the image of the open hand, we see the external impressions from divergent sources coalescing in the palm, which is the concept born of experience, the manifestation of the graspable. Rhetoric also works outward, from the conceptual to the impressionable, and through systematic invention, generates multiple perspectives from the common source of experience.
+
+![The open hand of eloquence and the closed fist of logic. From *Chirologia: or The naturall language of the hand* (1644) by John Bulwer. https://bit.ly/ chirologia](assets/figure-p005-1.png)\
+Figure 1. The open hand of eloquence and the closed fist of logic. From *Chirologia: or The naturall language of the hand* (1644) by John Bulwer. https://bit.ly/ chirologia
+
+![Undescribed figure from page 12 of the source](assets/figure-p012-1.png)
 
 # From Invention to Elaboration
 
@@ -185,7 +194,5 @@ Write an essay that examines a particularly interesting case of what we might ca
 4. *Exploiting Ambiguity*. In some situations, you want to persuade someone to take a specific course of action or to change an attitude. Using the term you chose in #2, choose one of the term’s meanings, then write a paragraph that uses that meaning to change someone’s attitude about it. *5.* Rhetorician Kenneth Burke once wrote in a concrete poem called a “Flowerish” (a pun on “flourish”), “From the very start, our terms jump to conclusions.” What do you think he had in mind? In what ways do our terms, our vocabulary, determine what can be known? Spoken? Seen? What might our terms filter from view? Provide one or more examples.
 
 [^1]: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
-
-Figure 1. The open hand of eloquence and the closed fist of logic. From *Chirologia: or The naturall language of the hand* (1644) by John Bulwer. https://bit.ly/ chirologia
 
 Figure 2. “Hey---are you thinking what I’m thinking?” © John Wilhelm. Used by permission.

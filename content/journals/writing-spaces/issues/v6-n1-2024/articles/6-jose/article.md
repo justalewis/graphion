@@ -7,7 +7,7 @@ short-title: Stronger Together
 short-authors: José
 volume: 6
 year: 2024
-start-page: 83
+start-page: 98
 chapter-number: 6
 source-file: 6Jose.pdf
 volume-title: Technical Writing Spaces 6
@@ -155,6 +155,14 @@ This step is the outcome of steps 1--4. Think of this contract as the first coll
 
 Once you have a detailed team contract, you are ready to start the work. Look at your contract as a map for initiating, planning, and deploying your collaborative process.
 
+|  | Did not follow the step | Followed the step |
+| --- | --- | --- |
+| Step1 | I feel I did more than my peers. It was hard to ask questions. We worked but never really talked. During the whole project I felt I was just trying to go through the motions. I am glad it is done. | I was never afraid to ask questions or say something when I did not agree with a particular decision. We became friends, even though we had never worked together before. |
+| Step 2 | I never knew who did what or what I had to do exactly. It was a constant guessing game. At the end, we just assembled our different sections. The whole exercise just felt disjointed. | I always knew what my responsibilities were. Each of us contributed based on our strengths. Making time to edit and discuss what we had contributed really helped. |
+| Step 3 | One of us did the design and kept all the files stored on their computer because they had access to Adobe InDesign and that’s what they wanted to use. So when they couldn’t make it to class or to a meeting, we had no way of accessing the drafts. Plus, I couldn’t edit because I do not have the program. This became super stressful in the end. | Having a common online folder with all the files for the project was very helpful. We could access the different drafts at all time. Working in an online setting that allowed us to comment on each other’s work saved us so much time. Plus, I could work at my pace before class. We’d leave comments during the week on the draft and then take turns editing. |
+| Step 4 | We basically only interacted in class. While it was OK, we often wasted time trying to figure out who did what during the week. Not knowing if my team members were going to be in class or what they had done that week made the whole experience more stressful than it needed to be. We could have done a better job managing our time. | Deciding early on how we would communicate made it much easier to let each other know when something was not working or needed to be changed. We ended up meeting only once outside of class but we communicated almost every other day via text messages and in our online doc draft. |
+| Step 5 | We wrote a contract but never really followed it once we started. Looking back, I wish we had taken more time setting up how we would work, including how we would handle absences and such. Not having good policies made it difficult to have conversations about workload and absences. | There were a few times when some of us dropped the ball, but we knew each other well enough then to know how to handle it based on the policies we had agreed on. Having a plan in place helped us to adjust our roles when needed. |
+
 # What does a collaborative writing project look like in action? The Collaborative Process Visualized
 
 Figure 6.1 shows an example of what a collaborative writing project that uses the methods outlined previously looks like in action. Note that your team contract would be effectively written during the 3rd stage as the first content document after stage 1 and 2.
@@ -166,6 +174,9 @@ The methods outlined earlier offer a framework to build sound collaborative prac
 # Social Loafing/Freeloading
 
 If you end up with a non-contributing member, start by addressing the issue during one of the check-in moments. Give the person a chance to explain the situation first. Incomplete or no work is not always a sign of a freeloader.
+
+![The Collaborative Process Visualized](assets/figure-p014-1.jpg)\
+Figure 6.1: The Collaborative Process Visualized
 
 Sometimes, a person does not contribute because their schedule or other unexpected factors get in the way. Sometimes they may also have difficulties finding the information for completing a task, or they do not fully understand what is expected from them. Having a conversation as a group will give you a chance to identify the source of the issue, provide support, and make necessary adjustments.
 
@@ -283,6 +294,4 @@ How does this initial exchange work or does not work for planning the project? W
 
 1 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
 
-Table 6.1. Examples of Post-Collaboration Reflections Based on Whether or Not Each Step Was Followed. Did not follow the step Followed the step Step1 I feel I did more than my peers. I was never afraid to ask questions It was hard to ask questions. We or say something when I did not worked but never really talked. agree with a particular decision. During the whole project I felt I We became friends, even though was just trying to go through the we had never worked togethmotions. I am glad it is done. er before. Step 2 I never knew who did what or I always knew what my responsibilwhat I had to do exactly. It was a ities were. Each of us contributed constant guessing game. At the end, based on our strengths. Making we just assembled our different time to edit and discuss what we sections. The whole exercise just had contributed really helped. felt disjointed. Step 3 One of us did the design and kept all Having a common online folder the files stored on their computer with all the files for the project was because they had access to Adobe very helpful. We could access the InDesign and that’s what they want- different drafts at all time. Working ed to use. So when they couldn’t in an online setting that allowed us make it to class or to a meeting, we to comment on each other’s work had no way of accessing the drafts. saved us so much time. Plus, I could Plus, I couldn’t edit because I do work at my pace before class. We’d not have the program. This became leave comments during the week on super stressful in the end. the draft and then take turns editing. Step 4 We basically only interacted in Deciding early on how we would class. While it was OK, we often communicate made it much easwasted time trying to figure out ier to let each other know when who did what during the week. something was not working or Not knowing if my team members needed to be changed. We ended were going to be in class or what up meeting only once outside of they had done that week made the class but we communicated almost whole experience more stressful every other day via text messages than it needed to be. We could and in our online doc draft. have done a better job managing our time. Step 5 We wrote a contract but never There were a few times when really followed it once we start- some of us dropped the ball, but ed. Looking back, I wish we had we knew each other well enough taken more time setting up how then to know how to handle it we would work, including how we based on the policies we had would handle absences and such. agreed on. Having a plan in place Not having good policies made helped us to adjust our roles when it difficult to have conversations needed. about workload and absences.
-
-Figure 6.1: The Collaborative Process Visualized
+Table 6.1. Examples of Post-Collaboration Reflections Based on Whether or Not Each Step Was Followed.

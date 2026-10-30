@@ -7,7 +7,7 @@ short-title: What Can I Add to Discourse Communities? How Writers Use
 short-authors: Tremain
 volume: 5
 year: 2023
-start-page: 82
+start-page: 86
 chapter-number: 6
 source-file: 6Tremain.pdf
 volume-title: Writing Spaces 5
@@ -42,11 +42,17 @@ The term *meme* is derived from the Greek word *memeia* - that which is imitated
 
 Consider the (now pretty ancient) LOLcat meme (fig. 1).
 
+![An image of a small, gray and white kitten standing on its hind legs and looking up at the photographer, with the words “CAN I HAZ” placed at the top of the photo, and “CHEEZBURGER PLZ” at the bottom of the photo](assets/figure-p004-1.jpg)\
+Figure 1. An image of a small, gray and white kitten standing on its hind legs and looking up at the photographer, with the words “CAN I HAZ” placed at the top of the photo, and “CHEEZBURGER PLZ” at the bottom of the photo.
+
 So, why the cat? Why does the cat ask to *haz* as opposed to *have* a *cheezburger*? What does this meme *mean*? Though we know that cats don’t really eat cheeseburgers (or *cheez*burgers), there are literally thousands of cat memes with “haz” in place of “have” in them, including memes of cats asking, “I can haz cat memes?” This genre is culturally known as the LOLcats meme (https://en.wikipedia.org/wiki/Lolcat), and this particular image was made with a meme generator for a burger restaurant (https:// tinyurl.com/274akjmh). LOLcats memes are cousins of (or intertextual with) other genres, such as viral cat videos and cute kitten images and gifs---and they are one of the earliest examples of the internet meme.
 
 A function of the LOLcats is that they present us with an archive of early internet aesthetic, a genre where writers designed and posted digitized blasts of communication through images and words, usually for comic effect. LOLcats memes capture and interpret cultural practices at one point in time, and they present us with the expectations for language in this meme-specific genre and discourse. We immediately know this is an LOLcats meme not only because it shows a cat, but because it uses the internet language forms of *plz* and *haz*. The LOLcats memes are an example of how a discourse community uses language, including visual and linguistic patterns to reveal, develop, contribute, or change a cultural practice or to establish a user’s membership in the community.
 
 Other discourse communities have taken up the genre of the LOLcat meme to speak internally to their members. In fact, while the first LOLcats memes appeared long before there were meme generator sites, now we can play Minecraft in LOLcat language (https://www.youtube.com/ watch?v=Nbgjaoww4Rs). We can also see how specific discourse communities with specialized languages (the lexis) meshed their discourses with the language of the LOLcats, like this example (fig. 2):
+
+![A brown cat who has apparently crawled inside of a computer tower pokes its head out, with the words “REDUNDANT VARIABLE CAT IZ IN UR DATASET” placed at the top of the photo, and “BOOSTIN UR R^2” at the bottom of the photo (https://tinyurl.com/mr3fxudy)](assets/figure-p006-1.png)\
+Figure 2. A brown cat who has apparently crawled inside of a computer tower pokes its head out, with the words “REDUNDANT VARIABLE CAT IZ IN UR DATASET” placed at the top of the photo, and “BOOSTIN UR R^2” at the bottom of the photo (https://tinyurl.com/mr3fxudy).
 
 Whether you understand the specialized language in this LOLcat meme or not (which uses the lexis of statistics), you can see the LOLcat language conventions of *iz* and *ur*. This meme is also highly representative of the statistics discourse community. It uses the disciplinary terms *redundant variable, dataset,* and *r^2*, and the joke in it makes little sense to those of us outside of its membership.
 
@@ -100,6 +106,7 @@ Another way to think about the balancing act of negotiating discourse: as the ex
 
 # Works Cited
 
+
 Anzaldúa, Gloria. *Borderlands = La Frontera: The New Mestiza*. Aunt Lute Books, 2007.
 
 Grayson, Mara Lee. “Writing toward Racial Literacy.” *Writing Spaces: Readings* *on Writing, Volume 4,* edited by Dana Lynn Driscoll, Megan Heise, Mary K. Stewart, and Matthew Vetter. Parlor Press, 2021, pp. 166-183.
@@ -132,7 +139,7 @@ The claims in this text regarding the characteristics of translanguaging, code-m
 
 # Questions, Activities and Prompts for Discussion
 
-1. Find and evaluate a meme as representative of a discourse community. { Justify the extent to which the meme is or is not representative of a particular discourse community and explain your rationale. { Analyze language expectations of the discourse community by comparing the meme to another genre from the discourse community. { Evaluate the meme use (if present) of translanguaging or code-meshing. If no translanguaging or code-meshing is present, evaluate how well the meme adheres to its discourse community’s language expectations.
+1. Find and evaluate a meme as representative of a discourse community. ○ Justify the extent to which the meme is or is not representative of a particular discourse community and explain your rationale. ○ Analyze language expectations of the discourse community by comparing the meme to another genre from the discourse community. ○ Evaluate the meme use (if present) of translanguaging or code-meshing. If no translanguaging or code-meshing is present, evaluate how well the meme adheres to its discourse community’s language expectations.
 
 2. Design a meme for a particular discourse community using its lexis *and* integrating translanguaging or code-meshing practices as appropriate to your linguistic resources. Be respectful and do not appropriate another cultural language practice or dialect that is not your own.
 
@@ -142,12 +149,10 @@ The claims in this text regarding the characteristics of translanguaging, code-m
 
 5. How are English*es* different across the communities where you am a member and when does it really matter what language choices you make in the discourse community?
 
-6. Choose a discourse community that you are a member of---or that you want to join. Analyze the language expectations of this discourse community by considering the following questions: { What would it look like for you or others to utilize linguistic resources, such as the dialects or language styles a person feels most comfortable with, in this community? What are the risks and benefits of doing so? { What do you notice about language expectations and which languages or dialects are and are not valued in this discourse communities? { What are the benefits or challenges of using translanguaging and/or code-meshing in this community? When are the stakes high and where are they low?
+6. Choose a discourse community that you are a member of---or that you want to join. Analyze the language expectations of this discourse community by considering the following questions: ○ What would it look like for you or others to utilize linguistic resources, such as the dialects or language styles a person feels most comfortable with, in this community? What are the risks and benefits of doing so? ○ What do you notice about language expectations and which languages or dialects are and are not valued in this discourse communities? ○ What are the benefits or challenges of using translanguaging and/or code-meshing in this community? When are the stakes high and where are they low?
 
 7. How can we better understand the choices people make as writers and speakers and learn to value diverse and interesting language practices?
 
+
+
 [^1]: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use. 87
-
-Figure 1. An image of a small, gray and white kitten standing on its hind legs and looking up at the photographer, with the words “CAN I HAZ” placed at the top of the photo, and “CHEEZBURGER PLZ” at the bottom of the photo.
-
-Figure 2. A brown cat who has apparently crawled inside of a computer tower pokes its head out, with the words “REDUNDANT VARIABLE CAT IZ IN UR DATASET” placed at the top of the photo, and “BOOSTIN UR R^2” at the bottom of the photo (https://tinyurl.com/mr3fxudy).

@@ -4,12 +4,12 @@ author:
 - name: Kristin DeMint Bailey
 - name: An Ha
 - name: AJ Outlar
-abstract: In this chapter, a community college writing professor and two of her first-year writing students collaboratively address the issue of Whiteness in academic writing.[^1] Specifically, we challenge the notion that academic language is neutral as well as the expectation that all academic writers should strive for uniformity. We question notions of correctness and clarity, adopting Jacqueline Jones Royster’s definition of voice as “the power and authority to speak and make meaning” (31), and we challenge students to ask hard questions about language, identity, and power. We explain the inextricable bonds between language and community, examine the connections between language and racial identity, and explore the political nature of language, all of which affect a person’s voice as Royster has defined it. Then, the two of us who are students share our experiences with writing for school, reflecting on what we’ve learned both in and out of school about our language and our voice. Together, we invite students to reflect on their own voice in academic writing, asking themselves, “Whose voice do I hear in my writing, and why? What does this voice reveal about my identity as a writer, and how do I feel about what I uncover? What might I want to do more or differently?” . . . *survival is not an academic skill. It is learning how to* *stand alone, unpopular and sometimes reviled, and how to* *make common cause with those others identified as outside the*
+abstract: In this chapter, a community college writing professor and two of her first-year writing students collaboratively address the issue of Whiteness in academic writing.[^1] Specifically, we challenge the notion that academic language is neutral as well as the expectation that all academic writers should strive for uniformity. We question notions of correctness and clarity, adopting Jacqueline Jones Royster’s definition of voice as “the power and authority to speak and make meaning” (31), and we challenge students to ask hard questions about language, identity, and power. We explain the inextricable bonds between language and community, examine the connections between language and racial identity, and explore the political nature of language, all of which affect a person’s voice as Royster has defined it. Then, the two of us who are students share our experiences with writing for school, reflecting on what we’ve learned both in and out of school about our language and our voice. Together, we invite students to reflect on their own voice in academic writing, asking themselves, “Whose voice do I hear in my writing, and why? What does this voice reveal about my identity as a writer, and how do I feel about what I uncover? What might I want to do more or differently?”
 short-title: What Color Is My Voice? Academic Writing and the Myth of
 short-authors: Bailey, Ha, and Outlar
 volume: 5
 year: 2023
-start-page: 63
+start-page: 67
 chapter-number: 5
 source-file: 5DeMint-Bailey-Ha-Outlar.pdf
 volume-title: Writing Spaces 5
@@ -17,6 +17,8 @@ license: This work is licensed under the Creative Commons Attribution-NonCommerc
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 teacher-resources: separate
 ---
+
+> . . . *survival is not an academic skill. It is learning how to* *stand alone, unpopular and sometimes reviled, and how to* *make common cause with those others identified as outside the*
 
 > *structures in order to define and seek a world in which we can* *all flourish. It is learning how to take our differences and make* *them strengths. For the master’s tools will never dismantle the* *master’s house. They may allow us temporarily to beat him at* *his own game, but they will never enable us to bring about* *genuine change.”*
 

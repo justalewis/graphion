@@ -8,7 +8,7 @@ short-title: “Not So Fast”
 short-authors: Lanius and Weber
 volume: 6
 year: 2024
-start-page: 214
+start-page: 248
 chapter-number: 13
 source-file: 13Lanius-Weber.pdf
 volume-title: Technical Writing Spaces 6
@@ -34,6 +34,9 @@ The focus on creating products that users actually need and can actually use is 
 User-centered design applies to the creation of products, services, and documents. In user-centered design, the needs of users take priority over the ideas and wishes of the designers, writers, and organization. People practicing user-centered design often have to set aside their own plans and egos to make sure that users come first. User-centered design starts with questions about users. Who are they? What do they want? What are their goals for using this product or document? What problems do they have that our product can solve? What experiences do they have with our product and similar products? What do they like and not like about our products or documents? Successful user-centered design requires significant knowledge about how users think, feel, and behave. It also takes a long-term perspective on users, considering their needs and behavior before, during, and after their engagement with the product document. User-centered design also considers users’ long-term relationships with products and documents. When you practice user-centered design, you might have to sacrifice a pet project or a really innovative idea if it does not meet the users’ needs.
 
 User-centered design develops its perspective on users through a process that is iterative (that is, the process repeats and continues in cycles until the product truly meets user needs). This iterative process involves research and user input throughout design or writing (See Figure 13.1). The user-centered design process should begin with research and engagement with users to find out what they want and need. This research should lead to the development of product or business requirements that drive design decisions. These requirements lead designers to create product prototypes, which usually start simple and get more sophisticated as product development continues. As the business develops prototypes, it should test them with users to make sure its designs are useful and usable. If user research and testing reveal potential problems, designers should reevaluate and redesign to improve the product or document. Eventually, the business will release the product, but even then, they should provide ways to get user feedback through feedback forms or live tech support to make continuous upgrades and improvements based on user needs.
+
+![Iterative User-Centered Design Process](assets/figure-p004-1.jpg)\
+Figure 13.1: Iterative User-Centered Design Process
 
 Often, user-centered design gets referred to by related names, like “design thinking” or “user experience” (UX). User-centered design can involve expertise from a variety of disciplines, including human-computer interaction (HCI), psychology, human factors (the study of how people perform tasks), ergonomics (the study of risk and discomfort during work), cognitive science, marketing, and technical communication. User-centered design will also involve input from many different kinds of professionals, including programmers, project managers, researchers, quality assurance professionals, graphic designers, sales people, and customer support. Because technical writers serve as user advocates who constantly remind organizations to consider and meet user needs, technical writers can be integrally involved in user-centered design.
 
@@ -105,6 +108,9 @@ First, SeeClickFix customizes their service for each city that uses the product.
 
 A second user-centered design principle exhibited in the customization of the SeeClickFix applications is the inclusion of request categories that match the location. Sioux Falls, for example, has lots of snow fall so their service requests reflect that reality with a “Snow Alert Information” category. St. Petersburg, on the other hand, experiences strong tropical storms, so their categories include “Hurricane Center” and “Evacuation Zones.” The product considers the user’s context of use. Having categories that match each location makes it easier for users to find their specific issue, but beyond that it makes the application useful as a communication tool. If users from Sioux Falls, SD logged onto the application and saw hurricane-related requests, they would think “this tool was not designed for me.” Each town has categories that match their citizen’s needs, wants, and desires.
 
+![Customization for St. Petersburg, Florida, Huntsville, Alabama, and Sioux Falls, South Dakota on the SeeClickFix App. Source: Google Play. Accessed June 29, 2021](assets/figure-p010-1.jpg)\
+Figure 13.2: Customization for St. Petersburg, Florida, Huntsville, Alabama, and Sioux Falls, South Dakota on the SeeClickFix App. Source: Google Play. Accessed June 29, 2021.
+
 SeeClickFix began as a product designed to meet a user need. Founder Ben Berkowitz created the product after his own frustrating experience getting graffiti removed in his neighborhood (Berkowitz & Gagnon), and the product retains that focus on helping users. Users can review the service and application directly in Google Play or the Apple Store. Based on these reviews, the SeeClickFix blog shares how they have updated their application.[^2] For instance, in 2017 the product improved its color accessibility for the “7% of men and .4% of women” who “have difficulty distinguishing red from green” (Severson). SeeClickFix has also conducted user testing to “improve the functionality and SeeClickFix experience for all future iOS users” (Artsem). The web version updated its help centers in 2021 to improve usability and allow users to more quickly access information (“Changes to the CivicPlus help centers”). In this way, the product and services are focused on user needs, accessibility, and ease of use, making this an interesting case of user-centered design principles in action.
 
 # Conclusion
@@ -148,9 +154,5 @@ These discussion questions are designed to accompany the SeeClickFix case study 
 3. As a group, think of a product or service that you are all familiar with. If you were tasked with creating a list of potential user issues for this product or service, which user-centered design methods would you use?
 
 1 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
-
-Figure 13.1: Iterative User-Centered Design Process
-
-Figure 13.2: Customization for St. Petersburg, Florida, Huntsville, Alabama, and Sioux Falls, South Dakota on the SeeClickFix App. Source: Google Play. Accessed June 29, 2021.
 
 City of Sioux Falls. https://play.google.com/store/apps/details?id=org.cityofsiouxfalls.seeclickfix. Accessed June 29, 2021. Huntsville Connect. https://play.google.com/store/apps/details?id=com.seeclickfix.huntsvilleconnect.app. Accessed June 29, 2021. SeeClickFix St. Pete. https://play.google.com/store/apps/details?id=com.seeclickfix.seeclickfixstpete.app . Accessed June 29, 2021.

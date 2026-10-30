@@ -7,7 +7,7 @@ short-title: Technical, Scientific, and Business Presentations
 short-authors: Slattery
 volume: 6
 year: 2024
-start-page: 125
+start-page: 151
 chapter-number: 8
 source-file: 8Slattery.pdf
 volume-title: Technical Writing Spaces 6
@@ -89,6 +89,12 @@ Finally, limit the amount of text you place on each slide. You may have heard th
 As discussed earlier, the tone you adopt and the language you use should be informed by the audience you are addressing. If the audience comprises people who might not be experts in your discipline or field, or who may be non-native English speakers, you should avoid using jargon, colloquialisms, clichés, and acronyms.
 
 In Figure 8.2, note how a table has been used to present essentially the same information as Figure 8.1, but in a more user-friendly way. It is better to use a table to present multiple numerical values as you can present the information in a relatively small space and the audience will find it easier to compare the values (Rubens 336-337). A table will also help you during your presentation as you won’t have to remember the data and can elaborate on what the data means, in your own words.
+
+![Example of a Poorly Designed Slide](assets/figure-p007-1.jpg)\
+Figure 8.1: Example of a Poorly Designed Slide
+
+![Example of an Improved Slide Design](assets/figure-p008-1.jpg)\
+Figure 8.2: Example of an Improved Slide Design
 
 You can often use figures, diagrams, and charts to explain complex concepts and to appeal to attendees who prefer visuals to text. If you are presenting the results of a survey, for example, you might use a pie chart or bar graph to convey the data, rather than present the figures on their own. If you are presenting a workflow or process, a flowchart can work well.
 
@@ -218,6 +224,34 @@ To engage your students with the ideas discussed in this chapter, consider havin
 
 # Appendix. Checklist for Presentations
 
+| Phase | Practical considerations | Tick when completed/ considered |
+| --- | --- | --- |
+| Identify the audience and the purpose of the presentation | • Have you identified the purpose and scope of the presentation? |  |
+|  | • Have you identified the audience profile (e.g., their demographics, motivation, interests, and expectations)? |  |
+| Choose presentation tools | • What presentation software (if any) is currently available to you? |  |
+|  | • What software (if any) do you feel comfortable using? |  |
+|  | • Would a free trial version suffice? |  |
+|  | • Which file format(s) do you need to provide? |  |
+| Develop the presentation | • Are you going to design your own slide deck or are you required to use a corporate template for your presentation? If so, are there restrictions on the type, color, and graphics that you can use? |  |
+|  | • Have you taken cultural considerations into account when planning your color scheme? |  |
+|  | • Have you catered for different accessibility issues when developing the presentation? |  |
+| Phase | Practical considerations | Tick when completed/ considered |
+| --- | --- | --- |
+|  | • Does your presentation have opening, body, and closing sections? Have you clearly stated the purpose and structure of the presentation in the opening section? Have you summarized the key points of the presentation at the end? |  |
+|  | • Is the writing style and tone suitable for the target audience? Have you explained any complex jargon if your audience is not familiar with it? Have you adhered to Plain English guidelines? |  |
+|  | • Have you used tables, charts, diagrams, and/or figures instead of text, when they are required? |  |
+| Deliver the presentation | • Have you checked the facilities in the room where you will deliver your presentation? Does your presentation display as intended? |  |
+|  | • Have you rehearsed your presentation? |  |
+|  | • Have you identified your preferred presentation style (e.g., formal or informal)? |  |
+|  | • Do you plan to have handouts (e.g., printouts of your slide deck) and have you printed enough copies in advance? |  |
+|  | • Have you considered the requirements for any activities that attendees might undertake during your presentation? |  |
+|  | • If you plan to follow-up with attendees afterwards, have you prepared an attendance list for participants to sign? |  |
+|  | • If you were unable to answer one or more questions during your presentation, have you followed up with the relevant attendees? |  |
+| Phase | Practical considerations | Tick when completed/ considered |
+| --- | --- | --- |
+|  | • If you are delivering a virtual presentation, have you familiarized yourself with the software so that you know how to mute/unmute attendees and share/un-share files? |  |
+|  | • If you are delivering a virtual presentation, have you devised a workable strategy for interaction during the presentation (e.g., should attendees ask questions in live chat only or by putting their hands up)? |  |
+
 1 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
 
 Useful tip: Don’t install a trial version until you are ready to start working on the presentation and make sure the trial license will remain valid until your deadline.
@@ -227,8 +261,6 @@ Useful tip: Don’t install a trial version until you are ready to start working
 Useful tip: Presentation software templates are a great starting point if you are looking for inspiration about colors and typography that work well together. Even if you’re not creating a presentation, you can look at the color schemes and layouts that have been built into the templates to get ideas for your other documentation projects.
 
 Useful tip: Plain English is a style of writing that ensures the content is more readily understood by everyone. You can read about the Federal Plain English Guidelines at https://plainlanguage.gov/guidelines/.
-
-Figure 8.1: Example of a Poorly Designed Slide Figure 8.2: Example of an Improved Slide Design
 
 3 Pexels can be found at https://www.pexels.com. Creative Commons can be found at https://search.creativecommons.org.
 
@@ -241,5 +273,3 @@ Useful tips: • At the start of the presentation, ask the attendees if they can
 Useful tips: • Most presentation tools enable you to print your slide deck in different formats e.g., one slide per page or two to six slides per page. While it will save paper if you print a large number of slides per page, you need to ensure that attendees can still read the content on the slides. I usually print two to four slides per page to ensure they are sufficiently legible. • If someone else is organizing the presentation, ask them to take an attendee list so you can send the supplementary resources afterwards. If not, have a sheet of paper ready and ask attendees to add their details (names and email addresses) and pass it around, during your presentation.
 
 Useful tips: • Do a few trial runs of the presentation software with a colleague, to familiarize yourself with how the tool works. Delivering a presentation online can be daunting, and it can feel as though there is no one present if the cameras are off, so you need to be comfortable. • Make sure you are familiar with the mute/unmute features. • At the start of the presentation, ask the attendees if they can hear and see you. Also ask them if they can see your slide deck once you share it with the audience. If their cameras are off, they might answer via the chat area, so keep an eye on chat too. • Have your slide deck open in the background and close any unnecessary windows and folders just in case you accidentally share a screen you don’t intend on sharing. This happens to nearly everyone at some stage, and it can be embarrassing if you are not prepared for it. • Put your cell phone on mute and place a ‘do not disturb’ sign on your door, so no one disturbs you during your presentation. • Communicate clearly with attendees about the strategy for asking questions. If you’d prefer them to post questions in chat only and/or to hold all questions until the end, then state that clearly at the beginning of your presentation. • If you cannot mute all attendees before they join, then ask them to mute at the start of the presentation. It can be very distracting when attendees unmute their microphones (sometimes accidentally) while you are presenting, so you need to be ready to deal with it.
-
-Phase Practical considerations Tick when completed/ considered Identify the • Have you identified the purpose audience and and scope of the presentation? the purpose of the presentation • Have you identified the audience profile (e.g., their demographics, motivation, interests, and expectations)? Choose presen- • What presentation software (if any) tation tools is currently available to you? • What software (if any) do you feel comfortable using? • Would a free trial version suffice? • Which file format(s) do you need to provide? Develop • Are you going to design your own the presentation slide deck or are you required to use a corporate template for your presentation? If so, are there restrictions on the type, color, and graphics that you can use? • Have you taken cultural considerations into account when planning your color scheme? • Have you catered for different accessibility issues when developing the presentation? Phase Practical considerations Tick when completed/ considered • Does your presentation have opening, body, and closing sections? Have you clearly stated the purpose and structure of the presentation in the opening section? Have you summarized the key points of the presentation at the end? • Is the writing style and tone suitable for the target audience? Have you explained any complex jargon if your audience is not familiar with it? Have you adhered to Plain English guidelines? • Have you used tables, charts, diagrams, and/or figures instead of text, when they are required? Deliver • Have you checked the facilities in the presentation the room where you will deliver your presentation? Does your presentation display as intended? • Have you rehearsed your presentation? • Have you identified your preferred presentation style (e.g., formal or informal)? • Do you plan to have handouts (e.g., printouts of your slide deck) and have you printed enough copies in advance? • Have you considered the requirements for any activities that attendees might undertake during your presentation? • If you plan to follow-up with attendees afterwards, have you prepared an attendance list for participants to sign? • If you were unable to answer one or more questions during your presentation, have you followed up with the relevant attendees? Phase Practical considerations Tick when completed/ considered • If you are delivering a virtual presentation, have you familiarized yourself with the software so that you know how to mute/unmute attendees and share/un-share files? • If you are delivering a virtual presentation, have you devised a workable strategy for interaction during the presentation (e.g., should attendees ask questions in live chat only or by putting their hands up)?

@@ -8,7 +8,7 @@ short-title: Introduction to Usability and Usability Testing
 short-authors: Chong and Rice-Bailey
 volume: 6
 year: 2024
-start-page: 175
+start-page: 203
 chapter-number: 11
 source-file: 11Chong-Rice-Bailey.pdf
 volume-title: Technical Writing Spaces 6
@@ -79,6 +79,9 @@ The first task you perform is to create a user profile. For the “Faster Food�
 
 > • Eat fast food • Have experience using a mobile app • Be an adult age 18 or over
 
+![Example of Mobile App](assets/figure-p006-1.jpg)\
+Figure 11.1: Example of Mobile App
+
 In your user profile, you also identify two categories of users:
 
 1. Novice users: Teenagers and adults who are familiar with fast food menus but may not have experience ordering from these restaurants online.
@@ -90,6 +93,9 @@ Sean and Roxanne, which you can see in Figure 11.2.
 Sean and Roxanne are composites that you created based on data from web analytics that identified demographic information of your average users. Sean and Roxanne’s fictional identities include information such as their photos, occupations, yearly income, experience level, and buying habits.
 
 The personas of Sean and Roxanne are important throughout the design and development of your “Faster Food” App to create reliable and realistic representations of your users as you decide what will meet their needs and expectations. For example, in the “Faster Food” app, you might decide to highlight inexpensive restaurants that might be popular with Sean, who has a limited income and lives in the dorms. Alternatively, you might choose to highlight nearby restaurants for Roxanne, who prefers to have her lunch delivered quickly from a restaurant that is near her workplace.
+
+![Example of Personas](assets/figure-p007-1.jpg)\
+Figure 11.2: Example of Personas
 
 # Understanding Testing and Test Plans
 
@@ -147,6 +153,9 @@ The first part of the test plan (Figure 11.3) is to articulate the product goal 
 
 4. Navigate to the home address screen.
 
+![Example of Simple Usability Test Plan](assets/figure-p011-1.jpg)\
+Figure 11.3: Example of Simple Usability Test Plan
+
 # Additional Sections Included in an Advanced Test Plan
 
 An advanced test plan would contain more comprehensive tasks and test details, including different types of qualitative and quantitative data (evaluation method) you are seeking and specifics about the testing environment (description of testing environment), as described later in this chapter.
@@ -180,6 +189,12 @@ A pilot test will allow you to see if you are testing for the correct questions.
 # Recruiting Participants
 
 Often, students wonder how many participants they need for a usability study. Nielsen makes a sound argument for aiming for three to five users (Nielsen). They explain that you will learn the most from the first user. The second and third user will do many of the same things that you already observed with the first user. The third user will generate a small amount of new data, but not as much as the first and second user. As you add users, you will continue to observe the same behaviors and will learn less with each additional user. As Nielsen explains, “After the fifth user, you are wasting your time by observing the same findings repeatedly but not learning much new.”
+
+![Advanced Test Plan Part 1](assets/figure-p013-1.jpg)\
+Figure 11.4: Advanced Test Plan Part 1
+
+![Advanced Test Plan Part 2](assets/figure-p014-1.jpg)\
+Figure 11.5: Advanced Test Plan Part 2
 
 One of the greatest challenges to conducting a usability test is recruiting participants. Research (Chong, “Implementing Usability Testing”) shows that nearly one quarter of students reported that finding users to participate in a usability test was a challenge. To make this process more manageable, it is important that you define specific criteria for potential participants and think broadly about the recruitment process.
 
@@ -259,6 +274,9 @@ Similar to analyzing the primary research data in other projects, you will need 
 
 To analyze the results of the “Faster Food” app simple usability test, you look at the data you collected from the participants’ think-aloud protocol statements. This data is found in the notes or transcript of the participants’ statements. Figure 11.6 shows these comments from three of the five participants who followed the think-aloud protocol while they completed our usability test.
 
+![Example of Qualitative Findings](assets/figure-p020-1.jpg)\
+Figure 11.6: Example of Qualitative Findings
+
 By creating a column that identifies the screen the participant was on when they made the comment, you could look for patterns in the data. For instance, Figure 11.6 shows that while on the restaurant selection screen, two of our participants initially questioned how to find a specific restaurant. This also shows that two participants gave favorable feedback on the home screen.
 
 # Example: Analyzing the Findings of the Faster Food Mobile App (Advanced)
@@ -266,6 +284,9 @@ By creating a column that identifies the screen the participant was on when they
 For a more advanced usability test, which might include quantitative data, you would review this quantitative data in addition to the qualitative data described in the simple usability test. For example, you look at the specific number of times certain events occurred during the testing. Figure 11.7 indicates the events you are testing and the participants’ scores:
 
 Figure 11.7 shows some of the quantitative data from the usability tests. Notice that all three participants spent the least amount of time selecting the restaurant and the most amount of time changing the Diet Coke to a Sprite. Also, notice that the task of selecting the Big Mac Meal shows the most occurrences of using the “back” button, which may suggest that this screen is not as intuitive or user-centered as you would have expected.
+
+![Example of Quantitative Data](assets/figure-p021-1.jpg)\
+Figure 11.7: Example of Quantitative Data
 
 # Developing Recommendations
 
@@ -276,6 +297,9 @@ Your recommendations may be informally or formally presented depending on your a
 # Example: Developing the Executive Summary for the Faster Food Mobile App Usability Testing
 
 Figure 11.8 shows the executive summary of the “Faster Food” app advanced usability testing. This summary includes an introduction to the project, a brief summary of our methods and findings, and the recommendations that these findings suggest.
+
+![Example of Executive Summary](assets/figure-p022-1.jpg)\
+Figure 11.8: Example of Executive Summary
 
 # Conclusion
 
@@ -332,19 +356,5 @@ With the advent of online education and testing, here is a list of websites for 
 Here is a list of suggested readings for you to learn more about user-centered design and usability tests:
 
 1 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
-
-Figure 11.1: Example of Mobile App
-
-Figure 11.2: Example of Personas
-
-Figure 11.3: Example of Simple Usability Test Plan
-
-Figure 11.4: Advanced Test Plan Part 1 Figure 11.5: Advanced Test Plan Part 2
-
-Figure 11.6: Example of Qualitative Findings
-
-Figure 11.7: Example of Quantitative Data
-
-Figure 11.8: Example of Executive Summary
 
 Barnum, Carol. *Usability Testing Essentials: Ready, Set . . . Test!* Elsevier, 2011. Johnson, Robert R. *User-Centered Technology: A Rhetorical Theory for Computers* *and Other Mundane Artifacts*. State University of New York Press, 1998. Norman, Donald A. *The Psychology of Everyday Things*. Basic Books, 1988. Rubin, Jeffrey, and Dana Chisnell. *Handbook of Usability Testing: How to Plan,* *Design, and Conduct Effective Tests*, 2nd ed., Wiley, 2008.

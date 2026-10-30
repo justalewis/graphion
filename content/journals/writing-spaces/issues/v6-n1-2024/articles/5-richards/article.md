@@ -7,7 +7,7 @@ short-title: Let’s Party
 short-authors: Richards
 volume: 6
 year: 2024
-start-page: 70
+start-page: 80
 chapter-number: 5
 source-file: 5Richards.pdf
 volume-title: Technical Writing Spaces 6
@@ -54,6 +54,10 @@ Find everything you can on the topic, using resources around you like a libraria
 
 Creating a table ensures that (a) you don’t have 21 browser tabs open with important information and then lose them when your internet crashes and (b) you are thinking about how each piece of information you find---could be books, journal articles, web pieces, blog posts, or software applications---connects to your research. They could support it, challenge it, facilitate it---whatever. But listening to as many folks as you can and learning (and remembering!) their positions on a topic is one of the best ways to have a great time at a party and avoid any social *faux pas*. Off you go to dig into the research.
 
+| Author | Title | Publication | Link/ DOI | Reliability Rating (1 to 5) | Main Argument/Findings | Connection to Your Project |
+| --- | --- | --- | --- | --- | --- | --- |
+| . . . | . . . | . . . | . . . | . . . | . . . | . . . |
+
 # Adjudicates Sources
 
 Whew! That was a lot of sources. You have currently . . . let’s see . . . 5 . . . 10 . . . 17 sources! Great work. But your professor only asked for a few. Now what? Need you include all of them in your literature review? Short answer: No. *But I want the professor to know how much research I’ve* *done*, you retort. Understandable, but another key function of the literature review is adjudication---or, judging *which* sources are most relevant to include and *why*, essentially sifting through your list and transitioning from indiscriminate collection of sources to a more focused curation of the most credible and relevant sources for the constraints, genre, and purpose of your piece of writing. This takes time, experience, and deliberation---much like it would for any astute judge.
@@ -70,11 +74,32 @@ You consider what sources would be useful for the development team to know about
 
 You then decide that for this “review of literature” you’ll just be listing, summarizing, and synthesizing the actual tools themselves. You’ll make a note in there about how there is ample scholarship on these tools, but for the purpose of this project, and its scope, at this time you are choosing to focus on the technical sources.
 
+| Author | Title | Publication | Link/DOI |
+| --- | --- | --- | --- |
+| Sonia H. Stephens, Denise E. DeLorme and Scott C. Hagen | Evaluating the Utility and Communicative Effectiveness of an Interactive Sea-Level Rise Viewer Through Stakeholder Engagement | Journal of Business and Technical Communication | https://doi. org/10.1177/ 10506191557 3 963 |
+| Reliability Rating (1 to 5) | Main Argument/Findings | Connection to Your Project |  |
+| 5 | The authors discuss the implications of this study for visual risk communication and make recommendations for others developing similar interactive data visualization tools with audience input. | This is research on the user experience part of the tool, and not its original development. |  |
+| Author | Title | Publication | Link/DOI |
+| Jacob D. Rawlins and Greg D. Wilson | Agency and Interactive Data Displays: Internet Graphics as Co-Created Rhetorical Spaces | Technical Communication Quarterly | https://doi.org /10.1080/1057 2252.2014.94 2468 |
+| Reliability Rating (1 to 5) | Main Argument/Findings | Connection to Your Project |  |
+| 5 | Bit complex and theoretical, but the argument seems to be the concept of agency is a useful perspective to interpret the way users interact with a variety of online graphical tools. | This could help with placing this project into an academic one that is more philosophical. |  |
+| Author | Title | Publication | Link/DOI |
+| NOAA | Sea Level Rise Viewer | https:// NOAA.gov | https://coast. noaa.gov/digitalcoast/tools/slr. html |
+| Reliability Rating (1 to 5) | Main Argument/Findings | Connection to Your Project |  |
+| 5 | Hmm. That sea level rise risks should be visualized? More by implication, really. | This resembles a type of tool that I think the development team wants to create. |  |
+
 # Practice
 
 You’ll need practice in “summarizing” technical sources. Consider adapting the table from the previous sections to highlight information that is more relevant to technical sources (e.g., swapped out DOI and reliability for functionality and user base). I’ve input the NOAA source as an example (Table 5.3).
 
 As most technical writers find out, what constitutes useful sources will constantly change according to purpose and will extend far beyond musty books and full-text periodicals. (We’re two functions in and you haven’t even started writing yet!)
+
+| Author | Title | Publication | Link/DOI |
+| --- | --- | --- | --- |
+| Climate Central | Risk Zone Map | Surging Seas? | https://ss2. climatecentral. org |
+| Reliability Rating (1 to 5) | Main Argument/Findings | Connection to Your Project |  |
+| 4? | Like NOAA, the argument is the same. | This resembles a type of tool that I think the development team wants to create---but more attainable since they are also a nonprofit, like we are. |  |
+| . . . | . . . | . . . | . . . |
 
 # Refines for the Target Audience
 
@@ -178,10 +203,17 @@ Consider supplementing this chapter with the following questions:
 
 4. Composing an effective literature review requires handling a good deal of information. What are some ways you can manage your content and information in an efficient way?
 
+| Agency | Type | Link |
+| --- | --- | --- |
+| NOAA | Government | https://coast.noaa.gov/digitalcoast/tools/ slr.html |
+| Origination Date | Functionality | User Base |
+| Not sure. Last modified August 2020. | Identify address and use sea level gauge (inter-active). | Primarily coastal planners but also the public. |
+| . . . | . . . | . . . |
+
 1 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
 
-Table 5.1. Source Spreadsheet for Literature Reviews Author Title Publication Link/ Reliability Main Argu- Connection to DOI Rating (1 ment/Find- Your Project to 5) ings . . . . . . . . . . . . . . . . . . . . .
+Table 5.1. Source Spreadsheet for Literature Reviews
 
-Table 5.2. Populated Source Spreadsheet for Literature Reviews, Including Both Academic and Technical Sources Author Title Publication Link/DOI Sonia H. Stephens, Evaluating the Utility and *Journal of* https://doi. Denise E. DeLo- Communicative Effec- *Business* org/10.1177/ rme and Scott tiveness of an Interactive *and Technical* 10506191557 C. Hagen Sea-Level Rise Viewer *Communica-* 3 963 Through Stakehold- *tion* er Engagement Reliability Rating Main Argument/Findings Connection to Your Project (1 to 5) 5 The authors discuss the This is research on the user eximplications of this study for perience part of the tool, and visual risk communication not its original development. and make recommendations for others developing similar interactive data visualization tools with audience input. Author Title Publication Link/DOI Jacob D. Raw- Agency and Interactive *Technical* https://doi.org lins and Greg Data Displays: Internet *Communica-* /10.1080/1057 D. Wilson Graphics as Co-Created *tion Quarterly* 2252.2014.94 Rhetorical Spaces 2468 Reliability Rating Main Argument/Findings Connection to Your Project (1 to 5) 5 Bit complex and theoretical, This could help with placing this but the argument seems to project into an academic one be the concept of agency is that is more philosophical. a useful perspective to interpret the way users interact with a variety of online graphical tools. Author Title Publication Link/DOI NOAA Sea Level Rise Viewer https:// https://coast. NOAA.gov noaa.gov/digitalcoast/tools/slr. html Reliability Rating Main Argument/Findings Connection to Your Project (1 to 5) 5 Hmm. That sea level rise This resembles a type of tool risks should be visualized? that I think the development More by implication, really. team wants to create. Table 5.3. Populated Source Spreadsheet for Literature Reviews, Including Both Academic and Technical Sources Author Title Publication Link/DOI Climate Central Risk Zone Map Surging Seas? https://ss2. climatecentral. org Reliability Rating Main Argument/Findings Connection to Your Project (1 to 5) 4? Like NOAA, the argument This resembles a type of tool is the same. that I think the development team wants to create---but more attainable since they are also a nonprofit, like we are. . . . . . . . . . . . .
+Table 5.2. Populated Source Spreadsheet for Literature Reviews, Including Both Academic and Technical Sources Table 5.3. Populated Source Spreadsheet for Literature Reviews, Including Both Academic and Technical Sources
 
-Table 5.4. Source Spreadsheet Adapted for Technical Sources Agency Type Link NOAA Government https://coast.noaa.gov/digitalcoast/tools/ slr.html Origination Date Functionality User Base Not sure. Last mod- Identify address Primarily coastal planners but also the ified August 2020. and use sea level public. gauge (inter-active). . . . . . . . . .
+Table 5.4. Source Spreadsheet Adapted for Technical Sources

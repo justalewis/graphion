@@ -1,5 +1,6 @@
 ---
 title: Acknowledgments
+abstract: Three years ago, in the spring of 2020, Writing Spaces put out a call
 short-title: Acknowledgments
 volume: 5
 year: 2023
@@ -10,7 +11,9 @@ license: This work is licensed under the Creative Commons Attribution-NonCommerc
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ---
 
-Three years ago, in the spring of 2020, Writing Spaces put out a call for proposals for Volume 4 of the *Readings on Writing* series. In many ways, that CFP marked a turning point for the Writing Spaces project since it was the first completely new volume crafted by the new editorial team of Dana Driscoll, Mary Stewart, and Matt Vetter. While we had just recently published Volume 3 of the Readings on Writing series, that particular volume included manuscripts from years previous -- when Charlie Lowe and Pavel Zemliansky led the project. Our CFP for Volume 4 accepted open-topic submissions, but it also allowed us to call for essays that tackled more specific interests that emerged from our survey of readers, editorial board interests, and our review of previous issues. In other words, we wanted to both update the Writing Spaces curriculum, since the last CFP resulted in a 2011 publication, but also fill in the gaps by soliciting essays on issues such as global Englishes, translingualism, social justice, community-engaged writing, and emerging technologies, among others.
+> for proposals for Volume 4 of the *Readings on Writing* series. In many ways, that CFP marked a turning point for the Writing Spac-
+
+es project since it was the first completely new volume crafted by the new editorial team of Dana Driscoll, Mary Stewart, and Matt Vetter. While we had just recently published Volume 3 of the Readings on Writing series, that particular volume included manuscripts from years previous -- when Charlie Lowe and Pavel Zemliansky led the project. Our CFP for Volume 4 accepted open-topic submissions, but it also allowed us to call for essays that tackled more specific interests that emerged from our survey of readers, editorial board interests, and our review of previous issues. In other words, we wanted to both update the Writing Spaces curriculum, since the last CFP resulted in a 2011 publication, but also fill in the gaps by soliciting essays on issues such as global Englishes, translingualism, social justice, community-engaged writing, and emerging technologies, among others.
 
 When we published the CFP for Volume 4, we never imagined the enormous response we would get, which amounted to over 150 proposals from the Writing Spaces community. The immensity of this response led to a couple of important decisions that defined the work we did in the next few years.
 

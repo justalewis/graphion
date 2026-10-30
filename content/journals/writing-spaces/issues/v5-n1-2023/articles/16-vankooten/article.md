@@ -7,7 +7,7 @@ short-title: Thinking across Modes and Media (and Baking Cake)
 short-authors: VanKooten
 volume: 5
 year: 2023
-start-page: 222
+start-page: 251
 chapter-number: 16
 source-file: 16VanKooten.pdf
 volume-title: Writing Spaces 5
@@ -68,6 +68,11 @@ From 1:34-1:51, Evan uses Lovato’s lyrics to start to tell a story of persever
 
 This fifteen-second sequence ends as the music transitions from verse to chorus. Within the song at 1:41, an ascending electronic scale grows louder, building in volume and pitch to the first line of the chorus. Evan juxtaposes this musical shift with a video clip that zooms in on a lone figure at the end of a hallway (see Figure 3). According to Kratz, one way juxtaposition works is to coordinate elements to heighten the audience’s attention (30), and we notice Evan using the music and the clip’s zooming movement to do just that---to get us to look and listen closely. As the beat of the chorus drops dramatically, we then see a black and white clip of Evan himself, punching toward the camera on the downbeat, and the visual quickly flips to a red screen with the date “2010.”
 
+![A lone figure illuminated by light from a window at the end of a hallway. Closed captioning shows Demi Lovato lyrics. Please access Evan’s video at https:// youtu.be/RgX4U7Z25c0. Screenshot by the author](assets/figure-p010-1.png)\
+Figure 3. A lone figure illuminated by light from a window at the end of a hallway. Closed captioning shows Demi Lovato lyrics. Please access Evan’s video at https:// youtu.be/RgX4U7Z25c0. Screenshot by the author.
+
+![Undescribed figure from page 10 of the source](assets/figure-p010-2.png)
+
 There’s a lot going on here. Evan is both juxtaposing and integrating, using images, clips, music, lyrics, and movement to tell the story of his journey through college with mental health. The juxtapositions are sequential (different images one after another) and simultaneous (music with image); they are within and across visual and aural modes, and they help to make watching this video a captivating and persuasive experience. And the purposes of these juxtapositions are various and align with Kratz’s list, working to imply a narrative (of Evan’s experiences across time), to heighten attention (to a transition point in the story), or to point out similarities (between Lovato’s lyrics and Evan’s experiences).
 
 # Baking (and Sharing) Your Own Cake
@@ -120,10 +125,10 @@ The chapter offers two examples of effective uses of integration and juxtapositi
 
 5. Pick a topic, and compose a short audio or video clip that combines at least two media elements strategically for a certain effect. You might combine a song and several images, for example, in a way that aims for surprise, joy, discomfort, or sadness. After composing your clip, write a paragraph that reflects over your authorial choices and their effects on a potential audience.
 
+![Undescribed figure from page 6 of the source](assets/figure-p006-1.png)
+
+![“A College Collage” by Evan Kennedy on YouTube, showing an image of stacked pill bottles. Please access Evan’s video at https://youtu.be/RgX4U7Z25c0. Screenshot by the author.](assets/figure-p007-1.png){#fig:1 fig-alt="Undescribed figure from page 7 of the source"}
+
 [^1]: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
 
-Figure 1. “A College Collage” by Evan Kennedy on YouTube, showing an image of stacked pill bottles. Please access Evan’s video at https://youtu.be/RgX4U7Z25c0. Screenshot by the author.
-
 Figure 2. “A College Collage” by Evan Kennedy on YouTube. Evan reinforces the use of spoken words with an image of a woman. Text reads “Woman’s voice: Fighting yourself to wake up, get up, take a shower, try and breathe, try and smile.” Please access Evan’s video at https://youtu.be/RgX4U7Z25c0. Screenshot by the author.
-
-Figure 3. A lone figure illuminated by light from a window at the end of a hallway. Closed captioning shows Demi Lovato lyrics. Please access Evan’s video at https:// youtu.be/RgX4U7Z25c0. Screenshot by the author.

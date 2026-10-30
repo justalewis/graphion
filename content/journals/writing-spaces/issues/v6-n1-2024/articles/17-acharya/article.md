@@ -7,7 +7,7 @@ short-title: Composing Technical Documents for Localized Usability in the
 short-authors: Acharya
 volume: 6
 year: 2024
-start-page: 274
+start-page: 323
 chapter-number: 17
 source-file: 17Acharya.pdf
 volume-title: Technical Writing Spaces 6
@@ -96,6 +96,8 @@ In the globally interconnected world, you are expected to produce documents in w
 
 Adopting the document localization process can help you address these factors and produce effective documents for multicultural audiences. As shown in Figure 17.1, you can begin the documentation process with a documentation plan, which entails a preliminary study of the document type and purpose, audience, and context of use. As the documentation project progresses, the next crucial phase involves delving into cultural factors. During this phase, it becomes essential to carefully examine these cultural elements to tailor the materials appropriately, aligning them with the cultural expectations associated with document usability (St.Amant 154). In the third phase, you start drafting and reviewing the document with cultural considerations and contextual awareness of the user’s situation.
 
+Figure 17.1: Document Localization Process
+
 At this phase, you thoroughly review the text to ensure its functionality, accuracy, accessibility, and writing quality. While document functionality is concerned with how the document conveys information to its users, accuracy involves correctly presenting information without ambiguity or errors. Likewise, accessible documents ensure that all users, including those with disabilities, receive the same information. Good technical writing avoids unnecessary wordiness, jargon (overtly technical language), and reads smoothly.
 
 As you perform the tasks from 1 to 3, you should also focus on the cultural expectations of rhetoric (presenting information in a credible way), document type (memos, letters, reports, proposals, instructions, reviews, newsletters, presentations, etc.) and the context of use.
@@ -154,9 +156,7 @@ Certainly, you may not be able to account for all the different cultural context
 
 Consider that different cultures use distinct formats for numbers, dates, and currencies. For example, phone numbers and time representations (such as 12-hour vs. 24-hour) vary around the world. To make your technical documents usable, meaningful, and credible in other cultures, you need to consider the following:
 
-> • Date format: Different countries use different date formats. For example:
-
-> Units of measurement: Be mindful of the type of measurement units being used in other cultures. For instance, while “kilometer” is commonly used in countries like Nepal, India, Pakistan, and China, “mile” is the preferred unit in the United States, Myanmar, Liberia, and Puerto Rico.
+> • Date format: Different countries use different date formats. For example: Units of measurement: Be mindful of the type of measurement units being used in other cultures. For instance, while “kilometer” is commonly used in countries like Nepal, India, Pakistan, and China, “mile” is the preferred unit in the United States, Myanmar, Liberia, and Puerto Rico.
 
 > • Currency: Pay attention to how currency values are formatted and written. For example:
 
@@ -195,6 +195,7 @@ Composing texts for localized usability requires you to better understand how cu
 Composing technical documents for localized usability, however, can be challenging---especially if you are uncertain about how to obtain information about your audience’s behaviors, norms, values, and belief systems. The culture of your target audience has a significant impact on how users perceive and accept your message. Adopting the document localization process as a tool and researching audiences’ needs and expectations in the target culture can help produce usable, meaningful, and credible documents. In short, with user research and usability testing in international contexts, you can better understand how cultural differences affect the audience’s expectations of your text and compose better texts for better experiences.
 
 # Works Cited
+
 
 Ball, Donald A. and Wendell H. McCulloch. *International Business: The Challenge of Global Competition*, 7th ed., Mcgraw-Hill, 1999.
 
@@ -246,7 +247,7 @@ To help students explore the ideas discussed in this chapter, consider having th
 
 5. This essay provides some guidelines and best practices to compose texts with cultural considerations. What additional guidelines and practices can you suggest for composing texts with cultural considerations? Can you prepare your own list?
 
-6. Briefly explain the significance of the following while composing texts for multicultural audiences: { Cultural expectations { User research { Document localization { Usability testing { Localized usability
+6. Briefly explain the significance of the following while composing texts for multicultural audiences: ○ Cultural expectations ○ User research ○ Document localization ○ Usability testing ○ Localized usability
 
 7. Discuss what strategies would you consider for composing usable, meaningful, and credible technical documents to be used by members from other cultures? Can you provide any examples?
 
@@ -254,10 +255,15 @@ To help students explore the ideas discussed in this chapter, consider having th
 
 > • Usability Testing Guidelines: https://www.plainlanguage.gov/guidelines/test/usability-testing/ • Usability Evaluation Basics: https://www.usability.gov/what-and-why/usability-evaluation.html • Usability Resources: https://infodesign.com.au/usabilityresources.html • Usability Testing: https://www.nngroup.com/articles/usability-testing-101/ • Remote Testing: https://www.usability.gov/how-to-and-tools/ methods/remote-testing.html • Usability Testing Basics: https://studentlife.mit.edu/sites/default/ files/Documents/Usability_Testing_Workshop_March2020.pdf • How to Test the Usability of Documents: https://www.uxmatters. com/mt/archives/2020/05/how-to-test-the-usability-of-documents.php
 
+| U.S. | Ghana | Portugal | Luxembourg |
+| --- | --- | --- | --- |
+| 5/29/2023 | 29/5/2023 | 23.05.29 | 29.05.2023 |
+| 5-29-2023 | 29-5-2023 | 2023/05/29 |  |
+| 5/29/23 |  | 29-05-2023 |  |
+
+| U.S. | Nepal | India |
+| --- | --- | --- |
+| $430.50 | रू ४३०.५० | ₹४३०.५० |
+| US$430.50 | ४३० रपु यै ाँ ५० पसै ा | ४३० रपु ये ५० पसै े |
+
 1 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
-
-Figure 17.1: Document Localization Process
-
-U.S. Ghana Portugal Luxembourg 5/29/2023 29/5/2023 23.05.29 29.05.2023 5-29-2023 29-5-2023 2023/05/29 5/29/23 29-05-2023
-
-U.S. Nepal India $430.50 रू ४३०.५० ₹४३०.५० US$430.50 ४३० रपु यै ाँ ५० पसै ा ४३० रपु ये ५० पसै े

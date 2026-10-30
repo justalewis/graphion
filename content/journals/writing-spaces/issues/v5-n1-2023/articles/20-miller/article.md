@@ -7,7 +7,7 @@ short-title: What’s the Diff? Version History and Revision Reflections
 short-authors: Miller
 volume: 5
 year: 2023
-start-page: 280
+start-page: 311
 chapter-number: 20
 source-file: 20Miller.pdf
 volume-title: Writing Spaces 5
@@ -73,6 +73,9 @@ First, to make sure I’m not overstating my claim or setting you up for confusi
 Luckily, many writing tools with version trackers let you add “named versions” within the file’s history.[^2] You can use these names to say where
 
 you are relative to some point in the process, as in “first draft” or “500 words to go”; or, even better, you can use the notes to briefly describe what’s changing, and why. A note like “first draft” doesn’t tell you, if you look back at it later, how far you’d gotten by the first draft. By contrast, a note like “reorder Sommers quote from third page to first” or “finished section on barracudas” tells you what you’ve actually done. A glance back through a series of such notes when the essay is complete can help you call to mind all the highlights of your process and reflect on what you learned---or what you want to ask for feedback on.
+
+![One form of annotated revision history (“named versions”), from a Google Docs version of this chapter. Even the limited space of the annotation allows various kinds of notes: descriptions of what’s changed (“Finished section on examples of diffs”), status updates (“Just a little note to self”), plans for future working sessions (“next: name your own! swap with friends!”), etc. Screenshot shows a list of five timestamped versions of a document, with labels including text quoted in the figure caption. An option to show only named versions is unselected. Screenshot by author](assets/figure-p007-1.png)\
+Figure 1. One form of annotated revision history (“named versions”), from a Google Docs version of this chapter. Even the limited space of the annotation allows various kinds of notes: descriptions of what’s changed (“Finished section on examples of diffs”), status updates (“Just a little note to self”), plans for future working sessions (“next: name your own! swap with friends!”), etc. Screenshot shows a list of five timestamped versions of a document, with labels including text quoted in the figure caption. An option to show only named versions is unselected. Screenshot by author.
 
 But even before the essay is complete, these notes can be powerful. Pausing to describe what you were just working on---even pausing to decide *whether* to describe what you were working on---opens up a space for reflection. Version notes invite you to think actively about how you’re writ-
 
@@ -173,8 +176,6 @@ Several pieces of comp/rhet scholarship inspired the ideas in this essay and cou
 [^1]: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
 
 [^2]: In LibreOffice, you can find the option to name a save under File > Versions… > Save New Version; in Google Docs, timestamps saved automatically under File > Version History can be renamed (though only 40 per document). One version tracker popular among programmers and technical writers, called *git*, tracks only these named versions, which it calls “commits.” I kind of love the energy of that: it’s like, “Okay, I know you’ve saved this file, but are you ready to commit to it? Is this an official version you’d want to look at again later?”
-
-Figure 1. One form of annotated revision history (“named versions”), from a Google Docs version of this chapter. Even the limited space of the annotation allows various kinds of notes: descriptions of what’s changed (“Finished section on examples of diffs”), status updates (“Just a little note to self”), plans for future working sessions (“next: name your own! swap with friends!”), etc. Screenshot shows a list of five timestamped versions of a document, with labels including text quoted in the figure caption. An option to show only named versions is unselected. Screenshot by author.
 
 NB: Microsoft Word and Apple Pages allow you to compare versions of documents, and Word will even autosave versions to compare, but as of this writing neither Word nor Pages has the built-in capacity to name a save or attach a comment to specific versions.
 

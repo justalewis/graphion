@@ -7,7 +7,7 @@ short-title: Social Media as a Space for Today’s Technical Communication
 short-authors: Lanier
 volume: 6
 year: 2024
-start-page: 157
+start-page: 185
 chapter-number: 10
 source-file: 10Lanier.pdf
 volume-title: Technical Writing Spaces 6

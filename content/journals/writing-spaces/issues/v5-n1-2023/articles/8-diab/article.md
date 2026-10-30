@@ -7,7 +7,7 @@ short-title: Enabling the Reader
 short-authors: Diab
 volume: 5
 year: 2023
-start-page: 110
+start-page: 118
 chapter-number: 8
 source-file: 8Diab.pdf
 volume-title: Writing Spaces 5
@@ -60,11 +60,25 @@ As Redish indicates, for the text to be accessible, readers should be able to re
 
 It might be obvious that some font types and sizes could hinder readability and accessibility to the reader. A font that is too small or too decorative will likely make readability harder for the targeted audience. Take, for example, the following textual examples (table 1, which contains figures 1-6). Which text in each row is easier to read?
 
-# 1 What do you think? What do you think?
+| Ex. # | Textual Option #1 | Textual Option # 2 |
+| --- | --- | --- |
+| 1 | What do you think? Figure 1: The question “What do you think?” written in font type Brush Script Std size 14 | What do you think? Figure 2: The question “What do you think?” written in font type Times New Roman size 14 |
+| 2 | What do you think? Figure 3: The question “What do you think?” written in font type Times New Roman size 10 | What do you think? Figure 4: The question “What do you think?” written in font type Times New Roman size 14 |
+| 3 | Figure 5: The question “What do you think?” written in font type Baguet Script size 12 | What do you think? Figure 6: The question “What do you think?” written in font type Comic Sans MS size 12 |
 
-# 3 What do you think?
+![The question “What Figure 2: The question “What do](assets/figure-p005-1.png)\
+Figure 1: The question “What Figure 2: The question “What do
+
+Figure 3: The question “What Figure 4: The question “What do
+
+Figure 6: The question “What do
+
+Figure 5: The question “What
 
 Notice that the examples in table 1 are given from my own perspective as a reader with particular capabilities. The font type and size might enable or disable me, but I don’t represent all variations of readers. For instance, readers with Dyslexia find it hard to distinguish letters and words from each other in written texts, which impacts the time required for reading and comprehending written words (Rello and Baeza-Yates). According to Rello and Baeza-Yates, font types in written texts are critical for readers with Dyslexia. See figure 7 for reading comprehension time required by readers with Dyslexia for 12 font types.
+
+![A figure created by Rello and Baeza-Yates shows how 12 font types impact the time required for reading and comprehending texts by readers with Dyslexia. The X axis shows the font types of Arial, OpenDys, CMU, Courier, OpenDys It., Helvetica, Verdana, Times, Times It., Myriad, Garamond, and Arial It, arranged by the readability time, where Arial has the shortest readability time and Arial It. Has the longest readability time. The Y axis shows the time in seconds required to read each font including the median, mean, and standard deviation of the readability time. Thus, the font types with the least time needed for reading, point to better readability. See “Good Fonts for Dyslexia” for more comprehensive study results. (The figure was reproduced for this chapter with the permission of the authors.)](assets/figure-p006-1.png)\
+Figure 7. A figure created by Rello and Baeza-Yates shows how 12 font types impact the time required for reading and comprehending texts by readers with Dyslexia. The X axis shows the font types of Arial, OpenDys, CMU, Courier, OpenDys It., Helvetica, Verdana, Times, Times It., Myriad, Garamond, and Arial It, arranged by the readability time, where Arial has the shortest readability time and Arial It. Has the longest readability time. The Y axis shows the time in seconds required to read each font including the median, mean, and standard deviation of the readability time. Thus, the font types with the least time needed for reading, point to better readability. See “Good Fonts for Dyslexia” for more comprehensive study results. (The figure was reproduced for this chapter with the permission of the authors.)
 
 Figure 7 shows the time required to read 12 different fonts by readers diagnosed with Dyslexia. As Rello and Baeza-Yates’ study shows, font types such as Arial, OpenDys, and CMU are more readable to readers with Dyslexia than font types of Myriad, Garamond, and Arial Italic, for instance. For us as good authors and citizens, such results mean that we need to consider readers with Dyslexia when composing any text. If we focus on what looks “professional” or “nice” to us, we risk disabling particular readers, such as ones with Dyslexia, from reading and comprehending our texts.
 
@@ -348,13 +362,7 @@ This activity introduces students to accessibility checkers that are embedded in
 
 [^1]: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
 
-Table 1 Examples that Demonstrate how Font Type and Size Contribute to Enhancing or Hindering the Readability and Accessibility of Texts from my own Perspective as a Reader. The first column shows the number of each example. The second column shows font types and sizes that make it difficult for me to read and understand the text. The third column shows font types and sizes that enhance the readability of texts to me. Ex. # Textual Option #1 Textual Option # 2
-
-Figure 1: The question “What Figure 2: The question “What do do you think?” written in font you think?” written in font type type Brush Script Std size 14 Times New Roman size 14 2 What do you think? What do you think? Figure 3: The question “What Figure 4: The question “What do do you think?” written in font you think?” written in font type type Times New Roman size 10 Times New Roman size 14
-
-Figure 6: The question “What do Figure 5: The question “What you think?” written in font type do you think?” written in font Comic Sans MS size 12 type Baguet Script size 12
-
-Figure 7. A figure created by Rello and Baeza-Yates shows how 12 font types impact the time required for reading and comprehending texts by readers with Dyslexia. The X axis shows the font types of Arial, OpenDys, CMU, Courier, OpenDys It., Helvetica, Verdana, Times, Times It., Myriad, Garamond, and Arial It, arranged by the readability time, where Arial has the shortest readability time and Arial It. Has the longest readability time. The Y axis shows the time in seconds required to read each font including the median, mean, and standard deviation of the readability time. Thus, the font types with the least time needed for reading, point to better readability. See “Good Fonts for Dyslexia” for more comprehensive study results. (The figure was reproduced for this chapter with the permission of the authors.)
+Table 1 Examples that Demonstrate how Font Type and Size Contribute to Enhancing or Hindering the Readability and Accessibility of Texts from my own Perspective as a Reader. The first column shows the number of each example. The second column shows font types and sizes that make it difficult for me to read and understand the text. The third column shows font types and sizes that enhance the readability of texts to me.
 
 Notice how the student author provided a full comprehensive title of the memo that included the assignment type, draft #, and title of the essay.
 

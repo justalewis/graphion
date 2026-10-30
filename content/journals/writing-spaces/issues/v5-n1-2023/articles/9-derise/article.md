@@ -2,12 +2,12 @@
 title: 'Everything’s Biased: A Guide to Determining When Bias Matters'
 author:
 - name: Danielle DeRise
-abstract: 'The polarization of American society means almost every topic is ripe for controversy.[^1] Students in first year writing classes reflect this noisy information ecosystem, commonly, by focusing on the degree of bias an author displays. In some cases, these observations result in savvy choices about source credibility, but in other instances, a focus on bias can lead students astray, even steering them away from reputable information. This chapter provides four classroom strategies---context awareness, genre awareness, classifying opinions, and evaluating counterarguments---to encourage students toward a more nuanced understanding of bias, which also can be applied to real-world situations. In *Biased,* a 2019 book about racial bias, author and psychology professor Jennifer Eberhardt likens bias to a categorization effort by the human brain. Eberhardt also acknowledges that this trait is universal: it’s our version of a short cut for processing vast amounts of information, “bringing coherence to a chaotic world” (24). However, these very same shortcuts have significant limitations, as they “impede our efforts to embrace and understand people who are deemed not like us” (24). This idea is at the heart of Eberhardt’s research about implicit racial bias and its life-or-death consequences. Tragically, in the years since Eberhardt’s book was published, acts of violence have continued against Black individuals by law enforcement. Also,'
+abstract: The polarization of American society means almost every topic is ripe for controversy.[^1] Students in first year writing classes reflect this noisy information ecosystem, commonly, by focusing on the degree of bias an author displays. In some cases, these observations result in savvy choices about source credibility, but in other instances, a focus on bias can lead students astray, even steering them away from reputable information. This chapter provides four classroom strategies---context awareness, genre awareness, classifying opinions, and evaluating counterarguments---to encourage students toward a more nuanced understanding of bias, which also can be applied to real-world situations.
 short-title: Everything’s Biased
 short-authors: DeRise
 volume: 5
 year: 2023
-start-page: 125
+start-page: 135
 chapter-number: 9
 source-file: 9DeRise.pdf
 volume-title: Writing Spaces 5
@@ -15,6 +15,10 @@ license: This work is licensed under the Creative Commons Attribution-NonCommerc
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 teacher-resources: separate
 ---
+
+In *Biased,* a 2019 book about racial bias, author and psychology professor Jennifer Eberhardt likens bias to a categorization effort by the human brain. Eberhardt also acknowledges that this trait is universal: it’s our version of a short cut for processing vast amounts of information, “bringing coherence to a chaotic world” (24). However, these very same shortcuts have significant limitations, as they “impede our efforts to embrace and understand people who are deemed not like us” (24). This idea is at the heart of Eberhardt’s research about implicit racial bias and its life-or-death consequences.
+
+Tragically, in the years since Eberhardt’s book was published, acts of violence have continued against Black individuals by law enforcement. Also,
 
 the COVID-19 pandemic began claiming lives globally, but disproportionately affected those over 65, those with compromised immune systems, people of color, people living in poverty, and those with limited access to information or health care.
 

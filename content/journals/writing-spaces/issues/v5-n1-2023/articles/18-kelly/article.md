@@ -7,7 +7,7 @@ short-title: The Good, the Bad, and the Ugly of Peer Review
 short-authors: Kelly
 volume: 5
 year: 2023
-start-page: 249
+start-page: 281
 chapter-number: 18
 source-file: 18Kelly.pdf
 volume-title: Writing Spaces 5
@@ -152,9 +152,7 @@ The blank chart below offers you a system for reflecting on advice you’ve rece
 
 As you make your own chart, pay special attention to the “Reflection” column, keeping in mind that you can reasonably decide that a comment is not a valid piece of criticism. It is possible for a peer reviewer to be wrong. But even a bad comment can help you make your writing more effective if it gets you to think about what the reviewer focused on and then consider possible revision options.
 
-# Revision Plan Chart
-
-# Works Cited
+# Revision Plan Chart Works Cited
 
 Belcher, Wendy. *Writing Your Journal Article in Twelve Weeks,* 2nd ed., Chicago, University of Chicago Press, 2019, https://doi.org/10.7208/ chicago/9780226500089.001.0001.
 
@@ -172,11 +170,17 @@ Giles, Sandra L. “Reflective Writing and the Revision Process: What Were You T
 
 Grauman, Jillian. “What’s That Supposed to Mean? Using Feedback on Your Writing.” *Writing Spaces: Readings on Writing,* vol. 4, Parlor Press, 2022, pp. 145-65, https://writingspaces.org/whats-that-supposed-to-mean-usingfeedback-on-your-writing/.
 
-MacDonald, Fiona. “8 Scientific Papers That Were Rejected Before Going on to Win a Nobel Prize.” *Science Alert,* 16 Aug. 2016, https://www.sciencealert. com/these-8-papers-were-rejected-before-going-on-to-win-the-nobel-prize. Reviewer 2. \@GrumpyReviewer2. *Twitter.* https://twitter.com/GrumpyReviewer2. Accessed 13 September 2021.
+MacDonald, Fiona. “8 Scientific Papers That Were Rejected Before Going on to Win a Nobel Prize.” *Science Alert,* 16 Aug. 2016, https://www.sciencealert. com/these-8-papers-were-rejected-before-going-on-to-win-the-nobel-prize.
 
-Shatz, David. *Peer Review: A Critical Inquiry.* Lanham, MD, Rowman & Littlefield, 2004. ShitMyReviewersSay. \@YourPaperSucks. *Twitter.* https://twitter.com/YourPaper-Sucks. Accessed 13 September 2021.
+Reviewer 2. \@GrumpyReviewer2. *Twitter.* https://twitter.com/GrumpyReviewer2. Accessed 13 September 2021.
 
-Wells, Jennifer. “Dispositions Towards Learning.” *Writing Spaces: Readings on* *Writing,* vol. 5, Parlor Press, 2023, pp. 17--27. Worse Reviewer. \@Worse_Reviewer. *Twitter.* https://twitter.com/Worse_Reviewer. Accessed 13 September 2021.
+Shatz, David. *Peer Review: A Critical Inquiry.* Lanham, MD, Rowman & Littlefield, 2004.
+
+ShitMyReviewersSay. \@YourPaperSucks. *Twitter.* https://twitter.com/YourPaper-Sucks. Accessed 13 September 2021.
+
+Wells, Jennifer. “Dispositions Towards Learning.” *Writing Spaces: Readings on* *Writing,* vol. 5, Parlor Press, 2023, pp. 17--27.
+
+Worse Reviewer. \@Worse_Reviewer. *Twitter.* https://twitter.com/Worse_Reviewer. Accessed 13 September 2021.
 
 # Teacher Resources for “The Good, the Bad, and the Ugly of Peer Review”
 
@@ -198,6 +202,21 @@ Students in higher education classrooms often lack the understanding that the in
 
 > • In a class session, walk students through an example of your writing at various stages of development; doing so makes clear not only that you are an academic writer but also that you are not a divine creature who produces brilliant one-and-done drafts. I find it helpful to show my students how an idea developed from a conference paper proposal into a conference paper, then a first draft of a book chapter or article, then a revision of that piece, then another revision, etc. I explain what feedback -- from audience members at a conference presentation, colleagues I asked to read work in progress, peer reviewers, editors, etc. -- I took into account at each stage of revision. You might share a seminar paper, thesis chapter, or any other piece of writing that has gone through multiple revisions guided by feedback from several readers. • If you have peer review/reader reports for a piece of writing you published, share these documents, and talk students through how you responded to the feedback you received. Make explicit that by the time a piece of scholarship shows up as a published article or book chapter a student can read and cite, it has been checked, reworked, and revised many times. • Give students a piece of writing that you consider to be a very rough first draft (maybe two or three typed pages that you pounded out in half an hour without revising, editing, or even proofreading), and ask them to give you feedback on it. If you like, start by asking them to offer mean, nitpicky Reviewer Two types of criticism, and model how you would handle those sorts of comments as well as what ideas for revision you might glean from this feedback.
 
+| Features evaluated | Commentary offered | Reflection (Valid or not?) | Planned response |
+| --- | --- | --- | --- |
+| Originality | “I can’t tell whether your goal is mostly to motivate people to vote or to vote for a particular candidate. These points seem to get muddled together.” | Valid. My goal is to motivate all people who can vote to vote, so I need to look for and rework places that seem to imply I only want people who support the same candidates I do to vote. | Revise my thesis to make my key point more explicit. Highlight sections in my draft that mention a particular candidate currently running, and make sure I’m not implying any favoritism. |
+| Features evaluated | Commentary offered | Reflection (Valid or not?) | Planned response |
+| --- | --- | --- | --- |
+| Argumentation (arrangement) | “There are so many examples from past elections, and I’m getting lost. Maybe cut some of these examples?” | Not valid. I think the examples are the strongest part of this essay, so I’m not going to cut any -- but maybe I could better explain what each one signifies. | Check and, if it seems necessary, clarify explanations about the significance of every example I include. |
+| Readability | “The writer uses the term ‘opponent’ all over this essay to refer to the candidate who isn’t the incumbent -- I think this will offend anyone who doesn’t want to vote for the person already in office.” | Valid. Interesting comment. I hadn’t noticed the implications of this word, and given that I want potential voters to see elections as something other than hostile and angry, I probably need to get rid of this kind of language. | Highlight in yellow any word choices that seem to suggest antagonism or hostility. Then rework that phrasing. |
+| Features evaluated | Peer-reviewer comment | Reflection (Valid or not?) | Planned response |
+| --- | --- | --- | --- |
+| Originality |  |  |  |
+| Argumentation (arrangement) |  |  |  |
+| Engagement with relevant research (examples) |  |  |  |
+| Readability |  |  |  |
+| Other |  |  |  |
+
 [^1]: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
 
 [^2]: This journal publishes research focused on medieval and renaissance English drama. You can read all the contents for free one year after they are published, if you’re interested.
@@ -208,8 +227,4 @@ Students in higher education classrooms often lack the understanding that the in
 
 [^5]: Historically, this has been called “blind” review. In an effort to avoid ableist language, the journal I help edit calls it “anonymous” peer review.
 
-Features Commentary Reflection (Valid or Planned response evaluated offered not?) Originality “I can’t tell whether Valid. My goal is to Revise my thesis to your goal is mostly motivate all people make my key point to motivate people to who can vote to vote, more explicit. vote or to vote for a so I need to look for particular candidate. and rework places Highlight sections in These points seem that seem to imply my draft that mention to get muddled I only want people a particular candidate together.” who support the currently running, and same candidates I do make sure I’m not imto vote. plying any favoritism.
-
-[^6]: Studies of peer review in academic publishing demonstrate that multiple peer reviewers don’t consistently offer the same feedback on a piece of writing; see Fiske. Even if they agree about the general recommendation (say, revise-and-resubmit), they sometimes comment on different elements or offer divergent recommendations. That doesn’t mean peer review is a bad process -- just that peer reviewers are human. Features Commentary Reflection (Valid or Planned response evaluated offered not?) Argumen- “There are so many Not valid. I think Check and, if it seems tation (ar- examples from past the examples are the necessary, clarify rangement) elections, and I’m strongest part of this explanations about the getting lost. Maybe essay, so I’m not go- significance of every cut some of these ing to cut any -- but example I include. examples?” maybe I could better explain what each one signifies. Readability “The writer uses the Valid. Interesting Highlight in yellow any term ‘opponent’ all comment. I hadn’t word choices that seem over this essay to noticed the implica- to suggest antagonism refer to the candidate tions of this word, or hostility. Then rewho isn’t the incum- and given that I work that phrasing. bent -- I think this want potential voters will offend anyone to see elections as who doesn’t want to something other than vote for the person hostile and angry, I already in office.” probably need to get rid of this kind of language.
-
-Features evaluated Peer-reviewer Reflection Planned recomment (Valid or not?) sponse Originality Argumentation (arrangement) Engagement with relevant research (examples) Readability Other
+[^6]: Studies of peer review in academic publishing demonstrate that multiple peer reviewers don’t consistently offer the same feedback on a piece of writing; see Fiske. Even if they agree about the general recommendation (say, revise-and-resubmit), they sometimes comment on different elements or offer divergent recommendations. That doesn’t mean peer review is a bad process -- just that peer reviewers are human.

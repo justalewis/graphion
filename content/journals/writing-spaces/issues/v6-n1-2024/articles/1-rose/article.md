@@ -110,13 +110,13 @@ Surveys are typically delivered online via email or on a website and can include
 
 Let’s imagine we are helping a transit agency design a new website and we want to understand our users. Some questions you could ask in a survey include:
 
-1. How often do you use public transportation? { Everyday { Several times a week { Several times a month { Less than once a month { Never
+1. How often do you use public transportation? ○ Everyday ○ Several times a week ○ Several times a month ○ Less than once a month ○ Never
 
-2. What are your motivations for using public transportation? (Check all that apply) { It’s my only form of transportation { To save money { To avoid traffic { To relax on my commute { Other _______
+2. What are your motivations for using public transportation? (Check all that apply) ○ It’s my only form of transportation ○ To save money ○ To avoid traffic ○ To relax on my commute ○ Other _______
 
-3. When you visited our website today, what information were you looking for? (Check all that apply) { Schedules { Fares { Service delays { Careers { News { Other __________
+3. When you visited our website today, what information were you looking for? (Check all that apply) ○ Schedules ○ Fares ○ Service delays ○ Careers ○ News ○ Other __________
 
-4. How would you rate our current website? { Excellent { Very good { Good { Fair { Poor
+4. How would you rate our current website? ○ Excellent ○ Very good ○ Good ○ Fair ○ Poor
 
 5. What is your biggest frustration or concern with our existing website? (Open-ended) Note that, in this example, you are providing individuals with a range
 

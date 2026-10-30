@@ -7,7 +7,7 @@ short-title: Strategies for Analyzing and Composing Data Stories
 short-authors: Laflen
 volume: 5
 year: 2023
-start-page: 163
+start-page: 179
 chapter-number: 12
 source-file: 12Laflen.pdf
 volume-title: Writing Spaces 5
@@ -20,6 +20,9 @@ teacher-resources: separate
 
 While scrolling through Instagram, the following post catches your attention:
 
+![A sample Instagram post. Source: Angela Laflen](assets/figure-p002-1.png)\
+Figure 1. A sample Instagram post. Source: Angela Laflen.
+
 You wonder if the post is true since you know there is a lot of misinformation circulating on social media. Working your way through questions you use to assess whether information is credible, you consider who posted it (your generally reliable cousin), why she posted it (because she is fascinated by UFOs), and its original source (the National UFO Reporting Center, which sounds official). So far, the post seems credible, but what to make of the statistic itself? If you are like many readers, you may tend to either dismiss it out of hand (since everyone knows statistics can be made up) or accept that it’s accurate (since there’s nothing obviously off about it).
 
 These two responses to numerical information are very common. However, neither is particularly effective at helping you make good decisions about the “data stories” you encounter in daily life. In the case of Figure 1, the National UFO Reporting Center is a real organization that allows people to report sightings of UFOs, and the statistic in the post is technically true, but it is also misleading. A quick search of the National UFO Reporting Center reveals that 2018 was anomalous for the low number of reported sightings that year, so the 48% increase reported in Figure 1 is the result of cherry-picking data to create the impression that UFO sightings rose drastically over a 2-year period. Cherry picking of data means we look for particular data and statistics that help to illustrate our point of view, and it is a common way that data are misused in data storytelling. Notice that no complicated math---or really any math at all---was required to determine that this statistic is flawed; just some simple fact checking. Though not all data stories can be fact-checked so easily, it is possible to read many data stories and to write your own credible data stories using basic reasoning skills.
@@ -29,6 +32,12 @@ These two responses to numerical information are very common. However, neither i
 Whether or not you have heard the phrase “data stories” before, you have certainly seen data stories because they are widespread on social media, in news publications, and in advertising of all kinds. In addition to social media posts such as Figure 1, data stories often take the form of infographics (such as Figure 2) or online articles (such as Figure 3). Whatever form they take, data stories are multimodal texts that combine data with words and images to tell a story or make an argument for a particular audience. As infographic guru Alberto Cairo explains, data stories are texts that “give shape to data, so that relevant patterns become visible” (16).
 
 You may have even used data in your own writing by including a graph or table as evidence to support an argument in a research paper. In fact, writers have always turned to data for evidence, and data stories of all kinds have long helped make data comprehensible to members of the public, decision makers, and other audiences. Today, though, data stories have become more common because there are simply more data to work with. According to writing and digital studies scholar Brenta Blevins, “the omnipresence of computers in every aspect of human life means we’re recording and capturing ever-increasing amounts of data.” Indeed, according to a 2021 article published in *TechJury,* “the majority of the world’s data has been generated within the last two years alone” (Bulao).
+
+![Infographic that charts the increase in language learning using the DuoLingo app during the COVID-19 pandemic. Source: Angela Laflen](assets/figure-p004-1.png)\
+Figure 2. Infographic that charts the increase in language learning using the DuoLingo app during the COVID-19 pandemic. Source: Angela Laflen.
+
+![Online news article that compares plant milks based on their CO2 emissions, land use, and water use. Source: Angela Laflen](assets/figure-p005-1.png)\
+Figure 3. Online news article that compares plant milks based on their CO2 emissions, land use, and water use. Source: Angela Laflen.
 
 Although not all of this information is numeric, a lot of it is, and most of it doesn’t make sense unless someone takes the time to explain it---to tell a story about it. Data stories help to turn raw data into information that readers can understand and use to make decisions. In fact, even the way news is reported reflects the increasing importance of data. Data journalism is a type of journalism in which reporters use large databases as sources to produce stories. As they tell complex stories through the use of infographics and data visualizations, data journalists practice data storytelling.
 
@@ -54,6 +63,22 @@ This chapter focuses on how you can cultivate the skills of a reader and communi
 
 You can apply all of the critical reading strategies you already use to analyze other kinds of texts to data stories. For example, you can preview a data story to get a quick sense of its author, general design, and structure, or you can read a data story rhetorically to consider how the author’s purpose, audience, and other elements of the text’s context influence you as a reader. You can learn more about reading strategies in Mike Bunn’s essay “How to Read Like a Writer” found in volume 2 of *Writing Spaces.* In addition, to analyze data stories, consider 1) the data source, 2) data alteration, 3) data analysis, and 4) data presentation. Table 1 provides a checklist of questions you can ask during analysis. In this section, I will show you how to use these questions to analyze a sample data story.
 
+| 1 | Data Source | Who conducted the study that this data story is based on and why? |
+| --- | --- | --- |
+| 2 | Data Alteration | How were the data manipulated from their raw form into the visualization that we see? Are details about the data alteration provided? |
+| 3 | Data Analysis | What terms are central to the writer’s argument (quantitative and otherwise)? How does the writer define the terms? Who would disagree with the way the terms have been defined, and why? Would the writer’s argument change if the definition of the term(s) changed; if so, how? |
+| 4 | Data Presentation | Who is the audience for this data story and what are they supposed to do with this information? How do the data, images, and design elements work together to draw the audience into feeling a particular way about the topic of the data story? |
+| 5 | Data Presentation | What story does this data story tell? What organizational pattern(s) did the writer use to tell that story? How would using a different organizational pattern change the argument? |
+
+![An example of “data journalism,” which refers to short news articles designed for sharing online. This graph was written to be published alongside the news article in Figure 3, but texts like this can also circulate online via social media without their original articles](assets/figure-p009-1.png)\
+Figure 4. An example of “data journalism,” which refers to short news articles designed for sharing online. This graph was written to be published alongside the news article in Figure 3, but texts like this can also circulate online via social media without their original articles.
+
+![Closeup on source information from Fig. 4. Source: Angela Laflen](assets/figure-p009-2.png)\
+Figure 5. Closeup on source information from Fig. 4. Source: Angela Laflen.
+
+![Closeup on bar graph in Fig. 4. that compares plant milks based on their CO2 emissions, land use, and water use. Source: Angela Laflen](assets/figure-p010-1.png)\
+Figure 6. Closeup on bar graph in Fig. 4. that compares plant milks based on their CO2 emissions, land use, and water use. Source: Angela Laflen.
+
 # Data Source
 
 In order to analyze this story, our first step is to check the data source. All credible data stories should cite their source(s) of information. This citation serves the same function as citing your sources in an academic research paper: crediting the source of information and allowing readers to find that source for themselves. Do note that data stories do not always use a formal documentation style like MLA to credit sources. Sometimes data stories are so succinct that there is not space for complete citation, and data stories designed to be read online often rely on embedded links to their sources as a way to identify them. Additionally, some of the programs used to create data stories do not support formatting features we have come to expect from word processing programs such as indenting or italicizing specific words. Nevertheless, data stories should provide enough information about their source(s) that readers can find the source(s) for themselves. Also, be sure to do an Internet search for any source that is credited in a data story to make sure it really exists because some deliberately falsified data stories make up fictional sources that sound credible. It goes without saying that falsifying data for use in a data story is unethical.
@@ -78,15 +103,24 @@ We should also ask how data were analyzed and consider the terms the writer used
 
 tion is included. The data story could change drastically if sustainability were to be defined differently.
 
+![Closeup on title in Fig. 4. Source: Angela Laflen](assets/figure-p012-1.png)\
+Figure 7. Closeup on title in Fig. 4. Source: Angela Laflen.
+
 # Data Presentation
 
 To check the data presentation, we ask how data, images, and other design elements work together to draw the audience into feeling and thinking a particular way about the topic of the data story. We also ask what the main story or argument is and how it is organized. The presentation of Figure 4 seems rather simple at first. When we look closer, though, we see that the presentation is designed to make reading easy, although the story’s title could be revised for clarity. Different shades of gray, black, and white are used to help distinguish elements of the data story from each other.
+
+![Closeup of milk carton image and bar graph in Fig. 4. Source: Angela Laflen](assets/figure-p013-1.png)\
+Figure 8. Closeup of milk carton image and bar graph in Fig. 4. Source: Angela Laflen.
 
 Most obviously, Figure 4 includes a bar graph and bubbles and triangles to present data, which make the visual comparison of the plant milks easy for readers. The story also includes an image of a milk carton surrounded by the four types of plants included in the comparison of plant milks: rice, oats, soy, and almonds (Figure 8). This imagery helps the reader to visualize the types of milk being discussed in the data story. A large title at the top of the story asks “Which Type of Plant Milk is the Most Sustainable?,” a question the story ultimately does not answer since the data indicate that no single plant milk is most sustainable in terms of carbon emissions, water use, and land use. The title could be revised to highlight this fact.
 
 # Strategies for Composing Data Stories
 
 The process of composing data stories is similar to the process you would use to create any multimodal text; however, we have to take extra steps to ensure that we represent data in ethical and rhetorically effective ways. Figure 9 shows how we might visualize the data storytelling composing process.
+
+![Data Storytelling Composing Process. Adapted from Wolff, Annika, et al. “Creating an Understanding of Data Literacy for a Data-Driven Society.” *The Journal of Community Informatics*, vol. 12, no. 3, 2016, p. 15. Source: Angela Laflen](assets/figure-p014-1.png)\
+Figure 9. Data Storytelling Composing Process. Adapted from Wolff, Annika, et al. “Creating an Understanding of Data Literacy for a Data-Driven Society.” *The Journal of Community Informatics*, vol. 12, no. 3, 2016, p. 15. Source: Angela Laflen.
 
 As this map illustrates, real-world problem-solving contexts and ethics determine how a writer moves through the data storytelling composing process. We can think of them as defining the writer’s rhetorical situation when composing a data story. A rhetorical situation refers to the surrounding circumstances and contexts that shape a piece of writing (usually discussed in terms of audience, purpose, exigence, genre, and rhetor). Data stories, like all texts, are shaped by their rhetorical situation. The real-world problem-solving context includes the reason a writer creates a data story, the audience they are writing to, and how they will disseminate the story.
 
@@ -130,15 +164,27 @@ If you think a graph is needed to communicate data clearly, you should choose th
 
 For the National Pizza Day post, I want to show a comparison, and specifically a comparison among items (pizza toppings in this case). The flowchart suggests I should consider a graph such as a vertical bar chart, horizontal bar chart, variable width column chart, or embedded table with graphs. Given that I only have one variable to graph---preference for pizza toppings---the vertical bar chart or horizontal bar chart are my best options.
 
+![Flowchart to determine graph type based on data storytelling purpose. Source: Angela Laflen](assets/figure-p018-1.png)\
+Figure 10. Flowchart to determine graph type based on data storytelling purpose. Source: Angela Laflen.
+
 # Create Explanations from Data and Test These with Readers
 
 Though the simplest data stories may just present data in a clearly labeled graph, it is more common for data stories to make a larger argument about their topic using data as evidence to persuade readers that the argument is true. Writers create these larger arguments by combining words and images to help readers understand what is important or meaningful in the data they are working with. Since it takes time to compose multimodal texts that combine words and images effectively, we can borrow drafting strategies from the field of graphic design to help us work efficiently. Specifically, tools called thumbnails and mock-ups are useful to help writers plan the design of multimodal texts.
 
 Graphic designers use thumbnails, which are small, quick sketches of possible designs, to rough out their initial ideas about how they might combine words and images (Figure 11). I like to create several different thumbnails to see the pros and cons of my different ideas. Often, I end up combining elements from different thumbnails together in my final design.
 
+![Two sample hand-drawn thumbnails for my pizza story. Source: Angela Laflen](assets/figure-p019-1.jpg)\
+Figure 11. Two sample hand-drawn thumbnails for my pizza story. Source: Angela Laflen.
+
 After you decide on an approach for your design, you create a mock-up, which is a rough layout of a screen or page. Think of your mock-up as a “visual outline of a project” (Ball, et al. 189) that includes the layout, colors, images, fonts, and headers you plan to use for your project. Mock-ups may or may not also include the actual text you plan to use. Although you can create a mock-up by hand, I prefer to create mock-ups using the software program I plan to use for my data story. Several free online programs are available to create multimodal texts including Canva, Piktochart, and Visme, along with pro tools such as Adobe Illustrator. Although these programs can make the composition process easier, document or slide programs (e.g. Word, Google Docs, Pages, PowerPoint, Google Slides, Keynote) can also work.
 
+![Mock-up of my National Pizza Day story. Source: Angela Laflen](assets/figure-p020-1.png)\
+Figure 12. Mock-up of my National Pizza Day story. Source: Angela Laflen.
+
 I used Canva to create the mock-up of my National Pizza Day post (Figure 12). I decided to focus my story on how united Americans are in their preferences for pizza toppings. The implicit argument in this story is that there are still some questions on which Americans agree strongly regardless of region, gender, age, politics, or income level. Since pepperoni is Americans’ favorite topping across all these categories, I used a large image of a pepperoni pizza as the focal point for this story, and I wrote a title that communicates the argument of my story about national unity around pizza topping preferences. I drafted short text to present key results from the survey and included a bar graph to show more of the survey results. This mock-up helped me to see that the story has two distinct parts that aren’t clearly linked yet, and I used it to write down a list of changes I wanted to make moving forward. Figure 13 shows how my data story evolved from the mock-up. Though some elements remained the same, including my main argument, I spent time on the images and text to make the story more cohesive. A cohesive data story is one in which the relationship between the different components of the text---the words, the images, the data, and any other elements included---is clear and logical to the audience. For example, in my mock-up it is not clear how the image of a hand reaching for a piece of pizza logically relates to the title “The United States of Pizza.” Similarly, because I used different fonts for the two different parts of the story, there is no clear visual relationship between the parts. I made changes during revision to improve these elements. I included an image of a pepperoni pizza shaped like the United States to relate more clearly to the title. I also used two consistent fonts throughout the data story, one for headings and the other for the rest of the text. The consistent use of fonts creates visual unity between the two parts of the text.
+
+![My National Pizza Day Facebook post. Source: Angela Laflen](assets/figure-p021-1.png)\
+Figure 13. My National Pizza Day Facebook post. Source: Angela Laflen.
 
 The next step in my composing process is to test my story with readers. Based on this feedback, I might make additional revisions to the story. Like all texts, data stories are subject to an ongoing drafting and revision process, and I usually only finish working on a data story because I run into a deadline.
 
@@ -212,7 +258,7 @@ When I introduce data stories to my students, I like to give them several exampl
 
 2. Discuss with your team: Is the story clear? Is it misleading? How could it be improved?
 
-3. Rate the data story and make a short note about why you gave the rating you did. Number Your Rating Comments/Notes 1 Great Good Bad Horrible 2 Great Good Bad Horrible 3 Great Good Bad Horrible 4 Great Good Bad Horrible 5 Great Good Bad Horrible 6 Great Good Bad Horrible After the groups have a chance to rank the data stories, we have a whole
+3. Rate the data story and make a short note about why you gave the rating you did. After the groups have a chance to rank the data stories, we have a whole
 
 class discussion about how we ranked each data story. This is a good way to talk about what makes a story effective and how content and design work together in these texts.
 
@@ -224,30 +270,22 @@ To help students become more comfortable creating graphs, I use a class day to g
 
 Having students reverse engineer a data story in class or as homework is useful in several ways. To reverse engineer the story, students have to recreate it using a software program designed for multimodal composing, such as Canva, Piktochart, or Adobe Illustrator (depending on what the students have access to and will use for their own projects). Students gain experience manipulating text and images using the program without having to worry about the content. They see how text and visuals work together in the story, and they also quickly see what the software program is capable of and what its limitations are. This helps them to plan their own projects more realistically and to appreciate the time involved in composing multimodal texts. The entire class can be asked to reverse engineer the same data story that is provided by the instructor, or students can choose to work with a data story they think is particularly effective.
 
-[^1]: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use. Figure 1. A sample Instagram post. Source: Angela Laflen.
+| Number | Your Rating | Comments/Notes |
+| --- | --- | --- |
+| 1 | Great Good Bad Horrible |  |
+| 2 | Great Good Bad Horrible |  |
+| 3 | Great Good Bad Horrible |  |
+| 4 | Great Good Bad Horrible |  |
+| 5 | Great Good Bad Horrible |
+| --- | --- |
+| 6 | Great Good Bad Horrible |
 
-Figure 2. Infographic that charts the increase in language learning using the DuoLingo app during the COVID-19 pandemic. Source: Angela Laflen. Figure 3. Online news article that compares plant milks based on their CO2 emissions, land use, and water use. Source: Angela Laflen.
+[^1]: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
 
-Table 1 Critical Questions for Data Stories 1 Data Source Who conducted the study that this data story is based on and why? 2 Data Alteration How were the data manipulated from their raw form into the visualization that we see? Are details about the data alteration provided? 3 Data Analysis What terms are central to the writer’s argument (quantitative and otherwise)? How does the writer define the terms? Who would disagree with the way the terms have been defined, and why? Would the writer’s argument change if the definition of the term(s) changed; if so, how? 4 Data Presentation Who is the audience for this data story and what are they supposed to do with this information? How do the data, images, and design elements work together to draw the audience into feeling a particular way about the topic of the data story? 5 Data Presentation What story does this data story tell? What organizational pattern(s) did the writer use to tell that story? How would using a different organizational pattern change the argument? Figure 4. An example of “data journalism,” which refers to short news articles designed for sharing online. This graph was written to be published alongside the news article in Figure 3, but texts like this can also circulate online via social media without their original articles. Figure 5. Closeup on source information from Fig. 4. Source: Angela Laflen. Figure 6. Closeup on bar graph in Fig. 4. that compares plant milks based on their CO2 emissions, land use, and water use. Source: Angela Laflen.
+Table 1 Critical Questions for Data Stories
 
 2
 
 2
 
 2
-
-2
-
-Figure 7. Closeup on title in Fig. 4. Source: Angela Laflen.
-
-Figure 8. Closeup of milk carton image and bar graph in Fig. 4. Source: Angela Laflen.
-
-Figure 9. Data Storytelling Composing Process. Adapted from Wolff, Annika, et al. “Creating an Understanding of Data Literacy for a Data-Driven Society.” *The Journal of Community Informatics*, vol. 12, no. 3, 2016, p. 15. Source: Angela Laflen.
-
-Figure 10. Flowchart to determine graph type based on data storytelling purpose. Source: Angela Laflen.
-
-Figure 11. Two sample hand-drawn thumbnails for my pizza story. Source: Angela Laflen.
-
-Figure 12. Mock-up of my National Pizza Day story. Source: Angela Laflen.
-
-Figure 13. My National Pizza Day Facebook post. Source: Angela Laflen.

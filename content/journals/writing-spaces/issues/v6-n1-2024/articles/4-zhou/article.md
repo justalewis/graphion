@@ -7,7 +7,7 @@ short-title: Drafting Technical Definitions and Descriptions
 short-authors: Zhou
 volume: 6
 year: 2024
-start-page: 53
+start-page: 59
 chapter-number: 4
 source-file: 4Zhou.pdf
 volume-title: Technical Writing Spaces 6
@@ -102,6 +102,9 @@ Consider the following definition of the exploded view drawing, a type of visual
 
 Good luck with that definition. It’s not that the writer did a poor job; however, defining this type of concept is best done with visuals. Figure 4.1 allows most readers to understand exploded view drawings immediately.
 
+![An exploded view drawing](assets/figure-p006-1.jpg)\
+Figure 4.1: An exploded view drawing (Source: United States Patent and Trademark Office)
+
 When using visuals, remember that you must consider copyright issues. You should not simply use images from the Web, social media, or other authors without getting permission.
 
 > Extend by Partition
@@ -109,6 +112,9 @@ When using visuals, remember that you must consider copyright issues. You should
 Many complex terms can be defined by partitioning their components. Partition elaborates on the categories, variations, and applications of a term. Remember that a term can often be partitioned in more than one way. Choose components that are major to the term and context. Figure 4.2 shows an extended definition of renewable energy by the U.S. Energy Information Administration.
 
 This definition begins with a sentence definition of renewable energy and extends to the five forms (partitions) of renewable energy: Biomass, hydropower, geothermal, wind, and solar.
+
+![Renewable energy definition using partitions](assets/figure-p007-1.jpg)\
+Figure 4.2: Renewable energy definition using partitions (Source: U.S. Energy Information Administration)
 
 > Extend by Comparison and Contrast
 
@@ -123,6 +129,15 @@ A distinctive way of defining a term is making analogies. Analogy links abstract
 Consider the following definition of “keyboard”:
 
 > A computer keyboard is one of the primary input devices used with a computer. Similar to an electric typewriter, a keyboard is composed of buttons that create letters, numbers, and symbols, as well as perform other functions (“Keyboard”)
+
+![A definition of laminate floor based on comparison (What Are Laminate Floors?)](assets/figure-p008-1.jpg)\
+Figure 4.3: A definition of laminate floor based on comparison (What Are Laminate Floors?)
+
+![Undescribed figure from page 19 of the source](assets/figure-p019-1.jpg)
+
+![Undescribed figure from page 21 of the source](assets/figure-p021-1.jpg)
+
+![Undescribed figure from page 22 of the source](assets/figure-p022-1.jpg)
 
 Here the writer thoughtfully uses the analogy of an electric typewriter for readers who are not computer savvy. Analogy is challenging. In this definition, for instance, the writer clearly assumes that more readers are familiar with electric typewriters than keyboards. This assumption might ring true these days. A few decades from now, it perhaps will not. Readers might not need a definition of a keyboard, nor might they be familiar with electric typewriters, except having seen one in museums. Appropriate analogy requires savvy understandings of the audience and context.
 
@@ -303,12 +318,6 @@ To help learners understand technical definitions and descriptions, consider the
 ly written technical definitions and descriptions; they are particularly helpful when learners draft definitions and descriptions from scratch. The key is to help learners think about many factors that technical communicators must attend to when drafting technical definitions and descriptions and link these factors with the concepts and strategies from this chapter.
 
 1 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
-
-Figure 4.1: An exploded view drawing (Source: United States Patent and Trademark Office)
-
-Figure 4.2: Renewable energy definition using partitions (Source: U.S. Energy Information Administration)
-
-Figure 4.3: A definition of laminate floor based on comparison (What Are Laminate Floors?)
 
 Table 4.1. A Mechanism Description (“*Text-To-Speech Technology: What It Is and* *How It Works”*) At a Glance This mechanism de• Text-to-speech (TTS) technology reads aloud scription begins with a digital text---the words on computers, smart- summary of important phones and tablets. points. Notice that the summary clearly • TTS can help kids who struggle with reading. identifies the intend• There are TTS tools available for nearly every ed audience digital device. Text-to-speech (TTS) is a type of assistive technolo- The author defines gy that reads digital text aloud. It’s sometimes called text-to-speech technol“read aloud” technology. ogy. The author then With a click of a button or the touch of a finger, elaborates on TTS and TTS can take words on a computer or other digital explains their intended device and convert them into audio. TTS is very audience and purpose. helpful for kids who struggle with reading. But it can also help kids with writing and editing, and even focusing. How Text-to-Speech Works The author describes TTS works with nearly every personal digital device, the nuts and bolts of including computers, smartphones and tablets. All how TTS works. Notice kinds of text files can be read aloud, including Word how the author connects and Pages documents. Even online web pages can be the children with this read aloud. description. The author also defines another The voice in TTS is computer-generated, and reading term, OCR. speed can usually be sped up or slowed down. Voice quality varies, but some voices sound human. There are even computer-generated voices that sound like children speaking. Many TTS tools highlight words as they are read aloud. This allows kids to see text and hear it at the same time. Some TTS tools also have a technology called optical character recognition (OCR). OCR allows TTS tools to read text aloud from images. For example, your child could take a photo of a street sign and have the words on the sign turned into audio. How Text-to-Speech Can Help Your Child Here the author begins Print materials in the classroom---like books and to explain how TTS can handouts---can create obstacles for kids with help children. Notice that reading issues. That’s because some kids struggle the heading confirms that with decoding and understanding printed words on parents are the intendthe page. Using digital text with TTS helps remove ed audience. these barriers. Table 4.1. A Mechanism Description (continued) How Text-to-Speech Can Help Your Child (continued) And since TTS lets kids both see and hear text when reading, it creates a multisensory reading experience. Researchers have found that the combination of seeing and hearing text when reading: • Improves word recognition • Increases the ability to pay attention and remember information while reading • Allows kids to focus on comprehension instead of sounding out words • Increases kids’ staying power for reading assignments • Helps kids recognize and fix errors in their own writing Like audiobooks, TTS won’t slow down the development of your child’s reading skills. Types of Text-to-Speech Tools Here the author elab-Depending on the device your child uses, there are orates on types of TTS many different TTS tools: tools and example programs. This section can • Built-in text-to-speech: Many devices have guide parents to select built-in TTS tools. This includes desktop and the appropriate program. laptop computers, smartphones and digital tablets and Chrome. Your child can use this TTS without purchasing special apps or software. • Web-based tools: Some websites have TTS tools on-site. For instance, you can turn on our website’s “Reading Assist” tool, located in the lower left corner of your screen, to have this webpage read aloud. Also, kids with dyslexia may qualify for a free Bookshare account with digital books that can be read with TTS. (Bookshare is a program of Understood founding partner Benetech.) There are also free TTS tools available online. • Text-to-speech apps: Kids can also download TTS apps on smartphones and digital tablets. These apps often have special features like text highlighting in different colors and OCR. Some examples include Voice Dream Reader, Claro ScanPen and Office Lens. Table 4.1. A Mechanism Description (continued) Types of Text-to-Speech Tools (continued) • Chrome tools: Chrome is a relatively new platform with several TTS tools. These include Read&Write for Google Chrome and Snap&Read Universal. You can use these tools on a Chromebook or any computer with the Chrome browser. See more Chrome tools to help with reading. • Text-to-speech software programs: There are also several literacy software programs for desktop and laptop computers. In addition to other reading and writing tools, many of these programs have TTS. Examples include Kurzweil 3000, ClaroRead and Read&Write. Microsoft’s Immersive Reader tool also has TTS. It can be found in programs like OneNote and Word. See more examples of software for kids with reading issues. How Your Child Can Access Text-to-Speech at School It’s a good idea to start the conversation with your child’s teacher if you think your child would benefit from TTS. If your child has an Individualized Education Program(IEP) or a 504 plan, your child has a right to the assistive technology she needs to learn. But even without an IEP or a 504 plan, a school may be willing to provide TTS if it can help your child. You can also use TTS at home. Try one of the previously mentioned tools, or check out options for free audiobooks and digital TTS books. And learn more about assistive technology for reading. Key Takeaways Finally, the author • Text-to-speech (TTS) can provide a multisen- concludes this descripsory reading experience that combines seeing tion with a summary of with hearing. important points. Notice that this summary • Using TTS won’t delay the development of your differs from the one at child’s reading skills. the beginning. It focuses • Your child’s school can provide TTS, but you can more on actions parents also try it at home. can take.
 

@@ -2,12 +2,12 @@
 title: 'Reading in Conversation: A Writing Student’s Guide to Social Annotation'
 author:
 - name: Michelle Sprouse
-abstract: Students are often encouraged to annotate while reading.[^1] However, annotation is often framed as an individual undertaking, a conversation between a reader and text. This chapter repositions annotation in the writing classroom as a social activity that can support students’ literacy development. Beginning with opportunities for students to reflect on their experiences with annotation, the chapter argues that social annotation can help students practice reading for different purposes as members of learning communities. Using examples from writing students and public annotators, students will learn about social annotation in classroom and public contexts. Students will then consider several affordances of social annotation technologies---expanded marginal space, hashtagging, and multimedia enrichment---that they can use for more productive marginal conversations. Because navigating a core text and its annotations can be challenging, the chapter concludes with a discussion of reading workflows that integrate skimming, close reading, and extending to help students get the most from social annotation. Easing open the cover of J.D. Salinger’s *Nine Stories* that I annotated two decades ago, I can see in the rounded letters of my adolescent handwriting are notes about Salinger’s life and the underlined heading “3 Themes” followed by the bulleted points “communication, innocence of children, perversion of adults.” Squeezed on the bottom of a page
+abstract: Students are often encouraged to annotate while reading.[^1] However, annotation is often framed as an individual undertaking, a conversation between a reader and text. This chapter repositions annotation in the writing classroom as a social activity that can support students’ literacy development. Beginning with opportunities for students to reflect on their experiences with annotation, the chapter argues that social annotation can help students practice reading for different purposes as members of learning communities. Using examples from writing students and public annotators, students will learn about social annotation in classroom and public contexts. Students will then consider several affordances of social annotation technologies---expanded marginal space, hashtagging, and multimedia enrichment---that they can use for more productive marginal conversations. Because navigating a core text and its annotations can be challenging, the chapter concludes with a discussion of reading workflows that integrate skimming, close reading, and extending to help students get the most from social annotation.
 short-title: Reading in Conversation
 short-authors: Sprouse
 volume: 5
 year: 2023
-start-page: 136
+start-page: 146
 chapter-number: 10
 source-file: 10Sprouse.pdf
 volume-title: Writing Spaces 5
@@ -15,6 +15,8 @@ license: This work is licensed under the Creative Commons Attribution-NonCommerc
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 teacher-resources: separate
 ---
+
+Easing open the cover of J.D. Salinger’s *Nine Stories* that I annotated two decades ago, I can see in the rounded letters of my adolescent handwriting are notes about Salinger’s life and the underlined heading “3 Themes” followed by the bulleted points “communication, innocence of children, perversion of adults.” Squeezed on the bottom of a page
 
 much later in the book was my annotation, “Ramona’s glasses---child’s view, scratched.” Even though the term paper they helped me to write has been lost, the first steps on my journey toward becoming an English scholar remain mapped in the pages.
 
@@ -58,7 +60,13 @@ You might help your classmates, for example, notice the significance of a term t
 
 My students were reviewing research papers for our class and encountered a number of citation strategies. In their readings, Elizabeth and Tom[^1] used their annotations to raise important questions about the citation strategies they were encountering (Fig. 1):
 
+![Screenshot of student annotations exploring citation strategies. (Permission to use this image was obtained from students.)](assets/figure-p004-1.png)\
+Figure 1. Screenshot of student annotations exploring citation strategies. (Permission to use this image was obtained from students.)
+
 Your classmates might also ask questions to which you can respond. In the annotations below (Fig. 2), Elizabeth is able to answer Cole’s question about an author’s cultural background.
+
+![Screenshot of annotations with replies to student questions. (Permission to use this image was obtained from students.)](assets/figure-p005-1.png)\
+Figure 2. Screenshot of annotations with replies to student questions. (Permission to use this image was obtained from students.)
 
 Community is an important aspect of social annotation. So that you and your peers can learn well together, it is important to establish and follow norms for respectful communication. Treat the margins of your shared text like you would a physical classroom space, as a place where different opinions and experiences can be valued and discussed safely.
 
@@ -70,9 +78,15 @@ Have you ever wondered about the inspiration for the lyrics to your favorite son
 
 As I’m drafting this chapter, Harry Style’s song “As It Was” is number one on the Genius list. The first annotation (Fig. 3) combines the work of four contributors who have crafted an explanation of the introduction using quotes from interviews, links to his music video, and an analysis of how the line might fit with broader themes in Styles’ music (“Harry Styles As It Was Lyrics”). Ratings for the annotation as a whole and individual contributors help other readers evaluate the annotation.
 
+![Screenshot of public annotation of Harry Styles’ “As It Was” lyrics by four contributors. This image does not fall within the CC license for this work](assets/figure-p006-1.png)\
+Figure 3. Screenshot of public annotation of Harry Styles’ “As It Was” lyrics by four contributors. This image does not fall within the CC license for this work.
+
 Public social annotation can help us to understand and share our interpretations of texts. Shared annotations can also help us to understand the responses readers might have to an authors’ writing choices.
 
 Figure 4 is an example of an annotation contributed to the UM Press Annotates project where readers were invited to add annotations to open access ebooks around several themes, including disability studies.
+
+![Screenshot of wmcleod’s annotation of Susan Antebi’s Embodied Archive with the hashtags #UMPAnnotates and #DisabilityStudies. This image does not fall within the CC license for this work](assets/figure-p007-1.png)\
+Figure 4. Screenshot of wmcleod’s annotation of Susan Antebi’s Embodied Archive with the hashtags #UMPAnnotates and #DisabilityStudies. This image does not fall within the CC license for this work.
 
 Social annotator wmcleod responds to a passage in Susan Antebi’s *Embodied Archive: Disability in Post-Revolutionary Mexican Cultural Production* with a critique of the author’s language choices for her intended audience. As a writer, you can use this annotation to reflect on when and how you might choose to use technical vocabulary to make your own writing more accessible for a wider audience.
 
@@ -94,9 +108,15 @@ Whereas I could hardly squeeze three words into the margins of the inexpensive p
 
 Use this extra space to share enough of your thinking so that others, including your future self, can converse with your ideas. Compare Evan’s two annotations below (Figs. 5-6). First, he makes a brief response that would fit into the margins of a trade paperback.
 
+![Screenshot of brief student annotation, “Very interesting point.” (Permission to use this image was obtained from student.)](assets/figure-p008-1.png)\
+Figure 5. Screenshot of brief student annotation, “Very interesting point.” (Permission to use this image was obtained from student.)
+
 While we can read how a bit about what he’s thinking, there’s not much to respond to. Visually, we can see too that there’s space for him to elaborate.
 
 Now read Evan’s longer annotation (Fig. 6).
+
+![Screenshot of longer student annotation, “I was really able to connect to the author in this story as me too, leaving for college, have left my house behind. I wonder what will change in my house while I am gone.” (Permission to use this image was obtained from student.)](assets/figure-p009-1.png)\
+Figure 6. Screenshot of longer student annotation, “I was really able to connect to the author in this story as me too, leaving for college, have left my house behind. I wonder what will change in my house while I am gone.” (Permission to use this image was obtained from student.)
 
 Notice how this longer annotation more fully explains Evan’s thinking. In the expansive digital margins, more complete thoughts actually open space for a dialogue to develop. You might add to the conversation about how your home might change if you too are away for college.
 
@@ -235,17 +255,5 @@ For each unit, I ask students to write cover letters introducing their work. As 
 Social annotation also affords opportunities to engage with authors. Projects like UM Press Annotates invite authors to share their work for social annotation. Students’ annotations can help to spark conversations with authors in the margins. Or, you might invite an author as a guest speaker for a course or event where they incorporate responses from readers.
 
 [^1]: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
-
-Figure 1. Screenshot of student annotations exploring citation strategies. (Permission to use this image was obtained from students.)
-
-Figure 2. Screenshot of annotations with replies to student questions. (Permission to use this image was obtained from students.)
-
-Figure 3. Screenshot of public annotation of Harry Styles’ “As It Was” lyrics by four contributors. This image does not fall within the CC license for this work.
-
-Figure 4. Screenshot of wmcleod’s annotation of Susan Antebi’s Embodied Archive with the hashtags #UMPAnnotates and #DisabilityStudies. This image does not fall within the CC license for this work.
-
-Figure 5. Screenshot of brief student annotation, “Very interesting point.” (Permission to use this image was obtained from student.)
-
-Figure 6. Screenshot of longer student annotation, “I was really able to connect to the author in this story as me too, leaving for college, have left my house behind. I wonder what will change in my house while I am gone.” (Permission to use this image was obtained from student.)
 
 [^1]: All student names are pseudonyms.
