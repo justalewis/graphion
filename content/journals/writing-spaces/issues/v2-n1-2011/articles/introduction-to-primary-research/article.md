@@ -1,7 +1,5 @@
 ---
 title: 'Introduction to Primary Research: Observations, Surveys, and Interviews'
-author:
-- name: Dana Lynn Driscoll
 abstract: '*by Dana Lynn Driscoll* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 2, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.'
 short-title: Introduction to Primary Research
 short-authors: Driscoll
@@ -75,6 +73,12 @@ The Research Timeline
 
 When you begin to conduct any kind of primary research, creating a timeline will help keep you on task. Because students conducting primary research usually focus on the collection of data itself, they often overlook the equally important areas of planning (invention), analyzing data, and writing. To help manage your time, you should create a research timeline, such as the sample timeline presented here.
 
+![The Research Process](assets/figure-p006-1.jpg)\
+Fig. 1: The Research Process
+
+![A sample timeline for Jared’s research project](assets/figure-p006-2.jpg)\
+Fig. 2: A sample timeline for Jared’s research project.
+
 When Primary Research Is Useful or Appropriate
 
 In *Evaluating Scientific Research: Separating Fact from Fiction,* Fred Leavitt explains that primary research is useful for questions that can be answered through asking others and direct observation. For first year writing courses, primary research is particularly useful when you want to learn about a problem that does not have a wealth of published information. This may be because the problem is a recent event or it is something not commonly studied. For example, if you are writing a paper on a new political issue, such as changes in tax laws or healthcare, you might not be able to find a wealth of peer-reviewed research because the issue is only several weeks old. You may find it necessary to collect some of your own data on the issue to supplement what you found at the library. Primary research is also useful when you are studying a local problem or learning how a larger issue plays out at the local level. Although you might be able to find information on national statistics for healthy eating, whether or not those statistics are representative of your college campus is something that you can learn through primary research.
@@ -133,8 +137,6 @@ To avoid bias in your observations, you can use something called a “double-ent
 
 ![Two sample entries from a double-entry notebook](assets/figure-p011-1.png)\
 Figure 3: Two sample entries from a double-entry notebook.
-
-![Undescribed figure from page 20 of the source](assets/figure-p020-1.png)
 
 courages you to separate your observations (the facts) from your feelings and judgments about the facts.
 
@@ -264,6 +266,9 @@ Describing Your Study Findings (Results)
 
 In a formal research paper, the results section is where you describe what you found. The results section can include charts, graphs, lists, direct quotes, and overviews of findings. Readers find it helpful if you are able to provide the information in different formats. For example, if you have any kind of numbers or percentages, you can talk about them in your written description and then present a graph or chart showing them visually. You should provide specific details as supporting evidence to back up your findings. These details can be in the form of direct quotations, numbers, or observations.
 
+![Graphic from Derek’s results section](assets/figure-p020-1.png)\
+Fig. 4: Graphic from Derek’s results section.
+
 Jared describes some of his interview results:
 
 > Alyson also mentioned the need for phone conversation. She stated, “The phone is a large part of my job. I am communicating with other NRCS offices daily to find out the status of our jobs.” She needs to be in constant contact in order to insure that everything is running smoothly. This is common with those overseeing projects. In these cases, the wait for a response to an email or a memo can be too long to be effective.
@@ -300,6 +305,7 @@ For more information on the primary methods of inquiry described here, please se
 
 # Works Cited
 
+
 Babbie, Earl. *The Practice of Social Research.* 10th ed. Belmont, CA: Wadsworth publishing, 2003. Print.
 
 Creswell, John. *Research Design: Qualitative, Quantitative, and Mixed Methods Approaches.* 3rd ed. Thousand Oaks, CA: Sage publications, 2008. Print.
@@ -316,14 +322,9 @@ Mead, Margaret. *Growing Up in New Guinea: A Comparative Study of Primitive Educ
 
 Mill, John Stuart. *John Stuart Mill’s Philosophy of Scientific Method.* Ernest Nagel, Ed. New York: Hafner Publishing Co, 1950. Print.
 
-Rubin, Herbert and Irene Rubin. *Qualitative Interviewing: The Art of Hearing Data.* 2nd ed. Thousand Oaks, CA: Sage Publications, 2004. Print. ![Undescribed figure from page 6 of the source](assets/figure-p006-1.jpg) ![Undescribed figure from page 6 of the source](assets/figure-p006-2.jpg) This essay is available under a Creative Commons License subject to the Writing Spaces' Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2011 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
-
+Rubin, Herbert and Irene Rubin. *Qualitative Interviewing: The Art of Hearing Data.* 2nd ed. Thousand Oaks, CA: Sage Publications, 2004. Print. This essay is available under a Creative Commons License subject to the Writing Spaces' Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2011 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
 [^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
 
 * This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.
-
-Fig. 1: The Research Process Fig. 2: A sample timeline for Jared’s research project.
-
-Fig. 4: Graphic from Derek’s results section.
 
 Babbie, Earl. *The Practice of Social Research.* 10th edition. Wadsworth Publishing, 2003. Print. Creswell, John. *Research Design: Qualitative, Quantitative, and Mixed Methods Approaches.* 3rd ed. Sage publications, 2008. Print. Rubin, Herbert and Irene Rubin. *Qualitative Interviewing: The Art of Hearing Data.* 2nd edition. Thousand Oaks, CA: Sage Publications, 2004. Print. Fink, Arlene. *How to Conduct Surveys: A Step-by-Step Guide.* 4th ed. Thousand Oaks, CA: Sage Publications, 2008. Print. Sanger, Jack. *Compleat Observer? A Field Research Guide to Observation.* New York: Routledge, 1996. Print. The National Commission for the Protection of Human Subjects of Biomedical and Behavioral Research. *The Belmont Report*. 18 April 1979. Web. <http://ohsr.od.nih.gov/guidelines/belmont.html>.

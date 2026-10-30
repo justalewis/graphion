@@ -1,7 +1,5 @@
 ---
 title: 'Googlepedia: Turning Information Behaviors into Research Skills'
-author:
-- name: Randall McClure
 abstract: '*by Randall McClure* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 2, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.'
 short-title: Googlepedia
 short-authors: McClure
@@ -245,6 +243,9 @@ Susan
 
 Susan begins her research where most students do, on Google. Interestingly, Susan does not start with the general topic of outsourcing, opting instead to let the search engine recommend related search terms. As Susan types in the term “outsourcing,” Google as a search engine builds on character recognition software providing several “suggestions” or related search terms, terms that Susan expects to be provided for her, and one---“outsourcing pros and cons”---quickly catches her attention. Commenting on this choice instead of searching by the general concept of outsourcing, Susan notes, “I would have to sort through too much stuff [on Google] before deciding what to do.” She selects “pros and cons” from the many related and limiting search terms suggested to her; Susan states, “I want both sides of the story because I don’t know much about it.”
 
+![Outsourcing suggestions from Google](assets/figure-p012-1.png)\
+Fig. 1. Outsourcing suggestions from Google.
+
 Susan next moves into examining the top ten returns provided on the first page of her Google search for outsourcing pros and cons. Doing what is now common practice for most Web users, Susan immediately selects the link for the first item returned in the query. I believe most search engine users are wired this way, even though they are likely familiar with the emphasis given to commercial sites on Google and other search engines. Quickly unsatisfied with this source, Susan jumps around on the first page of returns, stopping on the first visual she encounters on a linked page: a table illustrating pros and cons. Asked why she likes the visual, Susan responds that she is trying to find out how many arguments exist for and against outsourcing. On this page, Susan notes the author provides seven pros and four cons for outsourcing. This finding leads Susan to believe that more pros likely exist and that her essay should be in support of outsourcing.
 
 “Visual” Research
@@ -487,6 +488,7 @@ Susan Blum notes that “if we want to teach students to comply with academic no
 
 # Works Cited
 
+
 American Library Association. Presidential Committee on Information Literacy. Chicago: ALA, 1989. Print.
 
 Association of College and Research Libraries. *Information Literacy Competency Standards for Higher Education.* 2000. Web. 17 May 2010.
@@ -507,16 +509,19 @@ Pogatchnik, Shawn. “Student Hoaxes World’s Media on Wikipedia.” *msnbc.* *
 
 Purdy, James P. “Wikipedia Is Good for You!?” *Writing Spaces: Readings on* *Writing.* Vol. 1. West Lafayette, IN: Parlor P, 2010. 205--224. Print.
 
-Swanson, Troy. “A Radical Step: Implementing a Critical Information Literacy Model.” *portal: Libraries and the Academy.* 4.2 (2004): 259--273. Print. ![Undescribed figure from page 12 of the source](assets/figure-p012-1.png) This essay is available under a Creative Commons License subject to the Writing Spaces' Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2011 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
-
+Swanson, Troy. “A Radical Step: Implementing a Critical Information Literacy Model.” *portal: Libraries and the Academy.* 4.2 (2004): 259--273. Print. This essay is available under a Creative Commons License subject to the Writing Spaces' Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2011 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
 [^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
 
 * This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.
 
-Fig. 1. Outsourcing suggestions from Google.
+
 
 [^1]: Wikis are websites that allow a user to add new web pages or edit any page and have the changes he or she makes integrated into that page.
 
+
+
 [^2]: See pages 209--211 in Purdy for more discussion on the value of Wikipedia in preliminary research.
+
+
 
 [^3]: See pages 217--218 in Purdy for an example of a student engaging in written conversation with her sources rather than just “parroting” them.

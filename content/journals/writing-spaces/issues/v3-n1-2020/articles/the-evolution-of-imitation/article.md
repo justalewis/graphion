@@ -1,7 +1,5 @@
 ---
 title: 'The Evolution of Imitation: Building Your Style'
-author:
-- name: Craig A. Meyer
 abstract: 'Craig A. Meyer This essay is a chapter in *Writing Spaces: Readings on Writing*, Volume 3, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from any of these sites:'
 short-title: The Evolution of Imitation
 short-authors: Meyer
@@ -12,8 +10,8 @@ source-file: meyer.pdf
 volume-title: Writing Spaces 3
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
-chapter-number: 8
 teacher-resources: separate
+chapter-number: 8
 ---
 
 > • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/pages/writing-spaces • WAC Clearinghouse: http://wac.colostate.edu/books/
@@ -86,6 +84,11 @@ The other aspects of contextual imitation refer to the where and why authors mak
 
 In what follows (see figure 1), we have an excerpt from a short creative nonfiction piece. As we look at the piece, focus on where the author is deciding to *do* certain things---the comments along the side offer some guidance to help us along. He is describing a baseball game during, what we learn is, a critical moment: the last inning, the author’s team is up by one run, and he’s the catcher. We pick up the action with an intimidating and athletic player on first base---called by the author “big boy”---and a batter having let pass two pitches:
 
+![Image of essay with marginal comments explaining some of the writer’s rhetorical choices](assets/figure-p009-1.jpg)\
+Fig. 1. Image of essay with marginal comments explaining some of the writer’s rhetorical choices. Source: Craig A. Meyer, “Finding My Team.”
+
+![Undescribed figure from page 9 of the source](assets/figure-p009-2.jpg)
+
 This author, as we see by the comments on the right, decided to create almost a mini story at the end of each paragraph. This is a powerful technique (and one you can imitate). Think of it like this: imagine going to a movie that is two hours long. The first 110 minutes are horrible. You consider walking out but your friend insists that you stay, and she has the car keys. So you stay and suffer. But the last ten minutes feature the best piece of cinematography you’ve ever witnessed; it’s exciting---these ten minutes of the movie bring everything together and ends with an unforeseen twist that you find brilliant and unforgettable.
 
 As you’re walking out to the car, someone asks, “So, what did you think of it?” What might you say? Still charged by the ending, maybe you explain how great it was, even though most of the movie was rubbish---the ending leaves the impression. In this baseball piece, the author wants to give us an impression at the end of each paragraph, and while you may not remember the details of the paragraph, you probably remember those short, powerful sentences at the end. That’s the power of a strong ending. This technique of ending paragraphs with short, powerful sentences has just been added to your toolbox---you can imitate the technique to enhance your own writing.
@@ -93,6 +96,7 @@ As you’re walking out to the car, someone asks, “So, what did you think of i
 In studying several authors or samples, we learn from each one’s strengths and weaknesses. Imitation is more than just copying down a selection of writing---it’s digging into the prose, pulling it apart, and understanding *why* it works the way that it does. More importantly, other scholars teach us *how they* write, *how they* combine words, phrases, paragraphs, and *how they* handle the writing problems they encounter. *Then*, we practice and transfer that understanding to our *own* prose. These exercises do not take over our writing; they become part of it and make it stronger. Just like Data, we can take radically different styles to develop our own style. The learning process derived from imitation takes time and dedication. Like many things, the process becomes easier with practice and persistence. Take the Erasmus example again; imagine writing a hundred different ways of telling someone you enjoyed their letter. Of course, that would take time and really focusing on the task at hand---it would not be easy. Yet, with each attempt to create a new version, something changes in us constructing it, and in that process, we stretch a little more outside the confines of the original sentence. It is this stretching where *imitative* learning takes place and it is how we grow as writers.
 
 # Works Cited
+
 
 Carson, Rachel. *Silent Spring*. Houghton, 1962. Crowley, Sharon, and Debra Hawhee. *Ancient Rhetorics for Contemporary Students*. 4th ed., Pearson, 2009.
 
@@ -133,10 +137,6 @@ While this chapter could be used at any time during a first-year composition (FY
 5. As a group, create a sentence (like Erasmus’s) and generate as many possible variations. How are the variations similar? Different? What are the advantages in being able to present a sentence or group of sentences in many different ways?
 
 6. As a group or a class, what other techniques could you learn from or imitate from the baseball selection?
-
-![Undescribed figure from page 9 of the source](assets/figure-p009-1.jpg)
-
-![Image of essay with marginal comments explaining some of the writer’s rhetorical choices. Source: Craig A. Meyer, “Finding My Team.”](assets/figure-p009-2.jpg){#fig:1 fig-alt="Undescribed figure from page 9 of the source"}
 
 Parlor Press LLC, Anderson, South Carolina, USA © 2020 by Parlor Press. Individual essays © 2020 by the respective authors. Unless otherwise stated, these works are licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use. All rights reserved. For permission to reprint, please contact the author(s) of the individual articles, who are the respective copyright owners. Cover design by Colin Charlton. Library of Congress Cataloging-in-Publication Data on File
 

@@ -872,6 +872,21 @@ def is_figure_caption(text: str) -> bool:
     return bool(_FIGURE_CAPTION_RE.match(text.strip()))
 
 
+# A credit the archive sets as a trailing sentence of the caption, rather
+# than in brackets: "Photo by Jenae Cohn", "Menu image courtesy of Mistie
+# Cohn", "Source: Craig A. Meyer". It has to begin a sentence and it has to
+# name itself a credit, which is what keeps the pattern off "chord changes
+# for 'Heart of Gold' by Neil Young" and "a news show created by Colin
+# Charlton": a bare "by" is far more often part of the description. "from"
+# is left out altogether, since a sentence may simply open with it.
+_CREDIT_TAIL_RE = re.compile(
+    r"(?:(?<=\.)|(?<=”)|^)\s*"
+    r"(?:\w+\s+)?"
+    r"(?:source|credit|photo(?:graph)?|image|illustration|drawing)"
+    r"\s*(?::|\bby\b|\bcourtesy\s+of\b)\s*\S.*$",
+    re.IGNORECASE)
+
+
 def caption_alt_text(text: str) -> str:
     """Alt text for a figure, from the caption printed under it.
 
@@ -891,6 +906,18 @@ def caption_alt_text(text: str) -> str:
         text = text[match.end():]
     text = re.sub(r"\s*\((?:Source|Credit|Courtesy)[^)]*\)\s*$", "", text,
                   flags=re.IGNORECASE)
+    # The archive more often sets the credit as its own trailing sentence
+    # than in brackets: "A cheeseburger in close-up. Photo by Jenae Cohn".
+    # Who made a picture is not what is in it, and a screen reader reading
+    # alt text has no way to skip past it to the description.
+    trimmed = _CREDIT_TAIL_RE.sub("", text).strip()
+    # Unless the credit was the whole caption, as it is where the archive
+    # prints a source line and no description. An empty alt is not a better
+    # answer than a credit: it costs the galley its conformance, and
+    # `undescribed_alt` is what the caller uses when there is no caption at
+    # all, which is a different thing from a caption that only cites.
+    if trimmed:
+        text = trimmed
     return text.strip().rstrip(".").strip()
 
 

@@ -27,8 +27,8 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (276 functions: 88 in `test_cleanups.py`, 28 in
-`test_teacher_resources.py`, 67 in `test_pdf_ingest.py`, 40 in
+Tests (280 functions: 88 in `test_cleanups.py`, 28 in
+`test_teacher_resources.py`, 71 in `test_pdf_ingest.py`, 40 in
 `test_ingest_volume.py`, 25 in
 `test_lint.py`, 10 in `test_metadata_roundtrip.py`, 6 in
 `test_standalone_html.py`, 5 in `test_pdf_ua.py`, 4 in
@@ -214,6 +214,14 @@ set above it and the two part company across a page break, as both of chapter
 so anything inside another's box is dropped.
 
 Alt text comes from the caption with its label and any source credit removed.
+The archive sets the credit two ways, in brackets at the end and as a
+trailing sentence ("Photo by Jenae Cohn", "Menu image courtesy of Mistie
+Cohn"), and `_CREDIT_TAIL_RE` takes the second only where it names itself a
+credit: a bare "by" belongs to the description far more often, as in "chord
+changes for 'Heart of Gold' by Neil Young". A caption that is nothing but a
+credit keeps it, since an empty alt costs the galley its conformance and is
+no better for a reader than the credit is.
+
 That is a starting point, not an answer: a caption says what a figure is
 called and alt text says what is in it. A figure whose page printed no caption
 gets `undescribed_alt()` rather than an empty string, because empty alt text

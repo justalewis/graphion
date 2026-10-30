@@ -106,7 +106,6 @@ As you finish this chapter, we hope that you understand that self-doubt about yo
 
 # Works Cited
 
-
 Alvarez, Sara P., and Amy J. Wan. “Global Citizenship as Literacy: A Critical Reflection for Teaching Multilingual Writers.” *Journal of Adolescent & Adult* *Literacy*, vol. 63, no. 2, 2019, pp. 213-216.
 
 Baker-Bell, April. *Linguistic Justice: Black Language, Literacy, Identity, and Pedagogy*. Routledge, 2020.

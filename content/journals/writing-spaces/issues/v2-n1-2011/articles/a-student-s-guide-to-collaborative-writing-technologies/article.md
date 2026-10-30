@@ -1,8 +1,5 @@
 ---
 title: A Student’s Guide to Collaborative Writing Technologies
-author:
-- name: Matt Barton
-- name: Karl Klint
 abstract: '*by Matt Barton and Karl Klint* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 2, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.'
 short-title: A Student’s Guide to Collaborative Writing Technologies
 short-authors: Barton and Klint
@@ -34,6 +31,9 @@ Unfortunately, Madison and Dakota are commuters from different towns, and their 
 
 When Dakota gets home late that evening, he logs into his Twitter account and begins to micro-blog on the topic. During the drive home he was listening to National Public Radio (NPR) and heard an interesting discussion about health care reform. His first post, or Tweet on the topic goes something like this: “All this talk about health care on the news---great topic for paper.” Since Dakota is using Twitter, his messages must be short---only 140 characters! However, he can Tweet as often as he likes, so just before bed he adds another post: “I work full time and go to school. I am uninsured.”
 
+![Twitter is a great way to send brief messages to friends and colleagues. Many students use it to share information with their friends and classmates about their hobbies, social activities, classes, and assignments](assets/figure-p003-1.jpg)\
+Fig. 1. Twitter is a great way to send brief messages to friends and colleagues. Many students use it to share information with their friends and classmates about their hobbies, social activities, classes, and assignments.
+
 The next morning, Madison checks her email and finds an invitation from Dakota to join Twitter. Madison completes the registration process and selects the option to “follow” Dakota, so she will be notified when Dakota posts any more Tweets. She also notices the RSS logo on Dakota’s Twitter homepage, so she adds the feed to her Google Reader account. Now Dakota’s Tweets will show up alongside her daily dose of news and blog posts. Since she has to go to work soon, Madison downloads the Twitter application for her mobile phone so that she can respond to Dakota during her breaks. For now, though, she replies to Dakota’s Tweet with, “That sounds great! My mom has breast cancer and the family is really struggling.”
 
 Later that day Dakota sees Madison’s response to his Tweet and also several replies from his other friends. One of them is Brittney, a friend at another school who plans to apply to medical school next year. Brittney tells him that the topic is very controversial and sends him a link to her blog that discusses the pros and cons of the “public option.”
@@ -46,6 +46,9 @@ Now Dakota needs a way to share articles with Madison. He could email the links 
 
 Even though they’ve only talked face-to-face a few times, Dakota and Madison’s research into public options is going well. The sheer
 
+![Google Scholar is a lot like Google, but it searches academic, government, and legal documents. Some of the links it finds are freely or cheaply available online, but others are available only to paying members or subscribers. Before paying for access to an article, you should check to see if it is available at your school’s library](assets/figure-p005-1.png)\
+Fig. 2. Google Scholar is a lot like Google, but it searches academic, government, and legal documents. Some of the links it finds are freely or cheaply available online, but others are available only to paying members or subscribers. Before paying for access to an article, you should check to see if it is available at your school’s library.
+
 number of Tweets Dakota sends out is, unfortunately, starting to overwhelm Madison. Madison sends Dakota a Tweet that says, “Overwhelmed need to meet driving past your town thurs. U use doodle?”
 
 Dakota hasn’t used Doodle before, but discovers that this site is able to accomplish two things Dakota needs to do. First, Doodle helps people administer polls. Dakota has been looking for a way to set up polls at school for his disc golf league. He found a park between himself and campus that could fit a 12-hole disc golf course, but without any statistics to back up his claim that the area needs a disc golf course, the local park and recreational department won’t even discuss the idea. Dakota also finds that Doodle connects to Microsoft Outlook, an email and calendar management tool used at many colleges. Dakota isn’t a big fan of expensive software, but perhaps the Outlook connectivity will come in handy.
@@ -53,6 +56,9 @@ Dakota hasn’t used Doodle before, but discovers that this site is able to acco
 Outside of the polling option within Doodle, Dakota discovers where Madison was going with that last Tweet. Doodle offers a daily and weekly scheduler that can be accessed by many people. This is great because Dakota doesn’t really want classmates to view his Outlook schedule. Up until this point, most of Madison and Dakota’s interaction has been online and asynchronous. Asynchronous just means that they are communicating, but not at the same moment. Also, Madison’s mom has started cancer treatment, and the hospital is near Dakota’s apartment. Madison will be driving her mom to treatments at least once a week, but the appointments won’t always be at the same time. Even though their school has a really nice course management system (such as Blackboard, D2L, Sakai, or Moodle), a synchronous Facebook chat helps Madison and Dakota decide to use Doodle to schedule meetings. This works wonderfully for both of them because they are able to share each other’s schedule in detail. In short, Dakota was worried he might have to miss his Thursday night disc golf league, but he’s able to show his league on the schedule. This eases his mind a bit.
 
 Dakota and Madison now have a good idea of what they want to write about, but how will they draft their document? Dakota decides to open a Google Document. Google Docs is a tool that makes it easy to draft and collaborate online. Dakota shares the new file with Madison, and now they can draft and edit the document together. However, Dakota tries drafting an introduction and thesis statement, but ends up with a case of writer’s block. He sends out another Tweet asking for help organizing his thoughts.
+
+![Google Docs is a free, easy-to-use word processor that stores your documents online. You can then share them with friends and classmates. It’s a much better solution for collaborative writing than emailing documents back and forth between group members](assets/figure-p006-1.png)\
+Fig. 3. Google Docs is a free, easy-to-use word processor that stores your documents online. You can then share them with friends and classmates. It’s a much better solution for collaborative writing than emailing documents back and forth between group members.
 
 Darrin sees the Tweet and suggests that Dakota use Mindomo, a free online mind-mapping tool. Mind maps will allow Dakota to see how his ideas are connected, and possibly find new ways they are related. Furthermore, he will be able to share his map with whomever he wants, and get feedback too. For the next few hours, Dakota works on a map, making topics and subtopics. He’s having lots of fun, and eventually gets an idea---the debate over the public option seems to have a lot to do with business and politics. Some of the articles Dakota read argued that such a move would amount to socialism, with the government interfering in free trade. However, his research showed that similar arguments were made about Medicare and Social Security, which turned out to be very popular programs.
 
@@ -83,6 +89,9 @@ Twitter, which limits posts to only 140 characters, is a microblogging tool. Whe
 Madison took advantage of RSS feeds to kept tabs on Twitter and several other applications Dakota was using. An RSS feed is a list of updates automatically generated by a blog or website. RSS feeds are handy because they save you time. Instead of having to visit a bunch of different blogs and websites to stay current, you can subscribe to all of their RSS feeds and have them fed into an application like Google Reader (http://www.google.com/reader). Google Reader is a free RSS feed manager that keeps track of your feeds for you. You can use tools like Google Reader to stay abreast of activities occurring across a very broad array of online applications. Most modern sites offer RSS feeds, and some offer many specialized feeds. In most cases, subscribing to them is as simple as clicking on the bright orange RSS icon.
 
 Dakota also used Facebook (http://facebook.com), a popular social networking site originally designed for college students. While many students use Facebook to keep in touch with friends or to find parties, you can also use it to find study partners or to get help with your homework. You can do this by posting status updates or messages to
+
+![Google Reader is an RSS Feed Reader with a large variety of features. You can use it to quickly find and share blog posts and news items with your friends and classmates, as well as take notes and organize important information](assets/figure-p010-1.png)\
+Fig. 4. Google Reader is an RSS Feed Reader with a large variety of features. You can use it to quickly find and share blog posts and news items with your friends and classmates, as well as take notes and organize important information.
 
 your wall (or your friends’ walls). Facebook Chat is a synchronous tool, which means that you have to be online at the same time as your friend to use it. There are many other tools that allow for synchronous chatting, such as AOL Instant Messenger (AIM) or Google Talk. If you have a webcam and a microphone you could use a program such as Skype (http://skype.com) to connect through a VOIP-based (Voice Over Internet Protocol) system. VOIP-based programs like Skype will allow you see each other, talk to each other, and also do basic instant messaging, if you have a high-speed Internet connection.
 
@@ -128,24 +137,12 @@ There are new social media tools, features, and concepts being developed every d
 
 # Software Referenced
 
-![Undescribed figure from page 3 of the source](assets/figure-p003-1.jpg)
-
-![Undescribed figure from page 5 of the source](assets/figure-p005-1.png)
-
-![Undescribed figure from page 6 of the source](assets/figure-p006-1.png)
-
-![Twitter is a great way to send brief messages to friends and colleagues. Many students use it to share information with their friends and classmates about their hobbies, social activities, classes, and assignments.](assets/figure-p010-1.png){#fig:1 fig-alt="Undescribed figure from page 10 of the source"}
-
 This essay is available under a Creative Commons License subject to the Writing Spaces' Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2011 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
+
+
 
 [^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
 
 * This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.
-
-Fig. 2. Google Scholar is a lot like Google, but it searches academic, government, and legal documents. Some of the links it finds are freely or cheaply available online, but others are available only to paying members or subscribers. Before paying for access to an article, you should check to see if it is available at your school’s library.
-
-Fig. 3. Google Docs is a free, easy-to-use word processor that stores your documents online. You can then share them with friends and classmates. It’s a much better solution for collaborative writing than emailing documents back and forth between group members.
-
-Fig. 4. Google Reader is an RSS Feed Reader with a large variety of features. You can use it to quickly find and share blog posts and news items with your friends and classmates, as well as take notes and organize important information.
 
 Doodle. Doodle AG. Available at http://www.doodle.com/. Etherpad. Google. Available at http://etherpad.org/. Facebook. Facebook, Inc. Available at http://facebook.com/. Google Docs. Google. Available at http://docs.google.com/. Google Reader. Google. Available at http://reader.google.com/. Google Scholar Beta. Google. Available at http://scholar.google.com/. Mindomo. Expert Software Applications. Available at http://www.mindomo.com/. Twitter. Twitter, Inc. Available at http://twitter.com/. Zotero. Center for History and New Media at George Mason University. Available at http://zotero.org/.

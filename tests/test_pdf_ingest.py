@@ -724,3 +724,37 @@ def test_alt_text_drops_the_short_label_too():
 def test_an_abbreviated_table_label_is_a_table_caption():
     assert pdf_ingest.is_table_caption("Tab. 2. A comparison of two genres")
     assert pdf_ingest.is_table_caption("Table 2. A comparison of two genres")
+
+
+def test_a_trailing_credit_sentence_is_not_part_of_the_description():
+    """Who made a picture is not what is in it, and a screen reader reading
+    alt text cannot skip past the credit to reach the description."""
+    assert pdf_ingest.caption_alt_text(
+        "Figure 1. A cheeseburger is held in a close-up shot. Photo by Jenae "
+        "Cohn") == "A cheeseburger is held in a close-up shot"
+    assert pdf_ingest.caption_alt_text(
+        "Figure 2. A menu with three columns. Menu image courtesy of Mistie "
+        "Cohn") == "A menu with three columns"
+
+
+def test_a_bare_by_is_part_of_the_description():
+    """"chord changes for 'Heart of Gold' by Neil Young" names the song, not
+    the photographer, so the credit has to name itself one."""
+    kept = pdf_ingest.caption_alt_text(
+        "Figure 6. Lyrics and chord changes for \u201cHeart of Gold\u201d by "
+        "Neil Young with a fingering chart")
+    assert kept.endswith("with a fingering chart")
+
+
+def test_a_sentence_opening_with_from_is_not_a_credit():
+    kept = pdf_ingest.caption_alt_text(
+        "Figure 8. A diagram. From the beginning, writers plan before drafting.")
+    assert "From the beginning" in kept
+
+
+def test_a_caption_that_is_only_a_credit_keeps_it():
+    """Trimming it to nothing would cost the galley its conformance, and an
+    empty alt is not a better answer than a credit."""
+    only = pdf_ingest.caption_alt_text(
+        "Figure 3. Source: \u201cA Social Model of Writing.\u201d Writing@CSU.")
+    assert only.startswith("Source:")

@@ -106,7 +106,6 @@ Another way to think about the balancing act of negotiating discourse: as the ex
 
 # Works Cited
 
-
 Anzaldúa, Gloria. *Borderlands = La Frontera: The New Mestiza*. Aunt Lute Books, 2007.
 
 Grayson, Mara Lee. “Writing toward Racial Literacy.” *Writing Spaces: Readings* *on Writing, Volume 4,* edited by Dana Lynn Driscoll, Megan Heise, Mary K. Stewart, and Matthew Vetter. Parlor Press, 2021, pp. 166-183.
@@ -152,7 +151,5 @@ The claims in this text regarding the characteristics of translanguaging, code-m
 6. Choose a discourse community that you are a member of---or that you want to join. Analyze the language expectations of this discourse community by considering the following questions: ○ What would it look like for you or others to utilize linguistic resources, such as the dialects or language styles a person feels most comfortable with, in this community? What are the risks and benefits of doing so? ○ What do you notice about language expectations and which languages or dialects are and are not valued in this discourse communities? ○ What are the benefits or challenges of using translanguaging and/or code-meshing in this community? When are the stakes high and where are they low?
 
 7. How can we better understand the choices people make as writers and speakers and learn to value diverse and interesting language practices?
-
-
 
 [^1]: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use. 87

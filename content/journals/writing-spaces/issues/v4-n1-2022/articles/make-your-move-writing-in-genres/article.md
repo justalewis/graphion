@@ -205,7 +205,6 @@ Carrying out a moves analysis is more than just an academic exercise. You can us
 
 # Works Cited
 
-
 Devitt, Amy, et al. *Scenes of Writing.* Pearson Education, 2004. Dirk, Kerry. “Navigating Genres.” *Writing Spaces: Readings on Writing*, Volume 1, edited by Charles Lowe and Pavel Zemliansky, Parlor Press/The WAC Clearinghouse, 2010, pp. 249-262.
 
 “How Do I Write a Grant Proposal for My Individual Project? Where Can I Find Samples?” *Candid.Learning*, Candid, 2020, learning.candid.org/resources/ knowledge-base/grant-proposals-for-individual-projects/.

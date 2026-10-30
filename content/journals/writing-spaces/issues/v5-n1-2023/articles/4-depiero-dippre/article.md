@@ -77,7 +77,7 @@ False! Unfortunately, as a writer, you can’t sit around expecting all the rand
 
 That’s why brainstorming is such a crucial “step” in how writing happens. Contrary to popular belief, brainstorming---or related techniques like mind maps, concept clouds, or stream-of-consciousness freewriting---is more than the first “step” in the writing process; it’s something that writers keep coming back to.
 
-![Zack’s “How Writing Happens” Brainstorm on a Dry Erase Board. Arranged as an informal mind map with clustered bubbles and bullet points, the center of the board contains the phrase “How Writing Happens for Writing Spaces.” Various ideas splinter off of the center idea such as “Writing Process,” “Rhetorical Situation,” “Materiality,” and “Affect and Emotion,” each of which include some brief language for how the concept could be explained in the chapter. Photograph by the author (DePiero)](assets/figure-p006-1.jpg)\
+![Zack’s “How Writing Happens” Brainstorm on a Dry Erase Board. Arranged as an informal mind map with clustered bubbles and bullet points, the center of the board contains the phrase “How Writing Happens for Writing Spaces.” Various ideas splinter off of the center idea such as “Writing Process,” “Rhetorical Situation,” “Materiality,” and “Affect and Emotion,” each of which include some brief language for how the concept could be explained in the chapter](assets/figure-p006-1.jpg)\
 Figure 1: Zack’s “How Writing Happens” Brainstorm on a Dry Erase Board. Arranged as an informal mind map with clustered bubbles and bullet points, the center of the board contains the phrase “How Writing Happens for Writing Spaces.” Various ideas splinter off of the center idea such as “Writing Process,” “Rhetorical Situation,” “Materiality,” and “Affect and Emotion,” each of which include some brief language for how the concept could be explained in the chapter. Photograph by the author (DePiero).
 
 There’s this fascinating concept called first-order thinking that we engage in by capturing whatever crosses our mind: quick impressions, fleeting feelings, or random-but-maybe-relevant thoughts. As writers, we can use first-order thinking to generate interesting ideas worth writing about---and letting those ideas build off of each other---so that, later, we can shape them into something more polished. In fact, some writers (I’m not going to name names!) embrace the spirit of first-order thinking to the degree of bypassing any honest effort for correct spelling or proper punctuation.
@@ -241,6 +241,7 @@ I thought I’d end this feedback by annoying you a bit. You do a good job throu
 
 # Works Cited
 
+
 Adler-Kassner, Linda, and Elizabeth Wardle. *Naming What We Know: Threshold* *Concepts of Writing Studies*. University Press of Colorado, 2015.
 
 Bazerman, Charles. “A Relationship Between Reading and Writing: The Conversational Model.” *College English*, vol. 41, no. 6, 1980, pp. 656--661.
@@ -276,5 +277,7 @@ In first-year writing courses, this essay could be paired with reflective assign
 4. Consider how you might use this article as a springboard for an extended research project (e.g. a literature review). Out of the many ideas that we’ve introduced in this piece---for example, managing emotions, and talking with Writing Center tutors---which ones strike you as the most interesting, and why? Formulate a research question(s) that could help you dive deeper into the Writing Studies field.
 
 5. Find someone whose writing process you’d like to learn more about. Collect some writing-related artifacts connected to their personal life (e.g. journal entries, “to do” lists, social media posts), professional life (e.g., community outreach advertisements for a public relations representative, a housing description for a real estate agent, or lesson plans for a teacher), or if they’re a student, their academic life (e.g. an in-process draft or final submission, feedback to a classmate’s draft, an email to members of a club/organization). Use that data to ask questions that pique your curiosity as it relates to how writing happens for them. That data could become the basis for what Writing Studies researchers call a text-based interview, and you could ask them to walk you through the various decisions they made while writing each of those various documents.
+
+
 
 [^1]: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.

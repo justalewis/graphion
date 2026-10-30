@@ -1,7 +1,5 @@
 ---
 title: 'Writing “Eyeball To Eyeball”: Building A Successful Collaboration'
-author:
-- name: Rebecca Ingalls
 abstract: '*by Rebecca Ingalls* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 2, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.'
 short-title: Writing “Eyeball To Eyeball”
 short-authors: Ingalls
@@ -134,6 +132,9 @@ One technique that can be helpful in an open-topic situation actually comes from
 How do you begin? Let’s say your group has been asked to select a campus-wide problem and write a proposal for its solution, and you’ve got to decide together on a problem that you each agree is worth investigating. Start with a brainstorm. Each member of the group writes down on separate small pieces of paper two or more major individual concerns for your campus. Lay out all of the pieces of paper before you, and see whether you have common concerns, or whether some concerns might be related to one another. Once you’ve narrowed the list of concerns, begin to create sub-categories for each concern: effects of the problem on campus, resources for researching the problem (including primary and scholarly research), hypothetical solutions, and potential challenges in taking on the topic. Your affinity diagram might look a little something like Figure 1.
 
 Much more than a pro-con list, the affinity diagram puts some multi-faceted wisdom into the decision-making by showing you the magnitude of your campus concerns (who is affected by the problem), the availability of sources to support your research, and the feasibility
+
+![Affinity diagram for deciding on a topic](assets/figure-p012-1.png)\
+Fig. 1. Affinity diagram for deciding on a topic.
 
 of what needs to be done to remedy the problem. Filling in these categories above may help you to see more clearly what challenges may lie ahead for you if you decide to take on any one of these campus concerns. Thus, once you’ve enriched your diagram, you can begin to see together which topics have the most promise in terms of enjoyment, challenge, and sustainability. Moreover, as Green and Duerden found to be true for their students, don’t hesitate to give the diagram some time to “incubate” (4). That is, if class time is only an hour or so, get the diagram started, but check back in with group members later in the day, or even the next day. Talk to others, do some initial online research, let the ideas marinate so that you can best represent them in the diagram before you make a decision together about which topic you want to tackle.
 
@@ -271,6 +272,7 @@ Though flying solo can produce some extraordinary individual work, we might agai
 
 # Works Cited
 
+
 “The Beatles Biography.” *Rolling Stone Music.* 28 March 2008. Web. 18 Sept. 2010.
 
 Bruffee, Kenneth. “Collaborative Learning and the ‘Conversation of Mankind.’” *College English* 46.7 (1984): 635--52. Print.
@@ -283,10 +285,7 @@ Ingalls, Rebecca. “Collaborative Work in the Composition Classroom.” Survey.
 
 Norman, Philip. *John Lennon: The Life.* New York: Harper Collins, 2008. Print.
 
-Sheff, David. *All We Are Saying: The Last Major Interview with John Lennon* *and Yoko Ono.* New York: St. Martin’s Press, 2000. Print. ![Undescribed figure from page 12 of the source](assets/figure-p012-1.png) This essay is available under a Creative Commons License subject to the Writing Spaces' Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2011 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
-
+Sheff, David. *All We Are Saying: The Last Major Interview with John Lennon* *and Yoko Ono.* New York: St. Martin’s Press, 2000. Print. This essay is available under a Creative Commons License subject to the Writing Spaces' Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2011 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
 [^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
 
 * This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.
-
-Fig. 1. Affinity diagram for deciding on a topic.

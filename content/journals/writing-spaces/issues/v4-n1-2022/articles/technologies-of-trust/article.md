@@ -138,7 +138,7 @@ Creating a Kanban system is one of the easiest ways to accomplish this. Though t
 
 > Inbox or Backlog → To Do (or Next) → Doing → Done
 
-![Kanban Board showing the “To Do,” “Doing,” and “Done” columns. Image by Jeff.lasovski licensed under CC BY-SA 3.0](assets/figure-p010-1.jpg)\
+![Kanban Board showing the “To Do,” “Doing,” and “Done” columns](assets/figure-p010-1.jpg)\
 Figure 3. Kanban Board showing the “To Do,” “Doing,” and “Done” columns. Image by Jeff.lasovski licensed under CC BY-SA 3.0.
 
 As a team, everyone decides what are the most important tasks and places them in the To-Do or Next column. When a team member is looking for a new task, they simply go to this column and find the most important. They write their name on the sticky note and move it to the Doing column. Everyone knows that task is being worked on and can move on to a different task. This also provides a sense of accountability, especially if a task is dependent on someone else finishing their work.

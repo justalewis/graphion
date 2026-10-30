@@ -1,7 +1,5 @@
 ---
-title: Understanding Visual Rhetoric
-author:
-- name: Jenae Cohn
+title: Understanding Visual Rhetoric Jenae Cohn
 abstract: 'This essay is a chapter in *Writing Spaces: Readings on Writing*, Volume 3, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from any of these sites:'
 short-title: Understanding Visual Rhetoric
 short-authors: Cohn
@@ -12,8 +10,8 @@ source-file: cohn.pdf
 volume-title: Writing Spaces 3
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
-chapter-number: 2
 teacher-resources: separate
+chapter-number: 2
 ---
 
 > • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/pages/writing-spaces • WAC Clearinghouse: http://wac.colostate.edu/books/
@@ -34,17 +32,17 @@ Visuals can dramatically impact our understanding of a rhetorical situation. In 
 
 It’s Friday night and you’re hungry.* So, you corral some friends and you all decide that you’d like to go out to eat somewhere new. You hop online to explore your options, and, in the process, you find a wealth of information from menus and visitor reviews to hours and locations. But there’s one factor that has an especially strong influence on your choice: the pictures of the food.
 
-![A cheeseburger is held in a close-up shot. Photo by Jenae Cohn](assets/figure-p003-1.jpg)\
+![A cheeseburger is held in a close-up shot](assets/figure-p003-1.jpg)\
 Figure 1. A cheeseburger is held in a close-up shot. Photo by Jenae Cohn.
 
-![A hamburger and fries meal at Shake Shack in Palo Alto, California. Photo by Jenae Cohn](assets/figure-p003-2.jpg)\
+![A hamburger and fries meal at Shake Shack in Palo Alto, California](assets/figure-p003-2.jpg)\
 Figure 2. A hamburger and fries meal at Shake Shack in Palo Alto, California. Photo by Jenae Cohn.
 
 You check out a review page for a hamburger joint and find yourself drooling over a close-up shot of a juicy burger with a slice of cheese oozing over the edge (see figure 1). You click to the next shot and see a cascade of golden french fries on a tray with an ombre-tinted iced tea and lemonade (see figure 2). You click one more time and find yet another delectable shot: a frosty milkshake with a mountain of whipped cream on top. You’re feeling increasingly convinced that this restaurant is where you’ll suggest that you and your friends go out to eat.
 
 You decide to click through to see one more picture, expecting to see yet another culinary delight (see figure 3). But this next photo surprises you: it’s a picture of someone’s tray of food, but it’s dimly lit and a little hard to tell what’s there. The hamburger looks squished and flat, the meat greasy and paltry. The french fries curled up next to the burger look a bit dried out. There’s a mysterious puddle of sauce in a bowl next to the plate burger, and it’s not totally clear what’s in it. The meal suddenly doesn’t look so appetizing after all.
 
-![A poorly lit, squished hamburger and fries. Photo by Jenae Cohn](assets/figure-p004-1.jpg)\
+![A poorly lit, squished hamburger and fries](assets/figure-p004-1.jpg)\
 Figure 3. A poorly lit, squished hamburger and fries. Photo by Jenae Cohn.
 
 You find yourself confused. All of these pictures are supposedly of food at the same restaurant, but the pictures look so different from each other. Knowing that the images may not accurately reflect the reality of the restaurant experience, you feel angry and misled: how can you possibly know which photos capture the “real” experience at the restaurant? Why trust any photos of restaurant food at all?
@@ -67,7 +65,7 @@ We’ll explore a few more examples of what visual rhetoric can look like in a f
 
 Let’s think back to the restaurant example one more time. You’ve picked a restaurant for your Friday night dinner and now you’re with your friends and are seated at the dining table. A waiter hands you a menu and guess what? You’re seeing yet another example of visual rhetoric in action. This particular menu comes from a real restaurant, called Oren’s Hummus, which has locations around the San Francisco Bay Area in California (see figure 4).
 
-![An image of a menu for Oren’s Hummus with three columns containing various menu items. Menu image courtesy of Mistie Cohen](assets/figure-p007-1.jpg)\
+![An image of a menu for Oren’s Hummus with three columns containing various menu items](assets/figure-p007-1.jpg)\
 Figure 4. An image of a menu for Oren’s Hummus with three columns containing various menu items. Menu image courtesy of Mistie Cohen.
 
 This restaurant menu doesn’t have pictures on it, but it makes visual choices that may impact which food items you decide to order. For example, separating certain food items under headers, like “Hummus Bowls” and “Grilled Entrees” gives you some quick visual information about what items you can expect to find in those sections. Even more noticeably, the section titled “Dips & Sides” is separated from the other menu items by a green box. While the words “Dips & Sides” may have helped us understand that the items in that section would be smaller-sized than the menu items outside the green box, the use of the green box is a rhetorical tool; it makes it really obvious to the restaurant goer that if they order an item from the Dips & Sides section, it’s going to be smaller than the items that are not inside the green box.
@@ -190,6 +188,7 @@ As you look ahead to thinking capaciously about the strategies you might use to 
 A picture is often worth a thousand words because it implies so much and can give us a lot of information quickly. Seeing may not always be believing, but visual rhetoric can be a pretty powerful way to help people understand an idea differently than they may have otherwise.
 
 # Works Cited
+
 
 Handa, Carolyn. *Visual Rhetoric in a Digital World: A Critical Sourcebook*. Bedford/St. Martins, 2004.
 

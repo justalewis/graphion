@@ -229,7 +229,6 @@ This chapter has sought to discuss several visual communication genres and to pr
 
 # Works Cited
 
-
 Amare, Nicole and Alan Manning. “Teaching Form and Color as Emotion Triggers.” *Designing Texts: Teaching Visual Communication,* edited by Eva Brumberger and Kathryn Northcut, Routledge, 2013, pp. 181-195.
 
 Barthes, Roland. *Image, Music, Text.* Translated by Stephen Health. Hill & Wang, 1977.
