@@ -155,7 +155,6 @@ Doing research-based writing can also be less daunting---and more fulfilling and
 
 # Works Cited
 
-
 Bruns, Axel. *Blogs, Wikipedia, Second Life, and Beyond: From Production to* *Produsage.* New York: Peter Lang, 2009. Print.
 
 Chesmar, Lindsey. “Literacy.” *First Class: A Journal of First-Year Composition*. Pittsburgh, PA: Duquesne University, 2009. 16--19. Print.
@@ -199,30 +198,19 @@ Seigenthaler, John. “A False Wikipedia Biography.” *USA Today.* Gannett Co.,
 Wilson, Mark A. “Professors Should Embrace Wikipedia.” *Inside Higher Ed.* Inside Higher Ed, 1 April 2008. Web. 1 April 2008.
 
 “Writing.” *Wikipedia.* Wikimedia Foundation, 11:13, 9 June 2004. Web. 9 Nov. 2004. ![A Wikipedia references section set in two columns: twenty-five numbered citations for the Web 2.0 article, each ending in an external-link icon.](assets/figure-p007-1.png) ![A Wikipedia Further reading section: seven entries, among them a history of writing from hieroglyph to multimedia, three ERIC digests on writing instruction, a German discussion of Barthes, Breton, Deleuze and Federman, and links on the origins and history of writing. A tooltip shows one entry's URL.](assets/figure-p007-2.png) This essay is available under a Creative Commons License subject to the Writing Spaces Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2010 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
+
 [^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
 
 * This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces. org/terms-of-use.
 
-
-
 [^1]: You may be familiar with the term *research paper* and may have been asked to write one for some of your classes. I don’t use that term here, however. There are two primary reasons: (1) Research “papers” need not be papers anymore. That is, what you write need not be in the form of a print document. It might be a web site or a video or a poster or some other multimedia form. The term *research paper* doesn’t encapsulate all these possibilities. (2) Research papers are often associated with presentations of what other people have written about a topic. When people hear *research paper*, in other words, they often think of compiling what other authoritative, smart people have to say about a topic and calling it a day. The kind of writing you are asked to do in college, however, requires more than that. It asks for your response to and application of what others have written. You need to do something with the sources you read (other than just string together quotes from them in your paper). So instead of *research paper*, I use *research-based writing*. This term emphasizes the activity (writing) rather than the medium (paper). This term also presents research as the basis (research-based), a beginning rather than an end.
-
-
 
 [^2]: I put the word “encyclopedia” in quotation marks because I argue that calling Wikipedia an encyclopedia and evaluating it based on the standards of print-based encyclopedias misrepresents the way it works (see Purdy W352, W357, W365).
 
-
-
 [^3]: For clarity, I italicize the names of Wikipedia articles in this chapter.
-
-
 
 [^4]: That Wikipedia provides the same shallow coverage as other encyclopedias, or even that it should be considered an encyclopedia, is debatable (Bruns 101--133, Levinson 95--98). Nonetheless, its prevailing classification as an encyclopedia raises concern.
 
-
-
 [^5]: This image, like all the images in this chapter, comes from the English version of Wikipedia (http://en.wikipedia.org/) and, like all Wikipedia content (except the logo, which Wikipedia does not allow to be reproduced), is licensed under the Creative Commons Attribution-Share Alike (http:// creativecommons.org/licenses/by-sa/3.0) and GNU Free Documentation License (http://www.gnu.org/copyleft/fdl.html), which permit reproduction of content with attribution for non-commercial purposes, as explained by Wikipedia’s official policy on reusing Wikipedia content (“Wikipedia:Reusing Wikipedia Content”).
-
-
 
 [^6]: See Ben Rafoth’s “Why Visit Your Campus Writing Center?” chapter in this *Writing Spaces* volume.

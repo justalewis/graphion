@@ -189,7 +189,6 @@ If you decide to start blogging, give yourself a month to try it out. Start out 
 
 # Works Cited
 
-
 “Blog.” *Wikipedia.* Web. 13 Oct 2010. Csikszentmihalyi, Mihaly. *Flow: The Psychology of Optimal Experience*. New York: Harper, 1991. Print.
 
 Gladwell, Malcolm. *Outliers: The Story of Success*. New York: Little, Brown and Company, 2008. Print.
@@ -203,6 +202,7 @@ Robinson, Ken. “Ken Robinson says schools kill creativity.” *TED.* TED. 2006
 ---. “Sir Ken Robinson: Bring on the learning revolution!” *TED.* TED. 2010. Web | Type | Characteristics |
 | --- | --- |
 | Individual Blog | This type of blog would give you the greatest autonomy, which can also make it the most challenging kind of assignment. For example, I might ask students to post 20 times with posts that are at least 100 words in length over the course of a semester, but provide no assignment requirements beyond that. | This essay is available under a Creative Commons License subject to the Writing Spaces' Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2011 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
+
 [^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
 
 * This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.

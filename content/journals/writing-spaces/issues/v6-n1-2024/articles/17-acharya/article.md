@@ -197,7 +197,6 @@ Composing technical documents for localized usability, however, can be challengi
 
 # Works Cited
 
-
 Ball, Donald A. and Wendell H. McCulloch. *International Business: The Challenge of Global Competition*, 7th ed., Mcgraw-Hill, 1999.
 
 Cohn, Janae. “Understanding Visual Rhetoric.” *Writing Spaces: Readings on* *Writing*, vol. 3, edited by Dana Driscoll et al., WrtingSpaces.org, Parlor Press, and The WAC Clearinghouse, 2020, pp. 18-39. https://wac.colostate. edu/docs/books/writingspaces3/cohn.pdf.
@@ -261,7 +260,6 @@ To help students explore the ideas discussed in this chapter, consider having th
 | 5/29/2023 | 29/5/2023 | 23.05.29 | 29.05.2023 |
 | 5-29-2023 | 29-5-2023 | 2023/05/29 |  |
 | 5/29/23 |  | 29-05-2023 |  |
-
 | U.S. | Nepal | India |
 | --- | --- | --- |
 | $430.50 | रू ४३०.५० | ₹४३०.५० |
