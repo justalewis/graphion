@@ -27,8 +27,8 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (272 functions: 88 in `test_cleanups.py`, 28 in
-`test_teacher_resources.py`, 63 in `test_pdf_ingest.py`, 40 in
+Tests (276 functions: 88 in `test_cleanups.py`, 28 in
+`test_teacher_resources.py`, 67 in `test_pdf_ingest.py`, 40 in
 `test_ingest_volume.py`, 25 in
 `test_lint.py`, 10 in `test_metadata_roundtrip.py`, 6 in
 `test_standalone_html.py`, 5 in `test_pdf_ua.py`, 4 in
@@ -166,8 +166,21 @@ notes. And punctuation cannot tell a caption from a reference to one, because
 the archive writes all three of "Figure 4.1: ", "Figure 3.3. " and
 "Figure 15.1 "; what separates them is the capital that follows, since a
 caption continues with the figure's name and prose continues with a verb
-("Figure 7.6 shows that"). Only `Figure`, never `Table`: a table here is set
-as type.
+("Figure 7.6 shows that").
+
+The label itself is abbreviated three ways, consistently within a volume and
+not across the series: volume 2 prints "Fig. 1." over all seventeen of its
+captions, volume 6 prints "Fig 1.0", and the rest print "Figure 1". Matching
+only the long form read volume 2 as a book that captions nothing and sent
+twenty of its twenty-two figures to the undescribed pile with their
+descriptions sitting in the text above them, so `_FIGURE_CAPTION_RE` takes
+all three. The capital-letter test still does the work of telling a caption
+from a reference, which is what keeps "Fig. 1, we see that" out.
+
+A chapter can print more captions than it has images: `beyond-black-on-white`
+captions five figures and embeds one, because the other four are set as live
+type rather than placed as pictures. Pairing is by page and by order down the
+page for that reason, never by counting captions off against images.
 
 A figure goes in as an image and a hard line break above its caption, in one
 paragraph, and never as a lone image in one. A lone image becomes a Pandoc

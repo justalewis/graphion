@@ -699,3 +699,28 @@ def test_a_code_used_as_both_symbol_and_text_in_one_table_is_left_alone():
     trans = pdf_ingest._symbol_translations(_Page(), (0, 0, 10, 10))
     assert "{" not in trans
     assert trans["\uf0fc"] == "\u2713"
+
+
+def test_the_three_ways_the_archive_abbreviates_the_label():
+    """Volume 2 prints "Fig. 1." over all seventeen of its captions and
+    volume 6 prints "Fig 1.0"; matching only "Figure" read volume 2 as a
+    book that captions nothing."""
+    assert pdf_ingest.is_figure_caption("Fig. 1. Twitter sends brief messages.")
+    assert pdf_ingest.is_figure_caption("Fig 1.0. The Structure of RNA and DNA")
+    assert pdf_ingest.is_figure_caption("Figure 1. A desk seen from above.")
+
+
+def test_prose_referring_to_a_figure_by_the_short_label_is_not_a_caption():
+    """"Fig. 1, we see that" continues a sentence; a caption does not."""
+    assert not pdf_ingest.is_figure_caption(
+        "Fig. 1, we see that there is a crowded set of partially inhabited")
+
+
+def test_alt_text_drops_the_short_label_too():
+    assert pdf_ingest.caption_alt_text(
+        "Fig. 1. An unformatted resume.") == "An unformatted resume"
+
+
+def test_an_abbreviated_table_label_is_a_table_caption():
+    assert pdf_ingest.is_table_caption("Tab. 2. A comparison of two genres")
+    assert pdf_ingest.is_table_caption("Table 2. A comparison of two genres")

@@ -858,8 +858,14 @@ WEB_IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
 # with the figure's name, prose continues with a verb, as in "Figure 7.6 shows
 # that sales" or "Table 4.1 is an example". Only Figure, never Table: a table
 # in this series is set as type, so its caption belongs to no image.
+# The archive abbreviates the label three ways and is consistent within a
+# volume but not across the series: volume 2 prints "Fig. 1." over all
+# seventeen of its captions, volume 6 prints "Fig 1.0", and the rest print
+# "Figure 1". Matching only the long form read volume 2 as a book that does
+# not caption its figures at all, and sent twenty of its twenty-two to the
+# undescribed pile with their descriptions sitting in the text above them.
 _FIGURE_CAPTION_RE = re.compile(
-    r"^Figure\s+(?P<number>\d+(?:\.\d+)*)\s*[:.]?\s+(?=[A-Z])")
+    r"^(?:Figure|Fig\.?)\s+(?P<number>\d+(?:\.\d+)*)\s*[:.]?\s+(?=[A-Z])")
 
 
 def is_figure_caption(text: str) -> bool:
@@ -1069,7 +1075,7 @@ TABLE_SETTINGS = {"vertical_strategy": "lines", "horizontal_strategy": "lines"}
 MIN_TABLE_ROWS = 2
 MIN_TABLE_COLS = 2
 _TABLE_CAPTION_RE = re.compile(
-    r"^Table\s+(?P<number>\d+(?:\.\d+)*)\s*[:.]?\s+(?=[A-Z])")
+    r"^(?:Table|Tab\.)\s+(?P<number>\d+(?:\.\d+)*)\s*[:.]?\s+(?=[A-Z])")
 
 
 def is_table_caption(text: str) -> bool:
