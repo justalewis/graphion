@@ -567,8 +567,13 @@ def register_routes(app: Flask):
                 "error",
             )
         else:
+            # The merge note says whether the bound issue came out tagged and
+            # conformant, which is the one thing about an assembled issue an
+            # editor cannot see by opening it.
+            detail = f" ({'; '.join(result.notes)})" if result.notes else ""
             flash(
-                f"Assembled {result.total_pages} pages across {len(result.article_pages)} articles.",
+                f"Assembled {result.total_pages} pages across "
+                f"{len(result.article_pages)} articles.{detail}",
                 "success",
             )
         return redirect(url_for("issue_home", issue_id=issue_id))

@@ -15,6 +15,10 @@ Graphion/
                         issue assembly, front-matter rendering.
                         Includes WeasyPrint alternate-PDF render path.
   cleanups.py         ← Stage 2: deterministic Markdown cleanup passes.
+  pdf_tags.py         ← Binds rendered galleys into one tagged issue PDF,
+                        rebuilding the structure tree and parent tree that
+                        a page copy leaves behind. The only module that
+                        works on PDF object structure directly.
   crossref.py         ← CrossRef deposit XML emitter, DOI assignment,
                         BibTeX parsing for structured citations.
   jats.py             ← JATS XML emitter.
@@ -97,7 +101,11 @@ app.py:issue_assemble       — POST /issues/<id>/assemble
        _pdf_page_count
        UPDATE articles SET start_page, end_page
     → conversion.render_front_matter (single Typst doc)
-    → pypdf concatenation → issue.pdf
+    → pdf_tags.concatenate_tagged → issue.pdf
+       copies pages, then rebuilds the structure tree and parent tree
+       from the parts so the bound issue stays tagged; claims PDF/UA-1
+       only where every part declared it, and reports what it carried
+       in AssemblyResult.notes
 ```
 
 ## Adding a new output format
@@ -162,15 +170,22 @@ Run all tests:
 python -m pytest tests/ -q
 ```
 
-Currently 24/24 passing. Unit-tested:
+Currently 342 passing. Unit-tested:
 
 - `cleanups.py` — every cleanup pass with input/output pairs + idempotence checks.
 - `conversion.py` metadata round-trip — YAML read/write with sanitization and field ordering.
+- `pdf_ingest.py` — the layout heuristics, per case that drove each one.
+- `ingest_volume.py` — filename conventions, manifests, the collected-volume skip.
+- `lint.py` — each registered check.
+- `pdf_tags.py` — the structure-tree merge: parent-tree offsets, repointed
+  link annotations, alt text, unique element ids, and the conformance gate.
+- `conversion._compile_typst` — PDF/UA declaration, and the fallback that
+  keeps an editor's galley when the standard cannot be met. Typst arrives
+  through `typst-py`, so it needs no separate binary.
 
 Not yet unit-tested:
 
 - HTTP routes (would benefit from Flask test client + a temporary DB).
-- Typst rendering (would require typst binary in test environment).
 - CrossRef / JATS XML output (could schema-validate against the official XSD).
 
 ## Deployment

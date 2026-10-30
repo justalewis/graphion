@@ -8,7 +8,7 @@ import json
 import re
 import shutil
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Iterable, Optional
@@ -18,6 +18,7 @@ import pypandoc
 import cleanups
 import db
 import pdf_ingest
+import pdf_tags
 import preprocessors
 from config import CONTENT_DIR, PDF_UA_STANDARD, VERSIONS_KEEP
 
@@ -1585,6 +1586,9 @@ class AssemblyResult:
     issue_pdf_path: Path
     total_pages: int
     errors: list
+    # What the tagging merge carried, for the log and the status message.
+    # Defaulted so a caller built before the merge existed still constructs.
+    notes: list = field(default_factory=list)
 
 
 def assemble_issue(issue_id: int) -> AssemblyResult:
@@ -1595,13 +1599,10 @@ def assemble_issue(issue_id: int) -> AssemblyResult:
       2. Re-render the PDF (Typst start-page-val shifts the page counter)
       3. Count the rendered pages, store start/end in DB
 
-    Then render the issue cover (issue.typ) and concatenate cover + articles
-    into issues/<slug>/issue.pdf.
+    Then render the issue front matter and bind front matter + articles into
+    issues/<slug>/issue.pdf, carrying each part's structure tree across so the
+    bound issue is as tagged as the galleys it is made of.
     """
-    import json
-    from pypdf import PdfWriter, PdfReader
-    from pypdf.generic import NameObject, create_string_object
-
     issue_row = db.query_one(
         "SELECT i.*, j.slug AS journal_slug, j.name AS journal_name, j.issn AS journal_issn "
         "FROM issues i JOIN journals j ON i.journal_id = j.id WHERE i.id = ?",
@@ -1628,7 +1629,11 @@ def assemble_issue(issue_id: int) -> AssemblyResult:
     errors: list = []
     article_pages: list = []
     cumulative = 0
-    article_pdf_paths: list = []
+    # (rendered pdf, title) in reading order. The title names the article's
+    # division in the combined structure tree and its bookmark, so it comes
+    # from the article's own front matter, the same place the contents page
+    # reads it from.
+    article_parts: list = []
 
     for art in articles:
         apath = Path(art["project_path"])
@@ -1666,7 +1671,8 @@ def assemble_issue(issue_id: int) -> AssemblyResult:
         )
 
         article_pages.append((art["id"], start_page, end_page))
-        article_pdf_paths.append(pdf_path)
+        article_parts.append(
+            (pdf_path, plain_text(fm.get("title") or art["title"]) or ""))
         cumulative = end_page
 
     # Refresh article rows so start_page is included for the ToC.
@@ -1694,38 +1700,51 @@ def assemble_issue(issue_id: int) -> AssemblyResult:
     front_pdf = render_front_matter(issue, journal, articles_for_toc, editor_intro, issue_dir_path)
 
     issue_pdf = issue_dir_path / "issue.pdf"
-    writer = PdfWriter()
-    for pdf_path in [front_pdf] + article_pdf_paths:
-        reader = PdfReader(str(pdf_path))
-        for page in reader.pages:
-            writer.add_page(page)
-
-    # Concatenation copies pages, not document structure: the structure tree,
-    # the marked-content flag, and the title all live on the source documents'
-    # catalogs and do not survive. The combined file is therefore untagged no
-    # matter how conformant each article was on its own, so it deliberately
-    # does not claim PDF/UA; stamping the identifier here would assert a
-    # conformance the file does not have. Restore what is honestly
-    # restorable: a title the reader actually sees, and a language.
-    # Making issue.pdf itself conformant means compiling the whole issue as a
-    # single Typst document rather than merging rendered PDFs.
     doc_title = f"{issue['journal_name']} {issue['volume']}.{issue['issue_number']}"
     if issue.get("title"):
         doc_title = f"{doc_title}: {issue['title']}"
-    writer.add_metadata({"/Title": doc_title})
-    writer.create_viewer_preferences()
-    writer.viewer_preferences.display_doctitle = True
-    # pypdf exposes no public setter for the catalog's /Lang entry.
-    writer._root_object[NameObject("/Lang")] = create_string_object("en")
 
-    with issue_pdf.open("wb") as f:
-        writer.write(f)
+    # Adding pages to a writer copies pages, not document structure: the
+    # structure tree, the parent tree that reaches it from each page, and the
+    # marked-content flag all hang off the source catalogs and do not come
+    # with a page. A plain concatenation of conformant galleys is therefore an
+    # untagged file, which is what an audit reports against a bound issue
+    # while every article in it passes. pdf_tags rebuilds both trees from the
+    # parts, so the combined file carries the tagging Typst already validated
+    # chapter by chapter, and claims PDF/UA-1 only where every part did.
+    merge = pdf_tags.concatenate_tagged(
+        [(front_pdf, "")] + article_parts,
+        issue_pdf,
+        title=doc_title,
+    )
+    notes = [f"issue.pdf: {merge.summary()}"]
+    if merge.untagged_sources:
+        errors.append(
+            "issue.pdf is missing the structure of these parts, which were "
+            "rendered without a structure tree: "
+            + ", ".join(merge.untagged_sources[:6]))
+    if merge.dropped_annotations:
+        errors.append(
+            f"issue.pdf left {merge.dropped_annotations} link annotations "
+            "untagged; their annotation objects could not be matched to the "
+            "bound pages")
+    if merge.unresolved_pages:
+        errors.append(
+            f"issue.pdf has {len(merge.unresolved_pages)} pages that the "
+            "structure tree does not reach, starting at page "
+            f"{merge.unresolved_pages[0]}")
+    if merge.unconformant_sources and not merge.untagged_sources:
+        errors.append(
+            "issue.pdf does not claim PDF/UA-1; these parts were rendered "
+            "without the conformance identifier: "
+            + ", ".join(merge.unconformant_sources[:6]))
 
     return AssemblyResult(
         article_pages=article_pages,
         issue_pdf_path=issue_pdf,
         total_pages=cumulative,
         errors=errors,
+        notes=notes,
     )
 
 
@@ -1874,11 +1893,25 @@ def render_front_matter(issue: dict, journal: dict, articles: list, editor_intro
 
     intro_heading = f"EDITORS' INTRODUCTION TO ISSUE {vol}.{num}"
 
+    # Typst declares PDF/UA-1 only when the document carries a title, which
+    # is what ISO 14289-1 clause 5 reads. Without one the compile fails the
+    # standard and _compile_typst falls back to an unconstrained render, so
+    # the front matter arrived tagged but with no conformance identifier and
+    # no dc:title. That was invisible here, because the fallback is only
+    # logged when a caller passes a log path, and visible in the bound issue,
+    # where a merge can carry no more conformance than its parts have.
+    front_title = f"{journal_name} {vol}.{num}".strip()
+    if title:
+        front_title = f"{front_title}: {title}"
+    front_title = f"{front_title} (front matter)"
+
     typst_doc = f"""
 #let ink = rgb("#1a1612")
 #let ink-soft = rgb("#4a4137")
 #let rule-color = rgb("#b6a98c")
 #let header-label = [{_typst_inline_md(header_label)}]
+
+#set document(title: {_typst_str(front_title)})
 
 #set page(
   paper: "us-letter",
@@ -1946,7 +1979,7 @@ def render_front_matter(issue: dict, journal: dict, articles: list, editor_intro
     out_path = out_dir / "_front_matter.typ"
     out_pdf = out_dir / "_front_matter.pdf"
     out_path.write_text(typst_doc, encoding="utf-8")
-    _compile_typst(out_path, out_pdf)
+    _compile_typst(out_path, out_pdf, log_to=out_dir)
     return out_pdf
 
 

@@ -38,6 +38,14 @@ BROKEN = """#set document(title: [A Rendered Galley])
 #this-function-does-not-exist()
 """
 
+# Nothing wrong with this document but the title it never sets, which is on
+# its own enough to cost it the standard.
+UNTITLED = """#set text(lang: "en")
+= A Heading
+
+Body text, carrying nothing that needs alt text.
+"""
+
 
 def _write(tmp_path: Path, name: str, source: str) -> Path:
     path = tmp_path / name
@@ -110,6 +118,50 @@ def test_a_real_compile_error_still_propagates(tmp_path):
         conversion._compile_typst(typ, tmp_path / "broken.pdf", root=tmp_path)
 
     assert "PDF/UA" not in str(excinfo.value)
+
+
+def test_a_document_with_no_title_is_tagged_and_not_conformant(tmp_path):
+    """The failure mode that is easiest to miss, because the galley looks fine.
+
+    Typst tags the content either way, so the PDF has a structure tree and
+    reads correctly; it simply carries no conformance identifier and no
+    dc:title, and ISO 14289-1 clause 5 reads both. Nothing fails loudly.
+    """
+    typ = _write(tmp_path, "untitled.typ", UNTITLED)
+    out = tmp_path / "untitled.pdf"
+
+    assert conversion._compile_typst(typ, out, root=tmp_path) is False
+
+    markers = _markers(out)
+    assert markers["tagged"] is True
+    assert markers["ua_part"] is None
+    assert markers["title"] == ""
+
+
+def test_the_issue_front_matter_sets_a_document_title(tmp_path, monkeypatch):
+    """The front matter is a part of the bound issue, so its conformance is.
+
+    It set no title for six volumes, which is why every assembled issue held
+    three roman-numbered pages that claimed nothing; a merge can carry no
+    more conformance than the parts it binds. The journal record here is as
+    bare as one can be, because the title has to come from the issue's own
+    volume and number rather than from anything an editor filled in.
+    """
+    monkeypatch.setattr(conversion, "CONTENT_DIR", tmp_path)
+    issue = {"volume": 1, "issue_number": 1, "year": 2010,
+             "title": "Readings on Writing", "journal_name": "Writing Spaces"}
+    journal = {"name": "Writing Spaces", "short_name": "Writing Spaces"}
+
+    out_pdf = conversion.render_front_matter(issue, journal, [], None, tmp_path)
+
+    source = (tmp_path / "_front_matter.typ").read_text(encoding="utf-8")
+    assert "#set document(title:" in source
+    markers = _markers(out_pdf)
+    assert markers["title"] == (
+        "Writing Spaces 1.1: Readings on Writing (front matter)")
+    assert markers["ua_part"] == "1"
+    assert markers["display_doctitle"] is True
+    assert markers["tagged"] is True
 
 
 def test_standard_can_be_switched_off(tmp_path, monkeypatch):

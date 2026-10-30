@@ -86,7 +86,7 @@ Best for: depositing DOIs at CrossRef. Manual upload to <https://doi.crossref.or
 ## Triggering renders
 
 - Click **Render** on the article home — produces HTML and PDF.
-- Click **Assemble issue** — for every article, sets `start-page`, re-renders the PDF, counts pages, then builds the issue front matter PDF and concatenates everything into `issue.pdf`.
+- Click **Assemble issue** — for every article, sets `start-page`, re-renders the PDF, counts pages, then builds the issue front matter PDF and binds everything into `issue.pdf`. Binding carries each part's tagging across, so the bound issue is tagged, titled, and bookmarked by chapter; the flash message says how much structure came over and whether the result claims PDF/UA-1. It claims it only where every part did, so a chapter that rendered without the standard is named there rather than passed off as conformant.
 - Saving metadata via the form auto-runs Render (so the rendered files reflect current metadata).
 - EPUB and JATS render on first download request and are cached.
 

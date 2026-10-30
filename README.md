@@ -214,7 +214,8 @@ Roadmap and competitive audit: [docs/audit-and-roadmap.md](docs/audit-and-roadma
 - **mistune** — in-app help docs rendering
 - **ProseMirror** (via ESM CDN) — WYSIWYG editor
 - **bibtexparser** — BibTeX → structured citations
-- **pypdf** — concatenating front matter + articles for issue assembly
+- **pypdf** — binding front matter + articles into the issue PDF, structure
+  tree and all, so a bound issue stays as tagged as the galleys in it
 
 Article content lives on the filesystem; SQLite indexes. The filesystem
 layout under `content/` is self-documenting — a successor editor can
