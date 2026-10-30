@@ -27,8 +27,8 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (280 functions: 88 in `test_cleanups.py`, 28 in
-`test_teacher_resources.py`, 71 in `test_pdf_ingest.py`, 40 in
+Tests (283 functions: 88 in `test_cleanups.py`, 28 in
+`test_teacher_resources.py`, 74 in `test_pdf_ingest.py`, 40 in
 `test_ingest_volume.py`, 25 in
 `test_lint.py`, 10 in `test_metadata_roundtrip.py`, 6 in
 `test_standalone_html.py`, 5 in `test_pdf_ua.py`, 4 in
@@ -176,6 +176,12 @@ twenty of its twenty-two figures to the undescribed pile with their
 descriptions sitting in the text above them, so `_FIGURE_CAPTION_RE` takes
 all three. The capital-letter test still does the work of telling a caption
 from a reference, which is what keeps "Fig. 1, we see that" out.
+
+A caption may also be set in italic, so it arrives wrapped in emphasis
+and a pattern anchored at the start never sees the label. `unemphasize`
+takes off wrapping that covers the whole line, and only that: emphasis
+inside a caption is the caption's own. One figure in volume 2 was
+printing after the Works Cited for want of this.
 
 A chapter can print more captions than it has images: `beyond-black-on-white`
 captions five figures and embeds one, because the other four are set as live

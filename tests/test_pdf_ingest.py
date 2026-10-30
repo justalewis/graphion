@@ -758,3 +758,27 @@ def test_a_caption_that_is_only_a_credit_keeps_it():
     only = pdf_ingest.caption_alt_text(
         "Figure 3. Source: \u201cA Social Model of Writing.\u201d Writing@CSU.")
     assert only.startswith("Source:")
+
+
+def test_a_caption_set_in_italic_is_still_a_caption():
+    """Volume 2 sets one caption in italic, so it arrives wrapped in
+    emphasis and a pattern anchored at the start never sees the label. The
+    photograph then had nothing to anchor to and printed after the Works
+    Cited."""
+    assert pdf_ingest.is_figure_caption(
+        "*Fig. 1. Nicaraguan woman on a side street in Granada.*")
+    assert pdf_ingest.caption_alt_text(
+        "*Fig. 1. Nicaraguan woman on a side street in Granada.*"
+    ) == "Nicaraguan woman on a side street in Granada"
+
+
+def test_unemphasize_only_takes_wrapping_that_covers_the_whole_line():
+    """Emphasis inside a caption is the caption's own, and stays."""
+    assert pdf_ingest.unemphasize("*whole line*") == "whole line"
+    assert pdf_ingest.unemphasize("Figure 1. The *Monopoly* article") == \
+        "Figure 1. The *Monopoly* article"
+    assert pdf_ingest.unemphasize("*") == "*"
+
+
+def test_an_italic_table_caption_is_still_a_table_caption():
+    assert pdf_ingest.is_table_caption("*Table 2. A comparison of genres*")

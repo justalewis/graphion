@@ -868,8 +868,22 @@ _FIGURE_CAPTION_RE = re.compile(
     r"^(?:Figure|Fig\.?)\s+(?P<number>\d+(?:\.\d+)*)\s*[:.]?\s+(?=[A-Z])")
 
 
+def unemphasize(text: str) -> str:
+    """A line with any emphasis wrapping the whole of it taken off.
+
+    A caption set in italic on the page arrives as "*Fig. 1. Nicaraguan
+    woman on a side street in Granada.*", and a pattern anchored at the
+    start never sees the label. That left the photograph with no caption to
+    anchor to, so it closed the document and printed after the Works Cited.
+    """
+    stripped = text.strip()
+    while len(stripped) > 2 and stripped[0] in "*_" and stripped[-1] == stripped[0]:
+        stripped = stripped[1:-1].strip()
+    return stripped
+
+
 def is_figure_caption(text: str) -> bool:
-    return bool(_FIGURE_CAPTION_RE.match(text.strip()))
+    return bool(_FIGURE_CAPTION_RE.match(unemphasize(text)))
 
 
 # A credit the archive sets as a trailing sentence of the caption, rather
@@ -900,7 +914,7 @@ def caption_alt_text(text: str) -> str:
     the two are not the same. lint.check_alt_text reports every figure still
     holding its caption so the remaining work is countable.
     """
-    text = re.sub(r"\s+", " ", text).strip()
+    text = unemphasize(re.sub(r"\s+", " ", text))
     match = _FIGURE_CAPTION_RE.match(text)
     if match:
         text = text[match.end():]
@@ -1106,7 +1120,7 @@ _TABLE_CAPTION_RE = re.compile(
 
 
 def is_table_caption(text: str) -> bool:
-    return bool(_TABLE_CAPTION_RE.match(text.strip()))
+    return bool(_TABLE_CAPTION_RE.match(unemphasize(text)))
 
 
 def find_page_tables(page) -> list:
