@@ -709,7 +709,17 @@ def unfragment_works_cited(text: str, log: CleanupLog) -> str:
     AND (b) the prior entry ends in terminal punctuation. Both conditions
     must hold for a break to be preserved.
 
-    Stops at the next heading or footnote definition.
+    Stops at the next heading, footnote definition, pipe table, figure, or
+    escaped marker. The last of those is the licence note, which the series
+    marks with an asterisk that ingest escapes so Markdown cannot read it as
+    a bullet; volume 2's nineteenth chapter had it merged onto the end of
+    the Robinson entry.
+    A table or a figure that comes to rest after the Works Cited is not a
+    citation and must not be merged into the one above it: volume 1's second
+    chapter lost the Thaiss entry that way, swallowed into the header row of
+    the table that followed it, which left the galley printing a citation
+    inside a cell and a Works Cited one entry short. Nothing catches that
+    afterwards, because the words are all still there.
     """
     # Make sure "Works Cited" is a heading so downstream styling and
     # this function's own search can recognize the section boundary.
@@ -720,10 +730,14 @@ def unfragment_works_cited(text: str, log: CleanupLog) -> str:
         return text
 
     head_end = m.end()
-    head = text[:head_end]
+    # The heading pattern ends `\s*$`, which takes the blank line after the
+    # heading with it, and the reassembly below then puts a fresh one back.
+    # Left alone the pass gains a blank line every time it runs, so it is not
+    # idempotent and two runs of the pipeline do not agree.
+    head = text[:head_end].rstrip()
     body = text[head_end:]
 
-    stop_match = re.search(r"\n(#{1,6}\s|\[\^[^\]]+\]:)", body)
+    stop_match = re.search(r"\n(#{1,6}\s|\[\^[^\]]+\]:|\||!\[|\\)", body)
     if stop_match:
         body_section = body[:stop_match.start() + 1]
         tail = body[stop_match.start() + 1:]
@@ -783,6 +797,12 @@ def unfragment_works_cited(text: str, log: CleanupLog) -> str:
         merge_count,
         f"merged {merge_count} continuation paragraph(s) into prior entries",
     )
+    # The tail begins on the line after the one the search stopped at, so it
+    # needs its own blank line back. Without it the last citation and the
+    # first row of the table below it are one paragraph as far as Pandoc is
+    # concerned, which is the same corruption by a different route.
+    if tail and not tail.startswith("\n"):
+        tail = "\n" + tail
     return head + "\n\n" + new_body_section + tail
 
 

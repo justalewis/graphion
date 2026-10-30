@@ -895,3 +895,85 @@ def test_close_up_broken_em_dashes_is_idempotent():
     twice = cleanups.close_up_broken_em_dashes(once, _log())
     assert once == twice
     assert "--- " not in once
+
+
+# ---------- a table or a figure that comes after the Works Cited ----------
+
+
+def test_table_after_works_cited_is_not_merged_into_the_last_entry():
+    """Volume 1's second chapter lost a citation into a table header row.
+
+    The pass treats every paragraph in the section as a continuation unless
+    it looks like a new entry, and the first row of a pipe table does not,
+    so the Thaiss entry and the table were joined into one line. Pandoc then
+    read the citation as the table's header and printed it inside a cell,
+    leaving the Works Cited one entry short with nothing to show for it.
+    """
+    src = (
+        "# Works Cited\n\n"
+        "Carroll, Lee Ann. *Rehearsing New Roles*. Southern Illinois UP, 2002.\n\n"
+        "Thaiss, Chris and Terry Zawacki. *Engaged Writers*. Boynton/Cook, 2006.\n\n"
+        "| Who's your audience? | The professor. |\n"
+        "| --- | --- |\n"
+        "| What's your purpose? | To show your learning. |\n"
+    )
+    out = cleanups.unfragment_works_cited(src, _log())
+    assert "Thaiss, Chris and Terry Zawacki. *Engaged Writers*. Boynton/Cook, 2006." in out
+    # The citation keeps its own paragraph, and the table keeps its header row.
+    assert "2006. |" not in out
+    assert "\n\n| Who's your audience? | The professor. |\n| --- | --- |" in out
+
+
+def test_figure_after_works_cited_is_not_merged_into_the_last_entry():
+    src = (
+        "# Works Cited\n\n"
+        "Carroll, Lee Ann. *Rehearsing New Roles*. Southern Illinois UP, 2002.\n\n"
+        "![A bar chart of survey responses.](assets/figure-1.png)\n"
+    )
+    out = cleanups.unfragment_works_cited(src, _log())
+    assert "2002.\n\n![A bar chart" in out
+
+
+def test_unfragment_works_cited_idempotent():
+    r"""The heading pattern ends in `\s*$`, so it takes the blank line after
+    the heading with it and the reassembly puts a fresh one back. Unchecked,
+    the pass gained a blank line on every run and two runs of the pipeline
+    did not agree."""
+    src = (
+        "Body text.\n\n"
+        "# Works Cited\n\n"
+        "Smith, A. *Book*. Press, 2001.\n\n"
+        "| a | b |\n| --- | --- |\n| 1 | 2 |\n"
+    )
+    once = cleanups.unfragment_works_cited(src, _log())
+    twice = cleanups.unfragment_works_cited(once, _log())
+    assert once == twice
+
+
+def test_unfragment_works_cited_still_merges_a_real_continuation():
+    """The stop pattern must not cost the pass its actual job."""
+    src = (
+        "# Works Cited\n\n"
+        "Thaiss, Chris and Terry Zawacki. *Engaged Writers & Dynamic\n\n"
+        "Disciplines*. Portsmouth: Boynton/Cook, 2006. Print.\n"
+    )
+    out = cleanups.unfragment_works_cited(src, _log())
+    assert "Dynamic Disciplines*. Portsmouth" in out
+
+
+def test_licence_note_after_works_cited_is_not_merged_into_the_last_entry():
+    """The series marks its licence note with an asterisk, which ingest
+    escapes so Markdown cannot read it as a bullet. The escape has to end the
+    Works Cited section too: volume 2's nineteenth chapter had the licence
+    merged onto the end of the Robinson entry."""
+    src = (
+        "# Works Cited\n\n"
+        "Robinson, Ken. “Ken Robinson says schools kill creativity.” "
+        "*TED.* 2006. Web.\n\n"
+        "\\* This work is licensed under the Creative Commons Attribution "
+        "licence.\n"
+    )
+    out = cleanups.unfragment_works_cited(src, _log())
+    assert "2006. Web.\n" in out
+    assert "Web. \\*" not in out
+    assert "\n\\* This work is licensed" in out
