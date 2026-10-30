@@ -1,0 +1,150 @@
+{
+  "cummings--introduction-open-source-composition-texts.pdf": {
+    "chapter-number": 1,
+    "title": "Introduction: Open Source Composition Texts Arrive for College Writers",
+    "authors": [
+      "Robert E. Cummings"
+    ],
+    "slug": "introduction-open-source-composition-texts"
+  },
+  "irvin--what-is-academic-writing.pdf": {
+    "chapter-number": 2,
+    "title": "What Is “Academic” Writing?",
+    "authors": [
+      "L. Lennie Irvin"
+    ],
+    "slug": "what-is-academic-writing"
+  },
+  "hinton--so-youve-got-a-writing-assignment.pdf": {
+    "chapter-number": 3,
+    "title": "So You’ve Got a Writing Assignment. Now What?",
+    "authors": [
+      "Corrine E. Hinton"
+    ],
+    "slug": "so-you-ve-got-a-writing-assignment-now-what"
+  },
+  "allen--the-inspired-writing-vs-the-real-writer.pdf": {
+    "chapter-number": 4,
+    "title": "The Inspired Writer vs. the Real Writer",
+    "authors": [
+      "Sarah Allen"
+    ],
+    "slug": "the-inspired-writer-vs-the-real-writer",
+    "license": "This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 United States License (CC BY-NC-ND 3.0 US).",
+    "license-url": "https://creativecommons.org/licenses/by-nc-nd/3.0/us/"
+  },
+  "carroll--backpacks-vs-briefcases.pdf": {
+    "chapter-number": 5,
+    "title": "Backpacks vs. Briefcases: Steps toward Rhetorical Analysis",
+    "authors": [
+      "Laura Bolin Carroll"
+    ],
+    "slug": "backpacks-vs-briefcases"
+  },
+  "hewett--from-topic-to-presentation.pdf": {
+    "chapter-number": 6,
+    "title": "From Topic to Presentation: Making Choices to Develop Your Writing",
+    "authors": [
+      "Beth L. Hewett"
+    ],
+    "slug": "from-topic-to-presentation",
+    "license": "This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 United States License (CC BY-NC-ND 3.0 US).",
+    "license-url": "https://creativecommons.org/licenses/by-nc-nd/3.0/us/"
+  },
+  "antlitz--taking-flight.pdf": {
+    "chapter-number": 7,
+    "title": "Taking Flight: Connecting Inner and Outer Realities during Invention",
+    "authors": [
+      "Susan E. Antlitz"
+    ],
+    "slug": "taking-flight-connecting-inner-and-outer"
+  },
+  "trim-and-isaac--reinventing-invention.pdf": {
+    "chapter-number": 8,
+    "title": "Reinventing Invention: Discovery and Investment in Writing",
+    "authors": [
+      "Michelle D. Trim",
+      "Megan Lynn Isaac"
+    ],
+    "slug": "reinventing-invention",
+    "license": "This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 United States License (CC BY-NC-ND 3.0 US).",
+    "license-url": "https://creativecommons.org/licenses/by-nc-nd/3.0/us/"
+  },
+  "lessner-and-craig--finding-your-way-in.pdf": {
+    "chapter-number": 9,
+    "title": "“Finding Your Way In”: Invention as Inquiry Based Learning in First Year Writing",
+    "authors": [
+      "Steven Lessner",
+      "Collin Craig"
+    ],
+    "slug": "finding-your-way-in",
+    "license": "This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 United States License (CC BY-NC-ND 3.0 US).",
+    "license-url": "https://creativecommons.org/licenses/by-nc-nd/3.0/us/"
+  },
+  "rafoth--why-visit-your-campus-writing-center.pdf": {
+    "chapter-number": 10,
+    "title": "Why Visit Your Campus Writing Center?",
+    "authors": [
+      "Ben Rafoth"
+    ],
+    "slug": "why-visit-your-campus-writing-center"
+  },
+  "jones--finding-the-good-argument.pdf": {
+    "chapter-number": 11,
+    "title": "Finding the Good Argument OR Why Bother With Logic?",
+    "authors": [
+      "Rebecca Jones"
+    ],
+    "slug": "finding-the-good-argument-or-why-bother-with-logic"
+  },
+  "mckinney-maddalena--i-need-you-to-say-i.pdf": {
+    "chapter-number": 12,
+    "title": "“I need you to say ‘I’”: Why First Person Is Important in College Writing",
+    "authors": [
+      "Kate McKinney Maddalena"
+    ],
+    "slug": "i-need-you-to-say-i"
+  },
+  "giles--reflective-writing-and-the-revision-process.pdf": {
+    "chapter-number": 13,
+    "title": "Reflective Writing and the Revision Process: What Were You Thinking?",
+    "authors": [
+      "Sandra L. Giles"
+    ],
+    "slug": "reflective-writing-and-the-revision-process",
+    "license": "This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 United States License (CC BY-NC-ND 3.0 US).",
+    "license-url": "https://creativecommons.org/licenses/by-nc-nd/3.0/us/"
+  },
+  "purdy--wikipedia-is-good-for-you.pdf": {
+    "chapter-number": 14,
+    "title": "Wikipedia Is Good for You!?",
+    "authors": [
+      "James P. Purdy"
+    ],
+    "slug": "wikipedia-is-good-for-you"
+  },
+  "leary--composing-the-anthology.pdf": {
+    "chapter-number": 15,
+    "title": "Composing the Anthology: An Exercise in Patchwriting",
+    "authors": [
+      "Christopher Leary"
+    ],
+    "slug": "composing-the-anthology"
+  },
+  "atkins--collaborating-online.pdf": {
+    "chapter-number": 16,
+    "title": "Collaborating Online: Digital Strategies for Group Work",
+    "authors": [
+      "Anthony T. Atkins"
+    ],
+    "slug": "collaborating-online"
+  },
+  "dirk--navigating-genres.pdf": {
+    "chapter-number": 17,
+    "title": "Navigating Genres",
+    "authors": [
+      "Kerry Dirk"
+    ],
+    "slug": "navigating-genres"
+  }
+}

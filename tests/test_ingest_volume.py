@@ -150,6 +150,54 @@ def test_manifest_overrides_the_filename(tmp_path):
     assert "manifest" in chapter.note
 
 
+def test_a_manifest_entry_carries_the_chapter_s_own_licence(tmp_path):
+    """A volume mostly shares one licence; volume 1 of this series does not.
+
+    Twelve of its chapters print Share Alike and five print No Derivative
+    Works, so the terms are the chapter's own. Nothing in the runner can read
+    that off a filename, and the run's own licence overwrites whatever the
+    pages said, so without an entry the stricter of the two is published over
+    twelve chapters that permit derivatives.
+    """
+    _dir(tmp_path, "lessner--finding-your-way-in.pdf")
+    url = "https://creativecommons.org/licenses/by-nc-nd/3.0/us/"
+    manifest = {"lessner--finding-your-way-in.pdf": {
+        "license": "This work is licensed under No Derivs 3.0 US.",
+        "license-url": url}}
+    chapter = iv.plan(tmp_path, manifest)[0]
+    assert chapter.license == "This work is licensed under No Derivs 3.0 US."
+    assert chapter.license_url == url
+
+
+def test_a_chapter_with_no_entry_takes_the_run_s_licence(tmp_path):
+    """The volume fact still stands where the manifest is silent, which is
+    the common case and all of volumes 2 to 6."""
+    _dir(tmp_path, "irvin--what-is-academic-writing.pdf")
+    chapter = iv.plan(tmp_path, {"irvin--what-is-academic-writing.pdf":
+                                 {"chapter-number": 2}})[0]
+    assert chapter.license is None
+    assert chapter.license_url is None
+
+
+def test_the_shipped_manifests_record_volume_1_s_split_licence():
+    """The manifests are the only record of which chapter grants what.
+
+    The split was recorded nowhere before, which is how 4.0 NoDerivatives came
+    to be published over 33 chapters that grant 3.0 Share Alike. Volume 2 is
+    uniform and needs no override; volume 1 needs exactly five.
+    """
+    root = Path(__file__).resolve().parents[1] / "docs" / "manifests"
+    volume_1 = iv.load_manifest(root / "writing-spaces-volume-1.json")
+    volume_2 = iv.load_manifest(root / "writing-spaces-volume-2.json")
+    assert len(volume_1) == 17
+    assert len(volume_2) == 21
+    overrides = [e for e in volume_1.values() if e.get("license-url")]
+    assert len(overrides) == 5
+    assert {e["license-url"] for e in overrides} == {
+        "https://creativecommons.org/licenses/by-nc-nd/3.0/us/"}
+    assert not [e for e in volume_2.values() if e.get("license-url")]
+
+
 def test_slug_prefers_the_title_then_the_filename(tmp_path):
     _dir(tmp_path, "1Lester-Lucas.pdf", "2Wells.pdf")
     manifest = {"1Lester-Lucas.pdf": {"title": "We Write Because We Care!"}}

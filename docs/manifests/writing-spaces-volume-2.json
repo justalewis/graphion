@@ -1,0 +1,172 @@
+{
+  "reid--ten-ways-to-think.pdf": {
+    "chapter-number": 1,
+    "title": "Ten Ways To Think About Writing: Metaphoric Musings for College Writing Students",
+    "authors": [
+      "E. Shelley Reid"
+    ],
+    "slug": "ten-ways-to-think-about-writing"
+  },
+  "singh-corcoran--composition-as-a-write.pdf": {
+    "chapter-number": 2,
+    "title": "Composition as a Write of Passage",
+    "authors": [
+      "Nathalie Singh-Corcoran"
+    ],
+    "slug": "composition-as-a-write-of-passage"
+  },
+  "dasbender--critical-thinking.pdf": {
+    "chapter-number": 3,
+    "title": "Critical Thinking in College Writing: From the Personal to the Academic",
+    "authors": [
+      "Gita DasBender"
+    ],
+    "slug": "critical-thinking-in-college-writing"
+  },
+  "savini--looking-for-trouble.pdf": {
+    "chapter-number": 4,
+    "title": "Looking for Trouble: Finding Your Way into a Writing Assignment",
+    "authors": [
+      "Catherine Savini"
+    ],
+    "slug": "looking-for-trouble"
+  },
+  "bunn--how-to-read.pdf": {
+    "chapter-number": 5,
+    "title": "How to Read Like a Writer",
+    "authors": [
+      "Mike Bunn"
+    ],
+    "slug": "how-to-read-like-a-writer"
+  },
+  "boyd--murder-rhetorically-speaking.pdf": {
+    "chapter-number": 6,
+    "title": "Murder! (Rhetorically Speaking)",
+    "authors": [
+      "Janet Boyd"
+    ],
+    "slug": "murder-rhetorically-speaking"
+  },
+  "charlton--complexity-of-simplicity.pdf": {
+    "chapter-number": 7,
+    "title": "The Complexity of Simplicity: Invention Potentials for Writing Students",
+    "authors": [
+      "Colin Charlton"
+    ],
+    "slug": "the-complexity-of-simplicity"
+  },
+  "ingalls--writing-eyeball-to-eyeball.pdf": {
+    "chapter-number": 8,
+    "title": "Writing “Eyeball To Eyeball”: Building A Successful Collaboration",
+    "authors": [
+      "Rebecca Ingalls"
+    ],
+    "slug": "writing-eyeball-to-eyeball"
+  },
+  "krause--on-the-other-hand.pdf": {
+    "chapter-number": 9,
+    "title": "On the Other Hand: The Role of Antithetical Writing in First Year Composition Courses",
+    "authors": [
+      "Steven D. Krause"
+    ],
+    "slug": "on-the-other-hand"
+  },
+  "driscoll--introduction-to-primary-research.pdf": {
+    "chapter-number": 10,
+    "title": "Introduction to Primary Research: Observations, Surveys, and Interviews",
+    "authors": [
+      "Dana Lynn Driscoll"
+    ],
+    "slug": "introduction-to-primary-research"
+  },
+  "kahn--putting-ethnographic-writing.pdf": {
+    "chapter-number": 11,
+    "title": "Putting Ethnographic Writing in Context",
+    "authors": [
+      "Seth Kahn"
+    ],
+    "slug": "putting-ethnographic-writing-in-context"
+  },
+  "haller--walk-talk-cook-eat.pdf": {
+    "chapter-number": 12,
+    "title": "Walk, Talk, Cook, Eat: A Guide to Using Sources",
+    "authors": [
+      "Cynthia R. Haller"
+    ],
+    "slug": "walk-talk-cook-eat"
+  },
+  "rosenberg--reading-games.pdf": {
+    "chapter-number": 13,
+    "title": "Reading Games: Strategies for Reading Scholarly Sources",
+    "authors": [
+      "Karen Rosenberg"
+    ],
+    "slug": "reading-games-strategies-for-reading-scholarly"
+  },
+  "mcclure--googlepedia.pdf": {
+    "chapter-number": 14,
+    "title": "Googlepedia: Turning Information Behaviors into Research Skills",
+    "authors": [
+      "Randall McClure"
+    ],
+    "slug": "googlepedia-turning-information-behaviors"
+  },
+  "stedman--annoying-ways.pdf": {
+    "chapter-number": 15,
+    "title": "Annoying Ways People Use Sources",
+    "authors": [
+      "Kyle D. Stedman"
+    ],
+    "slug": "annoying-ways-people-use-sources"
+  },
+  "walker--everything-changes.pdf": {
+    "chapter-number": 16,
+    "title": "Everything Changes, or Why MLA Isn’t (Always) Right",
+    "authors": [
+      "Janice R. Walker"
+    ],
+    "slug": "everything-changes-or-why-mla-isn-t-always-right"
+  },
+  "ramsdell--storytelling-narration.pdf": {
+    "chapter-number": 17,
+    "title": "Storytelling, Narration, and the “Who I Am” Story",
+    "authors": [
+      "Catherine Ramsdell"
+    ],
+    "slug": "storytelling-narration-and-the-who-i-am-story"
+  },
+  "lynch--the-sixth-paragraph.pdf": {
+    "chapter-number": 18,
+    "title": "The Sixth Paragraph: A Re-Vision of the Essay",
+    "authors": [
+      "Paul Lynch"
+    ],
+    "slug": "the-sixth-paragraph"
+  },
+  "reid--why-blog.pdf": {
+    "chapter-number": 19,
+    "title": "Why Blog? Searching for Writing on the Web",
+    "authors": [
+      "Alex Reid"
+    ],
+    "slug": "why-blog-searching-for-writing-on-the-web"
+  },
+  "barton-and-klint--a-students-guide.pdf": {
+    "chapter-number": 20,
+    "title": "A Student’s Guide to Collaborative Writing Technologies",
+    "authors": [
+      "Matt Barton",
+      "Karl Klint"
+    ],
+    "slug": "a-student-s-guide-to-collaborative-writing-technologies"
+  },
+  "klein-and-shackelford--beyond-black-on-white.pdf": {
+    "chapter-number": 21,
+    "title": "Beyond Black on White: Document Design and Formatting in the Writing Classroom",
+    "authors": [
+      "Michael J. Klein",
+      "Kristi L. Shackelford"
+    ],
+    "slug": "beyond-black-on-white"
+  }
+}

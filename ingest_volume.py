@@ -120,6 +120,13 @@ class Chapter:
     note: str = ""
     is_chapter: bool = True
     skip: bool = False
+    # A volume mostly shares one licence, and where it does these stay None
+    # and the run's own licence applies. Volume 1 of this series does not:
+    # twelve of its chapters print Share Alike and five print No Derivative
+    # Works, so the terms are the chapter's own and only a person reading the
+    # page can say which.
+    license: Optional[str] = None
+    license_url: Optional[str] = None
 
 
 def slugify(text: str) -> str:
@@ -217,10 +224,15 @@ def load_manifest(path: Optional[Path]) -> dict:
             "chapter-number": 1,
             "title": "We Write Because We Care",
             "authors": ["Glenn Lester", "Taylor Lucas"],
-            "slug": "we-write-because-we-care"}}
+            "slug": "we-write-because-we-care",
+            "license": "This work is licensed under ...",
+            "license-url": "https://creativecommons.org/licenses/..."}}
 
     A manifest always wins over the filename and over what the PDF's own
-    pages say, because it is the one source a person checked.
+    pages say, because it is the one source a person checked. That goes for
+    the licence too, which is otherwise one value across a whole run: a
+    chapter whose own page grants different terms needs an entry here, and
+    nothing else in the runner can tell.
     """
     if not path:
         return {}
@@ -271,7 +283,9 @@ def plan(pdf_dir: Path, manifest: dict, volume: Optional[int] = None) -> list:
                 slug = f"{slug}-volume-{volume}"
         chapters.append(Chapter(pdf=pdf, number=number, title=title,
                                 authors=authors, slug=slug, note=note,
-                                is_chapter=chapter_like, skip=skip))
+                                is_chapter=chapter_like, skip=skip,
+                                license=entry.get("license"),
+                                license_url=entry.get("license-url")))
     # Numbered chapters in order, then anything unnumbered, by filename. A
     # volume's front and back matter sorts to the end rather than being
     # dropped: the editor decides whether to keep it.
@@ -355,6 +369,14 @@ def ingest_one(chapter: Chapter, journal: dict, defaults: dict,
     for key, value in defaults.items():
         if value is not None:
             fm[key] = value
+    # The licence is a volume fact until a manifest says otherwise. Volume 1
+    # of this series mixes two, so an entry naming the chapter's own terms
+    # overrides the run's; without this the stricter of the two would be
+    # published over twelve chapters that permit derivatives.
+    if chapter.license:
+        fm["license"] = chapter.license
+    if chapter.license_url:
+        fm["license-url"] = chapter.license_url
     if chapter.number is not None:
         fm["chapter-number"] = chapter.number
     elif not chapter.is_chapter:
