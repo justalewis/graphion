@@ -475,6 +475,47 @@ def check_figure_references(article: dict, fm: dict, body: str) -> LintResult:
 
 # ---------- runner ----------
 
+_UNREADABLE_RE = re.compile(
+    r"[-\U000f0000-\U0010fffd]"   # private use, both planes
+    r"|[\x00-\x08\x0b\x0c\x0e-\x1f\x7f-\x9f]"  # C0 and C1 controls
+)
+
+
+def check_unreadable_characters(article: dict, fm: dict, body: str) -> LintResult:
+    """Flag characters that no reader can read.
+
+    A private use codepoint has no meaning: it is whatever the font that
+    put it there decided, so a screen reader announces nothing or guesses.
+    They arrive from symbol fonts, where Wingdings byte 0xFC comes out as
+    U+F0FC rather than as the check mark it prints; `pdf_ingest` translates
+    the ones this archive uses, and this catches whatever a new source
+    brings in that it does not know.
+
+    It is a fail rather than a warn because it costs the galley more than
+    its legibility. Typst validates PDF/UA rather than declaring it, so one
+    of these aborts the compile, `_compile_typst` falls back to an
+    unconstrained render, and the chapter ships without the conformance
+    identifier an accessibility audit looks for.
+    """
+    found = _UNREADABLE_RE.findall(body)
+    if not found:
+        return _ok("unreadable-characters",
+                   "No private use or control characters.")
+    counts: dict = {}
+    for ch in found:
+        counts[ch] = counts.get(ch, 0) + 1
+    details = [
+        f"U+{ord(ch):04X} appears {n} time(s); it has no meaning outside "
+        f"the font that wrote it."
+        for ch, n in sorted(counts.items(), key=lambda kv: -kv[1])
+    ]
+    return _fail(
+        "unreadable-characters",
+        f"{len(found)} character(s) no reader can read.",
+        details,
+    )
+
+
 DEFAULT_CHECKS: list[Callable] = [
     check_required_fields,
     check_orcid_format,
@@ -486,6 +527,7 @@ DEFAULT_CHECKS: list[Callable] = [
     check_works_cited_present,
     check_citations_match_references,
     check_unstripped_artifacts,
+    check_unreadable_characters,
     check_alt_text,
     check_figure_coverage,
     check_figure_references,

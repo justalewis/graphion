@@ -27,9 +27,9 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (261 functions: 88 in `test_cleanups.py`, 28 in
-`test_teacher_resources.py`, 55 in `test_pdf_ingest.py`, 40 in
-`test_ingest_volume.py`, 22 in
+Tests (272 functions: 88 in `test_cleanups.py`, 28 in
+`test_teacher_resources.py`, 63 in `test_pdf_ingest.py`, 40 in
+`test_ingest_volume.py`, 25 in
 `test_lint.py`, 10 in `test_metadata_roundtrip.py`, 6 in
 `test_standalone_html.py`, 5 in `test_pdf_ua.py`, 4 in
 `test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
@@ -128,6 +128,26 @@ new heuristics need a case in `tests/test_pdf_ingest.py`. The geometry is
 learned per document rather than hardcoded: a series that redesigns between
 volumes should degrade, not silently misread. Use pdfplumber, not PyMuPDF,
 which is AGPL and would reach the whole deployed app.
+
+**Text set in a symbol font is not text.** A symbol font stores pictures at
+ordinary character codes, so extracting a Wingdings run gives punctuation:
+byte 0x7B is an open circle and arrives as `{`, byte 0x4A is a smiling face
+and arrives as `J`. Others land in the private use area as U+F0xx, which is
+worse, because a private use codepoint means nothing to a screen reader and
+Typst validates PDF/UA rather than declaring it, so one of them aborts the
+compile and the chapter ships without the conformance identifier. Only the
+font knows which is which and the font name is gone by Stage 2, so
+`SYMBOL_FONT_CHARS` and `translate_symbol_char()` do the substitution in
+`pdf_ingest.py`, during line assembly, where it is still in hand. Every
+entry was read off the page it came from; subsetted archive encodings need
+not agree with a published chart. Match on the whole family after the
+subset prefix, never a substring: `OpenSymbol` and `SymbolMT` decode their
+bullet correctly already and must be left alone. `table.extract()` strips
+the font off, so `_symbol_translations()` rebuilds the mapping from the
+chars inside the table's box; a code that appears there both as symbol and
+as text is left alone, since the extracted string carries no positions.
+`lint.check_unreadable_characters` is the backstop for whatever a new
+source brings in that the table does not know.
 
 **Figures come out too, and the caption is the hard part.** `extract()` takes
 an `assets_dir`; given one it writes every embedded raster there and places it

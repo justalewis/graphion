@@ -614,3 +614,88 @@ def test_a_table_with_no_caption_to_pair_with_is_reported():
     out, notes = pdf_ingest.place_tables(blocks, tables)
     assert any(kind == "table" for kind, _ in out)
     assert any("matched no caption" in note for note in notes)
+
+
+# ---------- symbol fonts ----------
+
+
+def test_wingdings_bullet_is_not_a_brace():
+    """Wingdings byte 0x7B is an open circle. Extracted as text it gives "{",
+    which reads as punctuation and sorts as code; forty-seven of them stand
+    beside the options of a survey in volume 6."""
+    chars = _chars([("{", "TKVGHF+Wingdings-Regular", 11, 100),
+                    ("A", "AGaramondPro-Regular", 11, 100)])
+    text, _, _ = pdf_ingest._line_text("{A", chars)
+    assert text == "\u25cbA"
+
+
+def test_wingdings_smiley_is_not_the_letter_j():
+    """The Outlook artifact: a smiling face typed as J. The chapter it sits
+    in is discussing emoticons, so the letter reads as a sentence."""
+    chars = _chars([("J", "TKVGHF+Wingdings-Regular", 11, 100)])
+    text, _, _ = pdf_ingest._line_text("J", chars)
+    assert text == "\u263a"
+
+
+def test_a_private_use_codepoint_from_a_symbol_font_is_translated():
+    """U+F0FC is Wingdings 0xFC, a check mark. A private use codepoint says
+    nothing to a screen reader, and Typst validates PDF/UA rather than
+    declaring it, so one of them costs the chapter its conformance."""
+    chars = _chars([("\uf0fc", "TKVGHF+Wingdings-Regular", 11, 100)])
+    text, _, _ = pdf_ingest._line_text("\uf0fc", chars)
+    assert text == "\u2713"
+
+
+def test_an_unmapped_private_use_codepoint_is_dropped():
+    """Nothing can read it and it aborts the compile, so the choice is
+    between losing the glyph and losing the galley."""
+    chars = _chars([("A", "AGaramondPro-Regular", 11, 100),
+                    ("\uf0dd", "TKVGHF+Wingdings-Regular", 11, 100),
+                    ("B", "AGaramondPro-Regular", 11, 100)])
+    text, _, _ = pdf_ingest._line_text("A\uf0ddB", chars)
+    assert text == "AB"
+
+
+def test_an_unmapped_ordinary_code_from_a_symbol_font_is_left_alone():
+    """Dropping it on the strength of a font-name match could eat real
+    text, which is the worse failure."""
+    chars = _chars([("Q", "TKVGHF+Wingdings-Regular", 11, 100)])
+    text, _, _ = pdf_ingest._line_text("Q", chars)
+    assert text == "Q"
+
+
+def test_opensymbol_and_symbolmt_are_left_alone():
+    """Both decode their bullet to U+2022 already; remapping them would
+    break text that is not broken. The match is on the whole family after
+    the subset prefix, not a substring of it."""
+    assert pdf_ingest.symbol_family("ABCDEF+OpenSymbol") is None
+    assert pdf_ingest.symbol_family("ABCDEF+SymbolMT") is None
+    assert pdf_ingest.symbol_family("POEHNO+Symbol") == "symbol"
+    assert pdf_ingest.symbol_family("TKVGHF+Wingdings-Regular") == "wingdings"
+
+
+def test_a_symbol_font_character_in_a_table_cell_is_translated():
+    """extract() strips the font off, so the substitution has to be rebuilt
+    from the page; a check mark is the whole content of its cell, and
+    leaving it as Wingdings loses the column."""
+    trans = {"\uf0fc": "\u2713"}
+    rows = pdf_ingest._clean_table(
+        [["Move", "Email"], ["Apologizing", "\uf0fc"]], trans)
+    assert rows == [["Move", "Email"], ["Apologizing", "\u2713"]]
+
+
+def test_a_code_used_as_both_symbol_and_text_in_one_table_is_left_alone():
+    """Without positions inside the cell the two cannot be told apart, and
+    changing both would corrupt the text to fix the glyph."""
+    class _Crop:
+        chars = [{"text": "{", "fontname": "TKVGHF+Wingdings-Regular"},
+                 {"text": "{", "fontname": "AGaramondPro-Regular"},
+                 {"text": "\uf0fc", "fontname": "TKVGHF+Wingdings-Regular"}]
+
+    class _Page:
+        def crop(self, bbox):
+            return _Crop()
+
+    trans = pdf_ingest._symbol_translations(_Page(), (0, 0, 10, 10))
+    assert "{" not in trans
+    assert trans["\uf0fc"] == "\u2713"

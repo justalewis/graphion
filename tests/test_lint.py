@@ -194,3 +194,27 @@ def test_alt_text_that_describes_more_than_the_caption_passes():
             "diagonal marked](assets/figure-p016-1.jpg)" + HARD_BREAK
             + "Figure 7.4: Schematic bridge diagram\n")
     assert _alt(body).level == "pass"
+
+
+def test_a_private_use_codepoint_fails_the_lint():
+    """U+F0FC is Wingdings 0xFC, which prints a check mark and means nothing
+    to anything else. Typst validates PDF/UA rather than declaring it, so one
+    of these costs the chapter its conformance identifier."""
+    result = lint.check_unreadable_characters(
+        {}, {}, "A table cell holding \uf0fc and nothing else.")
+    assert result.level == "fail"
+    assert "U+F0FC" in result.details[0]
+
+
+def test_a_control_character_fails_the_lint():
+    result = lint.check_unreadable_characters({}, {}, "Before\x86after")
+    assert result.level == "fail"
+    assert "U+0086" in result.details[0]
+
+
+def test_ordinary_prose_passes_the_unreadable_check():
+    """Em dashes, curly quotes and the characters pdf_ingest translates a
+    symbol font into are all ordinary text."""
+    body = "A check \u2713, an arrow \u2192, a circle \u25cb, a bullet \u2022."
+    result = lint.check_unreadable_characters({}, {}, body)
+    assert result.level == "pass"

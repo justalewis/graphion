@@ -53,6 +53,42 @@ GENRE_HEADS = (
     "overview and teaching strategies",
 )
 
+# A symbol font stores pictures at ordinary character codes, so what a PDF
+# reader gets back from a run set in one is not text at all. Wingdings byte
+# 0x7B is an open circle, and extracting it gives "{"; byte 0x4A is a smiling
+# face, and gives "J". Others land in the private use area as U+F0xx, which
+# is worse than wrong: a private use codepoint means nothing to a screen
+# reader, and Typst validates PDF/UA rather than declaring it, so one of them
+# aborts the compile and costs the chapter its conformance.
+#
+# Only the font knows which it is, and the font name is gone by the time the
+# text reaches Stage 2, so the substitution has to happen here. Every entry
+# below was read off the page it came from rather than taken from a chart:
+# the archive's own encodings are subsetted and need not agree with one.
+SYMBOL_FONT_CHARS = {
+    "wingdings": {
+        0x4A: "☺",  # smiling face; the "type J in Wingdings" artifact
+        0x7B: "○",  # open circle, set as a bullet and as an empty
+                         # option beside a survey answer
+        0x86: "□",  # open square, set as a bullet
+        0xAF: "✳",  # spoked ornament, set three in a row as a break
+        0xE0: "→",  # right arrow, between the stages of a process
+        0xFC: "✓",  # check mark, in a table cell
+    },
+    "symbol": {
+        0xA5: "•",  # bullet, down the side of a sample resume
+    },
+}
+# Font families whose text comes back correct and must not be remapped:
+# OpenSymbol and SymbolMT both decode their bullet to U+2022 already.
+_SYMBOL_FAMILIES = {
+    "wingdings": "wingdings",
+    "wingdings-regular": "wingdings",
+    "wingdings2": "wingdings",
+    "wingdings3": "wingdings",
+    "symbol": "symbol",
+}
+
 # A line is a new paragraph when it starts at least this far right of the
 # text edge. The series indents 14.4pt; half of that is clear of any
 # justification wobble while still catching a real indent.
@@ -144,6 +180,47 @@ def _superscript_runs(chars: list, body_size: float) -> set:
     return out
 
 
+def symbol_family(fontname: str) -> Optional[str]:
+    """The symbol font a PDF font name names, or None for a text font.
+
+    PDF font names carry a subset prefix: `TKVGHF+Wingdings-Regular`. The
+    match is on the whole family after that prefix, not a substring, so
+    SymbolMT and OpenSymbol are left alone; both decode correctly already,
+    and remapping them would break text that is not broken.
+    """
+    family = (fontname or "").split("+")[-1].strip().lower()
+    return _SYMBOL_FAMILIES.get(family)
+
+
+def translate_symbol_char(fontname: str, ch: str) -> str:
+    """What a character set in a symbol font actually says.
+
+    Returns the character unchanged when the font is a text font, or when
+    the font is a symbol font whose code is not one this archive uses and
+    the code could still be ordinary text.
+
+    An unmapped private use codepoint is dropped instead. It cannot be read
+    by anything, and leaving it in place fails the PDF/UA compile, so the
+    choice is between losing a glyph and losing the chapter's conformance.
+    An unmapped code outside that area is left alone: dropping it on the
+    strength of a font-name match could eat real text.
+    """
+    family = symbol_family(fontname)
+    if family is None or not ch:
+        return ch
+    code = ord(ch)
+    if 0xF000 <= code <= 0xF0FF:
+        code -= 0xF000
+    elif code > 0xFF:
+        return ch
+    mapped = SYMBOL_FONT_CHARS.get(family, {}).get(code)
+    if mapped is not None:
+        return mapped
+    if 0xE000 <= ord(ch) <= 0xF8FF:
+        return ""
+    return ch
+
+
 def _line_text(line_text: str, chars: list, supers: Optional[set] = None) -> tuple:
     """Overlay italics and footnote markers onto an already-spaced line.
 
@@ -195,6 +272,9 @@ def _line_text(line_text: str, chars: list, supers: Optional[set] = None) -> tup
         idx += 1
         font = ch.get("fontname") or ""
         fonts.add(font)
+        cell = translate_symbol_char(font, cell)
+        if not cell:
+            continue
         if (idx - 1) in supers and cell.isdigit():
             close_italic()
             super_run.append(cell)
@@ -1010,7 +1090,8 @@ def find_page_tables(page) -> list:
     candidates = []
     for table in found:
         try:
-            rows = _clean_table(table.extract())
+            rows = _clean_table(table.extract(),
+                                _symbol_translations(page, table.bbox))
         except Exception:
             continue
         if len(rows) < MIN_TABLE_ROWS:
@@ -1039,7 +1120,40 @@ def _inside(inner, outer, tol: float = 2.0) -> bool:
             and inner[2] <= outer[2] + tol and inner[3] <= outer[3] + tol)
 
 
-def _clean_table(rows: list) -> list:
+def _symbol_translations(page, bbox) -> dict:
+    """What the symbol-font characters inside one table actually say.
+
+    `table.extract()` hands back strings with the font stripped off, so the
+    substitution `_line_text` makes character by character has to be rebuilt
+    here from the page. A check mark in a comparison table is the whole
+    content of its cell, so leaving it as Wingdings loses the column.
+
+    A code set in a symbol font in part of the table and as ordinary text in
+    another part is left alone: the extracted string carries no positions, so
+    there is no way to tell those two apart, and changing both would corrupt
+    the text to fix the glyph.
+    """
+    symbol: dict = {}
+    literal: set = set()
+    try:
+        chars = page.crop(bbox).chars
+    except Exception:
+        return {}
+    for ch in chars:
+        text = ch.get("text") or ""
+        if len(text) != 1:
+            continue
+        if symbol_family(ch.get("fontname") or "") is None:
+            literal.add(text)
+        else:
+            symbol.setdefault(text, set()).add(
+                translate_symbol_char(ch.get("fontname") or "", text))
+    return {text: next(iter(seen)) for text, seen in symbol.items()
+            if len(seen) == 1 and text not in literal
+            and next(iter(seen)) != text}
+
+
+def _clean_table(rows: list, trans: Optional[dict] = None) -> list:
     """Tidy extracted cells: rejoin broken words, drop empty rows and columns.
 
     A cell's text is wrapped as it was printed, so it arrives with the line
@@ -1047,7 +1161,7 @@ def _clean_table(rows: list) -> list:
     or the table reads as badly as the prose it replaces. Columns that are
     entirely empty come from rules pdfplumber counted as boundaries.
     """
-    table = [[_clean_cell(cell) for cell in row] for row in rows if row]
+    table = [[_clean_cell(cell, trans) for cell in row] for row in rows if row]
     table = [row for row in table if any(cell for cell in row)]
     if not table:
         return []
@@ -1057,8 +1171,11 @@ def _clean_table(rows: list) -> list:
     return [[row[i] for i in keep] for row in table]
 
 
-def _clean_cell(cell) -> str:
-    text = re.sub(r"(\w)-\s*\n\s*(\w)", r"\1\2", str(cell or ""))
+def _clean_cell(cell, trans: Optional[dict] = None) -> str:
+    text = str(cell or "")
+    if trans:
+        text = text.translate(str.maketrans(trans))
+    text = re.sub(r"(\w)-\s*\n\s*(\w)", r"\1\2", text)
     text = re.sub(r"\s*\n\s*", " ", text)
     # A pipe inside a cell would close the column it sits in.
     return re.sub(r"\s+", " ", text).replace("|", r"\|").strip()
