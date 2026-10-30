@@ -782,3 +782,26 @@ def test_unemphasize_only_takes_wrapping_that_covers_the_whole_line():
 
 def test_an_italic_table_caption_is_still_a_table_caption():
     assert pdf_ingest.is_table_caption("*Table 2. A comparison of genres*")
+
+
+def test_an_italic_caption_pairs_with_its_figure():
+    """The key is matched between the caption as the page prints it and the
+    caption as the block holds it, and only the block has been through
+    _line_text, so an italic caption arrives with an asterisk on the front.
+    Recognising the caption is not enough; the key is what places the
+    figure."""
+    page = "Fig. 1. Nicaraguan woman on a side street in Granada."
+    block = "*Fig. 1. Nicaraguan woman on a side street in Granada.*"
+    assert pdf_ingest._caption_key(page) == pdf_ingest._caption_key(block)
+
+
+def test_an_italic_caption_places_the_figure_before_the_back_matter():
+    blocks = [("body", "Prose about the photograph."),
+              ("body", "*Fig. 1. Nicaraguan woman on a side street.*"),
+              ("head", "Works Cited"),
+              ("body", "Savini, Catherine. Nicaraguan Woman. 2007.")]
+    figures = [{"page": 10, "index": 0, "name": "figure-p010-1.jpg"}]
+    caption_pages = {(10, 0): "Fig. 1. Nicaraguan woman on a side street."}
+    out, _ = pdf_ingest.place_figures(blocks, figures, caption_pages)
+    kinds = [kind for kind, _ in out]
+    assert kinds.index("figure") < kinds.index("head")

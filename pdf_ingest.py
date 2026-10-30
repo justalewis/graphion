@@ -1336,8 +1336,17 @@ def place_tables(blocks: list, tables: list) -> tuple:
 
 
 def _caption_key(text: str) -> str:
-    """A caption's first few words, which is enough to find it again."""
-    return " ".join(re.sub(r"\s+", " ", text).strip().split()[:8]).lower()
+    """A caption's first few words, which is enough to find it again.
+
+    The emphasis has to come off here too. The key is matched between the
+    caption as the page prints it and the caption as the block holds it,
+    and only the block has been through `_line_text`, so an italic caption
+    arrives with an asterisk on the front and the two keys differ by that
+    one character. Recognising the caption was not enough to place the
+    figure; the pairing is what the key does.
+    """
+    return " ".join(
+        re.sub(r"\s+", " ", unemphasize(text)).strip().split()[:8]).lower()
 
 
 def opening_page_body(body_lines: list, layout: Layout,
