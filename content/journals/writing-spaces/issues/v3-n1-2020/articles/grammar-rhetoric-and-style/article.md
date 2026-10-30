@@ -2,33 +2,19 @@
 title: Grammar, Rhetoric, and Style
 author:
 - name: Craig Hulst
-abstract: 'This essay is a chapter in *Writing Spaces: Readings on Writing*, Volume 3, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from any of these sites:'
+abstract: This chapter focuses on grammar, specifically on understanding that grammar is much more than just the rules that we have been taught. Rather, grammar can be used rhetorically---with an understanding of the writing situation and making appropriate choices regarding the structure of the sentences, the use of punctuation, using active or passive voice, etc. In other words, this chapter focuses on using grammar to influence a piece of writing’s style, rather than focusing on the correctness of the grammar. Readers are encouraged to look at the writing that they see in their casual or research reading and evaluate the grammar of those pieces to gain a better understanding of how they can control their own use of grammar.
 short-title: Grammar, Rhetoric, and Style
 short-authors: Hulst
 volume: 3
 year: 2020
-start-page: 82
+start-page: 79
+chapter-number: 6
 source-file: hulst.pdf
 volume-title: Writing Spaces 3
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
-chapter-number: 6
 teacher-resources: separate
 ---
-
-> • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/pages/writing-spaces • WAC Clearinghouse: http://wac.colostate.edu/books/
-
-Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.
-
-# 6
-
-# Grammar, Rhetoric, and Style
-
-# *Craig Hulst*
-
-# Overview
-
-This chapter focuses on grammar, specifically on understanding that grammar is much more than just the rules that we have been taught. Rather, grammar can be used rhetorically---with an understanding of the writing situation and making appropriate choices regarding the structure of the sentences, the use of punctuation, using active or passive voice, etc. In other words, this chapter focuses on using grammar to influence a piece of writing’s style, rather than focusing on the correctness of the grammar. Readers are encouraged to look at the writing that they see in their casual or research reading and evaluate the grammar of those pieces to gain a better understanding of how they can control their own use of grammar.
 
 Grammar.[^1] The mere word makes adults weep, children run and hide, and dogs howl.* All right, perhaps I am exaggerating just a bit; not all of us hate grammar. There are even people who actually like grammar. However, the general aversion to the word “grammar” is such that the word is hardly ever used in polite company. And, if your composition professor is anything like me, she or he tries to avoid the word in your class.
 
@@ -158,8 +144,6 @@ There are essays in *Writing Spaces* that talk about reading rhetorically (See M
 
 Have students take a paper that they are revising and have them specifically look at their grammar. Ask them to identify their audience and the expectations of their writing. If they have already tried their hands at the *Rhetorical Grammar Analysis* activity, they might be able to apply what they have learned about how the author used grammar to create an appropriate style to their own writing. Otherwise, ask them about the level of formality that is expected in their writing and whether or not their use of grammar (pronoun usage, including gender-specific pronouns; contractions; complexity of sentence construction; etc.) supports that. Students might choose specific sentences and rewrite them (making active voice passive, adding modifiers, changing the verb tense, etc.) to see how the style of the sentence can be altered by grammatical choices.
 
-Parlor Press LLC, Anderson, South Carolina, USA © 2020 by Parlor Press. Individual essays © 2020 by the respective authors. Unless otherwise stated, these works are licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use. All rights reserved. For permission to reprint, please contact the author(s) of the individual articles, who are the respective copyright owners. Cover design by Colin Charlton. Library of Congress Cataloging-in-Publication Data on File
-
-* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
 
 [^1]: Throughout this essay, I will use some simple grammar terms such as noun, pronoun, adjective, adverb, and so on. I am, perhaps wrongly, assuming that you will understand these terms. If I have erred in my assumption, please accept my apologies. There are many ways to discover the meanings of these terms, the first of which is your instructor. Other resources include handbooks, internet sources, and your friends.

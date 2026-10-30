@@ -2,24 +2,18 @@
 title: So You’ve Got a Writing Assignment. Now What?
 author:
 - name: Corrine E. Hinton
-abstract: '*by Corrine E. Hinton* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 1, a peer-reviewed open textbook series for the writing classroom, and is published through Parlor Press. The full volume and individual chapter downloads are available for free from the following sites: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers. To learn about participating in the Writing Spaces project, visit the Writing Spaces website at http://writingspaces.org/.'
+abstract: It’s the first day of the semester and you’ve just stepped foot into your Intro to American Politics class.* You grab a seat toward the back as the instructor enters, distributes the syllabus, and starts to discuss the course schedule. Just before class ends, she grabs a thin stack of papers from her desk and, distributing them, announces, “This is your first writing assignment for the term. It’s due two weeks from Thursday, so I suggest you begin early.” Your stomach clenches. For some people, a writing assignment causes a little nervous energy, but for you, it’s a deep, vomit-inducing fireball that shoots down your body and out your toes. As soon as the assignment sheet hits your hands, your eyes dart wildly about, frantically trying to decipher what you’re supposed to do. How many pages is this thing supposed to be? What am I supposed to write about? What’s Chicago style? When is it due? You know your instructor is talking about the assignment right now, but her voice fades into a murmur as you busy yourself with the assignment sheet. The sound of shuffling feet interrupts your thoughts; you look up and realize she’s dismissed the class. You shove the assignment into your bag, convinced you’re doomed before you’ve even started.
 short-title: So You’ve Got a Writing Assignment. Now What?
 short-authors: Hinton
 volume: 1
 year: 2010
-start-page: 20
+start-page: 21
 source-file: hinton--so-youve-got-a-writing-assignment.pdf
 volume-title: Writing Spaces 1
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
-license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
+license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
 chapter-number: 3
 ---
-
-# So You’ve Got a Writing Assignment.
-
-# Now What? *Corrine E. Hinton*
-
-It’s the first day of the semester and you’ve just stepped foot into your Intro to American Politics class.* You grab a seat toward the back as the instructor enters, distributes the syllabus, and starts to discuss the course schedule. Just before class ends, she grabs a thin stack of papers from her desk and, distributing them, announces, “This is your first writing assignment for the term. It’s due two weeks from Thursday, so I suggest you begin early.” Your stomach clenches. For some people, a writing assignment causes a little nervous energy, but for you, it’s a deep, vomit-inducing fireball that shoots down your body and out your toes. As soon as the assignment sheet hits your hands, your eyes dart wildly about, frantically trying to decipher what you’re supposed to do. How many pages is this thing supposed to be? What am I supposed to write about? What’s Chicago style? When is it due? You know your instructor is talking about the assignment right now, but her voice fades into a murmur as you busy yourself with the assignment sheet. The sound of shuffling feet interrupts your thoughts; you look up and realize she’s dismissed the class. You shove the assignment into your bag, convinced you’re doomed before you’ve even started.
 
 So you’ve got a writing assignment. Now what? First, don’t panic. Writing assignments make many of us nervous, but this anxiety is especially prevalent in first year students. When that first writing assignment comes along, fear, anxiety, avoidance, and even anger are typical responses. However, negative emotional reactions like these can cloud your ability to be rational, and interpreting a writing assignment is a rational activity and a skill. You can learn and cultivate this skill with practice. Why is learning how to do it so important?
 
@@ -64,6 +58,8 @@ Audience is a critical component to any writing assignment, and realistically, o
 4. Locate and Understand the Directive Verbs
 
 One thing you should do when interpreting a writing assignment is to locate the directive verbs and know what the instructor means by them. Directive verbs tell you what you should do in order to formulate a written response. The following table lists common directive verbs used in writing assignments:
+
+Table 1. Frequently used directive verbs.
 
 | analyze | defend | illustrate |
 | --- | --- | --- |
@@ -119,6 +115,8 @@ Your grade will depend upon
 2. your use of ethical principles from chapter 7 of our textbook;
 
 3. the professionalism, correctness, and logic of your writing.
+
+Table 2. Sample knowledge table for undergraduate business writing assignment.
 
 | What I Know | What I Think I Know | What I Don’t Know |
 | --- | --- | --- |
@@ -228,17 +226,11 @@ The above are excellent resources for student assistance. Your instructor, the l
 
 Bailey. Biology Writing Assignment. Rec. 20 July 2009. Digital Voice Recorder. University of the West, Rosemead, California. Ernest. Biology Writing Assignment. Rec. 20 July 2009. Digital Voice Recorder. University of the West, Rosemead, California. Nicole. Business Writing Assignment. Rec. 20 July 2009. Digital Voice Recorder. University of the West. Rosemead, California.
 
-Pekrun, Reinhard, Andrew J. Elliot, and Markus A. Maier. “Achievement Goals and Achievement Emotions: Testing a Model of Their Joint Relations with Academic Performance.” *Journal of Educational Psychology* 101.1 (February 2009): 115--135. This essay is available under a Creative Commons License subject to the Writing Spaces Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2010 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
+Pekrun, Reinhard, Andrew J. Elliot, and Markus A. Maier. “Achievement Goals and Achievement Emotions: Testing a Model of Their Joint Relations with Academic Performance.” *Journal of Educational Psychology* 101.1 (February 2009): 115--135.
 
-[^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
+\* This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces. org/terms-of-use.
 
-* This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces. org/terms-of-use.
-
-Table 1. Frequently used directive verbs.
-
-* Sample undergraduate philosophy writing assignment, courtesy of Dr. Kenneth Locke, Religious Studies Department, University of the West.
-
-Table 2. Sample knowledge table for undergraduate business writing assignment.
+\* Sample undergraduate philosophy writing assignment, courtesy of Dr. Kenneth Locke, Religious Studies Department, University of the West.
 
 [^1]: My thanks to Dr. Kenneth Locke from University of the West for contributing a sample assignment to this project and to the students who participated in this exercise; their interest, time, and enthusiasm helps bring a sense of realism to this essay, and I am indebted to them for their assistance.
 

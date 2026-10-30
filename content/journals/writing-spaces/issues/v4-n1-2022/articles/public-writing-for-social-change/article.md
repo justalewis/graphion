@@ -28,6 +28,8 @@ Writing for a public rhetorical situation means planning ahead by choosing a tim
 
 Take a minute and brainstorm a quick list of characteristics or words that come to mind when you, separately, think of the word “academic” and the word “citizen.”
 
+Table 1: Brainstorming Characteristics of “Academic” and “Citizen”
+
 | Academic | Citizen |
 | --- | --- |
 | • • | • • |
@@ -192,6 +194,4 @@ I continue to teach public writing because of the powerful ways it bridges acade
 
 6. This essay invites you to “go public” by publishing and/or circulating your writing to reach an audience who can effect change. Brainstorm a list of possibilities for going public with your writing; include a mix of digital and print publishing contexts and consider how to circulate (i.e., distribute or share) your writing with others. For example, you could “publish” your writing by printing it to a flyer, but you would need to consider where to post or hand out your flyer to “circulate” it to your targeted audience.
 
-* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
-
-Table 1: Brainstorming Characteristics of “Academic” and “Citizen”
+\* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.

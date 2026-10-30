@@ -7,7 +7,7 @@ short-title: Writing Technical Content for Online Spaces
 short-authors: Cleary
 volume: 6
 year: 2024
-start-page: 167
+start-page: 170
 chapter-number: 9
 source-file: 9Cleary.pdf
 volume-title: Technical Writing Spaces 6

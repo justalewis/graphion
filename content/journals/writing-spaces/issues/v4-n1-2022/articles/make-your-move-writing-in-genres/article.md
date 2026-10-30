@@ -99,6 +99,8 @@ Look at how we labeled the moves in these four samples. We did this by first rea
 
 After identifying moves in individual samples, the next step is to compare the samples, looking for similarities and differences to better understand what moves seem typical (or unusual) for the genre. Based on our labels in Table 1, what moves do you see most and least frequently? A table is useful for this step, especially when you are working with longer or more complex genres and want to visualize the similarities and differences between samples. In Table 2, we listed all of the moves found in the four samples, noted which samples included each move, and decided whether each move seemed obligatory, common, optional, or rare for this particular genre based on how often it appeared. If we noticed the move in every sample, we labeled it as “obligatory,” but if we only saw a move in one or two samples, we figured it might be more optional or rare. We need to be careful, however, about making definite conclusions about what is or is not a typical feature of a genre when looking at such a small set of texts. We would probably locate many more moves or develop a different analysis with a larger sample size. Nevertheless, check out our findings in Table 1.
 
+Table 1. Comparing moves across samples
+
 | Move | S. 1 | S.2 | S. 3 | S. 4 | Obligatory, common, optional, or rare? |
 | --- | --- | --- | --- | --- | --- |
 | Informing the teacher that an absence occurred/will occur | ✓ | ✓ | ✓ | ✓ | Obligatory |
@@ -271,6 +273,4 @@ For further discussion on carrying out moves analysis activities, see chapter 2 
 
 6. Some genres tend to be more open to variation than others, including in their use of moves. Make a list of genres that you think are more open to variation and those in which bending the norms may be riskier. What kinds of things might affect your choices as a writer to depart from common moves or other features of a genre?
 
-* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
-
-Table 1. Comparing moves across samples
+\* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.

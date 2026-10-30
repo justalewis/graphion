@@ -2,24 +2,18 @@
 title: 'Taking Flight: Connecting Inner and Outer Realities during Invention'
 author:
 - name: Susan E. Antlitz
-abstract: '*by Susan E. Antlitz* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 1, a peer-reviewed open textbook series for the writing classroom, and is published through Parlor Press. The full volume and individual chapter downloads are available for free from the following sites: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers. To learn about participating in the Writing Spaces project, visit the Writing Spaces website at http://writingspaces.org/.'
+abstract: One of the toughest challenges beginning writers face is figuring out what to write about.* Connecting personal identity and purpose to more public contexts and subjects can play a significant role in helping people to write confidently. Also, since writing anxiety is a common cause of difficulty getting started, strategies for reducing anxiety including movement, sound, intentional distraction, role playing, journaling, and prayer and meditation can help the invention process to unfold more smoothly. Electronic media such as email, messaging or texting, and presentation software also provide avenues for generating ideas. By exploring these methods, you can also increase your satisfaction with writing, and you can find new ways to build bridges between the ideas and purposes that are meaningful to you and the writing you produce for others.
 short-title: Taking Flight
 short-authors: Antlitz
 volume: 1
 year: 2010
-start-page: 87
+start-page: 85
 source-file: antlitz--taking-flight.pdf
 volume-title: Writing Spaces 1
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
-license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
+license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
 chapter-number: 7
 ---
-
-# Taking Flight: Connecting Inner and Outer Realities during Invention
-
-# *Susan E. Antlitz*
-
-One of the toughest challenges beginning writers face is figuring out what to write about.* Connecting personal identity and purpose to more public contexts and subjects can play a significant role in helping people to write confidently. Also, since writing anxiety is a common cause of difficulty getting started, strategies for reducing anxiety including movement, sound, intentional distraction, role playing, journaling, and prayer and meditation can help the invention process to unfold more smoothly. Electronic media such as email, messaging or texting, and presentation software also provide avenues for generating ideas. By exploring these methods, you can also increase your satisfaction with writing, and you can find new ways to build bridges between the ideas and purposes that are meaningful to you and the writing you produce for others.
 
 # Understanding the Connection between the Personal and the Social
 
@@ -331,8 +325,4 @@ When I am inventing, I don’t try to make my notes fit into any particular form
 
 3. What strategies have you used to generate ideas in the past? What has worked or not worked for you? Try several of the strategies discussed in this essay. Which ones appeal to you most, and why?
 
-This essay is available under a Creative Commons License subject to the Writing Spaces Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2010 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
-
-[^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
-
-* This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces. org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces. org/terms-of-use.

@@ -2,16 +2,16 @@
 title: 'The Complexity of Simplicity: Invention Potentials for Writing Students'
 author:
 - name: Colin Charlton
-abstract: '*by Colin Charlton* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 2, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.'
+abstract: '*[T]he “format” of this piece---it goes against what I’ve been*'
 short-title: The Complexity of Simplicity
 short-authors: Charlton
 volume: 2
 year: 2011
-start-page: 102
+start-page: 97
 source-file: charlton--complexity-of-simplicity.pdf
 volume-title: Writing Spaces 2
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
-license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
+license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
 chapter-number: 7
 images-of-text:
 - figure-p003-1.png
@@ -20,12 +20,6 @@ images-of-text:
 - figure-p014-1.jpg
 - figure-p019-1.jpg
 ---
-
-# The Complexity of Simplicity: | Invention Potentials for Writing
-
-# Students *Colin Charlton*
-
-*[T]he “format” of this piece---it goes against what I’ve been*
 
 *taught: to keep things orderly and clump ideas together. This piece*
 
@@ -343,10 +337,22 @@ Graff, Gerald. *Beyond the Culture Wars: How Teaching the Conflicts Can Revitali
 
 Harrison, Jim. *After Ikkyū and Other Poems.* Boston: Shambhala, 1996. Print. Helmenstine, Ann Marie. “Mix Your own Tattoo Ink.” *About.com.* 22 Sept. 2009. Web. <http://chemistry.about.com/cs/howtos/ht/tattooink.htm>.
 
-Hutchison, Grant, Scott Hutchison, Bill Kennedy, and Andy Monaghan (Frightened Rabbit). “A Modern Leper.” *Midnight Organ Fight.* Fat Cat Records, 2008. ![A collage across the page. At the left, a poem by Jim Harrison from the After Ikkyu cycle: one part of the brain attacks another, the war subsides for lack of ammunition, but mules are bringing fresh supplies over the mountain. At the centre, a bottle of ink, labelled light cyan. At the right, a recipe for tattoo ink from Anne Marie Helmenstine: vodka, glycerin, propylene glycol, powdered pigment, a blender and aseptic training.](assets/figure-p003-1.png) ![A school desk photographed from the side, labelled [desk], with questions written around it: writing surface, graffiti, doodles, big enough? Seat back, support, straight. Stationary or mobile, adaptable? Seat, single or multiple students?](assets/figure-p005-1.jpg) ![Torn and overlapping flyers pasted on a brick wall, labelled brick flyers at the left and phosphorous at the right.](assets/figure-p007-1.jpg) ![A collage headed design it and they will read. At the left, a student writes that an English writing class was the last class she ever wanted to take, and that she could not begin to tell what was going through her head. At the centre, a t-shirt printed with a black starburst. At the right, Erika Slavinsky, from a reflective portfolio cover letter for English 1301: no teacher is going to make her write about things she does not want to write about, her writing teacher always nagging about specifics, and the thought of taking the course physically nauseating her.](assets/figure-p010-1.jpg) ![A collage labelled copper. At the centre, a hand-drawn board headed Experts and Novices. On both sides, Adolfo Guerrero reflecting on Project 3 for English 1301: that writing the paper he felt like one of the students unprepared for college and fighting a Goliath, that he felt it would take too long to graduate, and that he wrote about people who take a break and never go back, knowing his sisters and brother did and never went back.](assets/figure-p011-1.jpg) ![A collage labelled zinc. At the left, a verse from Frightened Rabbit's The Modern Leper about coming back for more of exactly the same. At the centre, a page of handwritten teacher comments. At the right, Erika Slavinsky on her teacher wanting revision after revision of work already done, and on his giving feedback until an idea is in her head rather than his.](assets/figure-p014-1.jpg) ![A collage labelled antimony. At the left, Ozzy Ozuna on never paying much attention to the education system until now, and on the system being poorly structured. At the centre, a dark worn disc. At the right, Adolfo Guerrero, from The Silence Dogood Letter for College Freshmen, warning students sitting in the calm of high school senior year that the storm of college is coming, and telling them in bold that there will be many changes.](assets/figure-p019-1.jpg) This essay is available under a Creative Commons License subject to the Writing Spaces' Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2011 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
+Hutchison, Grant, Scott Hutchison, Bill Kennedy, and Andy Monaghan (Frightened Rabbit). “A Modern Leper.” *Midnight Organ Fight.* Fat Cat Records, 2008.
 
-[^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
+![A collage across the page. At the left, a poem by Jim Harrison from the After Ikkyu cycle: one part of the brain attacks another, the war subsides for lack of ammunition, but mules are bringing fresh supplies over the mountain. At the centre, a bottle of ink, labelled light cyan. At the right, a recipe for tattoo ink from Anne Marie Helmenstine: vodka, glycerin, propylene glycol, powdered pigment, a blender and aseptic training.](assets/figure-p003-1.png)
 
-* This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.
+![A school desk photographed from the side, labelled [desk], with questions written around it: writing surface, graffiti, doodles, big enough? Seat back, support, straight. Stationary or mobile, adaptable? Seat, single or multiple students?](assets/figure-p005-1.jpg)
+
+![Torn and overlapping flyers pasted on a brick wall, labelled brick flyers at the left and phosphorous at the right.](assets/figure-p007-1.jpg)
+
+![A collage headed design it and they will read. At the left, a student writes that an English writing class was the last class she ever wanted to take, and that she could not begin to tell what was going through her head. At the centre, a t-shirt printed with a black starburst. At the right, Erika Slavinsky, from a reflective portfolio cover letter for English 1301: no teacher is going to make her write about things she does not want to write about, her writing teacher always nagging about specifics, and the thought of taking the course physically nauseating her.](assets/figure-p010-1.jpg)
+
+![A collage labelled copper. At the centre, a hand-drawn board headed Experts and Novices. On both sides, Adolfo Guerrero reflecting on Project 3 for English 1301: that writing the paper he felt like one of the students unprepared for college and fighting a Goliath, that he felt it would take too long to graduate, and that he wrote about people who take a break and never go back, knowing his sisters and brother did and never went back.](assets/figure-p011-1.jpg)
+
+![A collage labelled zinc. At the left, a verse from Frightened Rabbit's The Modern Leper about coming back for more of exactly the same. At the centre, a page of handwritten teacher comments. At the right, Erika Slavinsky on her teacher wanting revision after revision of work already done, and on his giving feedback until an idea is in her head rather than his.](assets/figure-p014-1.jpg)
+
+![A collage labelled antimony. At the left, Ozzy Ozuna on never paying much attention to the education system until now, and on the system being poorly structured. At the centre, a dark worn disc. At the right, Adolfo Guerrero, from The Silence Dogood Letter for College Freshmen, warning students sitting in the calm of high school senior year that the storm of college is coming, and telling them in bold that there will be many changes.](assets/figure-p019-1.jpg)
+
+\* This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.
 
 [^1]: I created the images for *inSights,* the visual essay throughout the essay, but I have to give special thanks to Jacqueline Casas, a student in the same English 1301 as Brittany and Adbe, who made sure we had readable images of all our whiteboard work. Her skills with a cell phone camera at the end of several classes meant that we could spend class time making connections rather than taking notes.

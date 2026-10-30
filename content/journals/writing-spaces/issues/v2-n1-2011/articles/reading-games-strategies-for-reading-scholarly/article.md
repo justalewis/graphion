@@ -2,20 +2,17 @@
 title: 'Reading Games: Strategies for Reading Scholarly Sources'
 author:
 - name: Karen Rosenberg
-abstract: '*by Karen Rosenberg* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 2, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.'
 short-title: Reading Games
 short-authors: Rosenberg
 volume: 2
 year: 2011
-start-page: 209
+start-page: 200
 source-file: rosenberg--reading-games.pdf
 volume-title: Writing Spaces 2
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
-license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
+license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
 chapter-number: 13
 ---
-
-# Reading Games: Strategies for Reading Scholarly Sources *Karen Rosenberg*
 
 # If at First You Fall Asleep . . .
 
@@ -107,11 +104,9 @@ Collectively, these suggestions and guidelines will help you read and understand
 
 Norgaard, Rolf. *Composing Knowledge: Readings for College Writers.* Boston: Bedford/St. Martin’s, 2007. Print.
 
-Rounsaville, Angela, Rachel Goldberg, Keith Feldman, Cathryn Cabral, and Anis Bawarshi, eds. *Situating Inquiry: An Introduction to Reading, Research, and Writing at the University of Washington.* Boston: Bedford/St. Martin’s, 2008. Print. This essay is available under a Creative Commons License subject to the Writing Spaces' Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2011 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
+Rounsaville, Angela, Rachel Goldberg, Keith Feldman, Cathryn Cabral, and Anis Bawarshi, eds. *Situating Inquiry: An Introduction to Reading, Research, and Writing at the University of Washington.* Boston: Bedford/St. Martin’s, 2008. Print.
 
-[^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
-
-* This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.
 
 [^1]: In this discussion I draw on Norgaard’s excellent discussion of reading as joining a conversation (1--28). By letting you, the reader, know this in a footnote, I am not only citing my source (I’d be plagiarizing if I didn’t mention this somewhere), but I’m also showing how I enter this conversation and give you a trail to follow if you want to learn more about the metaphor of the conversation. Following standard academic convention, I put the full reference to Norgaard’s text at the end of this article, in the references.
 

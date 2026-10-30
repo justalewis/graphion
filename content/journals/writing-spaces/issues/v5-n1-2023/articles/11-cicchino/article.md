@@ -61,6 +61,8 @@ Figure 2: Akeelah’s scientific poster, mock examples created by the author. Th
 
 Angel’s challenge isn’t uncommon for students as they move into their discipline-specific courses (also called courses in the major). Angel’s composition professor had taught them the importance of audience, purpose, and genre, and they had been successful applying those concepts in their composition course. However, it was more difficult for Angel to apply those concepts and manage their writing process in this new discipline-specific course. Prof. Smith expected Angel to do the work of learning about writing within the scientific community and the genre of a scientific poster more independently. Prof. Smith also didn’t provide checkpoints in draft development like Angel’s composition professor had, making it easy for Angel to wait to begin the project until just before it was due.
 
+Table 1 A comparison between Angel’s and Akeelah’s posters
+
 |  | Angel’s Poster | Akeelah’s Poster |
 | --- | --- | --- |
 | Style/ Word Choice | Uses “I” language, narrative style, and lengthy transitions to elaborate on the topic. MLA format | Uses more concise scientific language with tightly focused paragraphs. APA format |
@@ -132,6 +134,8 @@ As you encounter new genres, you should ask what conventions are associated with
 Conventions can vary because of your audience, discipline, or culture. For instance, the conventions associated with a research poster can vary across disciplines: a research poster you create in a biology course may have different conventions than a research poster you create in a history course. While both will still purposefully communicate research, biologists expect concise informative writing, a straightforward design, and want to see scientific methods, while historians allow for more creative design with persuasive moments in writing and research methods drawn from the humanities. Conventions can vary across cultures and national contexts, too. Poster conventions that are typical for American professionals might differ from posters that those in the same profession in Japan or Ghana create because different cultures appreciate different aesthetic designs and have different ways to logically make meaning.
 
 Writers do sometimes purposefully reject conventions because they want to challenge the expected to impact the audience. You should always deviate from conventions intentionally. Because conventions come to be expected by your audience, deviating from them might leave your audience confused or questioning your expertise. For instance, a biologist presenting their scientific poster to an audience of high schoolers might reduce their technical terms and play with a more colorful, creative design. Departing from conventions in this case makes the information more accessible and appealing to the biologist’s audience and helps the biologist achieve their purpose: to engage high schoolers in learning about biology research.
+
+Table 1 This table briefly summarizes these rhetorical concepts and offers some guiding questions to get you thinking about these concepts in your writing.
 
 | RHETORICAL CONCEPT | DEFINITION | GUIDING QUESTIONS |  |
 | --- | --- | --- | --- |
@@ -307,7 +311,3 @@ Take time to read through each example. Instead of worrying about the content, r
 4. What resources or support could help you write in this genre for this audience and purpose?
 
 [^1]: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use. 168
-
-Table 1 A comparison between Angel’s and Akeelah’s posters
-
-Table 1 This table briefly summarizes these rhetorical concepts and offers some guiding questions to get you thinking about these concepts in your writing.

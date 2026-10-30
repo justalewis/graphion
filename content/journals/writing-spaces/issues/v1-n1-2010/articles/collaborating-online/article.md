@@ -2,22 +2,19 @@
 title: 'Collaborating Online: Digital Strategies for Group Work'
 author:
 - name: Anthony T. Atkins
-abstract: '*by Anthony T. Atkins* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 1, a peer-reviewed open textbook series for the writing classroom, and is published through Parlor Press. The full volume and individual chapter downloads are available for free from the following sites: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers. To learn about participating in the Writing Spaces project, visit the Writing Spaces website at http://writingspaces.org/.'
 short-title: Collaborating Online
 short-authors: Atkins
 volume: 1
 year: 2010
-start-page: 240
+start-page: 231
 source-file: atkins--collaborating-online.pdf
 volume-title: Writing Spaces 1
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
-license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
+license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
 chapter-number: 16
 images-of-text:
 - figure-p013-1.png
 ---
-
-# Collaborating Online: Digital Strategies for Group Work *Anthony T. Atkins*
 
 # Introduction
 
@@ -182,11 +179,7 @@ The newsletter project (Project A), ended successfully. Using a wiki called Wiki
 
 # Notes
 
-This essay is available under a Creative Commons License subject to the Writing Spaces Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2010 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
-
-[^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
-
-* This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces. org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces. org/terms-of-use.
 
 [^1]: The students were required to create a poster for a presentation to faculty, and in this situation the students simply stood next to their poster and explained the project to those who chose to stop by and review them. The students were also required to provide a more formal presentation of their work in a classroom setting (where a computer and LCD projector could also be used).
 

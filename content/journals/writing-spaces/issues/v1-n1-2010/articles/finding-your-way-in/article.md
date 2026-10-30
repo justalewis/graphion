@@ -3,26 +3,18 @@ title: '“Finding Your Way In”: Invention as Inquiry Based Learning in First 
 author:
 - name: Steven Lessner
 - name: Collin Craig
-abstract: '*by Steven Lessner and Collin Craig* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 1, a peer-reviewed open textbook series for the writing classroom, and is published through Parlor Press. The full volume and individual chapter downloads are available for free from the following sites: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers. To learn about participating in the Writing Spaces project, visit the Writing Spaces website at http://writingspaces.org/.'
+abstract: Imagine the initial meeting of your first year writing course.* After welcoming you to the course and going over the basics, your writing instructor prompts you and the other students to reflect on how you typically begin to think about approaching a writing assignment. Several hands raise and you listen as students begin answering. One student hesitantly states that he normally waits until the last minute to think about it and stays up all night before it’s due, working away. Another student asserts that she often has trouble choosing and then narrowing down a topic. Disagreeing about this shared response, a student sitting near you asserts that he has trouble generating more supporting ideas once he has chosen a topic to explore. Still someone else states that she tries to get ideas from the readings she is supposed to write about in essays---often without success. After hearing from these students, your writing instructor tells the class that this is a good time to start talking about invention and helpful activities to use when approaching and starting a writing assignment.
 short-title: “Finding Your Way In”
 short-authors: Lessner and Craig
 volume: 1
 year: 2010
-start-page: 129
+start-page: 126
 source-file: lessner-and-craig--finding-your-way-in.pdf
 volume-title: Writing Spaces 1
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
-license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 United States License (CC BY-NC-ND 3.0 US).
+license-url: https://creativecommons.org/licenses/by-nc-nd/3.0/us/
 chapter-number: 9
 ---
-
-# “Finding Your Way In”: Invention
-
-# as Inquiry Based Learning in First
-
-# Year Writing *Steven Lessner and Collin Craig*
-
-Imagine the initial meeting of your first year writing course.* After welcoming you to the course and going over the basics, your writing instructor prompts you and the other students to reflect on how you typically begin to think about approaching a writing assignment. Several hands raise and you listen as students begin answering. One student hesitantly states that he normally waits until the last minute to think about it and stays up all night before it’s due, working away. Another student asserts that she often has trouble choosing and then narrowing down a topic. Disagreeing about this shared response, a student sitting near you asserts that he has trouble generating more supporting ideas once he has chosen a topic to explore. Still someone else states that she tries to get ideas from the readings she is supposed to write about in essays---often without success. After hearing from these students, your writing instructor tells the class that this is a good time to start talking about invention and helpful activities to use when approaching and starting a writing assignment.
 
 Your first year college writing course often becomes a primary place where new writing techniques and tools are presented to help smoothen your transition into college-level writing. We hope this chapter will encourage you to see the diverse invention possibilities available when beginning a writing assignment. For instance, have you ever felt a blank sheet of paper or empty word processing screen intently staring at you while you decide what to say? Learning potential invention activities for writing can help you feel more comfortable as a writer in college by giving you many more places to begin. As college writing teachers, we know that first year writing students have plenty of generative ideas to share and many insightful connections to make in their writing. Knowing that a wide range of invention activities are available to try out may be all you need to begin approaching writing assignments with more effectiveness, clarity and creativity.
 
@@ -339,8 +331,6 @@ DeWitt, Scott Lloyd. *Writing Inventions: Identities, Technologies, Pedagogies*.
 
 Elbow, Peter. *Writing With Power: Techniques for Mastering the Writing Process*. NewYork: Oxford UP, 1981.
 
-hooks, bell. *Remembered Rapture: The Writer at Work*. New York: Henry and Holt Co.,1999. This essay is available under a Creative Commons License subject to the Writing Spaces Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2010 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
+hooks, bell. *Remembered Rapture: The Writer at Work*. New York: Henry and Holt Co.,1999.
 
-[^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
-
-* This work is licensed under the Creative Commons Attribution-Noncommercial-No Derivative Works 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-Noncommercial-No Derivative Works 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.

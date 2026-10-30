@@ -8,7 +8,7 @@ short-title: You Are Good for Wikipedia
 short-authors: Vetter and Moroz
 volume: 5
 year: 2023
-start-page: 264
+start-page: 266
 chapter-number: 17
 source-file: 17Vetter-Moroz.pdf
 volume-title: Writing Spaces 5
@@ -148,7 +148,9 @@ Gorman, Michael. “Jabberwiki: The Educational Response, Part II.” *Britannic
 
 Harrison, Stephen. “Happy 18th Birthday, Wikipedia. Let’s Celebrate the Internet’s Good Grown-Up.” *Washington Post*, 14 Jan. 2019, www.washingtonpost. com/opinions/happy-18th-birthday-wikipedia-lets-celebrate-the-internetsgood-grown-up/2019/01/14/e4d854cc-1837-11e9-9ebf-c5fed1b7a081_story. html. Accessed 12 April 2022.
 
-Hwang, Thomas J., et al. “Drug Safety in the Digital Age.” *New England Journal of Medicine*, vol. 370, no. 26, June 2014, pp. 2460--2462, doi:10.1056/ NEJMp1401767. \@jamiewithorn. “My middle school teacher who yelled that ‘Wikipedia wasn’t a reliable source’ every day is sharing vaccine conspiracy theories on Facebook.” *Twitter*, 11 Feb. 2021, 8:52 p.m., twitter.com/jamiewithorne/ status/1360044136695554051.
+Hwang, Thomas J., et al. “Drug Safety in the Digital Age.” *New England Journal of Medicine*, vol. 370, no. 26, June 2014, pp. 2460--2462, doi:10.1056/ NEJMp1401767.
+
+\@jamiewithorn. “My middle school teacher who yelled that ‘Wikipedia wasn’t a reliable source’ every day is sharing vaccine conspiracy theories on Facebook.” *Twitter*, 11 Feb. 2021, 8:52 p.m., twitter.com/jamiewithorne/ status/1360044136695554051.
 
 Kill, Melanie. “Teaching Digital Rhetoric: Wikipedia, Collaboration, and the Politics of Free Knowledge.” *Digital Humanities Pedagogy: Practices, Principles, and Politics*, edited by Brett D. Hirsch, Open Book Publishers, 2012, pp. 389--406. www.jstor.org/stable/j.ctt5vjtt3.21. Accessed 27 July 2021.
 

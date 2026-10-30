@@ -2,7 +2,6 @@
 title: What Is “Academic” Writing?
 author:
 - name: L. Lennie Irvin
-abstract: '*by L. Lennie Irvin* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 1, a peer-reviewed open textbook series for the writing classroom, and is published through Parlor Press. The full volume and individual chapter downloads are available for free from the following sites: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers. To learn about participating in the Writing Spaces project, visit the Writing Spaces website at http://writingspaces.org/.'
 short-title: What Is “Academic” Writing?
 short-authors: Irvin
 volume: 1
@@ -10,12 +9,10 @@ year: 2010
 start-page: 6
 source-file: irvin--what-is-academic-writing.pdf
 volume-title: Writing Spaces 1
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
-license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
+license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
 chapter-number: 2
 ---
-
-# What Is “Academic” Writing? *L. Lennie Irvin*
 
 # Introduction: The Academic Writing Task
 
@@ -73,6 +70,13 @@ Figure 1. Source: “A Social Model of Writing.” Writing@CSU. 2010. Web. 10 Ma
 *Looking More Closely at the “Academic Writing” Situation*
 
 Writing in college is a fairly specialized writing situation, and it has developed its own codes and conventions that you need to have a keen awareness of if you are going to write successfully in college. Let’s break down the writing situation in college:
+
+| Who’s your audience? | Primarily the professor and possibly your classmates (though you may be asked to include a secondary outside audience). |
+| --- | --- |
+| What’s the occasion or context? | An assignment given by the teacher within a learning context and designed to have you learn and demonstrate your learning. |
+| What’s your message? | It will be your learning or the interpretation gained from your study of the subject matter. |
+| What’s your purpose? | To show your learning and get a good grade (or to accomplish the goals of the writing assignment). |
+| What documents/ genres are used? | The essay is the most frequent type of document used. |
 
 So far, this list looks like nothing new. You’ve been writing in school toward teachers for years. What’s different in college? Lee Ann Carroll, a professor at Pepperdine University, performed a study of student writing in college and had this description of the kind of writing you will be doing in college:
 
@@ -226,13 +230,6 @@ As we leave this discussion, I want to return to what I said was the secret for 
 
 Carroll, Lee Ann. *Rehearsing New Roles: How College Students Develop as* *Writers*. Carbondale: Southern Illinois UP, 2002. Print.
 
-Thaiss, Chris and Terry Zawacki. *Engaged Writers & Dynamic Disciplines:* *Research on the Academic Writing Life*. Portsmouth: Boynton/Cook, 2006. Print. | Who’s your audience? | Primarily the professor and possibly your classmates (though you may be asked to include a secondary outside audience). |
-| --- | --- |
-| What’s the occasion or context? | An assignment given by the teacher within a learning context and designed to have you learn and demonstrate your learning. |
-| What’s your message? | It will be your learning or the interpretation gained from your study of the subject matter. |
-| What’s your purpose? | To show your learning and get a good grade (or to accomplish the goals of the writing assignment). |
-| What documents/ genres are used? | The essay is the most frequent type of document used. | This essay is available under a Creative Commons License subject to the Writing Spaces Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2010 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
+Thaiss, Chris and Terry Zawacki. *Engaged Writers & Dynamic Disciplines:* *Research on the Academic Writing Life*. Portsmouth: Boynton/Cook, 2006. Print.
 
-[^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
-
-* This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces. org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces. org/terms-of-use.

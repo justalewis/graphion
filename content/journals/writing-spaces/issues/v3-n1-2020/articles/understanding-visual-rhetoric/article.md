@@ -1,36 +1,22 @@
 ---
-title: Understanding Visual Rhetoric Jenae Cohn
+title: Understanding Visual Rhetoric
 author:
 - name: Jenae Cohn
-abstract: 'This essay is a chapter in *Writing Spaces: Readings on Writing*, Volume 3, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from any of these sites:'
+abstract: Visuals can dramatically impact our understanding of a rhetorical situation. In a writing class, students do not always think that they will need to be attentive to visuals, but visual information can be a critical component to understanding and analyzing the rhetorical impacts of a multimodal text. This chapter gives examples of what visual rhetoric looks like in everyday situations, unpacking how seemingly mundane images like a food picture on social media or a menu at a restaurant, can have a persuasive impact on the viewer. The chapter then offers students some terms to use when describing visuals in a variety of situations.
 short-title: Understanding Visual Rhetoric
 short-authors: Cohn
 volume: 3
 year: 2020
-start-page: 15
+start-page: 14
+chapter-number: 2
 source-file: cohn.pdf
 volume-title: Writing Spaces 3
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 teacher-resources: separate
-chapter-number: 2
 images-of-text:
 - figure-p007-1.jpg
 ---
-
-> • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/pages/writing-spaces • WAC Clearinghouse: http://wac.colostate.edu/books/
-
-Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.
-
-# 2
-
-# Understanding Visual Rhetoric
-
-# *Jenae Cohn*
-
-# Overview
-
-Visuals can dramatically impact our understanding of a rhetorical situation. In a writing class, students do not always think that they will need to be attentive to visuals, but visual information can be a critical component to understanding and analyzing the rhetorical impacts of a multimodal text. This chapter gives examples of what visual rhetoric looks like in everyday situations, unpacking how seemingly mundane images like a food picture on social media or a menu at a restaurant, can have a persuasive impact on the viewer. The chapter then offers students some terms to use when describing visuals in a variety of situations.
 
 # Introduction
 
@@ -237,6 +223,4 @@ Pick a few data visualizations (i.e. infographics) from sites like Information i
 
 Asking students to write captions for images can be a really interesting moment for students to interrogate and unpack their assumptions about particular images and what they’re privileging as viewers and authors of multimodal or image-rich projects. A conversation about captions can also be a good opportunity to help students understand accessibility and ways to make images readable for a variety of audiences. To start this class activity, you will want to define two different kinds of image captions that exist for visuals published on the Web: captions and alt text. The caption is the text that displays below an image (much like what you would see in a printed textbook and in this particular textbook chapter for that matter). Alt text, on the other hand, is a short, written description of an image Web authors use to describe an image in a sentence for someone using screen reader software. For a reader using screen reader software, the alt text and the caption are both read to offer clarity on what the visual includes. For this class activity, project an image or photograph in a shared space and ask everyone in the class to write both a caption and alt text for the image. You may find it useful to show a few examples of captions and alt text to help clarify the activity. Alternatively, you could have students start with writing captions (since students may have more exposure to reading captions than alt text) and then move to alt text. After students have written their captions, ask them to share with a partner, comparing how their captions are similar or different. Each pair should then take a few minutes to decide which caption they would use for the photo or image if they were publishing the image themselves, justifying their choice as a pair. The results can then be shared with the class where the instructor can lead a longer class conversation about the impacts of captions and the challenges in writing captions to capture the impacts of visuals on the audience.
 
-Parlor Press LLC, Anderson, South Carolina, USA © 2020 by Parlor Press. Individual essays © 2020 by the respective authors. Unless otherwise stated, these works are licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use. All rights reserved. For permission to reprint, please contact the author(s) of the individual articles, who are the respective copyright owners. Cover design by Colin Charlton. Library of Congress Cataloging-in-Publication Data on File
-
-* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.

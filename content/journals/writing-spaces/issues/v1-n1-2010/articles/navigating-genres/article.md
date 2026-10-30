@@ -2,22 +2,18 @@
 title: Navigating Genres
 author:
 - name: Kerry Dirk
-abstract: '*by Kerry Dirk* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 1, a peer-reviewed open textbook series for the writing classroom, and is published through Parlor Press. The full volume and individual chapter downloads are available for free from the following sites: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers. To learn about participating in the Writing Spaces project, visit the Writing Spaces website at http://writingspaces.org/.'
+abstract: 'There’s a joke that’s been floating around some time now that you’ve likely already heard.* It goes something like the following:'
 short-title: Navigating Genres
 short-authors: Dirk
 volume: 1
 year: 2010
-start-page: 255
+start-page: 245
 source-file: dirk--navigating-genres.pdf
 volume-title: Writing Spaces 1
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
-license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
+license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
 chapter-number: 17
 ---
-
-# Navigating Genres *Kerry Dirk*
-
-There’s a joke that’s been floating around some time now that you’ve likely already heard.* It goes something like the following:
 
 Q: What do you get when you rewind a country song?
 
@@ -215,8 +211,6 @@ Miller, Carolyn R. “Genre as Social Action.” *Quarterly Journal of Speech* 7
 
 *The Onion: America’s Finest News Source*. 20 July 2009. Web. 20 July 2009. <http://www.theonion.com>.
 
-Reiff, Mary Jo. “Moving Writers, Shaping Motives, Motivating Critique and Change: A Genre Approach to Teaching Writing.” *Relations, Locations,* *Positions: Composition Theory for Writing Teachers*. Ed. Peter Vandenberg, Sue Hum, and Jennifer Clary-Lemon. Urbana, IL: National Council of Teachers of English, 2006. 157--64. Print. This essay is available under a Creative Commons License subject to the Writing Spaces Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2010 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
+Reiff, Mary Jo. “Moving Writers, Shaping Motives, Motivating Critique and Change: A Genre Approach to Teaching Writing.” *Relations, Locations,* *Positions: Composition Theory for Writing Teachers*. Ed. Peter Vandenberg, Sue Hum, and Jennifer Clary-Lemon. Urbana, IL: National Council of Teachers of English, 2006. 157--64. Print.
 
-[^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
-
-* This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces. org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces. org/terms-of-use.

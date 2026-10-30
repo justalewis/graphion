@@ -2,22 +2,18 @@
 title: Putting Ethnographic Writing in Context
 author:
 - name: Seth Kahn
-abstract: '*by Seth Kahn* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 2, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.'
+abstract: If you’re like most students, you may wonder why your writing instructor is asking you to do *ethnographic writing. You may have a vague idea of what ethnography is---what anthropologists do when they live in faraway places for long stretches of time, trying to understand what makes a culture unique or interesting. You may wonder what studying cultures in detail, conducting fieldwork and interviews, has to do with writing papers for your college classes.
 short-title: Putting Ethnographic Writing in Context
 short-authors: Kahn
 volume: 2
 year: 2011
-start-page: 176
+start-page: 169
 source-file: kahn--putting-ethnographic-writing.pdf
 volume-title: Writing Spaces 2
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
-license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
+license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
 chapter-number: 11
 ---
-
-# Putting Ethnographic Writing in Context *Seth Kahn*
-
-If you’re like most students, you may wonder why your writing instructor is asking you to do *ethnographic writing. You may have a vague idea of what ethnography is---what anthropologists do when they live in faraway places for long stretches of time, trying to understand what makes a culture unique or interesting. You may wonder what studying cultures in detail, conducting fieldwork and interviews, has to do with writing papers for your college classes.
 
 Anthropologists James Spradley and David McCurdy answer the question concisely when they say, “A good writer must be a good ethnographer” (4). Ethnographic writing challenges you to consider everything that’s interesting and difficult about writing; it pushes you to *generate, collect, analyze,* and *synthesize* more material than you’ve probably had to work with in one paper before. Moreover, because ethnographies are about actual people, the assignment makes you think about *ethics* (how you’re presenting information, how that information might affect people if made public, being as accurate as you can) and *knowledge* (what it is you really know at the end of the project and how you present that knowledge without sounding more confident than you should). And finally, because these projects generally take a long time and you write constantly while doing them, you’ll have plenty of
 
@@ -183,8 +179,6 @@ Spradley, James, and David A. McCurdy. *The Cultural Experience: Ethnography in 
 
 Sunstein, Bonnie. *Composing a Culture: Inside a Summer Writing Program* *with High School Teachers.* Portsmouth, NH: Boynton-Cook/Heinemann, 1994. Print.
 
-Van Maanen, John. *Tales of the Field: On Writing Ethnography.* Chicago: U of Chicago P, 1988. Print. This essay is available under a Creative Commons License subject to the Writing Spaces' Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2011 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
+Van Maanen, John. *Tales of the Field: On Writing Ethnography.* Chicago: U of Chicago P, 1988. Print.
 
-[^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
-
-* This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.

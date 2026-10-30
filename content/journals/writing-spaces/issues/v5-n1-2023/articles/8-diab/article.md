@@ -62,6 +62,8 @@ As Redish indicates, for the text to be accessible, readers should be able to re
 
 It might be obvious that some font types and sizes could hinder readability and accessibility to the reader. A font that is too small or too decorative will likely make readability harder for the targeted audience. Take, for example, the following textual examples (table 1, which contains figures 1-6). Which text in each row is easier to read?
 
+Table 1 Examples that Demonstrate how Font Type and Size Contribute to Enhancing or Hindering the Readability and Accessibility of Texts from my own Perspective as a Reader. The first column shows the number of each example. The second column shows font types and sizes that make it difficult for me to read and understand the text. The third column shows font types and sizes that enhance the readability of texts to me.
+
 | Ex. # | Textual Option #1 | Textual Option # 2 |
 | --- | --- | --- |
 | 1 | What do you think? Figure 1: The question “What do you think?” written in font type Brush Script Std size 14 | What do you think? Figure 2: The question “What do you think?” written in font type Times New Roman size 14 |
@@ -363,8 +365,6 @@ This activity introduces students to accessibility checkers that are embedded in
 5. Ask students to revise the file names, when necessary, to point out the author and what they submitted to the reader.
 
 [^1]: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
-
-Table 1 Examples that Demonstrate how Font Type and Size Contribute to Enhancing or Hindering the Readability and Accessibility of Texts from my own Perspective as a Reader. The first column shows the number of each example. The second column shows font types and sizes that make it difficult for me to read and understand the text. The third column shows font types and sizes that enhance the readability of texts to me.
 
 Notice how the student author provided a full comprehensive title of the memo that included the assignment type, draft #, and title of the essay.
 

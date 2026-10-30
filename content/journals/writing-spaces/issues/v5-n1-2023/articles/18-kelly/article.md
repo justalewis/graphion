@@ -7,7 +7,7 @@ short-title: The Good, the Bad, and the Ugly of Peer Review
 short-authors: Kelly
 volume: 5
 year: 2023
-start-page: 282
+start-page: 284
 chapter-number: 18
 source-file: 18Kelly.pdf
 volume-title: Writing Spaces 5
@@ -122,6 +122,14 @@ You can also try turning the feedback you get from different readers -- say mult
 
 In Appendix 2 you’ll find a blank chart that offers a system for reflecting on the advice you’ve received about your work in progress. You can make a version of this chart for yourself to turn feedback from peer reviewers into a to-do (and sometimes also a not-to-do) list. The chart below is a sample version I’ve filled in with some comments given in response to a research essay that tries to get more people to register to vote.
 
+| Features evaluated | Commentary offered | Reflection (Valid or not?) | Planned response |
+| --- | --- | --- | --- |
+| Originality | “I can’t tell whether your goal is mostly to motivate people to vote or to vote for a particular candidate. These points seem to get muddled together.” | Valid. My goal is to motivate all people who can vote to vote, so I need to look for and rework places that seem to imply I only want people who support the same candidates I do to vote. | Revise my thesis to make my key point more explicit. Highlight sections in my draft that mention a particular candidate currently running, and make sure I’m not implying any favoritism. |
+| Features evaluated | Commentary offered | Reflection (Valid or not?) | Planned response |
+| --- | --- | --- | --- |
+| Argumentation (arrangement) | “There are so many examples from past elections, and I’m getting lost. Maybe cut some of these examples?” | Not valid. I think the examples are the strongest part of this essay, so I’m not going to cut any -- but maybe I could better explain what each one signifies. | Check and, if it seems necessary, clarify explanations about the significance of every example I include. |
+| Readability | “The writer uses the term ‘opponent’ all over this essay to refer to the candidate who isn’t the incumbent -- I think this will offend anyone who doesn’t want to vote for the person already in office.” | Valid. Interesting comment. I hadn’t noticed the implications of this word, and given that I want potential voters to see elections as something other than hostile and angry, I probably need to get rid of this kind of language. | Highlight in yellow any word choices that seem to suggest antagonism or hostility. Then rework that phrasing. |
+
 You might also add to your own chart a column that lets you order your planned response tasks. Maybe you want to tackle the easy tasks first (e.g. correcting the spelling of a particular term) and hold off on big jobs (e.g. reordering your examples in the second half of the essay). Maybe you want to manage more global, structural revisions before bothering with small details. In any case, you’re likely to find that planning revision as a set of steps makes this stage of the writing process more manageable and effective.
 
 The key way we learn to improve our writing is to think about what we’re doing. Getting feedback from readers and then evaluating that feedback offers valuable practice in thinking about thinking. (Giles’s essay “Reflective Writing and the Revision Process” offers a helpful overview of “thinking about thinking,” also known as metacognition.) By working through a reflective process, we can come to understand that not every nasty comment from a peer reviewer needs to be taken at face value. (For example, we don’t necessarily need to change our topic if a reader sniffs, “This is confusing,” although we might decide to explain our main point more systematically.) And maybe we can even come to recognize that our own tendency to think harshly about our work in progress could be a step towards identifying a section we might revise later.
@@ -153,6 +161,14 @@ The blank chart below offers you a system for reflecting on advice you’ve rece
 As you make your own chart, pay special attention to the “Reflection” column, keeping in mind that you can reasonably decide that a comment is not a valid piece of criticism. It is possible for a peer reviewer to be wrong. But even a bad comment can help you make your writing more effective if it gets you to think about what the reviewer focused on and then consider possible revision options.
 
 # Revision Plan Chart Works Cited
+
+| Features evaluated | Peer-reviewer comment | Reflection (Valid or not?) | Planned response |
+| --- | --- | --- | --- |
+| Originality |  |  |  |
+| Argumentation (arrangement) |  |  |  |
+| Engagement with relevant research (examples) |  |  |  |
+| Readability |  |  |  |
+| Other |  |  |  |
 
 Belcher, Wendy. *Writing Your Journal Article in Twelve Weeks,* 2nd ed., Chicago, University of Chicago Press, 2019, https://doi.org/10.7208/ chicago/9780226500089.001.0001.
 
@@ -201,21 +217,6 @@ Instructors could assign this essay in a first-year or upper-level writing cours
 Students in higher education classrooms often lack the understanding that the instructors teaching their courses are accomplished researchers -- possibly graduate students working on MA or PhD thesis projects; possibly authors of published articles, chapters, or books; and always teachers whose work engages with the scholarship of teaching and learning. While we aren’t trying to make all students into academics, much less clones of ourselves, we do them no favors by failing to share our own stories of academic research and writing. By focusing on peer review -- and particularly on the label we give to peer-review-gone-wrong, Reviewer Two -- this chapter ensures that students see academic writing as produced through collaboration (by writers, reviewers, and editors) and involving revision. Instructors can make clear the importance of drafting, revision, and workshopping by linking such classroom “assignments” or “scaffolding activities” to real experiences of professional academic writing -- ideally their own.
 
 > • In a class session, walk students through an example of your writing at various stages of development; doing so makes clear not only that you are an academic writer but also that you are not a divine creature who produces brilliant one-and-done drafts. I find it helpful to show my students how an idea developed from a conference paper proposal into a conference paper, then a first draft of a book chapter or article, then a revision of that piece, then another revision, etc. I explain what feedback -- from audience members at a conference presentation, colleagues I asked to read work in progress, peer reviewers, editors, etc. -- I took into account at each stage of revision. You might share a seminar paper, thesis chapter, or any other piece of writing that has gone through multiple revisions guided by feedback from several readers. • If you have peer review/reader reports for a piece of writing you published, share these documents, and talk students through how you responded to the feedback you received. Make explicit that by the time a piece of scholarship shows up as a published article or book chapter a student can read and cite, it has been checked, reworked, and revised many times. • Give students a piece of writing that you consider to be a very rough first draft (maybe two or three typed pages that you pounded out in half an hour without revising, editing, or even proofreading), and ask them to give you feedback on it. If you like, start by asking them to offer mean, nitpicky Reviewer Two types of criticism, and model how you would handle those sorts of comments as well as what ideas for revision you might glean from this feedback.
-
-| Features evaluated | Commentary offered | Reflection (Valid or not?) | Planned response |
-| --- | --- | --- | --- |
-| Originality | “I can’t tell whether your goal is mostly to motivate people to vote or to vote for a particular candidate. These points seem to get muddled together.” | Valid. My goal is to motivate all people who can vote to vote, so I need to look for and rework places that seem to imply I only want people who support the same candidates I do to vote. | Revise my thesis to make my key point more explicit. Highlight sections in my draft that mention a particular candidate currently running, and make sure I’m not implying any favoritism. |
-| Features evaluated | Commentary offered | Reflection (Valid or not?) | Planned response |
-| --- | --- | --- | --- |
-| Argumentation (arrangement) | “There are so many examples from past elections, and I’m getting lost. Maybe cut some of these examples?” | Not valid. I think the examples are the strongest part of this essay, so I’m not going to cut any -- but maybe I could better explain what each one signifies. | Check and, if it seems necessary, clarify explanations about the significance of every example I include. |
-| Readability | “The writer uses the term ‘opponent’ all over this essay to refer to the candidate who isn’t the incumbent -- I think this will offend anyone who doesn’t want to vote for the person already in office.” | Valid. Interesting comment. I hadn’t noticed the implications of this word, and given that I want potential voters to see elections as something other than hostile and angry, I probably need to get rid of this kind of language. | Highlight in yellow any word choices that seem to suggest antagonism or hostility. Then rework that phrasing. |
-| Features evaluated | Peer-reviewer comment | Reflection (Valid or not?) | Planned response |
-| --- | --- | --- | --- |
-| Originality |  |  |  |
-| Argumentation (arrangement) |  |  |  |
-| Engagement with relevant research (examples) |  |  |  |
-| Readability |  |  |  |
-| Other |  |  |  |
 
 [^1]: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
 

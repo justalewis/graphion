@@ -49,6 +49,8 @@ Students beginning archival research for the first time often ask, “Where do I
 
 When selecting a topic, begin with subjects that interest you most. Topic ideas can come from a variety of places. In our archival projects, we have investigated historical issues (the history of music copyright and 19th-century women’s monuments), current social movements and events (women’s marches and health-related artifacts), and labor practices (domestic workers and educators). Your research may be just as varied. Take a moment and think about what interests you personally and academically. Do you have a hobby that you want to explore further; do you want to know more about a community issue; or are you interested in the backstory of a film or book? List three possible research topics, then ask yourself the following questions about each option in order to narrow your focus:
 
+Table 1: Topic Idea Chart
+
 |  | Is your topic an idea, thing, or place? | What draws you to it? | What is the exigence? | What claims can you make? | Where can you find more information? |
 | --- | --- | --- | --- | --- | --- |
 | Topic Idea 1 |  |  |  |  |  |
@@ -209,6 +211,4 @@ Discuss possible project formats with students during the first two weeks of the
 
 At the end of the term, consider planning a symposium where students present their final projects in a poster board session, discussion panel, conference talk, paper, or other genre as appropriate to the project. We’ve had great success inviting other teachers and students from the department to the event, as well as community participants who contributed to the projects.
 
-* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
-
-Table 1: Topic Idea Chart
+\* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.

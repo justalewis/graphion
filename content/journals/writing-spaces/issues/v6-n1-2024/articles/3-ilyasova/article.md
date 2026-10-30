@@ -150,6 +150,8 @@ Table 3.1 provides some quick differences to keep in mind between abstracts and 
 
 Finally, before you get started drafting either an abstract or executive summary it is a good idea to do the following four steps as outlined by Purdue Online Writing Lab (see https://tinyurl.com/5n8za6bt).
 
+Table 3.1. Abstracts Versus Executive Summaries
+
 |  | Abstracts | Executive Summaries |
 | --- | --- | --- |
 | Length | Typically about one robust paragraph. | Often about one page maximum. |
@@ -242,5 +244,3 @@ To help students explore and develop the ideas discussed in this chapter, consid
 reports and consider how to apply the ideas presented in each section to crafting well-organized and concise memos, abstracts, and executive summaries.
 
 1 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
-
-Table 3.1. Abstracts Versus Executive Summaries

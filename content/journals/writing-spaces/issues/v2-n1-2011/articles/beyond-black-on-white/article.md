@@ -3,26 +3,20 @@ title: 'Beyond Black on White: Document Design and Formatting in the Writing Cla
 author:
 - name: Michael J. Klein
 - name: Kristi L. Shackelford
-abstract: '*by Michael J. Klein and Kristi L. Shackelford* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 2, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.'
+abstract: You’ve received your first assignment in a college writing course.* You’ve created an outline, done the necessary research, and written a first draft of your paper. Now it’s time for you to revise your work so you can submit the paper. However, writing a paper for a course involves more than simply generating content and turning it into your instructor. Equally important as the words you write is how the appearance of your document influences the way readers interpret your ideas.
 short-title: Beyond Black on White
 short-authors: Klein and Shackelford
 volume: 2
 year: 2011
-start-page: 335
+start-page: 324
 source-file: klein-and-shackelford--beyond-black-on-white.pdf
 volume-title: Writing Spaces 2
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
-license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
+license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
 chapter-number: 21
 images-of-text:
 - figure-p008-1.png
 ---
-
-# Beyond Black on White: Document Design and Formatting in the
-
-# Writing Classroom *Michael J. Klein and Kristi L. Shackelford*
-
-You’ve received your first assignment in a college writing course.* You’ve created an outline, done the necessary research, and written a first draft of your paper. Now it’s time for you to revise your work so you can submit the paper. However, writing a paper for a course involves more than simply generating content and turning it into your instructor. Equally important as the words you write is how the appearance of your document influences the way readers interpret your ideas.
 
 Most people think of design as the arrangement of images on the page. This is only half true: Graphics can convey concepts that you can’t express in writing. If you were writing an article about an oil spill and the damage it caused, one powerful photograph could make your point more persuasively than pages of writing. Good document design integrates the words on the page with appropriate imagery to fully illustrate your meaning. An image of the Deep Horizon oil spill won’t have the same impact if the image isn’t coupled with a sentence about the scope of the spill.
 
@@ -217,11 +211,9 @@ Style guides define typographical and design rules for you as a writer and a rea
 
 # Works Cited
 
-Modern Language Association of America. *The MLA Handbook for Writers of* *Research Papers.* 7th ed. New York: MLA, 2009. Print. This essay is available under a Creative Commons License subject to the Writing Spaces' Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2011 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
+Modern Language Association of America. *The MLA Handbook for Writers of* *Research Papers.* 7th ed. New York: MLA, 2009. Print.
 
-[^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
-
-* This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.
 
 Mathew J. Kraft 225 Ingram Road kraft@hotmail.com Harrisonburg, VA 22807 555-­‐555-­‐4321 Education 2008 -- Bachelor of Arts, University of Arizona, Tucson, AZ Major: Creative Writing Minor: Political Science Courses: Creative Writing Workshop, Genre Theories, Technology and Writing, Publication Management 2004 -- Honors Diploma, University High School, Phoenix, AZ Employment 2007 -- current Editorial Assistant, Political Science Summary, Tucson, AZ • Managed day-­‐to-­‐day activities of a monthly journal in political science. • Tracked manuscript submissions and kept in contact with authors and publisher. 2006 -- 2007 Graphic Design Intern, University of Arizona Marketing and Communications, Tucson, AZ • Designed and produced marketing brochures, pamphlets, and catalogs. • Maintained web sites for participating clients. 2002 -- 2004 Server, Phoenix Café, Phoenix, AZ • Took customer orders • Managed nightly restaurant closing • Prepared bank deposits Software Skills Adobe: InDesign, Illustrator, Dreamweaver Microsoft: Word, Excel, PowerPoint Operating Systems: Macintosh and Windows Clubs and Organizations • Alpha Beta Fraternity (President) • Student Ambassadors
 

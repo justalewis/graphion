@@ -2,24 +2,18 @@
 title: 'Reflective Writing and the Revision Process: What Were You Thinking?'
 author:
 - name: Sandra L. Giles
-abstract: '*by Sandra L. Giles* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 1, a peer-reviewed open textbook series for the writing classroom, and is published through Parlor Press. The full volume and individual chapter downloads are available for free from the following sites: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers. To learn about participating in the Writing Spaces project, visit the Writing Spaces website at http://writingspaces.org/.'
+abstract: “Reflection” and “reflective writing” are umbrella terms that refer to any activity that asks you to think about your own thinking.* As composition scholars Kathleen Blake Yancey and Jane Bowman Smith explain, reflection records a “student’s process of thinking about what she or he is doing while in the process of that doing” (170). In a writing class, you may be asked to think about your writing processes in general or in relation to a particular essay, to think about your intentions regarding rhetorical elements such as audience and purpose, or to think about your choices regarding development strategies such as comparison-contrast, exemplification, or definition. You may be asked to describe your decisions regarding language features such as word choice, sentence rhythm, and so on. You may be asked to evaluate or assess your piece of writing or your development as a writer in general. Your instructor may also ask you to perform these kinds of activities at various points in your process of working on a project, or at the end of the semester.
 short-title: Reflective Writing and the Revision Process
 short-authors: Giles
 volume: 1
 year: 2010
-start-page: 194
+start-page: 188
 source-file: giles--reflective-writing-and-the-revision-process.pdf
 volume-title: Writing Spaces 1
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
-license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 United States License (CC BY-NC-ND 3.0 US).
+license-url: https://creativecommons.org/licenses/by-nc-nd/3.0/us/
 chapter-number: 13
 ---
-
-# Reflective Writing and the Revision Process: What Were You Thinking?
-
-# *Sandra L. Giles*
-
-“Reflection” and “reflective writing” are umbrella terms that refer to any activity that asks you to think about your own thinking.* As composition scholars Kathleen Blake Yancey and Jane Bowman Smith explain, reflection records a “student’s process of thinking about what she or he is doing while in the process of that doing” (170). In a writing class, you may be asked to think about your writing processes in general or in relation to a particular essay, to think about your intentions regarding rhetorical elements such as audience and purpose, or to think about your choices regarding development strategies such as comparison-contrast, exemplification, or definition. You may be asked to describe your decisions regarding language features such as word choice, sentence rhythm, and so on. You may be asked to evaluate or assess your piece of writing or your development as a writer in general. Your instructor may also ask you to perform these kinds of activities at various points in your process of working on a project, or at the end of the semester.
 
 # A Writer’s Experience
 
@@ -141,8 +135,6 @@ Sommers, Jeffrey. “Behind the Paper: Using the Student-Teacher Memo.” *Colle
 
 ---. “Enlisting the Writer’s Participation in The Evaluation Process.” *Journal* *of Teaching Writing* 4.1 (1985): 95--103. Print.
 
-Winegardner, Mark. Personal interview. 3 February 2003. Yancey, Kathleen Blake, and Jane Bowman Smith. “Reflections on Self-Assessment.” Smith and Yancey 169--76. This essay is available under a Creative Commons License subject to the Writing Spaces Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2010 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
+Winegardner, Mark. Personal interview. 3 February 2003. Yancey, Kathleen Blake, and Jane Bowman Smith. “Reflections on Self-Assessment.” Smith and Yancey 169--76.
 
-[^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
-
-* This work is licensed under the Creative Commons Attribution-Noncommercial-No Derivative Works 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-Noncommercial-No Derivative Works 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.

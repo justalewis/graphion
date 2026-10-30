@@ -2,33 +2,19 @@
 title: Weaving Personal Experience into Academic Writing
 author:
 - name: Marjorie Stewart
-abstract: 'Marjorie Stewart This essay is a chapter in *Writing Spaces: Readings on Writing*, Volume 3, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from any of these sites:'
+abstract: “Warp and Weft” uses the metaphor of weaving to demonstrate one way of using personal and narrative writing within academic essays. Rather than debate whether narrative is appropriate for academic writing, it addresses the question of when is it appropriate and how it can be done effectively, focusing on helping writers decide when the use of personal experience is appropriate for their purpose, how to make personal experience and narrative pull its weight in the essay, and how the ability to incorporate personal experience can translate into the ability to incorporate research.
 short-title: Weaving Personal Experience into Academic Writing
 short-authors: Stewart
 volume: 3
 year: 2020
-start-page: 150
+start-page: 147
+chapter-number: 11
 source-file: stewart.pdf
 volume-title: Writing Spaces 3
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
-chapter-number: 11
 teacher-resources: separate
 ---
-
-> • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/pages/writing-spaces • WAC Clearinghouse: http://wac.colostate.edu/books/
-
-Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.
-
-# 11
-
-# Weaving Personal Experience
-
-# into Academic Writing *Marjorie Stewart*
-
-# Overview
-
-“Warp and Weft” uses the metaphor of weaving to demonstrate one way of using personal and narrative writing within academic essays. Rather than debate whether narrative is appropriate for academic writing, it addresses the question of when is it appropriate and how it can be done effectively, focusing on helping writers decide when the use of personal experience is appropriate for their purpose, how to make personal experience and narrative pull its weight in the essay, and how the ability to incorporate personal experience can translate into the ability to incorporate research.
 
 The essay is structured as an example of the use of personal experience as well as a how-to guide. “Warp and Weft” contains a discussion of three students who incorporated narrative in their essays in three ways: as a structural frame, as an example when the research topic and personal experience overlap, and as a tool for discovery. Students will benefit from the peer-written examples as well as the use of the personal in the essay itself.
 
@@ -174,6 +160,4 @@ Often the attitude towards personal narrative, held by teachers and students ali
 
 If you have a favorite example of a well-mixed narrative research essay, by all means, use it. If you are using a book with good examples, you might assign one as companion reading to “Warp and Weft.” I also recommend many essays published as creative nonfiction, especially those from The Creative Nonfiction Foundation, at creativenonfiction.org. One of my favorites is “Rachel at Work: Enclosed, A Mother’s Report” by Jane Bernstein, published in *Creative Nonfiction* and anthologized in their collection *True Stories, Well Told*.
 
-Parlor Press LLC, Anderson, South Carolina, USA © 2020 by Parlor Press. Individual essays © 2020 by the respective authors. Unless otherwise stated, these works are licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use. All rights reserved. For permission to reprint, please contact the author(s) of the individual articles, who are the respective copyright owners. Cover design by Colin Charlton. Library of Congress Cataloging-in-Publication Data on File
-
-* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.

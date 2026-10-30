@@ -2,27 +2,21 @@
 title: Why Blog? Searching for Writing on the Web
 author:
 - name: Alex Reid
-abstract: '*by Alex Reid* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 2, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.'
+abstract: As Malcolm Gladwell and others have observed, it takes some 10,000 hours of dedication to a craft or profession to become an “expert.”* Obviously this is a generalization that provokes as many questions as it answers, but the fairly self-evident bottom-line point here is that becoming good at anything worth becoming good at takes a lot of time. According to the 2008 National Survey of Student Engagement, the typical first year student writes 92 pages, while average college seniors write 146 pages (21). Given these statistics, we may assume that the average college student writes less than 500 pages during his or her academic career. It’s difficult to equate pages with the hours in Gladwell’s calculation, but I would think that even a student in a writing intensive major would not likely spend, on average, more than 1000 hours writing to get her degree. At that rate, 1000 hours of writing over four years, one would reach expertise (10,000 hours) in 36 more years. In other words, not even writing intensive courses are likely to ask students to commit the kind of time to their assigned writing that would be necessary to work towards expertise as Gladwell defines it. To make matters potentially worse, being an “expert” isn’t necessarily all that it would seem to be. As one discovers with almost anything one dedicates one’s time to, there is no ceiling, no final desti-
 short-title: Why Blog? Searching for Writing on the Web
 short-authors: Reid
 volume: 2
 year: 2011
-start-page: 305
+start-page: 293
 source-file: reid--why-blog.pdf
 volume-title: Writing Spaces 2
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
-license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
+license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
 chapter-number: 19
 images-of-text:
 - figure-p016-1.jpg
 - figure-p016-2.jpg
 ---
-
-# Why Blog? Searching for Writing
-
-# on the Web *Alex Reid*
-
-As Malcolm Gladwell and others have observed, it takes some 10,000 hours of dedication to a craft or profession to become an “expert.”* Obviously this is a generalization that provokes as many questions as it answers, but the fairly self-evident bottom-line point here is that becoming good at anything worth becoming good at takes a lot of time. According to the 2008 National Survey of Student Engagement, the typical first year student writes 92 pages, while average college seniors write 146 pages (21). Given these statistics, we may assume that the average college student writes less than 500 pages during his or her academic career. It’s difficult to equate pages with the hours in Gladwell’s calculation, but I would think that even a student in a writing intensive major would not likely spend, on average, more than 1000 hours writing to get her degree. At that rate, 1000 hours of writing over four years, one would reach expertise (10,000 hours) in 36 more years. In other words, not even writing intensive courses are likely to ask students to commit the kind of time to their assigned writing that would be necessary to work towards expertise as Gladwell defines it. To make matters potentially worse, being an “expert” isn’t necessarily all that it would seem to be. As one discovers with almost anything one dedicates one’s time to, there is no ceiling, no final desti-
 
 nation, on the path of mastery. There are always new challenges; there is always room for improvement. As I will discuss here, blogging is one good way to develop as a writer.
 
@@ -108,11 +102,16 @@ The specifics of my experience starting out as a blogger are likely quite differ
 
 Since you are probably reading this as vvvvvvvvvvpart of a composition class, there’s a good chance that you will be asked to blog as part of the course. Within the context of a composition course there are a few general types of blogs that you might be asked to join. Certainly, the kind of blog you are asked to write will have some impact on what you decide to do, and unfortunately, the nearly inescapable carrots and sticks of the classroom can serve as an impediment to creative thinking. At the same time, as writers and creative thinkers, we always work within contexts that provide both unique constraints and opportunities. The task therefore is to gather whatever autonomy you can within the situation in order to customize your work in a way that will allow you to engage productively with your work and tap into some intrinsic motivation for writing.
 
+Table 1. Types of course-assigned blogs.
+
 | Type | Characteristics |
 | --- | --- |
 | Class Blog | In a class blog, the students and the instructor post to a common blog on the subject of the course. Often students are asked to post new material and comment on their peers’ posts. |
 | Individual Reading or Learning Blog | Here, though you are keeping a solo blog, you are asked to write specifically about the topic of the course. Perhaps you will write in response to readings or other assignments in addition to reflecting on your learning experiences. |
 | Class Team Blog | In some classes, students work on group projects and are asked to keep a blog that updates the class on their activities. Here you may have a wider degree of autonomy on the subject matter of your blog, depending on the particulars of the assignment you are given. |
+| Type | Characteristics |
+| --- | --- |
+| Individual Blog | This type of blog would give you the greatest autonomy, which can also make it the most challenging kind of assignment. For example, I might ask students to post 20 times with posts that are at least 100 words in length over the course of a semester, but provide no assignment requirements beyond that. |
 
 As with all writing, perhaps the most challenging task is finding a subject on which to write, or what we rhetoricians term “invention.” By claiming an interest and reading other bloggers with similar interests, hopefully you will find a worthwhile topic. Perhaps you have already declared a major. If so, that should give you a good place to start. If not, then you might have to get more creative in thinking about a subject that you would like to read and write about. As the educational theorist and activist, Sir Ken Robinson, explains, our talents and passions are sometimes hidden, submerged by well-intentioned but misguided schooling experiences (Robinson). Perhaps you can think about the moments when you find yourself in a state of flow. Csikszentmihalyi conducted an experiment where he paged people randomly 40 times during a week and had them write about what they were doing at that moment in an attempt to discover and describe flow experiences (4). You might do something similar. Wherever you experience flow, your interests are likely close by.
 
@@ -199,12 +198,6 @@ Pink, Daniel H. *Drive: The Surprising Truth About What Motivates Us*. New York:
 
 Robinson, Ken. “Ken Robinson says schools kill creativity.” *TED.* TED. 2006. Web.
 
----. “Sir Ken Robinson: Bring on the learning revolution!” *TED.* TED. 2010. Web | Type | Characteristics |
-| --- | --- |
-| Individual Blog | This type of blog would give you the greatest autonomy, which can also make it the most challenging kind of assignment. For example, I might ask students to post 20 times with posts that are at least 100 words in length over the course of a semester, but provide no assignment requirements beyond that. | This essay is available under a Creative Commons License subject to the Writing Spaces' Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2011 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
+---. “Sir Ken Robinson: Bring on the learning revolution!” *TED.* TED. 2010. Web
 
-[^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
-
-* This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.
-
-Table 1. Types of course-assigned blogs.
+\* This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.

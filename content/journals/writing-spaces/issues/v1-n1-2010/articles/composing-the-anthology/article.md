@@ -2,22 +2,18 @@
 title: 'Composing the Anthology: An Exercise in Patchwriting'
 author:
 - name: Christopher Leary
-abstract: '*by Christopher Leary* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 1, a peer-reviewed open textbook series for the writing classroom, and is published through Parlor Press. The full volume and individual chapter downloads are available for free from the following sites: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers. To learn about participating in the Writing Spaces project, visit the Writing Spaces website at http://writingspaces.org/.'
+abstract: Rebecca Moore Howard defines “patchwriting” as a method of composing in which writers take the words of other authors and patch them together with few or no changes (233).* Although associated with plagiarism, it is an extremely useful writing strategy with a very long and noble tradition, and I hope that, by the end of this essay, you will be convinced that the opportunities (great writing) far outweigh the risks (accusations of dishonesty). With that as my goal, I’ll start by telling you the story of how I worked through my own fears and uncertainties about plagiarism and patchwriting.
 short-title: Composing the Anthology
 short-authors: Leary
 volume: 1
 year: 2010
-start-page: 229
+start-page: 221
 source-file: leary--composing-the-anthology.pdf
 volume-title: Writing Spaces 1
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
-license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
+license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
 chapter-number: 15
 ---
-
-# Composing the Anthology: An Exercise in Patchwriting *Christopher Leary*
-
-Rebecca Moore Howard defines “patchwriting” as a method of composing in which writers take the words of other authors and patch them together with few or no changes (233).* Although associated with plagiarism, it is an extremely useful writing strategy with a very long and noble tradition, and I hope that, by the end of this essay, you will be convinced that the opportunities (great writing) far outweigh the risks (accusations of dishonesty). With that as my goal, I’ll start by telling you the story of how I worked through my own fears and uncertainties about plagiarism and patchwriting.
 
 Nowadays, I consider myself to be a frequent practitioner of patchwriting, especially early in my writing process. I also happen to really *enjoy* it---for one thing, it gets me past the stage of staring at a blank white page. Likewise, my students report that (in addition to being frustrating and time-consuming) patchwriting is “fun,” “confidencebuilding,” and “extremely interesting.” I consider us to be the latest in a long-running line of writers [^1] spanning centuries who view this type of work as crucial to their identities as writers.
 
@@ -157,10 +153,8 @@ Stentz, Zack. “Class Cut-Ups: Collagists and Assemblagists Gain New Respect.�
 
 Von Seggern, John. *Postdigital Remix Culture and Online Performance*. n.d. Web. 11 Jan. 2007.
 
-Wright, Charles. “In the Kingdom of the Past, the Brown-Eyed Man is King.” *Appalachia*. New York: Farrar, Straus, and Giroux, 1999. Print. This essay is available under a Creative Commons License subject to the Writing Spaces Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2010 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
+Wright, Charles. “In the Kingdom of the Past, the Brown-Eyed Man is King.” *Appalachia*. New York: Farrar, Straus, and Giroux, 1999. Print.
 
-[^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
-
-* This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces. org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces. org/terms-of-use.
 
 [^1] For example, the German-Hebrew writer Micha Berdyczewski wrote that compiling religious texts is a “poetic” (Kagan 223) practice that shines “new light” (Kagan 219) on them. This was puzzling to his friends, who viewed compiling the work of others to be a mundane, non-intellectual task. Also, the twenty-first century writer Jerome Rothenburg talks fondly of his textual assembly as “a pulling together of poems & people & ideas about poetry & much else in the words of others and in our own” (Golding). And the sixteenth century essayist and patchwriter Michel Montaigne says of his own work, “I have here only made a nosegay of culled flowers, and have brought nothing of my own but the thread that ties them together.”

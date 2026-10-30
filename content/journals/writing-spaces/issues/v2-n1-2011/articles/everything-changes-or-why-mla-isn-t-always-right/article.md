@@ -2,24 +2,18 @@
 title: Everything Changes, or Why MLA Isn’t (Always) Right
 author:
 - name: Janice R. Walker
-abstract: '*by Janice R. Walker* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 2, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.'
+abstract: “The only thing that doesn’t change is the fact that everything changes.”* I’ve heard this saying all my life, but until I wanted to use it for this essay, it never occurred to me to check where it came from. According to Bartleby.com, this pithy saying is attributed to Heraclitus, a Greek philosopher, and should actually read, “Change alone is unchanging.” But then Bartleby cites *The Columbia World* *of Quotations,* edited by Robert Andrews, Mary Biggs, and Michael Seidel, as the source of the information about Heraclitus.
 short-title: Everything Changes, or Why MLA Isn’t (Always) Right
 short-authors: Walker
 volume: 2
 year: 2011
-start-page: 259
+start-page: 248
 source-file: walker--everything-changes.pdf
 volume-title: Writing Spaces 2
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
-license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
+license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
 chapter-number: 16
 ---
-
-# Everything Changes, or Why MLA
-
-# Isn’t (Always) Right *Janice R. Walker*
-
-“The only thing that doesn’t change is the fact that everything changes.”* I’ve heard this saying all my life, but until I wanted to use it for this essay, it never occurred to me to check where it came from. According to Bartleby.com, this pithy saying is attributed to Heraclitus, a Greek philosopher, and should actually read, “Change alone is unchanging.” But then Bartleby cites *The Columbia World* *of Quotations,* edited by Robert Andrews, Mary Biggs, and Michael Seidel, as the source of the information about Heraclitus.
 
 So, now what do I do? Do I change the opening quotation? I like my version better than Heraclitus’s (maybe because it’s the way I always heard it, right or wrong). Do I cite Heraclitus? Do I cite *Bartleby.* *com?* Or do I cite *The Columbia World of Quotations?* Or maybe I don’t need a citation at all. But then, will I be charged with plagiarism? Of course, if I can argue it’s common knowledge, maybe I can get away with leaving it alone?
 
@@ -141,11 +135,9 @@ Walker, Janice R., and Todd Taylor. *The Columbia Guide to Online Style.* 2nd ed
 
 Watson, Leon. “UFO ‘Sacrificed Itself for Us.’” *The Sun* 4 July 2009. http:// www.thesun.co.uk/sol/homepage/news/ufos/2451627/UFO-sacrificeditself-for-us.html (4 July 2009).
 
-Wouters, Paul. *The Citation Culture.* Doctoral Thesis, U of Amsterdam, 1999. http://www.garfield.library.upenn.edu/wouters/wouters.pdf (7 June 2009). This essay is available under a Creative Commons License subject to the Writing Spaces' Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2011 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
+Wouters, Paul. *The Citation Culture.* Doctoral Thesis, U of Amsterdam, 1999. http://www.garfield.library.upenn.edu/wouters/wouters.pdf (7 June 2009).
 
-[^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
-
-* This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.
 
 [^1]: Lise Buranen presented information that questions this “lore” (as Stephen North, in *The Making of Composition,* terms such knowledge claims) in “But I *Wasn’t* Cheating: Plagiarism and Cross-Cultural Mythology” (*Perspectives on Plagiarism and Intellectual Property in a Postmodern World,* ed. Lise Buranen and Alice M. Roy, Albany: SUNY, 1999, pp. 63--74). In her study of Eastern versus Western views of what constitutes plagiarism, responses to questionnaires showed “no basic difference between what they had been taught in their home country and in this country” (68). However, in a personal interview, at least one of her colleagues believed that it might be true that “since the ‘acknowledgment’ of the source is in the very use of it, listing them [sic] in a bibliography is at best redundant and at worst an insult to a reader’s intelligence” (69). Nonetheless, the respondent also argued that “One still credits one’s sources, but what is different is the form in which that ‘credit’ is given, whether explicit or implied” (69). It was noted, however, that Chinese culture does seem to be moving to a more explicit, e.g., Western, style of citation (69).
 

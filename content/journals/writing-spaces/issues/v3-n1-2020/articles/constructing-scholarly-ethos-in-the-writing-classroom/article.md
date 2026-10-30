@@ -2,35 +2,19 @@
 title: Constructing Scholarly Ethos in the Writing Classroom
 author:
 - name: Kathleen J. Ryan
-abstract: 'Kathleen J. Ryan This essay is a chapter in *Writing Spaces: Readings on Writing*, Volume 3, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from any of these sites:'
+abstract: This essay offers a more robust definition of ethos than the typical definition of credibility to teach students more about ethos. I define ethos as the strategic positioning of the rhetor in relationship to the audience and/or community and then discuss four interrelated parts of ethos that can help students construct their scholarly ethos more effectively. The four parts---name your identity, commit to being a responsible writer, bridge gaps between the writer and readers, and locate your perspective---all emphasize ethos as social, relational, and dynamic. The chapter focuses on using these parts of ethos as interrelated heuristics to help students understand and develop their ethos across a range of writing situations. Take a minute and imagine yourself doing each of the following:*
 short-title: Constructing Scholarly Ethos in the Writing Classroom
 short-authors: Ryan
 volume: 3
 year: 2020
-start-page: 120
+start-page: 117
+chapter-number: 9
 source-file: ryan.pdf
 volume-title: Writing Spaces 3
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
-chapter-number: 9
 teacher-resources: separate
 ---
-
-> • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/pages/writing-spaces • WAC Clearinghouse: http://wac.colostate.edu/books/
-
-Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.
-
-# 9
-
-# Constructing Scholarly Ethos
-
-# in the Writing Classroom *Kathleen J. Ryan*
-
-# Overview
-
-This essay offers a more robust definition of ethos than the typical definition of credibility to teach students more about ethos. I define ethos as the strategic positioning of the rhetor in relationship to the audience and/or community and then discuss four interrelated parts of ethos that can help students construct their scholarly ethos more effectively. The four parts---name your identity, commit to being a responsible writer, bridge gaps between the writer and readers, and locate your perspective---all emphasize ethos as social, relational, and dynamic. The chapter focuses on using these parts of ethos as interrelated heuristics to help students understand and develop their ethos across a range of writing situations.
-
-Take a minute and imagine yourself doing each of the following:*
 
 > • Meeting your significant other’s parents for the first time and deciding what to wear and what to say to make a good first impression. • Interviewing for a job and trying to frame your prior job experience and demonstrate your work ethic to persuade the interviewer to hire you for a job you either really *want* or really *need*. • Applying for a university scholarship and trying to persuade the committee members in a letter that your academic record and future plans make you the most deserving scholarship applicant.
 
@@ -192,6 +176,4 @@ I love Anis Bawarshi’s *Genre and the Invention of the Writer: Reconsidering* 
 
 5. On a scale of 1 to 5 (one being the worst and five the best), how well have I done in constructing a good scholarly ethos for this assignment? Please explain.
 
-Parlor Press LLC, Anderson, South Carolina, USA © 2020 by Parlor Press. Individual essays © 2020 by the respective authors. Unless otherwise stated, these works are licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use. All rights reserved. For permission to reprint, please contact the author(s) of the individual articles, who are the respective copyright owners. Cover design by Colin Charlton. Library of Congress Cataloging-in-Publication Data on File
-
-* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.

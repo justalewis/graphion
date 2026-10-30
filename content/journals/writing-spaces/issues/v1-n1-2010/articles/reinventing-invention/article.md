@@ -3,20 +3,17 @@ title: 'Reinventing Invention: Discovery and Investment in Writing'
 author:
 - name: Michelle D. Trim
 - name: Megan Lynn Isaac
-abstract: '*by Michelle D. Trim and Megan Lynn Isaac* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 1, a peer-reviewed open textbook series for the writing classroom, and is published through Parlor Press. The full volume and individual chapter downloads are available for free from the following sites: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers. To learn about participating in the Writing Spaces project, visit the Writing Spaces website at http://writingspaces.org/.'
 short-title: Reinventing Invention
 short-authors: Trim and Isaac
 volume: 1
 year: 2010
-start-page: 110
+start-page: 107
 source-file: trim-and-isaac--reinventing-invention.pdf
 volume-title: Writing Spaces 1
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
-license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 United States License (CC BY-NC-ND 3.0 US).
+license-url: https://creativecommons.org/licenses/by-nc-nd/3.0/us/
 chapter-number: 8
 ---
-
-# Reinventing Invention: Discovery and Investment in Writing *Michelle D. Trim and Megan Lynn Isaac*
 
 # Part 1: What Is Invention and Why Do We Care?
 
@@ -348,11 +345,9 @@ Hillocks, George, Jr. “Fighting Back: Assessing the Assessments.” *English* 
 
 LeFevre, Karen Burke. *Invention as a Social Act*. Carbondale and Edwardsville: Southern Illinois UP, 1987.
 
-Welch, Kathleen E. *The Contemporary Reception of Classical Rhetoric: Appropriations of Ancient Discourse*. Hillsdale: Erlbaum, 1990. This essay is available under a Creative Commons License subject to the Writing Spaces Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2010 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
+Welch, Kathleen E. *The Contemporary Reception of Classical Rhetoric: Appropriations of Ancient Discourse*. Hillsdale: Erlbaum, 1990.
 
-[^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
-
-* This work is licensed under the Creative Commons Attribution-Noncommercial-No Derivative Works 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-Noncommercial-No Derivative Works 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
 
 [^1]: Direct quotes from student work are cited using students’ first names according to the students’ stated directives to use their actual first names or pseudonyms.
 

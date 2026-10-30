@@ -2,34 +2,18 @@
 title: 'Walk, Talk, Cook, Eat: A Guide to Using Sources'
 author:
 - name: Cynthia R. Haller
-abstract: '*by Cynthia R. Haller* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 2, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.'
+abstract: '*Marvin, a college student at Any University, sits down at his computer. *He logs in to the “Online Professor,” an interactive advice site for students.* *After setting up a chat, he begins tapping the keys.* Marvin: Hi. I’m a student in the physician assistant program. The major paper for my health and environment class is due in five weeks, and I need some advice. The professor says the paper has to be 6--8 pages, and I have to cite and document my sources. O-Prof: Congratulations on getting started early! Tell me a bit about your assignment. What’s the purpose? Who’s it intended for? Marvin: Well, the professor said it should talk about a health problem caused by water pollution and suggest ways to solve it. We’ve read some articles, plus my professor gave us statistics on groundwater contamination in different areas. O-Prof: What’s been most interesting so far? Marvin: I’m amazed at how much water pollution there is. It seems like it would be healthier to drink bottled water, but the plastic bottles hurt the environment.'
 short-title: Walk, Talk, Cook, Eat
 short-authors: Haller
 volume: 2
 year: 2011
-start-page: 194
+start-page: 186
 source-file: haller--walk-talk-cook-eat.pdf
 volume-title: Writing Spaces 2
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
-license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
+license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
 chapter-number: 12
 ---
-
-# Walk, Talk, Cook, Eat: A Guide to
-
-# Using Sources *Cynthia R. Haller*
-
-*Marvin, a college student at Any University, sits down at his computer. *He logs in to the “Online Professor,” an interactive advice site for students.* *After setting up a chat, he begins tapping the keys.*
-
-Marvin: Hi. I’m a student in the physician assistant program. The major paper for my health and environment class is due in five weeks, and I need some advice. The professor says the paper has to be 6--8 pages, and I have to cite and document my sources.
-
-O-Prof: Congratulations on getting started early! Tell me a bit about your assignment. What’s the purpose? Who’s it intended for?
-
-Marvin: Well, the professor said it should talk about a health problem caused by water pollution and suggest ways to solve it. We’ve read some articles, plus my professor gave us statistics on groundwater contamination in different areas.
-
-O-Prof: What’s been most interesting so far?
-
-Marvin: I’m amazed at how much water pollution there is. It seems like it would be healthier to drink bottled water, but the plastic bottles hurt the environment.
 
 O-Prof: Who else might be interested in this?
 
@@ -301,8 +285,6 @@ O-Prof: Anytime. Good luck with your paper, and with the rest of your writing li
 
 # Works Cited
 
-“Bottled Water.” *Wikipedia*. Web. 12 Sept. 2009. Burke, Kenneth. *The Philosophy of Literary Form.* Berkeley: U of California P, 1941. Print. Maupome, G., et al. “Socio-Demographic Features and Fluoride Technologies Contributing to Higher Fluorosis Scores in Permanent Teeth of Canadian Children.” *Caries Research* 37.5 (2003): 327--334. CINAHL. Web. 10 Oct. 2010. Napier, Gena, and Charles Kodner. “Health Risks and Benefits of Bottled Water.” *Primary Care Clinical Office Practice* 35.4 (2008): 789--802. CI-NAHL. Web. 10 Oct. 2010. Twain, Mark. *Life on the Mississippi.* New York: Harper & Row, 1951. Print. This essay is available under a Creative Commons License subject to the Writing Spaces' Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2011 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
+“Bottled Water.” *Wikipedia*. Web. 12 Sept. 2009. Burke, Kenneth. *The Philosophy of Literary Form.* Berkeley: U of California P, 1941. Print. Maupome, G., et al. “Socio-Demographic Features and Fluoride Technologies Contributing to Higher Fluorosis Scores in Permanent Teeth of Canadian Children.” *Caries Research* 37.5 (2003): 327--334. CINAHL. Web. 10 Oct. 2010. Napier, Gena, and Charles Kodner. “Health Risks and Benefits of Bottled Water.” *Primary Care Clinical Office Practice* 35.4 (2008): 789--802. CI-NAHL. Web. 10 Oct. 2010. Twain, Mark. *Life on the Mississippi.* New York: Harper & Row, 1951. Print.
 
-[^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
-
-* This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.

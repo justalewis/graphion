@@ -2,31 +2,19 @@
 title: 'Writing in Global Contexts: Composing Usable Texts for Audiences from Different Cultures'
 author:
 - name: Kirk St.Amant
-abstract: 'Kirk St.Amant This essay is a chapter in *Writing Spaces: Readings on Writing*, Volume 3, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from any of these sites:'
+abstract: The international spread of online access means we live in an increasingly interconnected world. This situation means our students will likely write for audiences in different parts of the globe. Writing for such diverse audiences means addressing different contexts affecting how individuals perceive texts. Writing students can benefit from approaches that help them understand the reading expectations of other cultures. This chapter introduces the *globalized rhetoric* approach of identifying the reading expectations of other cultures and overviews how students can use this method to analyze audience expectations among different cultures when composing for them.
 short-title: Writing in Global Contexts
 short-authors: St.Amant
 volume: 3
 year: 2020
-start-page: 135
+start-page: 132
+chapter-number: 10
 source-file: stamant.pdf
 volume-title: Writing Spaces 3
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
-chapter-number: 10
 teacher-resources: separate
 ---
-
-> • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/pages/writing-spaces • WAC Clearinghouse: http://wac.colostate.edu/books/
-
-Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.
-
-# 10
-
-# Writing in Global Contexts: Composing Usable Texts for | Audiences from Different Cultures *Kirk St.Amant*
-
-# Overview
-
-The international spread of online access means we live in an increasingly interconnected world. This situation means our students will likely write for audiences in different parts of the globe. Writing for such diverse audiences means addressing different contexts affecting how individuals perceive texts. Writing students can benefit from approaches that help them understand the reading expectations of other cultures. This chapter introduces the *globalized rhetoric* approach of identifying the reading expectations of other cultures and overviews how students can use this method to analyze audience expectations among different cultures when composing for them.
 
 # Introduction
 
@@ -128,10 +116,18 @@ Regardless of how you interact with individuals, the overall research process is
 
 > • Question 1: Do you use [kind of genre] in your culture? (Next, see table 1.)
 
+Table 1. Questions to ask and answers to consider when writing research questions.
+
 |  | If “yes” | If “no” |
 | --- | --- | --- |
 | Question 2: | What is the purpose of [kind of genre]---what kinds of information do you use it to convey, and what do individuals expect to use it for? | How do you share information about [process you want individuals to perform]? |
 | Question 3: | What specific kinds of information do you expect to encounter in [type of genre] to achieve this objective/use it effectively? | What specific kinds of information do you expect to encounter in [type of genre] to achieve this objective/use it effectively? |
+|  | If “yes” | If “no” |
+| --- | --- | --- |
+| Question 4: | How is information organized in [type of genre]; what information comes first, second, third, . . . last? [Use responses to previous question to determine how many pieces of information to organize.] | How is information organized in [type of genre]---what information comes first, second, third, . . . last? [Use responses to previous question to determine how many pieces of information to organize.] |
+| Question 5: | Do you expect visuals to appear in [kind of genre]? If so, can you describe the visuals used, how many are used, and where on a page they appear? | Do you expect visuals to appear in [kind of genre]? If so, can you describe the visuals used, how many are used, and where on a page they appear? |
+| Question 6: | Have you ever read American [or author’s native culture] versions of [genre]? If so, did you find anything odd or that you would suggest changing if Americans [author’s native culture] write for individuals from [respondent’s culture]? | Have you ever read American [or author’s native culture] versions of [genre]? If so, did you find anything odd or that you would suggest changing if Americans [author’s native culture] write for individuals from [respondent’s culture]? |
+| Question 7: | Do you have any suggestions about writing a [genre] for members of your culture? | Do you have any suggestions about writing a [genre] for members of your culture? |
 
 These questions allow you to collect information on cultural expectations of rhetoric, genre, and usability. You can then consult this information when composing texts for the related cultural audience.
 
@@ -225,15 +221,4 @@ To help students explore the ideas discussed in these entries, consider having t
 
 sider how to apply the ideas presented in the essay within the context of their own writing processes.
 
-|  | If “yes” | If “no” |
-| --- | --- | --- |
-| Question 4: | How is information organized in [type of genre]; what information comes first, second, third, . . . last? [Use responses to previous question to determine how many pieces of information to organize.] | How is information organized in [type of genre]---what information comes first, second, third, . . . last? [Use responses to previous question to determine how many pieces of information to organize.] |
-| Question 5: | Do you expect visuals to appear in [kind of genre]? If so, can you describe the visuals used, how many are used, and where on a page they appear? | Do you expect visuals to appear in [kind of genre]? If so, can you describe the visuals used, how many are used, and where on a page they appear? |
-| Question 6: | Have you ever read American [or author’s native culture] versions of [genre]? If so, did you find anything odd or that you would suggest changing if Americans [author’s native culture] write for individuals from [respondent’s culture]? | Have you ever read American [or author’s native culture] versions of [genre]? If so, did you find anything odd or that you would suggest changing if Americans [author’s native culture] write for individuals from [respondent’s culture]? |
-| Question 7: | Do you have any suggestions about writing a [genre] for members of your culture? | Do you have any suggestions about writing a [genre] for members of your culture? |
-
-Parlor Press LLC, Anderson, South Carolina, USA © 2020 by Parlor Press. Individual essays © 2020 by the respective authors. Unless otherwise stated, these works are licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use. All rights reserved. For permission to reprint, please contact the author(s) of the individual articles, who are the respective copyright owners. Cover design by Colin Charlton. Library of Congress Cataloging-in-Publication Data on File
-
-* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
-
-Table 1. Questions to ask and answers to consider when writing research questions.
+\* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.

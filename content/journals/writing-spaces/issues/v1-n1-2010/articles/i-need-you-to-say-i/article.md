@@ -2,26 +2,18 @@
 title: '“I need you to say ‘I’”: Why First Person Is Important in College Writing'
 author:
 - name: Kate McKinney Maddalena
-abstract: '*by Kate McKinney Maddalena* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 1, a peer-reviewed open textbook series for the writing classroom, and is published through Parlor Press. The full volume and individual chapter downloads are available for free from the following sites: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers. To learn about participating in the Writing Spaces project, visit the Writing Spaces website at http://writingspaces.org/.'
+abstract: At this point in your development as a writer, you may have learned to write “I-less” prose, without first person.* I-less-ness is fine; writing habits, like all habits, are best simplified when first learned or re-learned. Jazz pianists learn strict scales before they are allowed to improvise. Someone might go on a strict diet and then return to a modified menu after the desired weight is lost, and the bad eating habits are broken. Constructing arguments without using “I” is good practice for formal “improvisation” at higher levels of thinking and writing. Avoiding personal pronouns forces you to be objective. It also “sounds” more formal; you’re more likely to maintain an appropriate tone if you stay away from the personal.
 short-title: “I need you to say ‘I’”
 short-authors: Maddalena
 volume: 1
 year: 2010
-start-page: 183
+start-page: 178
 source-file: mckinney-maddalena--i-need-you-to-say-i.pdf
 volume-title: Writing Spaces 1
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
-license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
+license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
 chapter-number: 12
 ---
-
-# “I need you to say ‘I’”: Why First
-
-# Person Is Important in College
-
-# Writing *Kate McKinney Maddalena*
-
-At this point in your development as a writer, you may have learned to write “I-less” prose, without first person.* I-less-ness is fine; writing habits, like all habits, are best simplified when first learned or re-learned. Jazz pianists learn strict scales before they are allowed to improvise. Someone might go on a strict diet and then return to a modified menu after the desired weight is lost, and the bad eating habits are broken. Constructing arguments without using “I” is good practice for formal “improvisation” at higher levels of thinking and writing. Avoiding personal pronouns forces you to be objective. It also “sounds” more formal; you’re more likely to maintain an appropriate tone if you stay away from the personal.
 
 But writing in various academic and professional contexts needs to be more flexible, sophisticated, and subtle than writing for high school English classes. In college, you should start using first-person pronouns in your formal academic writing, where appropriate. First person has an important place---an irreplaceable place---in texts that report research and engage scholarship. Your choices about where you place yourself as subject are largely determined by context and the
 
@@ -109,8 +101,6 @@ Clark, Susan G. “An Informational Approach to Sustainability: “Intelligence�
 
 Kraemer, Jennifer M., and David X. Marquez. “Psychosocial Correlates and Outcomes of Yoga or Walking Among Older Adults.” *Journal of Psychology* 143.4 (2009): 390--404. *Academic Search Premier.* Web. 22 Mar. 2010.
 
-Terrill, Robert E. “Put on a Happy Face: *Batman* as Schizophrenic Savior.” *The Quarterly Journal of Speech* 79.3 (1993): 319--35. *MLA International* *Bibliography.* Web. 22 Mar. 2010. This essay is available under a Creative Commons License subject to the Writing Spaces Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2010 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
+Terrill, Robert E. “Put on a Happy Face: *Batman* as Schizophrenic Savior.” *The Quarterly Journal of Speech* 79.3 (1993): 319--35. *MLA International* *Bibliography.* Web. 22 Mar. 2010.
 
-[^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
-
-* This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces. org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces. org/terms-of-use.

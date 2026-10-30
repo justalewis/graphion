@@ -2,31 +2,21 @@
 title: Understanding Discourse Communities
 author:
 - name: Dan Melzer
-abstract: 'This essay is a chapter in *Writing Spaces: Readings on Writing*, Volume 3, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from any of these sites:'
+abstract: This chapter uses John Swales’ definition of *discourse community* to explain to students why this concept is important for college writing and beyond. The chapter explains how genres operate within discourse communities, why different discourse communities have different expectations for writing, and how to understand what qualifies as a discourse community. The article relates the concept of discourse community to a personal example from the author (an acoustic guitar jam group) and an example of the academic discipline of history. The article takes a critical stance regarding the concept of discourse community, discussing both the benefits and constraints of communicating within discourse communities. The article concludes with writerly questions students can ask themselves as they enter new discourse communities in order to be more effective communicators.
 short-title: Understanding Discourse Communities
 short-authors: Melzer
 volume: 3
 year: 2020
-start-page: 95
+start-page: 92
+chapter-number: 7
 source-file: melzer.pdf
 volume-title: Writing Spaces 3
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
-chapter-number: 7
 teacher-resources: separate
 images-of-text:
 - figure-p006-1.png
 ---
-
-> • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/pages/writing-spaces • WAC Clearinghouse: http://wac.colostate.edu/books/
-
-Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.
-
-# 7 Understanding Discourse Communities *Dan Melzer*
-
-# Overview
-
-This chapter uses John Swales’ definition of *discourse community* to explain to students why this concept is important for college writing and beyond. The chapter explains how genres operate within discourse communities, why different discourse communities have different expectations for writing, and how to understand what qualifies as a discourse community. The article relates the concept of discourse community to a personal example from the author (an acoustic guitar jam group) and an example of the academic discipline of history. The article takes a critical stance regarding the concept of discourse community, discussing both the benefits and constraints of communicating within discourse communities. The article concludes with writerly questions students can ask themselves as they enter new discourse communities in order to be more effective communicators.
 
 Last year, I decided that if I was ever going to achieve my lifelong fantasy of being the first college writing teacher to transform into an international rock star, I should probably graduate from playing the video game *Guitar Hero* to actually learning to play guitar.* I bought an acoustic guitar and started watching every beginning guitar instructional video on YouTube. At first, the vocabulary the online guitar teachers used was like a foreign language to me---terms like major and minor chords, open G tuning, and circle of fifths. I was overwhelmed by how complicated it all was, and the fingertips on my left hand felt like they were going to fall off from pressing on the steel strings on the neck of my guitar to form
 
@@ -219,6 +209,4 @@ One goal of my discourse community analysis project is to help students see the 
 
 You could choose to have the focus of students’ discourse community projects be as simple as arguing that the discourse community they chose meets Swales’ criteria and explaining why. If you want students to dig a little deeper, you can ask them to come up with research questions about the discourse community they are analyzing. For example, students can ask questions about how the genres of the discourse community achieve the goals of the community, or how the writing conventions of the discourse community have changed over time and why they have changed, or how new members are initiated to the discourse community and the extent to which that initiation is effective. Some of my students are used to being assigned research papers in school that ask them to take a side on a pro/ con issue and develop a simplistic thesis statement that argues for that position. In the discourse community analysis project, I push them to think of research as more sophisticated than just taking a position and forming a simplistic thesis statement. I want them to use primary and secondary research to explore complex research questions and decide which aspects of their data and their analysis are the most interesting and useful to report on in their projects.
 
-Parlor Press LLC, Anderson, South Carolina, USA © 2020 by Parlor Press. Individual essays © 2020 by the respective authors. Unless otherwise stated, these works are licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use. All rights reserved. For permission to reprint, please contact the author(s) of the individual articles, who are the respective copyright owners. Cover design by Colin Charlton. Library of Congress Cataloging-in-Publication Data on File
-
-* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.

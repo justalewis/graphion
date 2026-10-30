@@ -76,6 +76,8 @@ This chapter focuses on how you can cultivate the skills of a reader and communi
 
 You can apply all of the critical reading strategies you already use to analyze other kinds of texts to data stories. For example, you can preview a data story to get a quick sense of its author, general design, and structure, or you can read a data story rhetorically to consider how the author’s purpose, audience, and other elements of the text’s context influence you as a reader. You can learn more about reading strategies in Mike Bunn’s essay “How to Read Like a Writer” found in volume 2 of *Writing Spaces.* In addition, to analyze data stories, consider 1) the data source, 2) data alteration, 3) data analysis, and 4) data presentation. Table 1 provides a checklist of questions you can ask during analysis. In this section, I will show you how to use these questions to analyze a sample data story.
 
+Table 1 Critical Questions for Data Stories
+
 | 1 | Data Source | Who conducted the study that this data story is based on and why? |
 | --- | --- | --- |
 | 2 | Data Alteration | How were the data manipulated from their raw form into the visualization that we see? Are details about the data alteration provided? |
@@ -294,8 +296,6 @@ Having students reverse engineer a data story in class or as homework is useful 
 | 6 | Great Good Bad Horrible |
 
 [^1]: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
-
-Table 1 Critical Questions for Data Stories
 
 2
 

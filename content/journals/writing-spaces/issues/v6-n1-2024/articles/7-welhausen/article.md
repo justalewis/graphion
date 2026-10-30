@@ -7,7 +7,7 @@ short-title: Worth a Thousand Words
 short-authors: Welhausen
 volume: 6
 year: 2024
-start-page: 122
+start-page: 125
 chapter-number: 7
 source-file: 7Welhausen.pdf
 volume-title: Technical Writing Spaces 6

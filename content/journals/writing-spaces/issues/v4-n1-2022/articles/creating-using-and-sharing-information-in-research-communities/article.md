@@ -45,6 +45,8 @@ Research communities create, share, and use information in ways that are particu
 
 Considering how a research community works in each of these areas will make it easier to see how to join that community. Let us consider each of these features in more detail.
 
+Table 1. Discourse Communities and Research Communities[^2]
+
 | Research Community Features |  |
 | --- | --- |
 | Discourse Communities | Research Communities |
@@ -107,6 +109,8 @@ Thinking about research communities and the features of research communities is 
 
 Take a look at this table to see how Cassie can identify and articulate the features of the podcast research community she joined. You can use this same table to analyze your own research community.
 
+Table 2. Completed Research Community Analysis for Podcasting Groups.
+
 | Research Community Analysis Table |  |
 | --- | --- |
 | Research Community Questions | Podcasting Groups |
@@ -157,20 +161,16 @@ Teaching students about research communities will work best when they already ha
 
 Students can conduct research community analyses on a variety of different scales. For an in-class assignment, ask students to fill out the following analysis table.
 
+Table 3. Research Community Analysis Table Research Community Analysis Table Research Community Questions Does the community create and share information in cycles and specific locations? Where? Does the community create and share information in a conversational way? How? Research Community Analysis Table What particular genres, formats, and media do the community members use? Does the community use specialized terminology? Like what? Are there experts in researching in the community? What qualifies as expertise? Does the community have ethical norms for the creation and sharing of information? Like what?
+
 Students might also have questions about how discourse communities and research communities differ. After asking students to explore the questions above individually or with a small group, pose this as a discussion question. You can open that question up to the class, asking them to use examples from the reading and also from their own experiences in order to see how discourse and research communities intersect and where they diverge.
 
 Students can also explore research communities as a longer stand-alone assignment wherein a final project might be a paper, video, or infographic demonstrating how a particular community meets the criteria for a research community. Alternatively, a research community analysis can be used as process-work for a larger assignment such as a literature review or for a more nuanced take on an annotated bibliography assignment.
 
-* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
-
-Table 1. Discourse Communities and Research Communities[^2]
-
-Table 2. Completed Research Community Analysis for Podcasting Groups.
+\* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
 
 [^1]: Research communities are an adaptation of Swales’ work about discourse communities (24-27) that is integrated with the *Framework for Information Literacy for Higher Education*.
 
 [^2]: Discourse community text is adapted from Swales (24-27). Research community text is adapted from the *Framework for Information Literacy for Higher Education*.
 
 [^3]: Wikipedia can be a good point for beginning research projects, as James Purdy notes in “Wikipedia Is Good for You?!” (209). This is the familiar topic research journey that Randall McClure discussed in “Googlepedia: Turning Information Behaviors into Research Skills,” and it serves many students very well when researching and writing a topic-focused research paper.
-
-Table 3. Research Community Analysis Table Research Community Analysis Table Research Community Questions Does the community create and share information in cycles and specific locations? Where? Does the community create and share information in a conversational way? How? Research Community Analysis Table What particular genres, formats, and media do the community members use? Does the community use specialized terminology? Like what? Are there experts in researching in the community? What qualifies as expertise? Does the community have ethical norms for the creation and sharing of information? Like what?

@@ -2,24 +2,18 @@
 title: 'Looking for Trouble: Finding Your Way into a Writing Assignment'
 author:
 - name: Catherine Savini
-abstract: '*by Catherine Savini* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 2, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.'
+abstract: The main character in the movie *Misery* is a writer named Paul Sheldon, who after a serious car accident is “res cued” by his self- pro claimed “number one fan,” Annie Wilkes.* Annie holds him captive, withholding pain medications and torturing him mentally and physically while demanding that he write a novel that brings her favorite character, Misery Chastaine, back to life. The movie trailer for *Misery* reads, “Now Paul Sheldon must write as if his life depended on it . . . because it does.” This is no one’s ideal writing scenario, nor is it a common one, but the direct association of writing and suffering will not seem farfetched to anyone who writes. Based on a Stephen King novella of the same name, *Misery* suggests that even a prolific writer like King, who has written screenplays, novels, short stories, and essays for the past thirty-five years, finds writing difficult, even painful.
 short-title: Looking for Trouble
 short-authors: Savini
 volume: 2
 year: 2011
-start-page: 51
+start-page: 48
 source-file: savini--looking-for-trouble.pdf
 volume-title: Writing Spaces 2
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
-license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
+license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
 chapter-number: 4
 ---
-
-# Looking for Trouble: Finding Your Way into a Writing Assignment
-
-# *Catherine Savini*
-
-The main character in the movie *Misery* is a writer named Paul Sheldon, who after a serious car accident is “res cued” by his self- pro claimed “number one fan,” Annie Wilkes.* Annie holds him captive, withholding pain medications and torturing him mentally and physically while demanding that he write a novel that brings her favorite character, Misery Chastaine, back to life. The movie trailer for *Misery* reads, “Now Paul Sheldon must write as if his life depended on it . . . because it does.” This is no one’s ideal writing scenario, nor is it a common one, but the direct association of writing and suffering will not seem farfetched to anyone who writes. Based on a Stephen King novella of the same name, *Misery* suggests that even a prolific writer like King, who has written screenplays, novels, short stories, and essays for the past thirty-five years, finds writing difficult, even painful.
 
 Chances are, if you have ever written a paper, you’ve experienced the uneasiness caused by the combination of a blank page and a looming deadline. Though it may seem counterintuitive at the outset, one way to diminish the considerable difficulty of getting started on a new assignment is to look for something that troubles you, seek out difficulty, find problems. All academic disciplines seek to impart in their students the ability to identify, mull over, and sometimes solve chal-
 
@@ -208,11 +202,9 @@ Pollan, Michael. *The Omnivore’s Dilemma: A Natural History of Four Meals.* Ne
 
 Savini, Catherine. *Nicaraguan Woman.* 2007. Photograph. Private collection. Sloan, Richard P. and Emilia Bagiella, et al. “Should Physicians Prescribe Religious Activities?” *The New England Journal of Medicine* 342.25 (2000): 1913--1916. Print.
 
-Williams, Joseph. “Avoiding ‘So what?’: Assignments that Help Students Find and Frame Problems Worth Solving.” Columbia University, New York City. 25 Jan. 2008. Lecture. This essay is available under a Creative Commons License subject to the Writing Spaces' Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2011 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
+Williams, Joseph. “Avoiding ‘So what?’: Assignments that Help Students Find and Frame Problems Worth Solving.” Columbia University, New York City. 25 Jan. 2008. Lecture.
 
-[^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
-
-* This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.
 
 [^1]: Prominent European philosophers, Jean-Jacques Rousseau (1712-- 1778) and Georg Wilhelm Friedrich Hegel (1770--1831) are credited with laying the groundwork for Marxism.
 

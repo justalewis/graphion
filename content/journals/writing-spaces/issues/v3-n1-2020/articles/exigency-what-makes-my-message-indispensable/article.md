@@ -2,33 +2,19 @@
 title: 'Exigency: What Makes My Message Indispensable to My Reader'
 author:
 - name: Quentin Vieregge
-abstract: 'Quentin Vieregge This essay is a chapter in *Writing Spaces: Readings on Writing*, Volume 3, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from any of these sites:'
+abstract: This essay defines the word exigency and explains its value as a way of gaining and holding a reader’s interest. Exigency is defined as not simply explaining why a topic matters generally, but why it should matter specifically at this time and place and for one’s intended readership. Four different strategies for invoking exigency are given with specific examples from student writing, journalistic writing, and trade books to clarify each strategy. Special attention is given to remind students of their rhetorical context, the interests of their readership, their readers’ predispositions towards the subject matter and thesis (sympathetic, neutral, or antagonistic), and the possibility of connecting their thesis with larger issues, concerns, or values shared by the writer and his or her readers. The chapter closes with a discussion of how rhetorical uses of exigency differ depending on the genre.
 short-title: Exigency
 short-authors: Vieregge
 volume: 3
 year: 2020
-start-page: 162
+start-page: 159
+chapter-number: 12
 source-file: vieregge.pdf
 volume-title: Writing Spaces 3
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
-chapter-number: 12
 teacher-resources: separate
 ---
-
-> • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/pages/writing-spaces • WAC Clearinghouse: http://wac.colostate.edu/books/
-
-Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.
-
-# 12 Exigency: What Makes My
-
-# Message Indispensable to My
-
-# Reader *Quentin Vieregge*
-
-# Overview
-
-This essay defines the word exigency and explains its value as a way of gaining and holding a reader’s interest. Exigency is defined as not simply explaining why a topic matters generally, but why it should matter specifically at this time and place and for one’s intended readership. Four different strategies for invoking exigency are given with specific examples from student writing, journalistic writing, and trade books to clarify each strategy. Special attention is given to remind students of their rhetorical context, the interests of their readership, their readers’ predispositions towards the subject matter and thesis (sympathetic, neutral, or antagonistic), and the possibility of connecting their thesis with larger issues, concerns, or values shared by the writer and his or her readers. The chapter closes with a discussion of how rhetorical uses of exigency differ depending on the genre.
 
 Imagine someone browsing the aisles of a bookstore for something interesting to read.* This customer has an interest, let’s say, for British rock, and, more broadly, popular music of the 1960s. After a few minutes, she finds a whole row of books, with titles about the Rolling Stones, the Beatles, and the British Invasion, but she only wants to buy one. She’ll have to choose among them, deciding which book grabs her interest and which deserve to be tossed aside.
 
@@ -67,6 +53,13 @@ Now that the persona of both the writers and readers has been thoroughly examine
 > The office of the dean of students at this university claims in its mission statement that it promotes a vibrant learning environment in part by “[collaborating] with institutional partners to address the needs of the student body” (*Dean of Students Office*). Furthermore, the dean wants to “support student learning” in part by “[reducing] barriers to student success” (*Dean of Students Office*). I applaud the dean’s interest in how the entire campus experience can contribute to a student’s ability to succeed and learn, but not enough has been done to provide students with nutritious options. Secondary schools across the country are beginning to provide junior high and high school kids with healthy meals, and researchers have well established a link between proper nutrition and learning potential. It’s time for higher education to do the same. Therefore, I propose that the office of the dean of students work with the food services department to provide students with more healthy alternatives to the numerous fast food restaurants established on campus. I am convinced that the following proposal will live up to this university’s excellent reputation of improving the daily lives of its students.
 
 This passage demonstrates exigent circumstances by finding relevant research about a correlation between nutrition and learning. But, just as importantly, the student-writer researched the values and motivations of the intended audience, the dean of students. The student-writer matched language from the school’s mission statement with the proposal that students should have more nutritious food options. Instead of the writer imposing an additional responsibility upon the dean’s time and workload, the research proposal is framed as a way of helping the dean achieve his own goals. The tone is laudatory and encouraging: “I applaud the dean’s interest” and “excellent reputation of improving the daily lives of its students.” By answering the questions in table 1, the student has found a way to surprise the dean, showing him an added layer that complicates his mission of improving the learning environment.
+
+| Questions | Answers |
+| --- | --- |
+| What is my audience’s persona? | The dean of students. |
+| What is my persona? | A student (not simply a student-writer) who is concerned about an issue on campus. |
+| What is my agenda? | In this case, I want to provide healthy food alternatives. I need to convince those with a position of power to assist me. |
+| What values or concerns do my readers have? | After researching the job description for the dean, I found out the dean has a mission statement. The mission statement has yielded a connection, which will require explanation but will at least hold the readers’ attention. |
 
 # Exigency Through a Gap in the Research
 
@@ -154,15 +147,6 @@ As my chapter asserts, asking students to think in terms of author and reader pe
 
 5. What genres can you think of that are not mentioned in this article? In what ways do authors typically use exigency in those genres?
 
-| Questions | Answers |
-| --- | --- |
-| What is my audience’s persona? | The dean of students. |
-| What is my persona? | A student (not simply a student-writer) who is concerned about an issue on campus. |
-| What is my agenda? | In this case, I want to provide healthy food alternatives. I need to convince those with a position of power to assist me. |
-| What values or concerns do my readers have? | After researching the job description for the dean, I found out the dean has a mission statement. The mission statement has yielded a connection, which will require explanation but will at least hold the readers’ attention. |
-
-Parlor Press LLC, Anderson, South Carolina, USA © 2020 by Parlor Press. Individual essays © 2020 by the respective authors. Unless otherwise stated, these works are licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use. All rights reserved. For permission to reprint, please contact the author(s) of the individual articles, who are the respective copyright owners. Cover design by Colin Charlton. Library of Congress Cataloging-in-Publication Data on File
-
-* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
 
 Table 1

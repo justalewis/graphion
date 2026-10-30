@@ -2,33 +2,19 @@
 title: How to Write Meaningful Peer Response Praise
 author:
 - name: Ron DePeter
-abstract: 'This essay is a chapter in *Writing Spaces: Readings on Writing*, Volume 3, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from any of these sites:'
+abstract: Praise is an important element of peer and teacher feedback---it can, to quote Donald Daiker, “lift the hearts, as well as the pens” of student authors---but substantive praise is one of the most challenging modes of feedback to compose (112). How can writing instructors move student responders beyond standard comments such as “Great paper!” or “I liked it” or “Good details”? This chapter is a guide for students in composition classes, and aims to help them understand the importance of giving and receiving detailed, conversational praise; it presents scenarios for conceptualizing how to write praise, provides sample student writing excerpts that invite students to practice writing praise, offers and analyzes examples of different types of student-authored praise comments, and provides an array of approaches to writing praise comments.
 short-title: How to Write Meaningful Peer Response Praise
 short-authors: DePeter
 volume: 3
 year: 2020
-start-page: 36
+start-page: 34
+chapter-number: 3
 source-file: depeter.pdf
 volume-title: Writing Spaces 3
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
-chapter-number: 3
 teacher-resources: separate
 ---
-
-> • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/pages/writing-spaces • WAC Clearinghouse: http://wac.colostate.edu/books/
-
-Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.
-
-# 3
-
-# How to Write Meaningful Peer
-
-# Response Praise *Ron DePeter*
-
-# Overview
-
-Praise is an important element of peer and teacher feedback---it can, to quote Donald Daiker, “lift the hearts, as well as the pens” of student authors---but substantive praise is one of the most challenging modes of feedback to compose (112). How can writing instructors move student responders beyond standard comments such as “Great paper!” or “I liked it” or “Good details”? This chapter is a guide for students in composition classes, and aims to help them understand the importance of giving and receiving detailed, conversational praise; it presents scenarios for conceptualizing how to write praise, provides sample student writing excerpts that invite students to practice writing praise, offers and analyzes examples of different types of student-authored praise comments, and provides an array of approaches to writing praise comments.
 
 In some first year writing classes, peer feedback days parallel the characters’ journey into the Appalachian caves in Neil Marshall’s horror film *The Descent. A group of female friends goes on an annual thrill-seeking adventure, climbing their way through a complex, uncharted cave, only to encounter some ferocious monsters, as well as their own inner demons. Vivian Sobchack characterizes the chaos depicted in the film this way: “Eventually trapped within the cave system by a rock slide, the six women become separated, each person or little group fitfully lit through different means to allow us to see their struggles in stroboscopic glimpses---and then often to wish we hadn’t” (41).
 
@@ -164,6 +150,4 @@ Instructors could assign this essay in a first-year or upper-level writing cours
 
 5. Discuss experiences you have had in other classes sharing peer response. Have they been a metaphorical “*Descent,*” or enjoyable journeys? What made your peer response sessions in the past work, or not work?
 
-Parlor Press LLC, Anderson, South Carolina, USA © 2020 by Parlor Press. Individual essays © 2020 by the respective authors. Unless otherwise stated, these works are licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use. All rights reserved. For permission to reprint, please contact the author(s) of the individual articles, who are the respective copyright owners. Cover design by Colin Charlton. Library of Congress Cataloging-in-Publication Data on File
-
-* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.

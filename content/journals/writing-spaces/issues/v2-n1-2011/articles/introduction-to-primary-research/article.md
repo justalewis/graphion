@@ -2,23 +2,20 @@
 title: 'Introduction to Primary Research: Observations, Surveys, and Interviews'
 author:
 - name: Dana Lynn Driscoll
-abstract: '*by Dana Lynn Driscoll* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 2, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.'
 short-title: Introduction to Primary Research
 short-authors: Driscoll
 volume: 2
 year: 2011
-start-page: 154
+start-page: 148
 source-file: driscoll--introduction-to-primary-research.pdf
 volume-title: Writing Spaces 2
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
-license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
+license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
 chapter-number: 10
 images-of-text:
 - figure-p006-2.jpg
 - figure-p011-1.png
 ---
-
-# Introduction to Primary Research: | Observations, Surveys, and Interviews *Dana Lynn Driscoll*
 
 # Primary Research: Definitions and Overview
 
@@ -326,10 +323,8 @@ Mead, Margaret. *Growing Up in New Guinea: A Comparative Study of Primitive Educ
 
 Mill, John Stuart. *John Stuart Mill’s Philosophy of Scientific Method.* Ernest Nagel, Ed. New York: Hafner Publishing Co, 1950. Print.
 
-Rubin, Herbert and Irene Rubin. *Qualitative Interviewing: The Art of Hearing Data.* 2nd ed. Thousand Oaks, CA: Sage Publications, 2004. Print. This essay is available under a Creative Commons License subject to the Writing Spaces' Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2011 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
+Rubin, Herbert and Irene Rubin. *Qualitative Interviewing: The Art of Hearing Data.* 2nd ed. Thousand Oaks, CA: Sage Publications, 2004. Print.
 
-[^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
-
-* This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.
 
 Babbie, Earl. *The Practice of Social Research.* 10th edition. Wadsworth Publishing, 2003. Print. Creswell, John. *Research Design: Qualitative, Quantitative, and Mixed Methods Approaches.* 3rd ed. Sage publications, 2008. Print. Rubin, Herbert and Irene Rubin. *Qualitative Interviewing: The Art of Hearing Data.* 2nd edition. Thousand Oaks, CA: Sage Publications, 2004. Print. Fink, Arlene. *How to Conduct Surveys: A Step-by-Step Guide.* 4th ed. Thousand Oaks, CA: Sage Publications, 2008. Print. Sanger, Jack. *Compleat Observer? A Field Research Guide to Observation.* New York: Routledge, 1996. Print. The National Commission for the Protection of Human Subjects of Biomedical and Behavioral Research. *The Belmont Report*. 18 April 1979. Web. <http://ohsr.od.nih.gov/guidelines/belmont.html>.

@@ -2,24 +2,18 @@
 title: The Inspired Writer vs. the Real Writer
 author:
 - name: Sarah Allen
-abstract: '*by Sarah Allen* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 1, a peer-reviewed open textbook series for the writing classroom, and is published through Parlor Press. The full volume and individual chapter downloads are available for free from the following sites: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers. To learn about participating in the Writing Spaces project, visit the Writing Spaces website at http://writingspaces.org/.'
+abstract: Several years ago, in a first year writing course, a student nervously approached me after class, asking if we could talk about her latest draft of a formal paper.* She was worried about the content of the draft, about the fact that in writing about her writing process (the assignment for the paper), she found her tone to be at best frustrated, at worst grumbling and whiney. “I don’t really like writing. Is that okay?” she asked.
 short-title: The Inspired Writer vs. the Real Writer
 short-authors: Allen
 volume: 1
 year: 2010
-start-page: 36
+start-page: 37
 source-file: allen--the-inspired-writing-vs-the-real-writer.pdf
 volume-title: Writing Spaces 1
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
-license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 United States License (CC BY-NC-ND 3.0 US).
+license-url: https://creativecommons.org/licenses/by-nc-nd/3.0/us/
 chapter-number: 4
 ---
-
-# The Inspired Writer vs. the Real Writer
-
-# *Sarah Allen*
-
-Several years ago, in a first year writing course, a student nervously approached me after class, asking if we could talk about her latest draft of a formal paper.* She was worried about the content of the draft, about the fact that in writing about her writing process (the assignment for the paper), she found her tone to be at best frustrated, at worst grumbling and whiney. “I don’t really like writing. Is that okay?” she asked.
 
 This is the first time that I remember a student confessing aloud (to me) that she did not like writing, and I remember struggling for an appropriate response---not because I couldn’t fathom how she had the gall to admit this to me, a writing teacher, but because I couldn’t understand why admitting to not liking writing worried her. In the next class, I asked my students if they liked writing. I heard a mixed response. I asked them if they assumed that someone like me, a writing teacher/scholar, always liked writing. The answer was a resounding “yes.” I rephrased, “So you believe that every day I skip gleefully to my computer?” Again, though giggling a bit, my students answered “yes.” And, at last, one student piped up to say, “Well, you’re good at it, right? I mean, that’s what makes you good at it.”
 
@@ -107,11 +101,9 @@ Bartholomae, David. “Against the Grain.” *Writers on Writing*. Ed. by Tom Wa
 
 Bizzell, Patricia. “Foundationalism and Anti-Foundationalism in Composition Studies.” *Academic Discourse and Critical Consciousness*. Pittsburgh, PA: U of Pittsburgh P, 1992. 202--221.
 
-Elbow, Peter. *Writing without Teachers*. New York, NY: Oxford UP, 1973. This essay is available under a Creative Commons License subject to the Writing Spaces Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2010 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
+Elbow, Peter. *Writing without Teachers*. New York, NY: Oxford UP, 1973.
 
-[^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
-
-* This work is licensed under the Creative Commons Attribution-Noncommercial-No Derivative Works 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-Noncommercial-No Derivative Works 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
 
 [^1]: See his “Autobiographical Digression” in the second chapter of *Writing without Teachers*.
 

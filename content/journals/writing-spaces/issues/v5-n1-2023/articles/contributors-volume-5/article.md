@@ -4,7 +4,7 @@ abstract: 'David Blakesley is Campbell Chair in Technical Communication at Clems
 short-title: Contributors
 volume: 5
 year: 2023
-start-page: 361
+start-page: 369
 source-file: Contributors.pdf
 volume-title: Writing Spaces 5
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).

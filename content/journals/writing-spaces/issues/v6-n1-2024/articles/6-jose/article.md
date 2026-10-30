@@ -7,7 +7,7 @@ short-title: Stronger Together
 short-authors: José
 volume: 6
 year: 2024
-start-page: 99
+start-page: 102
 chapter-number: 6
 source-file: 6Jose.pdf
 volume-title: Technical Writing Spaces 6
@@ -157,6 +157,8 @@ This step is the outcome of steps 1--4. Think of this contract as the first coll
 
 Once you have a detailed team contract, you are ready to start the work. Look at your contract as a map for initiating, planning, and deploying your collaborative process.
 
+Table 6.1. Examples of Post-Collaboration Reflections Based on Whether or Not Each Step Was Followed.
+
 |  | Did not follow the step | Followed the step |
 | --- | --- | --- |
 | Step1 | I feel I did more than my peers. It was hard to ask questions. We worked but never really talked. During the whole project I felt I was just trying to go through the motions. I am glad it is done. | I was never afraid to ask questions or say something when I did not agree with a particular decision. We became friends, even though we had never worked together before. |
@@ -295,5 +297,3 @@ Scenario-based exercises can also be used as application of this essay. Here is 
 How does this initial exchange work or does not work for planning the project? What are the pros and cons of such an approach? Discuss these questions with two or three peers and share the feedback you would give to this group with the rest of the class.
 
 1 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
-
-Table 6.1. Examples of Post-Collaboration Reflections Based on Whether or Not Each Step Was Followed.

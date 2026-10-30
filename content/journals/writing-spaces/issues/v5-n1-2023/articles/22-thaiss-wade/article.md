@@ -8,7 +8,7 @@ short-title: Writing Science in the First Year of College
 short-authors: Thaiss and Wade
 volume: 5
 year: 2023
-start-page: 346
+start-page: 353
 chapter-number: 22
 source-file: 22Thaiss-Wade.pdf
 volume-title: Writing Spaces 5
@@ -96,6 +96,14 @@ The 2020 Conference on College Composition and Communication statement “This A
 # Building Confidence and Rhetorical Awareness through Feedback and Peer Review
 
 Learning *inquiry-based rhetoric* (IBR) develops your metacognitive writing process. To achieve this, you’ll closely read your draft to identify which parts you most want your reader to comment on. If your instructor has given you a rubric (list of questions) for the assignment, you can use it to analyze your work, then to frame your request for feedback. If a rubric is not provided, create your own. As an example, here’s a rhetorical rubric we provide:
+
+|  | Questions to Help Writers Set the Agenda for Feedback |
+| --- | --- |
+| Logic | Questions about Critical Thinking and Logic • What is my central claim? • What reasons do I give? • Is my evidence reliable? |
+| Emotions | Questions about Why the Work Matters • What gap in research or knowledge of the subject does my work address? • Why does this matter? • What are the implications of my work that I’ve stated? • What next steps do I see for this research? |
+| --- | --- |
+| Character | Questions about Genre and Reader Expectations • What organizational patterns do I follow? • What are the relationships between my points? • Do I provide appropriate detail about my methods and materials? • Who does this research serve? • Are my research methods ethical? • Do my visuals accurately represent my results? • Do I use inclusive language? How understandable would I be to someone reading this draft? • Do I follow ethical and inclusive citation practices (Bali 2020)? |
+|  | Questions about Your Goals and Process • How did I generate material, draft, and revise this paper? What worked? What should or might I do differently? • What were my goals as a writer? How did I achieve them? Where would I like to continue to improve? |
 
 In addition to feedback from instructors, you will most likely give and receive feedback from classmates via peer review. You and the other members of your class will learn how to read your classmates’ writing rhetorically, appreciate its strengths, and suggest improvements. Peer review is a vital learning opportunity; it sparks insight into how others conceive writing tasks similar to yours. It gives you permission to ask for their careful response to your work.
 
@@ -223,6 +231,11 @@ In addition to turning the discussion questions above into classroom activities,
 
 # Rhetorical Reading Rubric Activities to Incorporate “Writing to Learn”
 
+| Logic and critical thinking: | • The document presents clear claims/points with related reasons supported by reliable evidence. |
+| --- | --- |
+| Emotions (gets the reader to care): | • The document shows how this research addresses a gap in prior research, and (2) shows why this research matters to other researchers or to a broader community. |
+| Character (earns the trust of the reader): | • The document shows understanding of relevant background research. • The document clearly explains methods and relevant materials. • The document uses visual techniques to achieve clarity. • The vocabulary used is accessible to the intended readers. • The document follows the general conventions of writing in the genre and discipline; for example in organization, format, and sentence style. |
+
 Our section “Beyond the First-year Writing Course: Writing in STEM Classes” describes the cognitive and metacognitive benefits of regularly using writing as a tool for memorization and for expanding thinking. It notes that “teachers may include online exercises to help [students] understand and apply the material.” Teachers might consider the following:
 
 1. At the beginning of a lecture, pose a question to students related to the theme of the lecture: e.g., “when you hear the term x, what do you think it means? What doesn’t it mean?” Ask students to write for just one minute without Googling the term. The question will immediately engage their attention and focus.
@@ -234,18 +247,6 @@ Our section “Beyond the First-year Writing Course: Writing in STEM Classes” 
 4. Teachers who set up student writing forums such as that described in a. and b. (above) might consider how frequently they will read or just browse them, and if they will grant them a small amount of course credit. Keep in mind that the writing of exercises like a. and b. is totally informal and spontaneous, and should always be a space for students to write without fear of evaluation. Indeed, teachers might tell students that such spontaneous writings should only be done in personal writing spaces that the teacher will have no access to.
 
 5. Conversely, teachers also may set up such forums more formally, often using them as quasi-public spaces open only to class members and the instructor. These often include regular deadlines, such as weekly, with named topics. In addition to giving students regular incentives to write about their reading and subjects of study, these forums are often used to build a course community, with expectations that students will read one another’s entries.
-
-|  | Questions to Help Writers Set the Agenda for Feedback |
-| --- | --- |
-| Logic | Questions about Critical Thinking and Logic • What is my central claim? • What reasons do I give? • Is my evidence reliable? |
-| Emotions | Questions about Why the Work Matters • What gap in research or knowledge of the subject does my work address? • Why does this matter? • What are the implications of my work that I’ve stated? • What next steps do I see for this research? |
-| --- | --- |
-| Character | Questions about Genre and Reader Expectations • What organizational patterns do I follow? • What are the relationships between my points? • Do I provide appropriate detail about my methods and materials? • Who does this research serve? • Are my research methods ethical? • Do my visuals accurately represent my results? • Do I use inclusive language? How understandable would I be to someone reading this draft? • Do I follow ethical and inclusive citation practices (Bali 2020)? |
-|  | Questions about Your Goals and Process • How did I generate material, draft, and revise this paper? What worked? What should or might I do differently? • What were my goals as a writer? How did I achieve them? Where would I like to continue to improve? |
-| Logic and critical thinking: | • The document presents clear claims/points with related reasons supported by reliable evidence. |
-| --- | --- |
-| Emotions (gets the reader to care): | • The document shows how this research addresses a gap in prior research, and (2) shows why this research matters to other researchers or to a broader community. |
-| Character (earns the trust of the reader): | • The document shows understanding of relevant background research. • The document clearly explains methods and relevant materials. • The document uses visual techniques to achieve clarity. • The vocabulary used is accessible to the intended readers. • The document follows the general conventions of writing in the genre and discipline; for example in organization, format, and sentence style. |
 
 *Project Kaleidoscope*. American Association of Colleges and Universities. 8 March 2022, https://www.aacu.org/pkal *Transforming STEM Higher Education*. American Association of Colleges and Universities. 8 March 2022, https://www.aacu.org/event/2022-stem *Eppendorf Prize Essays by Young Scientists* (Winners Video). 4 March 2022, https:// www.youtube.com/watch?v=PZOUHREIOb4
 

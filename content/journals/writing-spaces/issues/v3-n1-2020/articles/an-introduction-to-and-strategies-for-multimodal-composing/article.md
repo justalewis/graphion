@@ -2,17 +2,17 @@
 title: An Introduction to and Strategies for Multimodal Composing
 author:
 - name: Melanie Gagich
-abstract: 'This essay is a chapter in *Writing Spaces: Readings on Writing*, Volume 3, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from any of these sites:'
+abstract: This chapter introduces multimodal composing and offers five strategies for creating a multimodal text. The essay begins with a brief review of key terms associated with multimodal composing and provides definitions and examples of the five modes of communication. The first section of the essay also introduces students to the New London Group and offers three reasons why students should consider multimodal composing an important skill---one that should be learned in a writing class. The second half of the essay offers three pre-drafting and two drafting strategies for multimodal composing. Pre-drafting strategies include urging students to consider their rhetorical situation, analyze other multimodal texts, research textual content, gather visual and aural materials, and evaluate tools needed for creating their text. A brief discussion of open licenses and Creative Commons licenses is also included. Drafting strategies include citing and attributing various types of texts appropriately and suggesting that students begin drafting with an outline, script, or visual (depending on the project). I conclude the chapter with suggestions for further reading.
 short-title: An Introduction to and Strategies for Multimodal Composing
 short-authors: Gagich
 volume: 3
 year: 2020
-start-page: 59
+start-page: 56
+chapter-number: 5
 source-file: gagich.pdf
 volume-title: Writing Spaces 3
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
-chapter-number: 5
 images-of-text:
 - figure-p005-1.jpg
 - figure-p006-1.png
@@ -22,16 +22,6 @@ images-of-text:
 - figure-p017-1.png
 - figure-p018-1.png
 ---
-
-> • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/pages/writing-spaces • WAC Clearinghouse: http://wac.colostate.edu/books/
-
-Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.
-
-# 5 An Introduction to and Strategies for Multimodal Composing *Melanie Gagich*
-
-# Overview
-
-This chapter introduces multimodal composing and offers five strategies for creating a multimodal text. The essay begins with a brief review of key terms associated with multimodal composing and provides definitions and examples of the five modes of communication. The first section of the essay also introduces students to the New London Group and offers three reasons why students should consider multimodal composing an important skill---one that should be learned in a writing class. The second half of the essay offers three pre-drafting and two drafting strategies for multimodal composing. Pre-drafting strategies include urging students to consider their rhetorical situation, analyze other multimodal texts, research textual content, gather visual and aural materials, and evaluate tools needed for creating their text. A brief discussion of open licenses and Creative Commons licenses is also included. Drafting strategies include citing and attributing various types of texts appropriately and suggesting that students begin drafting with an outline, script, or visual (depending on the project). I conclude the chapter with suggestions for further reading.
 
 When you think about a college writing class, you probably think of pens, paper, word processors, printers, and, of course, essay writing.* However, on the first day of your college writing class, you might read the syllabus and notice that the first assignment asks you to create a “multimodal text.” You may wonder to yourself, “What
 
@@ -268,8 +258,6 @@ However, I can envision instances where the strategies could be addressed indivi
 
 4. Find a multimodal text and a traditional, written text that discusses your topic or a topic of interest. Does the presentation of information affect your understanding of each text? In what ways?
 
-Parlor Press LLC, Anderson, South Carolina, USA © 2020 by Parlor Press. Individual essays © 2020 by the respective authors. Unless otherwise stated, these works are licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use. All rights reserved. For permission to reprint, please contact the author(s) of the individual articles, who are the respective copyright owners. Cover design by Colin Charlton. Library of Congress Cataloging-in-Publication Data on File
-
-* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
 
 Figure 5 is a screen shot of a student’s podcast and shows the audio lines and length of the text, entitled “New Podcast Project.” (Permission to use this image was obtained from the student).

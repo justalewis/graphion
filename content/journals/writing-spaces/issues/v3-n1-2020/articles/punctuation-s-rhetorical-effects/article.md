@@ -2,29 +2,19 @@
 title: Punctuation’s Rhetorical Effects
 author:
 - name: Kevin Cassell
-abstract: 'This essay is a chapter in *Writing Spaces: Readings on Writing*, Volume 3, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from any of these sites:'
+abstract: Many students tend to think of punctuation as governed by a set of rules. This chapter encourages them to conceive of punctuation as a system of conventions, which includes standard expectations of correct usage---certain “rules”---but applies them within a broader rhetorical context. After distinguishing between punctuation and grammar (the two terms are often associated), students are provided with three reading strategies to help them become aware of how punctuation operates in printed texts. The first strategy, explicit reading, adopts *Writing Spaces* author Mike Bunn’s Reading Like a Writer (RLW) approach, but emphasizes a reading style that is sensory. The second strategy, visual reading, asks students to adopt a “typographical perspective” when reading so that they literally *see* how punctuation operates. The third one, aural reading, asks them to *listen* -- possibly by reading aloud -- to how punctuation conveys an author’s tone of voice, which can help to illustrate context. Palpably experiencing punctuation usage while reading will help students use it with confidence and facility in their own writing.
 short-title: Punctuation’s Rhetorical Effects
 short-authors: Cassell
 volume: 3
 year: 2020
 start-page: 1
+chapter-number: 1
 source-file: cassell.pdf
 volume-title: Writing Spaces 3
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
-chapter-number: 1
 teacher-resources: separate
 ---
-
-> • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/pages/writing-spaces • WAC Clearinghouse: http://wac.colostate.edu/books/
-
-Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.
-
-# 1 Punctuation’s Rhetorical Effects *Kevin Cassell*
-
-# Overview
-
-Many students tend to think of punctuation as governed by a set of rules. This chapter encourages them to conceive of punctuation as a system of conventions, which includes standard expectations of correct usage---certain “rules”---but applies them within a broader rhetorical context. After distinguishing between punctuation and grammar (the two terms are often associated), students are provided with three reading strategies to help them become aware of how punctuation operates in printed texts. The first strategy, explicit reading, adopts *Writing Spaces* author Mike Bunn’s Reading Like a Writer (RLW) approach, but emphasizes a reading style that is sensory. The second strategy, visual reading, asks students to adopt a “typographical perspective” when reading so that they literally *see* how punctuation operates. The third one, aural reading, asks them to *listen* -- possibly by reading aloud -- to how punctuation conveys an author’s tone of voice, which can help to illustrate context. Palpably experiencing punctuation usage while reading will help students use it with confidence and facility in their own writing.
 
 This chapter accommodates readers with hearing or visual impairments so they may participate in this sensory reading.
 
@@ -154,9 +144,7 @@ I have emphasized multimodal reading strategies -- reading as “seeing” and �
 
 2. Have students pair up. Working separately, ask them to find a short paragraph from an essay, article, or book that has a variety of punctuation marks in it. Have them write that paragraph down on a piece of paper, taking out all of the punctuation marks. Student pairs should exchange paragraphs and be instructed to punctuate their partner’s paragraph. Ask students to compare the original with their punctuated paragraph, seeing how close both students came to the original, and have students discuss why they chose some of the marks they did.
 
-Parlor Press LLC, Anderson, South Carolina, USA © 2020 by Parlor Press. Individual essays © 2020 by the respective authors. Unless otherwise stated, these works are licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use. All rights reserved. For permission to reprint, please contact the author(s) of the individual articles, who are the respective copyright owners. Cover design by Colin Charlton. Library of Congress Cataloging-in-Publication Data on File
-
-* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
 
 [^1]: In “How to Teach Punctuation,” Ralph H. Singleton argues that italics is one of several devices that ought to be taught along with punctuation, since their purpose and use are the same (112). In this chapter I treat italics as a form of punctuation.
 

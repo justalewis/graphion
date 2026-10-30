@@ -2,22 +2,18 @@
 title: Storytelling, Narration, and the “Who I Am” Story
 author:
 - name: Catherine Ramsdell
-abstract: '*by Catherine Ramsdell* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 2, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.'
+abstract: '*Green Eggs and Ham was the story of my life. I wouldn’t eat a*'
 short-title: Storytelling, Narration, and the “Who I Am” Story
 short-authors: Ramsdell
 volume: 2
 year: 2011
-start-page: 272
+start-page: 261
 source-file: ramsdell--storytelling-narration.pdf
 volume-title: Writing Spaces 2
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
-license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
+license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
 chapter-number: 17
 ---
-
-# Storytelling, Narration, and the “Who I Am” Story *Catherine Ramsdell*
-
-*Green Eggs and Ham was the story of my life. I wouldn’t eat a*
 
 *thing when I was a kid, but Dr. Seuss inspired me to try cauli-*
 
@@ -267,8 +263,6 @@ Maxwell, Richard and Robert Dickman. *The Elements of Persuasion: Using* *Storyt
 
 Simmons, Annette. *The Story Factor: Inspiration, Influence, and Persuasion* *Through the Art of Storytelling.* Basic Books: Cambridge, 2006. Print.
 
-Spielberg, Steven. “Steven Spielberg Quotes.” *BrainyQuote.* BrainyQuote. 2010. Web. 30 Sept. 2010. This essay is available under a Creative Commons License subject to the Writing Spaces' Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2011 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
+Spielberg, Steven. “Steven Spielberg Quotes.” *BrainyQuote.* BrainyQuote. 2010. Web. 30 Sept. 2010.
 
-[^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
-
-* This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.

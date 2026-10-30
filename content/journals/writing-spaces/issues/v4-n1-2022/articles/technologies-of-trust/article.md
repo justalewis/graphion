@@ -127,6 +127,8 @@ For software developers, a “complete” text is impossible. Software is too bi
 
 Prioritization is where agile processes truly shine. If you’ve written out all the tasks associated with your project, you probably feel overwhelmed. Consistently reflecting on your list is key. Tasks can be prioritized in four ways: difficulty, size, urgency, or importance. Many organizations use a combination of prioritization methods, or different methods for different task types. Each of these characteristics are relative---what’s important, difficult or big for one group may not be for the next group. So agile processes provide simple metrics.
 
+Table 1. Prioritization Methods.
+
 | Method | Name | Difficulty |
 | --- | --- | --- |
 | Difficulty | Fibonacci | 1, 2, 3, 5, 8, 13 |
@@ -146,6 +148,8 @@ Figure 3. Kanban Board showing the “To Do,” “Doing,” and “Done” colu
 As a team, everyone decides what are the most important tasks and places them in the To-Do or Next column. When a team member is looking for a new task, they simply go to this column and find the most important. They write their name on the sticky note and move it to the Doing column. Everyone knows that task is being worked on and can move on to a different task. This also provides a sense of accountability, especially if a task is dependent on someone else finishing their work.
 
 When Toyota developed their Kanban system in the 1940s, they simply used a wall with sticky notes. Now you’ll find many software platforms that help groups organize their workflow in this way. Which tools you choose doesn’t really matter, as long as you and your team can access the board and update it regularly.
+
+Table 2. Kanban Tools
 
 | Tool | Notes |
 | --- | --- |
@@ -249,12 +253,8 @@ Explore with your class the biggest concerns about group work, then identify a g
 
 Have students discuss what kinds of culture they’ve encountered in their workplaces or in different school settings. Have each group choose an organization and analyze their mission or culture page on the web. Discuss what cultural elements might transfer to your particular group project.
 
-* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
 
 Brainstorming → Research → Rough draft → Feedback → Revision → Final Project
 
 Figure 2. nCino Cultural Code showing six core values: “Bring You’re A-game,” “Do the Right Thing,” “Respect Each Other,” “Make Someone’s Day,” “Have Fun,” and “Be a Winner!”. Screen shot from nCino.com and used with permission.
-
-Table 1. Prioritization Methods.
-
-Table 2. Kanban Tools

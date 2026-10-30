@@ -4,36 +4,22 @@ author:
 - name: Kate Warrington
 - name: Natasha Kovalyova
 - name: Cindy King
-abstract: 'Kate Warrington, Natasha Kovalyova, and Cindy King This essay is a chapter in *Writing Spaces: Readings on Writing*, Volume 3, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from any of these sites:'
+abstract: This article walks students through how to use critical reading strategies to help them select credible sources for their research papers and helps them understand how critical reading assignments they may have completed earlier in the semester have prepared them for the difficult task of selecting sources. Through analysis of how logos, ethos, and pathos are used in potential sources, students will understand that these persuasive techniques can influence the overall credibility of a source. Seven questions are presented that aid in critical reading, and examples of student writing are provided that demonstrate the connection between the use of persuasive techniques and their effect on the credibility of a particular source. The chapter concludes with a brief evaluation of two Internet sources on the topic of animal shelters, providing students with an anchor for evaluating sources as they prepare their own research papers.
 short-title: Assessing Source Credibility for Crafting a Well-Informed
 short-authors: Warrington, Kovalyova, and King
 volume: 3
 year: 2020
-start-page: 175
+start-page: 172
+chapter-number: 13
 source-file: warrington.pdf
 volume-title: Writing Spaces 3
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
-chapter-number: 13
 teacher-resources: separate
 images-of-text:
 - figure-p010-1.jpg
 - figure-p012-1.png
 ---
-
-> • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/pages/writing-spaces • WAC Clearinghouse: http://wac.colostate.edu/books/
-
-Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.
-
-# 13
-
-# Assessing Source Credibility for Crafting a Well-Informed
-
-# Argument *Kate Warrington, Natasha Kovalyova, and Cindy King*
-
-# Overview
-
-This article walks students through how to use critical reading strategies to help them select credible sources for their research papers and helps them understand how critical reading assignments they may have completed earlier in the semester have prepared them for the difficult task of selecting sources. Through analysis of how logos, ethos, and pathos are used in potential sources, students will understand that these persuasive techniques can influence the overall credibility of a source. Seven questions are presented that aid in critical reading, and examples of student writing are provided that demonstrate the connection between the use of persuasive techniques and their effect on the credibility of a particular source. The chapter concludes with a brief evaluation of two Internet sources on the topic of animal shelters, providing students with an anchor for evaluating sources as they prepare their own research papers.
 
 In your writing course, you’re likely to encounter a variety of assignments---reading, responding, writing essays---and each of these assignments is a building block to improved writing skills.* Research writing requires all of the skills learned in these kinds of assignments; it demands you put theory into practice, gather sources, synthesize them, and lend your voice to the ongoing conversation.
 
@@ -225,8 +211,6 @@ To get students more comfortable with reading academic writing, have them practi
 
 Since most students feel comfortable using the popular Internet to find sources for their research, offer them an opportunity to work through credibility of Internet sources during small group work in class. Ask each small group to choose a topic (it can be a topic they plan to work with for their research paper) and conduct an Internet search for sources on that topic. Once they have located a source that they believe looks like it has good information, ask them to locate basic information like the author/ sponsoring organization and publication date. In many cases, this information will be difficult to locate, which not only helps them to prepare for the challenges they may face citing Internet sources, but also helps them to take a second look at the credibility of Internet sources.
 
-Parlor Press LLC, Anderson, South Carolina, USA © 2020 by Parlor Press. Individual essays © 2020 by the respective authors. Unless otherwise stated, these works are licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use. All rights reserved. For permission to reprint, please contact the author(s) of the individual articles, who are the respective copyright owners. Cover design by Colin Charlton. Library of Congress Cataloging-in-Publication Data on File
-
-* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
 
 Figure 3. “We Like Big Mutts and We Cannot Lie (Ok-Cats, Too)!” press release was found by following the “Newsroom” link from hsnt.org. The release discusses a partnership with several organizations that will allow them to fly larger dogs to other states to be adopted, thus increasing rates of adoption. Source: The Human Society of North Texas.

@@ -2,24 +2,18 @@
 title: 'On the Other Hand: The Role of Antithetical Writing in First Year Composition Courses'
 author:
 - name: Steven D. Krause
-abstract: '*by Steven D. Krause* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 2, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.'
+abstract: 'Besides my own experiences as a student many years ago in courses similar to the ones you and your classmates are in now, I think the most important influence on how I have approached research and argumentative writing came from academic debate.* Debate taught me at least two ways to approach an argument that were not part of my formal schooling. First, academic policy debate[^1] taught me that argumentation is a contest---a sport, not at all different from tennis or basketball or figure skating or gymnastics, an activity where you have to work with a team, you have to practice, and the goal is to “win.” And winning in academic debate happens: while it is a sport that is judged, it is an activity, like gymnastics or figure skating, where the rules for judging are surprisingly well codified. I will admit that seeing a debate or argument as something “to be won” has not always served me well in life, for there are any number of situations in which the framework for an argument is perhaps better perceived as an opportunity to listen and to compromise than to score points.'
 short-title: On the Other Hand
 short-authors: Krause
 volume: 2
 year: 2011
-start-page: 141
+start-page: 136
 source-file: krause--on-the-other-hand.pdf
 volume-title: Writing Spaces 2
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
-license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
+license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
 chapter-number: 9
 ---
-
-# On the Other Hand: The Role of | Antithetical Writing in First Year
-
-# Composition Courses *Steven D. Krause*
-
-Besides my own experiences as a student many years ago in courses similar to the ones you and your classmates are in now, I think the most important influence on how I have approached research and argumentative writing came from academic debate.* Debate taught me at least two ways to approach an argument that were not part of my formal schooling. First, academic policy debate[^1] taught me that argumentation is a contest---a sport, not at all different from tennis or basketball or figure skating or gymnastics, an activity where you have to work with a team, you have to practice, and the goal is to “win.” And winning in academic debate happens: while it is a sport that is judged, it is an activity, like gymnastics or figure skating, where the rules for judging are surprisingly well codified. I will admit that seeing a debate or argument as something “to be won” has not always served me well in life, for there are any number of situations in which the framework for an argument is perhaps better perceived as an opportunity to listen and to compromise than to score points.
 
 Second, because of the way that academic debate is structured, I learned quickly the importance of being able to perceive and argue
 
@@ -151,10 +145,8 @@ Most academic readers have respect for writers when they successfully argue for 
 
 Crowley, Sharon. *The Methodical Memory: Invention in Current-Traditional* *Rhetoric.* Carbondale: Southern Illinois UP, 1990. Print.
 
-Neel, Jasper. *Plato, Derrida, and Writing.* Carbondale: Southern Illinois UP, 1988. Print. This essay is available under a Creative Commons License subject to the Writing Spaces' Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2011 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
+Neel, Jasper. *Plato, Derrida, and Writing.* Carbondale: Southern Illinois UP, 1988. Print.
 
-[^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
-
-* This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.
 
 [^1]: Explaining “academic policy debate” is not my goal in this essay. But I will say that academic debate bears almost no resemblance to “debates” between political candidates or to the stereotypical way debate tends to be depicted on television shows or in movies. Certainly debate involves a certain intellectual prowess; but I think it’s fair to say that debate is a lot closer to a competitive sport than a classroom exercise. Two excellent introductions to the world of academic debate are the Wikipedia entry for “Policy Debate” (http://en.wikipedia.org/wiki/Policy_debate) and the 2007 documentary movie *Resolved*.

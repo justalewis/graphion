@@ -2,16 +2,16 @@
 title: Wikipedia Is Good for You!?
 author:
 - name: James P. Purdy
-abstract: '*by James P. Purdy* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 1, a peer-reviewed open textbook series for the writing classroom, and is published through Parlor Press. The full volume and individual chapter downloads are available for free from the following sites: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers. To learn about participating in the Writing Spaces project, visit the Writing Spaces website at http://writingspaces.org/.'
+abstract: '*“I actually do think Wikipedia is an amazing thing. It is the first place I*'
 short-title: Wikipedia Is Good for You!?
 short-authors: Purdy
 volume: 1
 year: 2010
-start-page: 209
+start-page: 201
 source-file: purdy--wikipedia-is-good-for-you.pdf
 volume-title: Writing Spaces 1
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
-license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
+license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
 chapter-number: 14
 images-of-text:
 - figure-p007-1.png
@@ -20,10 +20,6 @@ images-of-text:
 - figure-p013-1.png
 - figure-p016-1.png
 ---
-
-# Wikipedia Is Good for You!? *James P. Purdy*
-
-*“I actually do think Wikipedia is an amazing thing. It is the first place I*
 
 *go when I’m looking for knowledge. Or when I want to create some.”*
 
@@ -197,11 +193,13 @@ Seigenthaler, John. “A False Wikipedia Biography.” *USA Today.* Gannett Co.,
 
 Wilson, Mark A. “Professors Should Embrace Wikipedia.” *Inside Higher Ed.* Inside Higher Ed, 1 April 2008. Web. 1 April 2008.
 
-“Writing.” *Wikipedia.* Wikimedia Foundation, 11:13, 9 June 2004. Web. 9 Nov. 2004. ![A Wikipedia references section set in two columns: twenty-five numbered citations for the Web 2.0 article, each ending in an external-link icon.](assets/figure-p007-1.png) ![A Wikipedia Further reading section: seven entries, among them a history of writing from hieroglyph to multimedia, three ERIC digests on writing instruction, a German discussion of Barthes, Breton, Deleuze and Federman, and links on the origins and history of writing. A tooltip shows one entry's URL.](assets/figure-p007-2.png) This essay is available under a Creative Commons License subject to the Writing Spaces Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2010 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
+“Writing.” *Wikipedia.* Wikimedia Foundation, 11:13, 9 June 2004. Web. 9 Nov. 2004.
 
-[^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
+![A Wikipedia references section set in two columns: twenty-five numbered citations for the Web 2.0 article, each ending in an external-link icon.](assets/figure-p007-1.png)
 
-* This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces. org/terms-of-use.
+![A Wikipedia Further reading section: seven entries, among them a history of writing from hieroglyph to multimedia, three ERIC digests on writing instruction, a German discussion of Barthes, Breton, Deleuze and Federman, and links on the origins and history of writing. A tooltip shows one entry's URL.](assets/figure-p007-2.png)
+
+\* This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces. org/terms-of-use.
 
 [^1]: You may be familiar with the term *research paper* and may have been asked to write one for some of your classes. I don’t use that term here, however. There are two primary reasons: (1) Research “papers” need not be papers anymore. That is, what you write need not be in the form of a print document. It might be a web site or a video or a poster or some other multimedia form. The term *research paper* doesn’t encapsulate all these possibilities. (2) Research papers are often associated with presentations of what other people have written about a topic. When people hear *research paper*, in other words, they often think of compiling what other authoritative, smart people have to say about a topic and calling it a day. The kind of writing you are asked to do in college, however, requires more than that. It asks for your response to and application of what others have written. You need to do something with the sources you read (other than just string together quotes from them in your paper). So instead of *research paper*, I use *research-based writing*. This term emphasizes the activity (writing) rather than the medium (paper). This term also presents research as the basis (research-based), a beginning rather than an end.
 

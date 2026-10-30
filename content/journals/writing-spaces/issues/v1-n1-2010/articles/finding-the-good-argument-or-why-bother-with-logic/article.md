@@ -2,22 +2,18 @@
 title: Finding the Good Argument OR Why Bother With Logic?
 author:
 - name: Rebecca Jones
-abstract: '*by Rebecca Jones* This essay is a chapter in *Writing Spaces: Readings on Writing,* Volume 1, a peer-reviewed open textbook series for the writing classroom, and is published through Parlor Press. The full volume and individual chapter downloads are available for free from the following sites: • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/writingspaces • WAC Clearinghouse: http://wac.colostate.edu/books/ Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers. To learn about participating in the Writing Spaces project, visit the Writing Spaces website at http://writingspaces.org/.'
+abstract: The word argument often means something negative.* In Nina Paley’s cartoon (see Figure 1), the argument is literally a cat fight. Rather than envisioning argument as something productive and useful, we imagine intractable sides and use descriptors such as “bad,” “heated,” and “violent.” We rarely say, “Great, argument. Thanks!” Even when we write an academic “argument paper,” we imagine our own ideas battling others.
 short-title: Finding the Good Argument OR Why Bother With Logic?
 short-authors: Jones
 volume: 1
 year: 2010
-start-page: 158
+start-page: 154
 source-file: jones--finding-the-good-argument.pdf
 volume-title: Writing Spaces 1
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
-license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
+license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
 chapter-number: 11
 ---
-
-# Finding the Good Argument OR Why Bother With Logic? *Rebecca Jones*
-
-The word argument often means something negative.* In Nina Paley’s cartoon (see Figure 1), the argument is literally a cat fight. Rather than envisioning argument as something productive and useful, we imagine intractable sides and use descriptors such as “bad,” “heated,” and “violent.” We rarely say, “Great, argument. Thanks!” Even when we write an academic “argument paper,” we imagine our own ideas battling others.
 
 ![A four-panel comic strip. A cat and a dog face each other: the cat says light is a particle, the dog says it is a wave. In the second panel they are nose to nose, shouting particle and wave. In the third the cat proposes they stop the petty bickering and resolve the debate like professional scientists, and the dog agrees. In the fourth they are a tumbling cloud of fur, still shouting particle and wave.](assets/figure-p002-1.png)\
 Figure 1. This cartoon demonstrates the absurdity of either/or arguments. (© 1997-1998 Nina Paley. Image available under a Creative Commons Attribution-Share Alike license.[^1] * This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces. org/terms-of-use.
@@ -336,10 +332,6 @@ Murphy, James. *Quintilian On the Teaching and Speaking of Writing.* Carbondale:
 
 Paxton, Pamela, and Jeremy Adam Smith. “Not Everyone Is Out to Get You.” *UTNE Reader* Sept.-Oct. 2009: 44-45. Print.
 
-“Plato, *The Dialogues of Plato, vol. 1* [387 AD].” Online Library of Liberty, n. d. Web. 5 May 2010. <http://oll.libertyfund.org/index.php?option=com_ staticxt&staticfile=show.php%3Ftitle=111&layout=html#chapt er_39482>. This essay is available under a Creative Commons License subject to the Writing Spaces Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2010 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
-
-[^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
-
-2
+“Plato, *The Dialogues of Plato, vol. 1* [387 AD].” Online Library of Liberty, n. d. Web. 5 May 2010. <http://oll.libertyfund.org/index.php?option=com_ staticxt&staticfile=show.php%3Ftitle=111&layout=html#chapt er_39482>. 2
 
 [^1]: I would like to extend a special thanks to Nina Paley for giving permission to use this cartoon under Creative Commons licensing, free of charge. Please see Paley’s great work at www.ninapaley.com.

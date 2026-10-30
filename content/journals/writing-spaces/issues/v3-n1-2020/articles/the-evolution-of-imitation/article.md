@@ -2,32 +2,22 @@
 title: 'The Evolution of Imitation: Building Your Style'
 author:
 - name: Craig A. Meyer
-abstract: 'Craig A. Meyer This essay is a chapter in *Writing Spaces: Readings on Writing*, Volume 3, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from any of these sites:'
+abstract: This chapter focuses on incorporating imitation practices into a student’s writing toolbox. By encouraging students to look more rhetorically at writing through imitation, they learn to recognize that language is more dynamic, and they can approach writing tasks with more contemplative thought instead of as a dreaded task. Through the use of structural and contextual imitation, students gain more insight into how sentences create meaning, how they can be changed, and how the decision-making processes relate to putting certain writing elements in certain locations for specific effects. While this article briefly touches on plagiarism as being distinct from imitation, students should recognize that imitation is not mindlessly copying, but mindfully understanding the rationale and effect of sentence structure, variety, and placement. They also learn how words form meaning within a sentence and, by extension, paragraphs and the overall paper. Imitation helps student writers realize that the more models, authors, and examples they can imitate, the more diverse and expressive their writing will become. Each time they understand how and why another author’s sentence does what it does, they can use that insight in their own writing, which also increases their confidence.
 short-title: The Evolution of Imitation
 short-authors: Meyer
 volume: 3
 year: 2020
-start-page: 109
+start-page: 106
+chapter-number: 8
 source-file: meyer.pdf
 volume-title: Writing Spaces 3
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 teacher-resources: separate
-chapter-number: 8
 images-of-text:
 - figure-p009-1.jpg
 - figure-p009-2.jpg
 ---
-
-> • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/pages/writing-spaces • WAC Clearinghouse: http://wac.colostate.edu/books/
-
-Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.
-
-# 8 The Evolution of Imitation: Building Your Style *Craig A. Meyer*
-
-# Overview
-
-This chapter focuses on incorporating imitation practices into a student’s writing toolbox. By encouraging students to look more rhetorically at writing through imitation, they learn to recognize that language is more dynamic, and they can approach writing tasks with more contemplative thought instead of as a dreaded task. Through the use of structural and contextual imitation, students gain more insight into how sentences create meaning, how they can be changed, and how the decision-making processes relate to putting certain writing elements in certain locations for specific effects. While this article briefly touches on plagiarism as being distinct from imitation, students should recognize that imitation is not mindlessly copying, but mindfully understanding the rationale and effect of sentence structure, variety, and placement. They also learn how words form meaning within a sentence and, by extension, paragraphs and the overall paper. Imitation helps student writers realize that the more models, authors, and examples they can imitate, the more diverse and expressive their writing will become. Each time they understand how and why another author’s sentence does what it does, they can use that insight in their own writing, which also increases their confidence.
 
 Think for a moment on how you have learned most of the things you know.* Sometimes you learned by reading---perhaps from a textbook in history class. Sometimes you learned by doing something, like riding a bike. Sometimes you watched someone else and copied their
 
@@ -142,6 +132,4 @@ While this chapter could be used at any time during a first-year composition (FY
 
 6. As a group or a class, what other techniques could you learn from or imitate from the baseball selection?
 
-Parlor Press LLC, Anderson, South Carolina, USA © 2020 by Parlor Press. Individual essays © 2020 by the respective authors. Unless otherwise stated, these works are licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use. All rights reserved. For permission to reprint, please contact the author(s) of the individual articles, who are the respective copyright owners. Cover design by Colin Charlton. Library of Congress Cataloging-in-Publication Data on File
-
-* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.

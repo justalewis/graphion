@@ -7,7 +7,7 @@ short-title: Elaborate Rhetorics
 short-authors: Blakesley
 volume: 5
 year: 2023
-start-page: 215
+start-page: 217
 chapter-number: 14
 source-file: 14Blakesley.pdf
 volume-title: Writing Spaces 5

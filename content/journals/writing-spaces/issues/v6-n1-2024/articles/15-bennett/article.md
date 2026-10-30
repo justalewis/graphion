@@ -7,7 +7,7 @@ short-title: Designing Multimodal Technical Instructions for
 short-authors: Bennett
 volume: 6
 year: 2024
-start-page: 288
+start-page: 291
 chapter-number: 15
 source-file: 15Bennett.pdf
 volume-title: Technical Writing Spaces 6
@@ -109,6 +109,8 @@ An algorithm (AL-go-rith-em) is basically a set of steps for completing a task. 
 
 Table 15.1 shows a plan to communicate the text ‘algorithm’ multimodally, culturally, and cross-culturally using interactive aesthetics. Column one shows the different modes for communicating; whereas column two shows how the text could take tangible or intangible, aesthetic form. Column three shows how the aesthetic form from column two could be extended to address any cultural dissonance that may arise in the communication process. A common feature of the culturally responsive forms listed in column two is their reliance on interactivity (i.e., active, multisensory engagement) between each mode’s form and the reader.
 
+Table 15.1 Plan for Communicating Instructions Multimodally with Interactive Aesthetics to Yield Cross-Cultural Resonance Table 15.2 Sample Implementation of the Plan in Table 15.1 across multiple Modes for Cross-cultural Resonance. Notes: (V=Visual, L=Linguistic, S=Spatial, G=Gestural, A=Aural, C=Cultural). Please access the alt text for each image to view a description of what is being communicated.
+
 | Modes | Aesthetic form | Interactive Aesthetics |
 | --- | --- | --- |
 | Visual | Image of code | Visual treatments and representations gleaned from primary/secondary research that reflects different cultures |
@@ -119,6 +121,13 @@ Table 15.1 shows a plan to communicate the text ‘algorithm’ multimodally, cu
 | Aural | Sound verbalizes each step | Sound verbalizes each step in a culturally appropriate manner |
 |  |  | Sound technology translates a text (e.g., a word in a given language is translated into the reader’s language) or image (e.g., alt-text enables people who cannot see to have access to the stories that images tell.) or aesthetic treatment (e.g., the meaning of colors, icons, symbols, etc. are translated) |
 | Cultural | Image, sound, text, non-verbal communication, position or place | Culturally-specific representations of heritage algorithms that resonate with the culture of the reader |
+| Aesthetic form realized | V | L | S | G | A | C |
+| --- | --- | --- | --- | --- | --- | --- |
+|  | X |  | X |  |  | X |
+|  | X | X | X | X | X | X |
+|  | X |  |  | X | X | X |
+|  | X | X |  | X | X | X |
+|  | X |  |  | X | X |  |
 
 Implementation of the plan is where the designer applies their creative ideas. For instance, Table 15.2 shows the ways that my research team decided to implement the plan to teach BIPOC students about algorithms.
 
@@ -166,19 +175,11 @@ Using the following table as a guide, independently or in small groups discuss a
 
 Implement the plan you created previously by developing technical instructions that use interactive aesthetics to yield cross-cultural resonance (see Table 1). Then, use Table 2 to document the aesthetic forms realized that reflect your choices in Table 1.
 
+Table 1 Table 2 Aesthetic form realized V L S G A C
+
 | Aesthetic form realized | V | L | S | G | A | C |
 | --- | --- | --- | --- | --- | --- | --- |
 |  | X |  |  |  |  | X |
-
-To evaluate your technical instructions, conduct primary research to learn about how the target community of readers engage with them and use the knowledge gained to iterate the technical instructions.
-
-| Aesthetic form realized | V | L | S | G | A | C |
-| --- | --- | --- | --- | --- | --- | --- |
-|  | X |  | X |  |  | X |
-|  | X | X | X | X | X | X |
-|  | X |  |  | X | X | X |
-|  | X | X |  | X | X | X |
-|  | X |  |  | X | X |  |
 | Modes | Aesthetic form | Interactive Aesthetics |
 | --- | --- | --- |
 | Visual | Images and visual treatments | Visual treatments and representations gleaned from primary/secondary research that reflects different cultures in their motifs and designs |
@@ -192,8 +193,6 @@ To evaluate your technical instructions, conduct primary research to learn about
 |  |  | Sound technology translates a text (e.g., a word in a given language is translated into the reader’s language) or image (e.g., alt-text enables people who cannot see to have access to the stories that images tell.) or aesthetic treatment (e.g., the meaning of colors, icons, symbols, etc. are translated) |
 | Cultural | Image, sound, text, non-verbal communication, position or place | Culturally-specific representations of information that resonate with the culture of the reader |
 
+To evaluate your technical instructions, conduct primary research to learn about how the target community of readers engage with them and use the knowledge gained to iterate the technical instructions.
+
 1 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use. 2 This work was supported in part by a National Science Foundation STEM+C grant #DRL-1640014. Many thanks to Principal Investigator Dr. Ron Eglash who leads the Culturally-Situated Design Tools research project.
-
-Table 15.1 Plan for Communicating Instructions Multimodally with Interactive Aesthetics to Yield Cross-Cultural Resonance Table 15.2 Sample Implementation of the Plan in Table 15.1 across multiple Modes for Cross-cultural Resonance. Notes: (V=Visual, L=Linguistic, S=Spatial, G=Gestural, A=Aural, C=Cultural). Please access the alt text for each image to view a description of what is being communicated.
-
-Table 1 Table 2 Aesthetic form realized V L S G A C

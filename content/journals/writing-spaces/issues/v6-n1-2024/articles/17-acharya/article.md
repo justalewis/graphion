@@ -7,7 +7,7 @@ short-title: Composing Technical Documents for Localized Usability in the
 short-authors: Acharya
 volume: 6
 year: 2024
-start-page: 324
+start-page: 328
 chapter-number: 17
 source-file: 17Acharya.pdf
 volume-title: Technical Writing Spaces 6
@@ -161,6 +161,16 @@ Consider that different cultures use distinct formats for numbers, dates, and cu
 
 > • Currency: Pay attention to how currency values are formatted and written. For example:
 
+| U.S. | Ghana | Portugal | Luxembourg |
+| --- | --- | --- | --- |
+| 5/29/2023 | 29/5/2023 | 23.05.29 | 29.05.2023 |
+| 5-29-2023 | 29-5-2023 | 2023/05/29 |  |
+| 5/29/23 |  | 29-05-2023 |  |
+| U.S. | Nepal | India |
+| --- | --- | --- |
+| $430.50 | रू ४३०.५० | ₹४३०.५० |
+| US$430.50 | ४३० रपु यै ाँ ५० पसै ा | ४३० रपु ये ५० पसै े |
+
 > • Large numbers: Commas and/or periods are used in different places in different countries. For example, 1,234,567.89 (US) 1.234.567,89 or 1234 567,89 (France) 12,34,567.89 (Nepal) • Paper size: Consider the paper size your target audience uses, especially for electronic documents. For example, in Nepal, A4 paper (210 x 297 mm, or 8.27 x 11.7 inches) is used in place of American letter-size (8.5 x 11 inches).
 
 Thus, different cultures may perceive your composition of information in a variety of unexpected ways, so carefully consider the organization of contents, language expectations, colors, visuals, and measurement units, just to mention a few.
@@ -254,15 +264,5 @@ To help students explore the ideas discussed in this chapter, consider having th
 # Appendix
 
 > • Usability Testing Guidelines: https://www.plainlanguage.gov/guidelines/test/usability-testing/ • Usability Evaluation Basics: https://www.usability.gov/what-and-why/usability-evaluation.html • Usability Resources: https://infodesign.com.au/usabilityresources.html • Usability Testing: https://www.nngroup.com/articles/usability-testing-101/ • Remote Testing: https://www.usability.gov/how-to-and-tools/ methods/remote-testing.html • Usability Testing Basics: https://studentlife.mit.edu/sites/default/ files/Documents/Usability_Testing_Workshop_March2020.pdf • How to Test the Usability of Documents: https://www.uxmatters. com/mt/archives/2020/05/how-to-test-the-usability-of-documents.php
-
-| U.S. | Ghana | Portugal | Luxembourg |
-| --- | --- | --- | --- |
-| 5/29/2023 | 29/5/2023 | 23.05.29 | 29.05.2023 |
-| 5-29-2023 | 29-5-2023 | 2023/05/29 |  |
-| 5/29/23 |  | 29-05-2023 |  |
-| U.S. | Nepal | India |
-| --- | --- | --- |
-| $430.50 | रू ४३०.५० | ₹४३०.५० |
-| US$430.50 | ४३० रपु यै ाँ ५० पसै ा | ४३० रपु ये ५० पसै े |
 
 1 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.

@@ -2,33 +2,23 @@
 title: Writing with Force and Flair
 author:
 - name: William T. FitzGerald
-abstract: 'This essay is a chapter in *Writing Spaces: Readings on Writing*, Volume 3, a peer-reviewed open textbook series for the writing classroom. Download the full volume and individual chapters from any of these sites:'
+abstract: Exposure to rhetorical figures, once central to writing pedagogy, has
 short-title: Writing with Force and Flair
 short-authors: FitzGerald
 volume: 3
 year: 2020
-start-page: 47
+start-page: 44
+chapter-number: 4
 source-file: fitzgerald.pdf
 volume-title: Writing Spaces 3
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
-chapter-number: 4
 teacher-resources: separate
 ---
 
-> • Writing Spaces: http://writingspaces.org/essays • Parlor Press: http://parlorpress.com/pages/writing-spaces • WAC Clearinghouse: http://wac.colostate.edu/books/
+> largely fallen out of favor in composition. This chapter reintroduces today’s students to the stylistic possibilities of figures of speech,
 
-Print versions of the volume are available for purchase directly from Parlor Press and through other booksellers.
-
-# 4
-
-# Writing with Force and Flair
-
-# *William T. FitzGerald*
-
-# Overview
-
-Exposure to rhetorical figures, once central to writing pedagogy, has largely fallen out of favor in composition. This chapter reintroduces today’s students to the stylistic possibilities of figures of speech, drawing on an analogy to figure skating to illustrate how writing communicates with an audience through stylistic moves. In an accessible discussion of how and why to use figures, it provides an overview of the most common tropes (e.g., metaphor, hyperbole) and schemes (e.g. isocolon, anaphora) and offers brief definitions and examples to illustrate their variety and ubiquity. It discusses the situated nature of writing to acknowledge that while even academic writing employs rhetorical figures, not all figures are appropriate for every genre and context. The essay concludes with a set of style-based exercises to supplement a writing course. These include maintaining a commonplace book, analyzing texts, imitating passages, and practicing techniques of copia for stylistic flexibility. Some resources are recommended for further study.
+drawing on an analogy to figure skating to illustrate how writing communicates with an audience through stylistic moves. In an accessible discussion of how and why to use figures, it provides an overview of the most common tropes (e.g., metaphor, hyperbole) and schemes (e.g. isocolon, anaphora) and offers brief definitions and examples to illustrate their variety and ubiquity. It discusses the situated nature of writing to acknowledge that while even academic writing employs rhetorical figures, not all figures are appropriate for every genre and context. The essay concludes with a set of style-based exercises to supplement a writing course. These include maintaining a commonplace book, analyzing texts, imitating passages, and practicing techniques of copia for stylistic flexibility. Some resources are recommended for further study.
 
 If you watch figure skaters in the Winter Olympics, the only time I really do, you know the athleticism and artistry of these competitors.* You see it in their faces, in their bodies, in the way they fearlessly “attack” the ice. You can only marvel at the hours of practice and the slow accumulation of technical mastery required to make it all seem so effortless. Watching figure skating on TV, I always notice the commentary. The presenters speak a language incomprehensible to me to describe what we see. A double *this*, a triple *that*, a reverse *something-or-other*. All *I* see is
 
@@ -172,6 +162,4 @@ Hands-on attention to style and figuration meets students as readers and writers
 
 A final activity, then, is to encourage students to experiment with rhetorical figures in their own papers. Students might be asked, per the questions above, if there are particular figures they would want to use in a future writing project. They might also be asked to identify a handful of figures they find themselves using, whether by design or fortuitously.
 
-Parlor Press LLC, Anderson, South Carolina, USA © 2020 by Parlor Press. Individual essays © 2020 by the respective authors. Unless otherwise stated, these works are licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use. All rights reserved. For permission to reprint, please contact the author(s) of the individual articles, who are the respective copyright owners. Cover design by Colin Charlton. Library of Congress Cataloging-in-Publication Data on File
-
-* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and are subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.

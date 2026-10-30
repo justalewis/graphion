@@ -7,7 +7,7 @@ short-title: Let’s Party
 short-authors: Richards
 volume: 6
 year: 2024
-start-page: 81
+start-page: 84
 chapter-number: 5
 source-file: 5Richards.pdf
 volume-title: Technical Writing Spaces 6
@@ -54,6 +54,8 @@ Find everything you can on the topic, using resources around you like a libraria
 
 Creating a table ensures that (a) you don’t have 21 browser tabs open with important information and then lose them when your internet crashes and (b) you are thinking about how each piece of information you find---could be books, journal articles, web pieces, blog posts, or software applications---connects to your research. They could support it, challenge it, facilitate it---whatever. But listening to as many folks as you can and learning (and remembering!) their positions on a topic is one of the best ways to have a great time at a party and avoid any social *faux pas*. Off you go to dig into the research.
 
+Table 5.1. Source Spreadsheet for Literature Reviews
+
 | Author | Title | Publication | Link/ DOI | Reliability Rating (1 to 5) | Main Argument/Findings | Connection to Your Project |
 | --- | --- | --- | --- | --- | --- | --- |
 | . . . | . . . | . . . | . . . | . . . | . . . | . . . |
@@ -73,6 +75,8 @@ You start accumulating sources in your nifty table (Table 5.2). During your rese
 You consider what sources would be useful for the development team to know about. You really engaged with the Rawlins and Wilson journal article, most likely because you have a knack for theory, but would this be helpful to review for the purpose ahead of you? The constraints of the informal report genre? The audience at hand? The Stephens et al. piece you also enjoyed and was much more practical and research based. But they focused on the user experience of sea level rise viewers, which seems farther down the project road for the developers, who have barely started prototyping their vision. You realize now that a source can be quite reliable, engaging, and connected but not of immediate relevance for your project. And that’s OK---that’s part of savvy rhetorical adjudication that focuses on the needs of the reader more than a window into the full extent of your research.
 
 You then decide that for this “review of literature” you’ll just be listing, summarizing, and synthesizing the actual tools themselves. You’ll make a note in there about how there is ample scholarship on these tools, but for the purpose of this project, and its scope, at this time you are choosing to focus on the technical sources.
+
+Table 5.2. Populated Source Spreadsheet for Literature Reviews, Including Both Academic and Technical Sources Table 5.3. Populated Source Spreadsheet for Literature Reviews, Including Both Academic and Technical Sources
 
 | Author | Title | Publication | Link/DOI |
 | --- | --- | --- | --- |
@@ -94,12 +98,20 @@ You’ll need practice in “summarizing” technical sources. Consider adapting
 
 As most technical writers find out, what constitutes useful sources will constantly change according to purpose and will extend far beyond musty books and full-text periodicals. (We’re two functions in and you haven’t even started writing yet!)
 
+Table 5.4. Source Spreadsheet Adapted for Technical Sources
+
 | Author | Title | Publication | Link/DOI |
 | --- | --- | --- | --- |
 | Climate Central | Risk Zone Map | Surging Seas? | https://ss2. climatecentral. org |
 | Reliability Rating (1 to 5) | Main Argument/Findings | Connection to Your Project |  |
 | 4? | Like NOAA, the argument is the same. | This resembles a type of tool that I think the development team wants to create---but more attainable since they are also a nonprofit, like we are. |  |
 | . . . | . . . | . . . | . . . |
+| Agency | Type | Link |
+| --- | --- | --- |
+| NOAA | Government | https://coast.noaa.gov/digitalcoast/tools/ slr.html |
+| Origination Date | Functionality | User Base |
+| Not sure. Last modified August 2020. | Identify address and use sea level gauge (inter-active). | Primarily coastal planners but also the public. |
+| . . . | . . . | . . . |
 
 # Refines for the Target Audience
 
@@ -203,17 +215,4 @@ Consider supplementing this chapter with the following questions:
 
 4. Composing an effective literature review requires handling a good deal of information. What are some ways you can manage your content and information in an efficient way?
 
-| Agency | Type | Link |
-| --- | --- | --- |
-| NOAA | Government | https://coast.noaa.gov/digitalcoast/tools/ slr.html |
-| Origination Date | Functionality | User Base |
-| Not sure. Last modified August 2020. | Identify address and use sea level gauge (inter-active). | Primarily coastal planners but also the public. |
-| . . . | . . . | . . . |
-
 1 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
-
-Table 5.1. Source Spreadsheet for Literature Reviews
-
-Table 5.2. Populated Source Spreadsheet for Literature Reviews, Including Both Academic and Technical Sources Table 5.3. Populated Source Spreadsheet for Literature Reviews, Including Both Academic and Technical Sources
-
-Table 5.4. Source Spreadsheet Adapted for Technical Sources

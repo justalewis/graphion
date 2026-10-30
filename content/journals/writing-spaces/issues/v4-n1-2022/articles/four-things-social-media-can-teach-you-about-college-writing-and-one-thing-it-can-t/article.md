@@ -143,13 +143,21 @@ The next time you’re scrolling through social media instead of working on an e
 
 \@ArtByRizzo (Jeresneyka Rose). “Growing & Glowing.” *Instagram,* 2 Apr. 2020, https://www.instagram.com/p/B-fY4zAgBZz/.
 
-Cassell, Kevin. “Punctuation’s Rhetorical Effects.” *Writing Spaces: Readings on* *Writing*, vol. 3, edited by Dana Driscoll, Mary Stewart, and Matthew Vetter, Parlor Press, 2020, pp. 3-17. \@demibagby (Demi Bagby). “Stand up challenge!!!” *TikTok,* 21 Jan. 2020, https:// www.tiktok.com/\@demibagby/video/6784536387992440070?lang=en. Krypto9095. “Krypto9095 Ft. D3Mstreet Woah (Official Song to Woah Dance).” *YouTube,* 3 Nov. 2018, https://www.youtube.com/watch?v=afRki2_aNKg.
+Cassell, Kevin. “Punctuation’s Rhetorical Effects.” *Writing Spaces: Readings on* *Writing*, vol. 3, edited by Dana Driscoll, Mary Stewart, and Matthew Vetter, Parlor Press, 2020, pp. 3-17.
+
+\@demibagby (Demi Bagby). “Stand up challenge!!!” *TikTok,* 21 Jan. 2020, https:// www.tiktok.com/\@demibagby/video/6784536387992440070?lang=en.
+
+Krypto9095. “Krypto9095 Ft. D3Mstreet Woah (Official Song to Woah Dance).” *YouTube,* 3 Nov. 2018, https://www.youtube.com/watch?v=afRki2_aNKg.
 
 Melzer, Dan. “Understanding Discourse Communities.” *Writing Spaces: Readings* *on Writing*, vol. 3, edited by Dana Driscoll, Mary Stewart, and Matthew Vetter, Parlor Press, 2020, pp. 100-15.
 
 Meyer, Craig A. “The Evolution of Imitation: Building Your Style.” *Writing Spaces: Readings on Writing*, vol. 3, edited by Dana Driscoll, Mary Stewart, and Matthew Vetter, Parlor Press, 2020, pp. 116-27.
 
-“Sojourner Truth: Ain’t I A Woman?” *National Park Service,* 17 Nov. 2017, https:// www.nps.gov/articles/sojourner-truth.htm \@twosdayswithtk. “so \@hamish_brissett & \@hal_pal1021 did this challenge the best!” *TikTok,* 28 Jan. 2020, https://www.tiktok.com/\@twosdayswithtk/ video/6786898195692801286. \@UCCSAlumni. “This is what early registration looked like in the late 60’s.” *Twitter,* 9 July 2020, 2:45 p.m., https://twitter.com/UCCSAlumni/ status/1281328537132249089.
+“Sojourner Truth: Ain’t I A Woman?” *National Park Service,* 17 Nov. 2017, https:// www.nps.gov/articles/sojourner-truth.htm
+
+\@twosdayswithtk. “so \@hamish_brissett & \@hal_pal1021 did this challenge the best!” *TikTok,* 28 Jan. 2020, https://www.tiktok.com/\@twosdayswithtk/ video/6786898195692801286.
+
+\@UCCSAlumni. “This is what early registration looked like in the late 60’s.” *Twitter,* 9 July 2020, 2:45 p.m., https://twitter.com/UCCSAlumni/ status/1281328537132249089.
 
 # Teacher Resources for “Four Things Social Media Can Teach You About College Writing---and One Thing It Can’t”
 
@@ -173,6 +181,6 @@ One area where teachers may encounter resistance is from students who avoid or o
 
 5. Each Snapchat lens that filters your image has a name, like Starry Sunlight, which casts an amber color on a photo and makes small gold sparkles appear on the screen. Think of how you presented yourself in the last academic essay you wrote. What name would you give to the “filter” you used for your own presentation in that piece of writing, and how would you describe that filter? What name would you give to the filter you’d like to use to present yourself in your current writing course, and how would you describe it?
 
-* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
+\* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces.org/terms-of-use.
 
 Figures 5. Snapchat rhetorical Figure 6. Snapchat rhetorical choicchoices made to portray a deter- es made to portray self-deprecation. mined self. Image credits: Ann N. Amicucci.
