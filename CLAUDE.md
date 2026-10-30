@@ -27,8 +27,8 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (288 functions: 88 in `test_cleanups.py`, 28 in
-`test_teacher_resources.py`, 76 in `test_pdf_ingest.py`, 40 in
+Tests (292 functions: 88 in `test_cleanups.py`, 28 in
+`test_teacher_resources.py`, 80 in `test_pdf_ingest.py`, 40 in
 `test_ingest_volume.py`, 28 in
 `test_lint.py`, 10 in `test_metadata_roundtrip.py`, 6 in
 `test_standalone_html.py`, 5 in `test_pdf_ua.py`, 4 in
@@ -151,7 +151,14 @@ source brings in that the table does not know.
 
 **Figures come out too, and the caption is the hard part.** `extract()` takes
 an `assets_dir`; given one it writes every embedded raster there and places it
-in the body. pypdf is asked for the rasters because it resolves the stream
+in the body. An image qualifies by `big_enough()`, which measures each
+side against its own floor: `MIN_FIGURE_PX` for the longer, a much smaller
+`MIN_FIGURE_THIN_PX` for the shorter. Testing both sides against the one
+number threw away a five-stage flowchart 315 by 34, because a figure set to
+the full text measure is often short and this archive's measure is about
+315pt. Size rejects a rule; the furniture rule rejects a publisher's mark,
+which is why relaxing the floor does not let every volume's cover thumbnail
+back in. pypdf is asked for the rasters because it resolves the stream
 filters and names the format; pdfplumber reads the captions, since the lines
 are already being read there. A figure is paired with a caption by page and by
 order down the page.

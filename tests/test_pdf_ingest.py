@@ -805,3 +805,27 @@ def test_an_italic_caption_places_the_figure_before_the_back_matter():
     out, _ = pdf_ingest.place_figures(blocks, figures, caption_pages)
     kinds = [kind for kind, _ in out]
     assert kinds.index("figure") < kinds.index("head")
+
+
+def test_a_banner_wide_figure_clears_the_size_floor():
+    """Volume 6's Document Localization Process is 315 by 34, a five-stage
+    flowchart set to the full text measure. Testing its shorter side
+    against the longer side's floor threw it away."""
+    assert pdf_ingest.big_enough(315, 34)
+    assert pdf_ingest.big_enough(297, 27)
+
+
+def test_a_rule_does_not():
+    """A hairline across the measure is not a figure."""
+    assert not pdf_ingest.big_enough(315, 2)
+    assert not pdf_ingest.big_enough(400, 12)
+
+
+def test_a_bullet_or_icon_does_not():
+    assert not pdf_ingest.big_enough(30, 30)
+    assert not pdf_ingest.big_enough(79, 40)
+
+
+def test_a_tall_narrow_figure_clears_it_too():
+    """The test is on each side separately, so the rule is symmetric."""
+    assert pdf_ingest.big_enough(34, 315)

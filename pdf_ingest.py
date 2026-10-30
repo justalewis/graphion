@@ -843,9 +843,31 @@ def starts_paragraph(line: Line, layout: Layout) -> bool:
     return line.dropcap or line.x0 > layout.body_left + INDENT_MIN
 
 
-# A figure smaller than this in either direction is a rule, a bullet or a
-# publisher's mark rather than a figure.
+# A figure is at least this big along its longer side. Anything smaller is
+# a bullet, an icon or an inline mark rather than a figure.
 MIN_FIGURE_PX = 80
+# And at least this big along its shorter side, which is what separates a
+# banner from a rule. Testing both sides against 80 lost volume 6's
+# Document Localization Process, a five-stage flowchart 315 by 34, along
+# with ten more across the series: a figure set to the full text measure is
+# often short, and this archive's measure is about 315pt. A repeated mark
+# that clears both floors is caught by the furniture rule instead, which is
+# the right division of labour: size rejects a rule, provenance rejects a
+# publisher's mark.
+MIN_FIGURE_THIN_PX = 24
+
+
+def big_enough(width: float, height: float,
+               min_px: float = MIN_FIGURE_PX) -> bool:
+    """Whether an embedded image is large enough to be a figure.
+
+    Measured on each side separately rather than on both against one
+    number: a figure set to the full text measure is often short, and
+    testing the shorter side against the longer side's floor threw away
+    eleven real figures, among them a five-stage flowchart 315 by 34.
+    """
+    return (max(width, height) >= min_px
+            and min(width, height) >= MIN_FIGURE_THIN_PX)
 # What a browser will actually display. These PDFs carry JPEG 2000 and TIFF as
 # well, which Chrome and Firefox render neither of, so a galley that passed
 # them through would show a broken image to most readers: 14 of the 95 figures
@@ -959,7 +981,7 @@ def image_digests(pdf_path: Path, min_px: int = MIN_FIGURE_PX):
                 width, height = image.image.size
             except Exception:
                 continue
-            if width < min_px or height < min_px:
+            if not big_enough(width, height, min_px):
                 continue
             counts[_digest(image.data)] += 1
     return counts
@@ -1000,7 +1022,7 @@ def extract_figures(pdf_path: Path, assets_dir: Path,
                 width, height = image.image.size
             except Exception:
                 continue
-            if width < min_px or height < min_px:
+            if not big_enough(width, height, min_px):
                 continue
             if _digest(image.data) in skip_digests:
                 # The series' own mark, which opens every chapter of the
