@@ -7,7 +7,7 @@ short-title: Changing Your Mindset About Revision
 short-authors: Irvin
 volume: 5
 year: 2023
-start-page: 296
+start-page: 297
 chapter-number: 19
 source-file: 19Irvin.pdf
 volume-title: Writing Spaces 5

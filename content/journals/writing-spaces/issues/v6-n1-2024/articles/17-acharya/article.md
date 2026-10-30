@@ -96,6 +96,7 @@ In the globally interconnected world, you are expected to produce documents in w
 
 Adopting the document localization process can help you address these factors and produce effective documents for multicultural audiences. As shown in Figure 17.1, you can begin the documentation process with a documentation plan, which entails a preliminary study of the document type and purpose, audience, and context of use. As the documentation project progresses, the next crucial phase involves delving into cultural factors. During this phase, it becomes essential to carefully examine these cultural elements to tailor the materials appropriately, aligning them with the cultural expectations associated with document usability (St.Amant 154). In the third phase, you start drafting and reviewing the document with cultural considerations and contextual awareness of the user’s situation.
 
+![A flowchart of five stages joined left to right by arrows: documentation planning, understanding cultural factors, drafting and reviewing, user testing, revising and publishing. The first and last are drawn as rounded boxes, the three between them as rectangles.](assets/figure-p008-1.png)\
 Figure 17.1: Document Localization Process
 
 At this phase, you thoroughly review the text to ensure its functionality, accuracy, accessibility, and writing quality. While document functionality is concerned with how the document conveys information to its users, accuracy involves correctly presenting information without ambiguity or errors. Likewise, accessible documents ensure that all users, including those with disabilities, receive the same information. Good technical writing avoids unnecessary wordiness, jargon (overtly technical language), and reads smoothly.
@@ -196,6 +197,7 @@ Composing technical documents for localized usability, however, can be challengi
 
 # Works Cited
 
+
 Ball, Donald A. and Wendell H. McCulloch. *International Business: The Challenge of Global Competition*, 7th ed., Mcgraw-Hill, 1999.
 
 Cohn, Janae. “Understanding Visual Rhetoric.” *Writing Spaces: Readings on* *Writing*, vol. 3, edited by Dana Driscoll et al., WrtingSpaces.org, Parlor Press, and The WAC Clearinghouse, 2020, pp. 18-39. https://wac.colostate. edu/docs/books/writingspaces3/cohn.pdf.
@@ -259,6 +261,7 @@ To help students explore the ideas discussed in this chapter, consider having th
 | 5/29/2023 | 29/5/2023 | 23.05.29 | 29.05.2023 |
 | 5-29-2023 | 29-5-2023 | 2023/05/29 |  |
 | 5/29/23 |  | 29-05-2023 |  |
+
 | U.S. | Nepal | India |
 | --- | --- | --- |
 | $430.50 | रू ४३०.५० | ₹४३०.५० |

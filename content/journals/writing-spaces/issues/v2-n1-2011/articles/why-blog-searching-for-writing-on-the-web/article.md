@@ -15,6 +15,7 @@ license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 chapter-number: 19
 images-of-text:
 - figure-p016-1.jpg
+- figure-p016-2.jpg
 ---
 
 # Why Blog? Searching for Writing
@@ -163,12 +164,18 @@ The banner is your opportunity to create a strong identity for your site. As you
 
 The colors that dominate your banner will then inform the color choices that you make elsewhere. For example, the blues and grays in the banner image appear as font and background colors in the sidebar. My sidebar includes several widgets. There’s Tungle, which is a web application where my students can make appointments to meet with me. I also have my Twitter feed and a “blog roll” (a list of blogs I read), which is powered by Delicious. In addition, I have a list of recent comments posted to my blog (see more on commenting below). Though my blogging application, like all blogging applications, has its own commenting system, I use Disqus, another social media site, which allows commenters to create identities that they can carry from one blog to another (wherever Disqus is used). Finally, the primary part of the blog is the main text column. I have taken my own advice and
 
-![A blog called alex-reid.net, headed digital digs over a banner of code. A long post on Latour and post-critical composition fills the main column. A sidebar holds an About section, links to the author's other sites, a book cover for The Two Virtuals, purchase links, and recent short posts.](assets/figure-p016-1.jpg)\
+![A blog called alex-reid.net, headed digital digs over a banner of code. A long post on Latour's composition manifesto and post-critical composition fills the main column. The sidebar holds an About section, a cover and purchase links for the author's book The Two Virtuals, reviews, and recent short posts.](assets/figure-p016-1.jpg)\
 Fig. 1. A screen capture of my current blog, www.alex-reid.net. Figs. 2--6. Examples of different banners I have used for my blog.
 
-![A blog banner reading digital digs in a brush script over a photograph of ripples spreading in water, with the line an archeology of the future beneath it.](assets/figure-p016-2.jpg)
+![A blog banner: digital digs set in widely letterspaced type above the line an archaeology of the future, a photograph of the author at the centre, and at the right his name, title, department and university with an email address, telephone number and web address. Along the foot, digging up the past, digging the future.](assets/figure-p016-2.jpg)
 
-![A blog banner in a shallow strip: a close-up photograph of a telephone keypad, with digital digs: an archeology of the future and a.s. reid set small in the top left corner.](assets/figure-p017-1.jpg)
+![A blog banner: digital digs in a loose white brush script over a photograph of rings spreading in water around a stone, with an archeology of the future set small at the lower right.](assets/figure-p016-3.jpg)
+
+![A blog banner in a shallow strip: digital digs above an archeology of digital life, set over a faint collage of faces and printed matter, with the author's name, title, subject and university stacked at the right.](assets/figure-p017-1.jpg)
+
+![A blog banner: a close-up photograph of a telephone keypad lit from the side, with digital digs: an archeology of the future and a.s. reid in a dark panel at the top left and contact details set very small along the lower right.](assets/figure-p017-2.jpg)
+
+![A blog banner: a close-up of an eye at the left, then alex reid in large grey type over a field of halftone dots, with alex-reid.net and digital digs set small beside it.](assets/figure-p017-3.jpg)
 
 used dark text on a light background. You should experiment with font, font size, and spacing. Because my posts tend to be long, I have emphasized readability by selecting a simple font and adding some additional spacing between the lines (i.e., more than single-spaced).
 
@@ -181,6 +188,7 @@ An RSS feed will allow your readers to interact with your blog in a wider range 
 If you decide to start blogging, give yourself a month to try it out. Start out easy by using one of the templates offered on whichever blogging application you decide to go with. If you already are invested in other social media sites like Twitter or YouTube, and you want to share those things in your sidebar, that’s fine, but if you aren’t, that’s fine as well. Just focus on blogging. The main task of every blogger is to seek out interesting topics and write posts about them. Set an ambitious but reasonable goal for yourself that reflects your interests. Maybe you want to post at least one short message every day. Maybe your goal is to get two longer posts each week. Once you’ve set that goal, stick to it for a month at least. It takes time to develop positive habits. I often think of writing as I do running. As a runner, it took me a while to recognize how running feels and what I was capable of doing. Eventually I realized I could run regularly and that, though I would exert myself, I could consistently meet my goals. Similarly, a blogging regimen may seem intimidating at first, but if you meet your goals for a month, you will have direct evidence of your ability as a writer. And though blogging may not ultimately be the kind of writing you really need to do as a student or a professional, the experience of a regular writing practice will form a strong foundation for meeting your future writing challenges.
 
 # Works Cited
+
 
 “Blog.” *Wikipedia.* Web. 13 Oct 2010. Csikszentmihalyi, Mihaly. *Flow: The Psychology of Optimal Experience*. New York: Harper, 1991. Print.
 
@@ -195,7 +203,6 @@ Robinson, Ken. “Ken Robinson says schools kill creativity.” *TED.* TED. 2006
 ---. “Sir Ken Robinson: Bring on the learning revolution!” *TED.* TED. 2010. Web | Type | Characteristics |
 | --- | --- |
 | Individual Blog | This type of blog would give you the greatest autonomy, which can also make it the most challenging kind of assignment. For example, I might ask students to post 20 times with posts that are at least 100 words in length over the course of a semester, but provide no assignment requirements beyond that. | This essay is available under a Creative Commons License subject to the Writing Spaces' Terms of Use. More information, such as the specific license being used, is available at the bottom of the first page of the chapter. © 2011 by the respective author(s). For reprint rights and other permissions, contact the original author(s). Library of Congress Cataloging-in-Publication Data Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe and Pavel Zemliansky. p. cm. Includes bibliographical references and index. ISBN 978-1-60235-184-4 (pbk. : alk. paper) -- ISBN 978-1-60235-185-1 (adobe ebook)
-
 [^1]: College readers. 2. English language--Rhetoric. I. Lowe, Charles, 1965- II. Zemliansky, Pavel. PE1417.W735 2010 808’.0427--dc22 2010019487
 
 * This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.

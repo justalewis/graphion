@@ -8,7 +8,7 @@ short-title: Writing Science in the First Year of College
 short-authors: Thaiss and Wade
 volume: 5
 year: 2023
-start-page: 345
+start-page: 346
 chapter-number: 22
 source-file: 22Thaiss-Wade.pdf
 volume-title: Writing Spaces 5

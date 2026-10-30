@@ -8,7 +8,7 @@ short-title: Navigating Your Collaborative Project
 short-authors: Cecil-Lemkin and Gluck
 volume: 5
 year: 2023
-start-page: 326
+start-page: 327
 chapter-number: 21
 source-file: 21Cecil-Lemkin-Gluck.pdf
 volume-title: Writing Spaces 5

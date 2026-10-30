@@ -992,6 +992,32 @@ def _digest(data: bytes) -> str:
     return hashlib.sha1(data).hexdigest()
 
 
+# What PNG can hold. Anything else has to be converted on the way out, and
+# a figure in press colour is the usual case: PNG has no CMYK, so a CMYK
+# TIFF raises inside PIL and the `except` below drops the figure without a
+# word. Volume 6's Document Localization Process went that way and was
+# found only because its chapter still referred to a figure it did not have.
+PNG_MODES = frozenset({"1", "L", "LA", "I", "I;16", "P", "PA", "RGB", "RGBA"})
+ALPHA_MODES = frozenset({"LA", "La", "PA", "RGBA", "RGBa"})
+
+
+def for_png(image):
+    """The same image in a mode PNG can hold.
+
+    Converted to RGB, or to RGBA where the original carries transparency,
+    which is the pair of modes a press image can always be reduced to. The
+    colours shift slightly, as any CMYK to RGB conversion does; the
+    alternative on offer is no figure at all.
+    """
+    if image.mode in PNG_MODES:
+        return image
+    # Named rather than tested for an "A" in the mode, because LAB has one
+    # and no alpha channel.
+    has_alpha = image.mode in ALPHA_MODES or "transparency" in getattr(
+        image, "info", {})
+    return image.convert("RGBA" if has_alpha else "RGB")
+
+
 def extract_figures(pdf_path: Path, assets_dir: Path,
                     min_px: int = MIN_FIGURE_PX,
                     skip_digests=frozenset()) -> list:
@@ -1038,7 +1064,7 @@ def extract_figures(pdf_path: Path, assets_dir: Path,
             path = assets_dir / name
             try:
                 if reencode:
-                    image.image.save(str(path), format="PNG")
+                    for_png(image.image).save(str(path), format="PNG")
                 else:
                     path.write_bytes(image.data)
             except Exception:

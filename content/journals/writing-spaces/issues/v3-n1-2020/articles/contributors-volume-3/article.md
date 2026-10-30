@@ -4,7 +4,7 @@ abstract: 'Kevin Cassell teaches for the Writing Program in the Department of En
 short-title: Contributors
 volume: 3
 year: 2020
-start-page: 190
+start-page: 192
 source-file: contributors.pdf
 volume-title: Writing Spaces 3
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).

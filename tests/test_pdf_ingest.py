@@ -829,3 +829,34 @@ def test_a_bullet_or_icon_does_not():
 def test_a_tall_narrow_figure_clears_it_too():
     """The test is on each side separately, so the rule is symmetric."""
     assert pdf_ingest.big_enough(34, 315)
+
+
+def test_a_cmyk_image_is_converted_before_it_is_written():
+    """PNG has no CMYK, so saving one raises inside PIL and the extraction's
+    except drops the figure without a word. Volume 6's Document Localization
+    Process went that way."""
+    from PIL import Image
+    cmyk = Image.new("CMYK", (40, 10))
+    assert pdf_ingest.for_png(cmyk).mode == "RGB"
+
+
+def test_transparency_survives_the_conversion():
+    from PIL import Image
+    assert pdf_ingest.for_png(Image.new("LAB", (8, 8))).mode == "RGB"
+    assert pdf_ingest.for_png(Image.new("RGBA", (8, 8))).mode == "RGBA"
+
+
+def test_a_mode_png_can_hold_is_left_alone():
+    from PIL import Image
+    rgb = Image.new("RGB", (8, 8))
+    assert pdf_ingest.for_png(rgb) is rgb
+    grey = Image.new("L", (8, 8))
+    assert pdf_ingest.for_png(grey) is grey
+
+
+def test_lab_is_not_mistaken_for_having_an_alpha_channel():
+    """"A" is in "LAB", which is not a reason to give it transparency."""
+    from PIL import Image
+    assert pdf_ingest.for_png(Image.new("LAB", (8, 8))).mode == "RGB"
+    assert pdf_ingest.for_png(Image.new("CMYK", (8, 8))).mode == "RGB"
+    assert pdf_ingest.for_png(Image.new("RGBa", (8, 8))).mode == "RGBA"

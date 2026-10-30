@@ -27,8 +27,8 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (292 functions: 88 in `test_cleanups.py`, 28 in
-`test_teacher_resources.py`, 80 in `test_pdf_ingest.py`, 40 in
+Tests (296 functions: 88 in `test_cleanups.py`, 28 in
+`test_teacher_resources.py`, 84 in `test_pdf_ingest.py`, 40 in
 `test_ingest_volume.py`, 28 in
 `test_lint.py`, 10 in `test_metadata_roundtrip.py`, 6 in
 `test_standalone_html.py`, 5 in `test_pdf_ua.py`, 4 in
@@ -158,7 +158,13 @@ number threw away a five-stage flowchart 315 by 34, because a figure set to
 the full text measure is often short and this archive's measure is about
 315pt. Size rejects a rule; the furniture rule rejects a publisher's mark,
 which is why relaxing the floor does not let every volume's cover thumbnail
-back in. pypdf is asked for the rasters because it resolves the stream
+back in. A raster is re-encoded to PNG unless its own suffix is already
+a web format, and PNG has no CMYK, so `for_png()` converts a press image on
+the way out. Without it PIL raises and `extract_figures`' `except` drops the
+figure in silence, which is how volume 6 lost a flowchart; 50 of the series'
+figures are CMYK, and only that one needed re-encoding because the rest are
+JPEGs written through as bytes. Name the modes that carry alpha rather than
+testing for an "A" in the mode string, since LAB has one. pypdf is asked for the rasters because it resolves the stream
 filters and names the format; pdfplumber reads the captions, since the lines
 are already being read there. A figure is paired with a caption by page and by
 order down the page.
