@@ -27,11 +27,12 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (296 functions: 88 in `test_cleanups.py`, 28 in
-`test_teacher_resources.py`, 84 in `test_pdf_ingest.py`, 40 in
+Tests (342 functions: 93 in `test_cleanups.py`, 28 in
+`test_teacher_resources.py`, 97 in `test_pdf_ingest.py`, 43 in
 `test_ingest_volume.py`, 28 in
-`test_lint.py`, 10 in `test_metadata_roundtrip.py`, 6 in
-`test_standalone_html.py`, 5 in `test_pdf_ua.py`, 4 in
+`test_lint.py`, 23 in `test_pdf_tags.py`, 10 in
+`test_metadata_roundtrip.py`, 6 in
+`test_standalone_html.py`, 7 in `test_pdf_ua.py`, 4 in
 `test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
 runs without Pandoc; `test_journal_filter.py` needs it and skips where it is
 absent:
@@ -94,6 +95,19 @@ must produce identical output.
 Any new pass needs a unit test in `tests/test_cleanups.py` with at least one
 input/output pair plus an idempotence assertion.
 
+Two ways a pass goes wrong are worth knowing, because `unfragment_works_cited`
+did both. It merges a paragraph in the Works Cited into the entry above it
+unless the paragraph looks like a new entry, and the first row of a pipe table
+does not look like one, so a table that came to rest after the Works Cited was
+joined to the last citation: Pandoc then read the citation as the table's
+header row and printed it inside a cell, leaving the Works Cited one entry
+short. The stop pattern has to name everything that ends the section, tables
+and figures included. And the heading pattern ends `\s*$`, which takes the
+blank line after the heading with it, so the reassembly below put a fresh one
+back and the pass gained a line on every run. An idempotence assertion written
+against the shape the pass actually meets is what catches that; one written
+against a two-entry bibliography does not.
+
 **`run_cleanups()` is not the same thing, and it is not idempotent.** The
 passes are pure; the function around them rebuilds `article.md` from
 `article-raw.md`, so it discards everything written to the front matter after
@@ -115,8 +129,60 @@ Typst validates the standard rather than merely declaring it, so content that
 cannot conform aborts the compile. The helper falls back to an unconstrained
 render and logs why, so an editor never loses a galley to this. The usual
 cause is an image with no alt text, which `lint.check_alt_text` fails on
-first. Assembled issues are a separate case: concatenating with pypdf drops
-the structure tree, so `issue.pdf` deliberately does not claim conformance.
+first. A bound issue is as conformant as its parts and no more, which is what
+`pdf_tags.py` is for.
+
+**A bound issue is tagged by merging, not by re-rendering.** Adding a page to
+a pypdf writer copies the page. The structure tree, the `/ParentTree` that
+reaches it from each page, and `/MarkInfo` all hang off the source catalog and
+none of them comes with a page, so the obvious concatenation of conformant
+galleys is one untagged file. Those are the four failures an audit reported
+against every `issue.pdf` in this series while all 115 articles in them
+passed: not tagged, no document title, no XMP metadata, link annotation not
+tagged. The missing title is worth knowing about, because the old code did
+set one. It set `/Title` in the Info dictionary, and clause 5 reads `dc:title`
+in XMP, which a concatenation carries no trace of.
+`pdf_tags.concatenate_tagged()` rebuilds both trees from the parts instead.
+Each source's elements are copied with `/Pg` repointed at the page that page
+became, its `/ParentTree` keys shifted past every source before it, and each
+copied page's `/StructParents` shifted to match, so what the bound file
+carries is the tagging Typst already validated chapter by chapter. Compiling
+the whole issue as one Typst document would also have worked and is the wrong
+trade: the bound issue would then be a second rendering of each chapter rather
+than the one the standalone galley serves.
+
+Three things do not survive a plain copy and each one fails silently. A
+`/ParentTree` key is a per-document counter, so two sources both begin at 0
+and the second overwrites the first; every page of the first then resolves
+into the second's elements, which no checker sees and a screen reader reads as
+the wrong paragraph. An `/OBJR` is the entry that makes a link annotation
+tagged, and it names the annotation object, which the page copy replaced with
+a new one; a dangling `/OBJR` is itself a conformance error, so one that
+cannot be repointed is dropped and counted rather than written out. And an
+element `/ID` has to be unique across a document, while Typst numbers them per
+chapter from the same origin, so each source's ids are prefixed and the
+`/IDTree` is rebuilt over the prefixed names, sorted.
+
+Before it writes, the merge follows every page's `/StructParents` back into
+the tree it just built. The keys and the pages come from the same offsets, so
+they agree by construction, and the check is there because this is the one
+failure with no symptom: an unreachable page renders identically, reports
+itself as tagged, and reaches a screen reader with nothing above it.
+`MergeReport.unresolved_pages` numbers any that do not resolve, and
+`assemble_issue` reports them.
+
+The merge carries conformance; it cannot create it. `concatenate_tagged`
+stamps `pdfuaid:part` only where every part declared it, no part arrived
+untagged, no annotation was dropped, and every page resolves. A part that
+falls short is named in the report `assemble_issue` passes out as
+`AssemblyResult.notes` and the assemble route flashes. That gate is what
+found the other half of this bug: the issue front matter set no
+`document(title:)`, so `_compile_typst` fell back to an unconstrained render
+for all six volumes, and nothing said so because `render_front_matter` passed
+no log path. Three roman-numbered pages per issue were tagged and claimed
+nothing, and no merge can claim it on their behalf. Both halves are fixed; the
+front matter now sets a title and passes `log_to`, so a future fallback is on
+the record.
 
 **PDF ingest infers structure; it does not read it.** A DOCX still knows what
 a paragraph is, so Pandoc can be handed the file. A PDF knows only where ink
@@ -128,6 +194,35 @@ new heuristics need a case in `tests/test_pdf_ingest.py`. The geometry is
 learned per document rather than hardcoded: a series that redesigns between
 volumes should degrade, not silently misread. Use pdfplumber, not PyMuPDF,
 which is AGPL and would reach the whole deployed app.
+
+**The chapter does not always begin on page one.** The standalone chapter
+download in volumes 1 to 3 opens on a page the bound book does not have: the
+series boilerplate, the publisher's copyright page with its CIP block, and
+the licence, printed above the chapter so a reader who found the chapter
+alone can tell what it came from. Read as content it does real damage, and
+all of it quiet. `extract_front_matter` consumes the title and byline from
+that page, so the chapter's own title and byline are left in the body and the
+galley prints them twice; the boilerplate lands in `abstract`, which the
+template prints under an **Overview** head, with the byline running inline
+inside it and the list of download sites flattened to prose; and the CIP
+block arrives as a footnote. 49 of the series' chapters published that way.
+`is_cover_page` wants two of its three marker groups present, because a
+chapter may well discuss a Creative Commons licence and none of them prints
+a CIP block to discuss, and `count_cover_pages` looks only at the first page
+or two, because a cover page that is not at the front is not one. The drop
+happens before `learn_layout`, so the cover's own type cannot vote on what
+the body size is, and before `build_vocabulary`, so
+"Cataloging-in-Publication" is never a word the chapter knows. Volumes 4 to 6
+set no such page and are untouched.
+
+**A footnote is not always numbered.** The series marks the licence note on a
+chapter's opening page with an asterisk, which falls past `_NOTE_RE` and was
+written out as it was read. Markdown then reads the asterisk as a list marker,
+and 69 chapters printed their licence as a bulleted item in the middle of the
+text. `escape_list_marker` backslashes any leading bullet or numbered-list
+marker on a note that is not a numbered footnote, which leaves the printed
+text as the page set it. The licence belongs in the body: a published chapter
+prints its own terms and `should_print_license()` relies on finding them.
 
 **Text set in a symbol font is not text.** A symbol font stores pictures at
 ordinary character codes, so extracting a Wingdings run gives punctuation:
@@ -229,6 +324,27 @@ table, whose header row is what lets a screen reader name the column a cell
 is in. It runs before the vocabulary is built, so shredded cells do not teach
 it their fragments as words.
 
+A table's caption has to stay with its table, and `blocks_to_markdown` is
+where that is decided. The series sets a table caption the same size as a
+figure caption, which is the same size as a footnote, so `classify` reads it
+as a note and the note branch collects it at the end of the chapter. Testing
+only `is_figure_caption` there left volume 6's fifth chapter printing "Table
+5.1", "Table 5.2" and "Table 5.4" in a row on its last page, each one pages
+away from the table it names, while `place_tables` had put every table in the
+right place.
+
+A table the series did not caption has nothing to be paired with, and the end
+of the chapter is a poor guess: chapter 2 of volume 1 introduces its table
+with "Let's break down the writing situation in college:" on page 6 and had
+it printing after the Works Cited on page 14. `drop_lines_inside_tables`
+therefore keeps the line left standing immediately above each table as that
+table's anchor, which is the only record of where in the prose the table
+stood, and `_anchor_position` matches it back on its last few words, since
+the line has been through `join_lines` by then and sits inside a paragraph.
+A caption still wins where there is one; the anchor is the fallback, and a
+word broken across the line break defeats it, which drops the table to the
+end with the note that says so.
+
 A table is paired with its caption in reading order, which is where this
 differs from the figures. A figure and its caption share a page by
 definition, since the caption is set under the picture; a table's caption is
@@ -308,12 +424,29 @@ and `render_html` take a `part`, pass it to the filters as
 filter uses it to keep the drop cap out of the teacher galley. Both galleys
 are served from the article page; see `serve_teacher_pdf` in `app.py`.
 
-**A volume shares one licence.** `ingest_volume.py` writes `license` and
-`license-url` over every chapter in a run, rather than leaving each to the
-notice printed on its own opening page: a chapter whose footnote failed to
-extract would otherwise publish with no licence recorded. The HTML galley
-carries it as `rel="license"`, a `dcterms.rights` meta, and a visible
-statement closing the document. The PDF gets a colophon, but only when
+**A volume usually shares one licence, and one of them does not.**
+`ingest_volume.py` writes `license` and `license-url` over every chapter in a
+run, rather than leaving each to the notice printed on its own opening page: a
+chapter whose footnote failed to extract would otherwise publish with no
+licence recorded. That is right for five of the six volumes and wrong for
+volume 1, which prints Share Alike over twelve chapters and No Derivative
+Works over five. Stamping one value across the run published the stricter of
+the two over chapters that permit derivatives, in galleys that told a reader
+so; the licence a work is under is not a detail a pipeline may round off. So
+a manifest entry's `license` / `license-url` overrides the run's, which is
+the only way the runner can know, and `docs/manifests/` holds the two
+manifests the earlier volumes need anyway for chapter order. Volumes 1 and 2
+are under the 3.0 **United States** licences, not 4.0 International, and the
+jurisdiction is part of the URL (`/by-nc-sa/3.0/us/`). The chapter's own
+footnote names its deed ("To view a copy of this license, visit ..."), which
+is the authority to check a recorded value against; across the series 108 of
+115 chapters print one, and the 7 that do not are collective front matter
+plus `22-thaiss-wade`, which relies on the colophon.
+
+The HTML galley carries the field as `rel="license"`, a `dcterms.rights`
+meta, and a visible statement closing the document, all unconditionally
+(`article.html.j2:88`), so a wrong value there is published prose and not
+just metadata. The PDF gets a colophon, but only when
 `conversion.should_print_license()` finds the body silent: a published
 chapter prints its own terms as a footnote on its opening page and ingest
 recovers that, so printing the metadata licence as well would state it twice
@@ -349,8 +482,12 @@ Anything touching Claude (`stylize.py`, `llm_cleanup.py`) requires
 
 ## Layout notes
 
-- `app.py` (2672 lines) is the whole HTTP surface. `conversion.py` (2156) is the
+- `app.py` (2702 lines) is the whole HTTP surface. `conversion.py` (2258) is the
   pipeline. Those two hold most of the complexity.
+- `pdf_tags.py` (604) is the only module that touches PDF object structure
+  directly; it binds rendered galleys into a tagged issue. It reaches into
+  pypdf's `_add_object` and `_root_object` because pypdf exposes no public API
+  for a structure tree or the catalog's `/Lang`.
 - Per-journal template bundles live at `content/journals/<slug>/template/`:
   CSS, Pandoc HTML template, Typst template, Lua filters, CSL stylesheet,
   wordmark, and the Claude `style-guide.md`. The LiCS bundle is the worked
