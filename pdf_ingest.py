@@ -529,6 +529,24 @@ def classify(line: Line, layout: Layout) -> str:
 
 _LIST_RE = re.compile(r"^(\d{1,2})[.)]\s+")
 _NOTE_RE = re.compile(r"^(\d{1,3})[.)]\s+")
+# A footnote marked with a symbol rather than a number, which this series
+# uses for the licence it prints on a chapter's opening page.
+_MARKER_START_RE = re.compile(r"^([*+\-]|\d{1,3}[.)])\s+")
+
+
+def escape_list_marker(text: str) -> str:
+    """Keep a line that opens with a bullet character from becoming a bullet.
+
+    The licence footnote is marked with an asterisk, not a number, so it
+    falls past `_NOTE_RE` and is written out as it was read. Markdown then
+    reads the asterisk as a list marker and the galley prints the licence as
+    a bulleted item in the middle of the chapter, which is where 69 of the
+    series' chapters had it. Escaping the marker leaves the printed text
+    exactly as the page set it.
+    """
+    if _MARKER_START_RE.match(text):
+        return "\\" + text
+    return text
 
 
 def _is_list_start(line: Line, layout: Layout) -> bool:
@@ -702,20 +720,27 @@ def blocks_to_markdown(blocks: list) -> str:
             out.append("# " + text)
         elif kind == "quote":
             out.append("> " + text)
-        elif kind == "note" and is_figure_caption(text):
+        elif kind == "note" and (is_figure_caption(text) or is_table_caption(text)):
             # The series sets a figure caption a point smaller than its body,
             # which is the same thing it does to a footnote, so classify reads
             # one as the other. The difference is where it belongs: a footnote
             # is collected at the end, and a caption has to stay under the
             # figure it names. Left as a note, every caption in the chapter
             # was being moved to the back of it.
+            #
+            # A table's caption is set the same size and goes the same way.
+            # Testing only for a figure left volume 6's fifth chapter printing
+            # "Table 5.1", "Table 5.2" and "Table 5.4" in a row at the end of
+            # the chapter, each one three pages from the table it names;
+            # `place_tables` had put the tables in the right places, and then
+            # this moved every caption off them.
             out.append(text)
         elif kind == "note":
             match = _NOTE_RE.match(text)
             if match:
                 notes.append(f"[^{match.group(1)}]: {text[match.end():]}")
             else:
-                notes.append(text)
+                notes.append(escape_list_marker(text))
         else:
             out.append(text)
     body = "\n\n".join(out).strip()
@@ -1320,22 +1345,56 @@ def drop_lines_inside_tables(lines: list, tables_by_page: dict) -> tuple:
 
     A caption is never dropped, even where it falls inside the box, because
     it is what the table is placed against.
+
+    The line left standing immediately above each table is kept as that
+    table's anchor, which is the only record of where in the prose the
+    table stood. A table the series did not caption has nothing else to be
+    placed against, and the end of the document is a poor guess: chapter 2
+    of volume 1 introduces its table with "Let's break down the writing
+    situation in college:" on page 6 and had it printing after the Works
+    Cited on page 14.
     """
     inside = []
     out = []
+    anchors: dict = {}
     for line in lines:
         boxes = tables_by_page.get(line.page) or []
         if boxes and not (is_table_caption(line.plain)
                           or is_figure_caption(line.plain)):
             centre = line.top
-            if any(bbox[1] - 2 <= centre <= bbox[3] + 2 for bbox, _ in boxes):
+            hit = next((index for index, (bbox, _) in enumerate(boxes)
+                        if bbox[1] - 2 <= centre <= bbox[3] + 2), None)
+            if hit is not None:
+                anchors.setdefault((line.page, hit),
+                                   out[-1].plain if out else "")
                 inside.append(line)
                 continue
         out.append(line)
-    return out, len(inside)
+    return out, len(inside), anchors
 
 
-def place_tables(blocks: list, tables: list) -> tuple:
+def _anchor_position(blocks: list, anchor: Optional[str]) -> Optional[int]:
+    """The block holding the line the table's page printed above it.
+
+    Matched on the anchor's last few words rather than the whole of it,
+    because the line has been through `join_lines` by now and sits inside a
+    paragraph rather than alone. A word broken across the line break defeats
+    this, and the table then falls back to the end with the note saying so.
+    """
+    if not anchor:
+        return None
+    key = " ".join(re.sub(r"\s+", " ", unemphasize(anchor)).split()[-6:]).lower()
+    if not key:
+        return None
+    for position in range(len(blocks) - 1, -1, -1):
+        kind, text = blocks[position]
+        if kind in ("body", "quote", "note", "head", "title") \
+                and key in re.sub(r"\s+", " ", unemphasize(text)).lower():
+            return position
+    return None
+
+
+def place_tables(blocks: list, tables: list, anchors: Optional[dict] = None) -> tuple:
     """Put each table after the caption that names it.
 
     The series prints the caption above the table, so that is where it goes.
@@ -1354,14 +1413,22 @@ def place_tables(blocks: list, tables: list) -> tuple:
         if kind in ("body", "note", "quote") and is_table_caption(text)
     ]
 
+    anchors = anchors or {}
     inserts: dict = {}
-    unplaced = 0
+    unplaced = anchored = 0
     for index, table in enumerate(tables):
         if index < len(caption_positions):
             position = caption_positions[index]
         else:
-            unplaced += 1
-            position = len(blocks) - 1
+            # No caption to pair with, so fall back to the line the page
+            # printed above the table rather than to the end of the chapter.
+            position = _anchor_position(
+                blocks, anchors.get((table["page"], table["index"])))
+            if position is None:
+                unplaced += 1
+                position = len(blocks) - 1
+            else:
+                anchored += 1
         inserts.setdefault(position, []).append(table)
 
     out: list = []
@@ -1376,7 +1443,11 @@ def place_tables(blocks: list, tables: list) -> tuple:
     notes = []
     if tables:
         notes.append(f"Read {len(tables)} ruled table(s) as tables; "
-                     f"placed {len(tables) - unplaced} against a caption.")
+                     f"placed {len(tables) - unplaced - anchored} against a "
+                     f"caption.")
+    if anchored:
+        notes.append(f"{anchored} table(s) the series did not caption, put "
+                     f"back against the line printed above them.")
     if unplaced:
         notes.append(f"{unplaced} table(s) matched no caption and follow the "
                      f"text instead; check where they belong.")
@@ -1395,6 +1466,50 @@ def _caption_key(text: str) -> str:
     """
     return " ".join(
         re.sub(r"\s+", " ", unemphasize(text)).strip().split()[:8]).lower()
+
+
+# The standalone chapter download opens on a page the bound volume does not
+# have: the series boilerplate, the publisher's copyright page, and the
+# licence, printed above the chapter so a reader who found the chapter alone
+# can tell what it came from. None of it is the chapter. Volumes 1 to 3 set
+# one; 4 to 6 do not. Three groups of marker rather than one phrase, and two
+# groups have to be present, because a chapter may well discuss a Creative
+# Commons licence and none of them prints a CIP block to discuss.
+_COVER_MARKERS = (
+    ("boilerplate", ("is a chapter in", "available for free from the following",
+                     "print versions of the volume",
+                     "to learn about participating in")),
+    ("copyright", ("cataloging-in-publication", "includes bibliographical references",
+                   "library of congress", "p. cm.")),
+    ("licence", ("this work is licensed under",
+                 "creative commons license subject to")),
+)
+
+
+def is_cover_page(lines: list) -> bool:
+    """Is this the offprint cover rather than a page of the chapter?"""
+    text = re.sub(r"\s+", " ", " ".join(l.plain for l in lines)).lower()
+    groups = sum(1 for _, markers in _COVER_MARKERS
+                 if any(marker in text for marker in markers))
+    return groups >= 2
+
+
+def count_cover_pages(lines: list, limit: int = 2) -> int:
+    """How many leading pages are cover rather than chapter.
+
+    Only the first page or two are considered. A chapter that quotes the
+    series' own terms of use in its tenth page is discussing them, and a
+    cover page that is not at the front is not a cover page.
+    """
+    by_page: dict = {}
+    for line in lines:
+        by_page.setdefault(line.page, []).append(line)
+    count = 0
+    for page_no in sorted(by_page)[:limit]:
+        if not is_cover_page(by_page[page_no]):
+            break
+        count = page_no
+    return count
 
 
 def opening_page_body(body_lines: list, layout: Layout,
@@ -1459,6 +1574,7 @@ def extract(pdf_path: Path, genre_heads: Optional[tuple] = None,
     all_lines: list = []
     page_width = 0.0
     tables_by_page: dict = {}
+    table_anchors: dict = {}
     with pdfplumber.open(str(pdf_path)) as pdf:
         if not pdf.pages:
             raise ValueError(f"{pdf_path.name} has no pages.")
@@ -1475,6 +1591,18 @@ def extract(pdf_path: Path, genre_heads: Optional[tuple] = None,
             "before it can be ingested; see ocr.py."
         )
 
+    # Before the layout is learned, so the cover's own type cannot vote on
+    # what the body size is, and before the vocabulary, so "Cataloging-in-
+    # Publication" is never a word this chapter knows.
+    cover = count_cover_pages(all_lines)
+    if cover:
+        all_lines = [l for l in all_lines if l.page > cover]
+        tables_by_page = {p: t for p, t in tables_by_page.items() if p > cover}
+        notes.append(f"Dropped {cover} offprint cover page(s) printed above "
+                     f"the chapter; the chapter opens on page {cover + 1}.")
+        if not all_lines:
+            raise ValueError(f"{pdf_path.name} is a cover page and nothing else.")
+
     layout = learn_layout(all_lines, page_width)
     kept, dropped = strip_furniture(all_lines, layout)
     notes.append(f"Dropped {len(dropped)} line(s) of page furniture.")
@@ -1482,14 +1610,16 @@ def extract(pdf_path: Path, genre_heads: Optional[tuple] = None,
     # Before the vocabulary is built, so that cells shredded across columns
     # do not teach it their fragments as words.
     if tables_by_page:
-        kept, in_tables = drop_lines_inside_tables(kept, tables_by_page)
+        kept, in_tables, table_anchors = drop_lines_inside_tables(
+            kept, tables_by_page)
         notes.append(f"Took {in_tables} line(s) out of the prose that belong "
                      f"to a table, and read the table instead.")
 
     vocab, compounds = build_vocabulary(kept)
 
-    first_page = [l for l in kept if l.page == 1]
-    rest = [l for l in kept if l.page != 1]
+    opening = cover + 1
+    first_page = [l for l in kept if l.page == opening]
+    rest = [l for l in kept if l.page > opening]
     fm, overview_lines, consumed, fm_notes = extract_front_matter(first_page, layout)
     notes.extend(fm_notes)
 
@@ -1511,7 +1641,7 @@ def extract(pdf_path: Path, genre_heads: Optional[tuple] = None,
         for page_no in sorted(tables_by_page):
             for index, (_bbox, rows) in enumerate(tables_by_page[page_no]):
                 tables.append({"page": page_no, "index": index, "rows": rows})
-        blocks, table_notes = place_tables(blocks, tables)
+        blocks, table_notes = place_tables(blocks, tables, table_anchors)
         notes.extend(table_notes)
 
     if assets_dir is not None:

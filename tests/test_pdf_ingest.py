@@ -585,11 +585,13 @@ def test_lines_inside_a_table_are_taken_out_of_the_prose():
     outside = _line("Ordinary prose further down the page.", page=5, top=400.0)
     caption = _line("Table 1 A comparison between posters", page=5, top=150.0)
     tables = {5: [((58.0, 160.0, 373.0, 320.0), [["a", "b"], ["c", "d"]])]}
-    kept, dropped = pdf_ingest.drop_lines_inside_tables(
+    kept, dropped, anchors = pdf_ingest.drop_lines_inside_tables(
         [caption, inside, outside], tables)
     assert dropped == 1
     assert inside not in kept
     assert caption in kept and outside in kept
+    # The caption above the table is the line the table is anchored to.
+    assert anchors[(5, 0)] == "Table 1 A comparison between posters"
 
 
 def test_a_table_is_placed_after_its_caption_in_reading_order():
@@ -860,3 +862,147 @@ def test_lab_is_not_mistaken_for_having_an_alpha_channel():
     assert pdf_ingest.for_png(Image.new("LAB", (8, 8))).mode == "RGB"
     assert pdf_ingest.for_png(Image.new("CMYK", (8, 8))).mode == "RGB"
     assert pdf_ingest.for_png(Image.new("RGBa", (8, 8))).mode == "RGBA"
+
+
+# ---------- the offprint cover page ----------
+
+
+COVER_LINES = [
+    _line("What Is “Academic” Writing?", page=1),
+    _line("by L. Lennie Irvin", page=1),
+    _line("This essay is a chapter in Writing Spaces: Readings on Writing,", page=1),
+    _line("Volume 1, a peer-reviewed open textbook series for the writing", page=1),
+    _line("classroom, and is published through Parlor Press.", page=1),
+    _line("The full volume and individual chapter downloads are available for", page=1),
+    _line("free from the following sites:", page=1),
+    _line("Library of Congress Cataloging-in-Publication Data", page=1),
+    _line("Writing spaces : readings on writing. Volume 1 / edited by Charles Lowe", page=1),
+    _line("p. cm.", page=1),
+    _line("Includes bibliographical references and index.", page=1),
+]
+
+CHAPTER_LINES = [
+    _line("What Is “Academic” Writing?", page=2),
+    _line("L. Lennie Irvin", page=2),
+    _line("Introduction: The Academic Writing Task", page=2),
+    _line("As a new college student, you may have a lot of anxiety and questions", page=2),
+    _line("about the writing you’ll do in college.", page=2),
+]
+
+
+def test_cover_page_is_recognised():
+    assert pdf_ingest.is_cover_page(COVER_LINES)
+
+
+def test_chapter_opening_is_not_a_cover_page():
+    assert not pdf_ingest.is_cover_page(CHAPTER_LINES)
+
+
+def test_one_marker_group_is_not_enough():
+    """A chapter may well discuss a Creative Commons licence, and one that
+    does must not lose its first page for saying so."""
+    discussing = [
+        _line("Everything here is licensed under a Creative Commons licence,", page=2),
+        _line("which is what lets you quote it in your own essay without asking.", page=2),
+    ]
+    assert not pdf_ingest.is_cover_page(discussing)
+
+
+def test_count_cover_pages_finds_the_leading_cover_only():
+    assert pdf_ingest.count_cover_pages(COVER_LINES + CHAPTER_LINES) == 1
+
+
+def test_count_cover_pages_is_zero_where_there_is_none():
+    assert pdf_ingest.count_cover_pages(CHAPTER_LINES) == 0
+
+
+def test_a_late_page_of_boilerplate_is_not_a_cover():
+    """A cover page that is not at the front is not a cover page."""
+    late = [_line(l.text, page=9) for l in COVER_LINES]
+    assert pdf_ingest.count_cover_pages(CHAPTER_LINES + late) == 0
+
+
+# ---------- a footnote marked with a symbol rather than a number ----------
+
+
+def test_licence_footnote_does_not_become_a_bullet():
+    """The series marks the licence note with an asterisk, so it falls past
+    the numbered-note pattern and was written out as it was read. Markdown
+    then read the asterisk as a list marker and 69 of the series' chapters
+    printed their licence as a bulleted item."""
+    text = "* This work is licensed under the Creative Commons Attribution"
+    assert pdf_ingest.escape_list_marker(text).startswith("\\*")
+
+
+def test_escape_list_marker_leaves_ordinary_prose_alone():
+    text = "As a new college student, you may have a lot of anxiety."
+    assert pdf_ingest.escape_list_marker(text) == text
+
+
+def test_escape_list_marker_is_idempotent():
+    text = "* This work is licensed under the Creative Commons Attribution"
+    once = pdf_ingest.escape_list_marker(text)
+    assert pdf_ingest.escape_list_marker(once) == once
+
+
+# ---------- a table's caption stays with its table ----------
+
+
+def test_table_caption_is_not_collected_with_the_footnotes():
+    """`place_tables` had put the tables in the right places and this moved
+    every caption off them: volume 6's fifth chapter printed "Table 5.1",
+    "Table 5.2" and "Table 5.4" in a row at the end of the chapter, each one
+    pages away from the table it names."""
+    blocks = [
+        ("body", "The spreadsheet below collects what each source contributes."),
+        ("note", "Table 5.1. Source Spreadsheet for Literature Reviews"),
+        ("table", "| Source | Claim |\n| --- | --- |\n| Smith | Yes |"),
+        ("note", "1. A numbered footnote still goes to the end."),
+    ]
+    out = pdf_ingest.blocks_to_markdown(blocks)
+    caption = out.index("Table 5.1. Source Spreadsheet")
+    table = out.index("| Source | Claim |")
+    footnote = out.index("[^1]:")
+    assert caption < table, "the caption is set above its table"
+    assert table < footnote, "the numbered footnote still collects at the end"
+
+
+def test_an_uncaptioned_table_goes_back_where_its_page_printed_it():
+    """Volume 1's second chapter introduces its table with a colon on page 6
+    and the series gave it no caption, so there was nothing to pair it with
+    and it printed after the Works Cited eight pages later."""
+    blocks = [
+        ("body", "Let's break down the writing situation in college:"),
+        ("head", "The Format of the Academic Essay"),
+        ("body", "An essay has a beginning, a middle and an end."),
+        ("head", "Works Cited"),
+        ("body", "Carroll, Lee Ann. *Rehearsing New Roles*. 2002."),
+    ]
+    tables = [{"page": 6, "index": 0,
+               "rows": [["Who's your audience?", "The professor."],
+                        ["What's your purpose?", "To show your learning."]]}]
+    anchors = {(6, 0): "Let's break down the writing situation in college:"}
+    out, notes = pdf_ingest.place_tables(blocks, tables, anchors)
+    kinds = [kind for kind, _ in out]
+    assert kinds.index("table") == 1, "the table follows the line that introduces it"
+    assert any("put back against the line" in note for note in notes)
+
+
+def test_an_uncaptioned_table_with_no_usable_anchor_still_falls_to_the_end():
+    blocks = [("body", "Prose that does not contain the anchor.")]
+    tables = [{"page": 3, "index": 0, "rows": [["a", "b"], ["c", "d"]]}]
+    out, notes = pdf_ingest.place_tables(blocks, tables, {(3, 0): ""})
+    assert any(kind == "table" for kind, _ in out)
+    assert any("matched no caption" in note for note in notes)
+
+
+def test_a_captioned_table_still_goes_to_its_caption():
+    """The anchor is a fallback and must not pre-empt a caption."""
+    blocks = [("body", "Prose."),
+              ("note", "Table 1 A comparison between posters"),
+              ("body", "More prose.")]
+    tables = [{"page": 5, "index": 0, "rows": [["a", "b"], ["c", "d"]]}]
+    anchors = {(5, 0): "More prose."}
+    out, _ = pdf_ingest.place_tables(blocks, tables, anchors)
+    kinds = [kind for kind, _ in out]
+    assert kinds == ["body", "note", "table", "body"]
