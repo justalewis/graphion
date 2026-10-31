@@ -7,7 +7,7 @@ short-title: Wikipedia Is Good for You!?
 short-authors: Purdy
 volume: 1
 year: 2010
-start-page: 205
+start-page: 204
 source-file: purdy--wikipedia-is-good-for-you.pdf
 volume-title: Writing Spaces 1
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).

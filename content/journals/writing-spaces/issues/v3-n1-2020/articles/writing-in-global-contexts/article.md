@@ -122,6 +122,7 @@ Table 1. Questions to ask and answers to consider when writing research question
 | --- | --- | --- |
 | Question 2: | What is the purpose of [kind of genre]---what kinds of information do you use it to convey, and what do individuals expect to use it for? | How do you share information about [process you want individuals to perform]? |
 | Question 3: | What specific kinds of information do you expect to encounter in [type of genre] to achieve this objective/use it effectively? | What specific kinds of information do you expect to encounter in [type of genre] to achieve this objective/use it effectively? |
+
 |  | If “yes” | If “no” |
 | --- | --- | --- |
 | Question 4: | How is information organized in [type of genre]; what information comes first, second, third, . . . last? [Use responses to previous question to determine how many pieces of information to organize.] | How is information organized in [type of genre]---what information comes first, second, third, . . . last? [Use responses to previous question to determine how many pieces of information to organize.] |

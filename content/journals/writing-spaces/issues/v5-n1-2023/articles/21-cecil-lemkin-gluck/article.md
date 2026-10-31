@@ -8,7 +8,7 @@ short-title: Navigating Your Collaborative Project
 short-authors: Cecil-Lemkin and Gluck
 volume: 5
 year: 2023
-start-page: 333
+start-page: 334
 chapter-number: 21
 source-file: 21Cecil-Lemkin-Gluck.pdf
 volume-title: Writing Spaces 5
@@ -225,6 +225,7 @@ Collaborative projects offer you the opportunity to expand your skill set, gener
 | 10/27 | Edit annotations for Annotated Bibliography | Lex | 1 |
 | 10/28 | Final Annotated Bibliography is due | Olivia, Juan, Lex |  |
 | 10/30 | Work on overall rough draft (in class) | Olivia, Juan, Lex |  |
+
 | 11/3 | Meet at the library to finish rough draft (5:00pm) | Olivia, Juan, Lex |  |
 | --- | --- | --- | --- |
 | 11/4 | Rough draft due | Olivia | 1 |

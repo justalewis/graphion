@@ -9,7 +9,7 @@ short-title: Assessing Source Credibility for Crafting a Well-Informed
 short-authors: Warrington, Kovalyova, and King
 volume: 3
 year: 2020
-start-page: 172
+start-page: 173
 chapter-number: 13
 source-file: warrington.pdf
 volume-title: Writing Spaces 3

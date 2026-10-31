@@ -1769,24 +1769,62 @@ def drop_lines_inside_tables(lines: list, tables_by_page: dict) -> tuple:
     return out, len(inside), anchors
 
 
-def _anchor_position(blocks: list, anchor: Optional[str]) -> Optional[int]:
+def _normalize_block(text: str) -> str:
+    return re.sub(r"\s+", " ", unemphasize(text)).strip().lower()
+
+
+def _anchor_position(blocks: list, anchor: Optional[str],
+                     floor: int = 0) -> Optional[int]:
     """The block holding the line the table's page printed above it.
 
-    Matched on the anchor's last few words rather than the whole of it,
-    because the line has been through `join_lines` by now and sits inside a
-    paragraph rather than alone. A word broken across the line break defeats
-    this, and the table then falls back to the end with the note saying so.
+    The whole anchor is tried first, because the line above a table is often
+    a head, and a head is a block whose text is exactly that line. Only then
+    its last few words, for a line that has been through `join_lines` by now
+    and sits in the middle of a paragraph. A word broken across the line
+    break defeats both, and the table then falls back to the end with the
+    note saying so.
+
+    The order matters, and matching on the tail alone put volume 1 chapter
+    6's zero draft after the Conclusion. The line above that table is the
+    "Zero Draft" head, so the tail is the whole of two words, and five
+    blocks in the chapter contain them: the head, the paragraphs either side
+    of it, and one in the Discussion explaining what a zero draft is for.
+    Matched whole, the head is the only block that is those two words.
+
+    Between the two sits a block that merely begins with the anchor, which
+    is what a head reads as once something has been joined to it. Volume 5's
+    chapter 22 prints "Rhetorical Reading Rubric" over its rubric and
+    "Activities to Incorporate 'Writing to Learn'" under it, and with the
+    table's own lines gone the two heads are consecutive and `assemble`
+    joins them, so no block is the anchor and the merged head is the nearest
+    thing to it. Without this tier the table fell back to the tail, which
+    matches the paragraph a page earlier that mentions the rubric by name.
+
+    `floor` is the position the table before this one took. Tables arrive in
+    page order and their anchors are lines in reading order, so a position
+    behind the floor is a mis-match rather than a table that moved
+    backwards; among several candidates the first at or after the floor is
+    the one in reading order. It is a tie-break and not a rule: where
+    nothing matches at or after the floor the last match is still taken,
+    since a mis-ordered table is better than one at the end of the chapter,
+    and `place_tables` counts those and says so.
     """
     if not anchor:
         return None
-    key = " ".join(re.sub(r"\s+", " ", unemphasize(anchor)).split()[-6:]).lower()
-    if not key:
+    whole = _normalize_block(anchor)
+    if not whole:
         return None
-    for position in range(len(blocks) - 1, -1, -1):
-        kind, text = blocks[position]
-        if kind in ("body", "quote", "note", "head", "title") \
-                and key in re.sub(r"\s+", " ", unemphasize(text)).lower():
-            return position
+    key = " ".join(whole.split()[-6:])
+
+    for matches in (lambda text: text == whole,
+                    lambda text: text.startswith(whole),
+                    lambda text: key in text):
+        found = [position for position, (kind, text) in enumerate(blocks)
+                 if kind in ("body", "quote", "note", "head", "title")
+                 and matches(_normalize_block(text))]
+        if found:
+            ahead = [position for position in found if position >= floor]
+            return ahead[0] if ahead else found[-1]
     return None
 
 
@@ -1847,9 +1885,10 @@ def place_tables(blocks: list, tables: list, anchors: Optional[dict] = None) -> 
 
     anchors = anchors or {}
     inserts: dict = {}
-    unplaced = anchored = continued = 0
+    unplaced = anchored = continued = backwards = 0
     captions_used = 0
     previous = None
+    floor = 0
     for table in tables:
         carries_on = continues_previous(table, previous)
         previous = table
@@ -1862,14 +1901,18 @@ def place_tables(blocks: list, tables: list, anchors: Optional[dict] = None) -> 
             # For a continuation that line is the last one of the page it
             # carries on from, which puts it against the part it continues.
             position = _anchor_position(
-                blocks, anchors.get((table["page"], table["index"])))
+                blocks, anchors.get((table["page"], table["index"])), floor)
             if position is None:
                 unplaced += 1
                 position = len(blocks) - 1
-            elif carries_on:
-                continued += 1
             else:
-                anchored += 1
+                if position < floor:
+                    backwards += 1
+                floor = max(floor, position)
+                if carries_on:
+                    continued += 1
+                else:
+                    anchored += 1
         inserts.setdefault(position, []).append(table)
 
     out: list = []
@@ -1892,6 +1935,10 @@ def place_tables(blocks: list, tables: list, anchors: Optional[dict] = None) -> 
     if anchored:
         notes.append(f"{anchored} table(s) the series did not caption, put "
                      f"back against the line printed above them.")
+    if backwards:
+        notes.append(f"{backwards} table(s) anchored behind the table before "
+                     f"them, so the line matched is not the one printed "
+                     f"above them; check where they belong.")
     if unplaced:
         notes.append(f"{unplaced} table(s) matched no caption and follow the "
                      f"text instead; check where they belong.")

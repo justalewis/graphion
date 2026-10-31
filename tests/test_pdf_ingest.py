@@ -1390,3 +1390,94 @@ def test_only_a_page_that_could_clip_is_read_twice():
     assert not matches(b"/Wingdings 10 Tf")
     assert not matches(b"(Wikipedia is good for you) Tj")
     assert not matches(b"BT /F1 11 Tf (We hope) Tj ET")
+
+
+# ---------- the line a table was printed under ----------
+
+
+def test_a_head_above_a_table_is_matched_whole_not_by_its_tail():
+    """Volume 1 chapter 6's zero draft printed after the Conclusion. The line
+    above that table is the "Zero Draft" head, so its last few words are the
+    whole of two, and five blocks in the chapter contain them: the head, the
+    paragraphs either side of it, and one in the Discussion saying what a
+    zero draft is for. Matched whole, the head is the only block that is
+    those two words."""
+    blocks = [
+        ("head", "Initial, or Zero, Draft"),
+        ("body", "What follows is the zero draft I wrote that morning."),
+        ("head", "Zero Draft"),
+        ("body", "I left the spelling as it fell out."),
+        ("head", "Conclusion"),
+        ("body", "A zero draft is for getting the thinking down."),
+    ]
+    assert pdf_ingest._anchor_position(blocks, "Zero Draft") == 2
+    # The tail still does the work where the line sits inside a paragraph.
+    assert pdf_ingest._anchor_position(
+        blocks, "as it fell out.") == 3
+    # Emphasis comes off both sides before either is compared.
+    assert pdf_ingest._anchor_position(blocks, "*Zero Draft*") == 2
+    assert pdf_ingest._anchor_position(blocks, "") is None
+    assert pdf_ingest._anchor_position(blocks, "printed nowhere at all") is None
+
+
+def test_a_head_something_was_joined_to_is_the_nearest_thing_to_the_anchor():
+    """Volume 5 chapter 22 prints "Rhetorical Reading Rubric" over its rubric
+    and "Activities to Incorporate Writing to Learn" under it. With the
+    table's own lines gone the two heads are consecutive and `assemble` joins
+    them, so no block is the anchor and the merged head is the nearest thing
+    to it. The tail alone matches the paragraph a page earlier that mentions
+    the rubric by name."""
+    blocks = [
+        ("body", "While we offer the rhetorical reading rubric below to "
+                 "help guide peer review, use it in class."),
+        ("body", "1. The teacher might assign two or more texts."),
+        ("head", "Rhetorical Reading Rubric Activities to Incorporate "
+                 "Writing to Learn"),
+        ("body", "Our section describes the benefits of writing to learn."),
+    ]
+    assert pdf_ingest._anchor_position(blocks, "Rhetorical Reading Rubric") == 2
+    # An exact match still beats one that merely begins with the anchor.
+    split = blocks[:2] + [("head", "Rhetorical Reading Rubric")] + blocks[2:]
+    assert pdf_ingest._anchor_position(split, "Rhetorical Reading Rubric") == 2
+
+
+def test_among_several_matches_the_one_in_reading_order_wins():
+    """Tables arrive in page order and their anchors are lines in reading
+    order, so a position behind the table before this one is a mis-match
+    rather than a table that moved backwards."""
+    blocks = [
+        ("body", "First mention of the sample."),
+        ("body", "Second mention of the sample."),
+        ("body", "Third mention of the sample."),
+    ]
+    # With nothing placed yet, the first match.
+    assert pdf_ingest._anchor_position(blocks, "mention of the sample.") == 0
+    # Past the first, the next one along.
+    assert pdf_ingest._anchor_position(blocks, "mention of the sample.", 1) == 1
+    # Nothing at or after the floor, so the last match rather than nothing:
+    # a mis-ordered table beats one at the end of the chapter.
+    assert pdf_ingest._anchor_position(blocks, "mention of the sample.", 9) == 2
+
+
+def test_a_table_that_anchors_backwards_is_counted_and_reported():
+    """`anchored` counts the tables an anchor resolved for, not the ones put
+    where the page printed them, which is what hid the zero draft: the run
+    reported all twelve as anchored while one was pages away."""
+    blocks = [
+        ("body", "Only mention of the sample."),
+        ("body", "Filler so the floor can be behind us."),
+        ("body", "More filler."),
+    ]
+    anchors = {(3, 0): "More filler.", (4, 0): "Only mention of the sample."}
+    tables = [_table(3, [["A", "B"], ["1", "2"]]),
+              _table(4, [["C", "D"], ["3", "4"]])]
+    out, notes = pdf_ingest.place_tables(blocks, tables, anchors)
+    # Each table goes in after its anchor block, so the second, anchoring to
+    # block 0, comes out ahead of the first, which anchored to block 2.
+    assert [kind for kind, _ in out] == ["body", "table", "body", "body", "table"]
+    assert any("anchored behind the table before them" in n for n in notes)
+    # In order, nothing is reported.
+    _, clean = pdf_ingest.place_tables(
+        blocks, [_table(3, [["A", "B"], ["1", "2"]])],
+        {(3, 0): "Only mention of the sample."})
+    assert not any("anchored behind" in n for n in clean)

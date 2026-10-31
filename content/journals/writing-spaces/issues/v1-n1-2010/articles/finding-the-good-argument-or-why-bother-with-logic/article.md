@@ -7,7 +7,7 @@ short-title: Finding the Good Argument OR Why Bother With Logic?
 short-authors: Jones
 volume: 1
 year: 2010
-start-page: 158
+start-page: 157
 source-file: jones--finding-the-good-argument.pdf
 volume-title: Writing Spaces 1
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).

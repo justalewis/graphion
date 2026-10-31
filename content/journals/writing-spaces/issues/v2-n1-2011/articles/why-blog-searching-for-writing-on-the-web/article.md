@@ -109,6 +109,7 @@ Table 1. Types of course-assigned blogs.
 | Class Blog | In a class blog, the students and the instructor post to a common blog on the subject of the course. Often students are asked to post new material and comment on their peers’ posts. |
 | Individual Reading or Learning Blog | Here, though you are keeping a solo blog, you are asked to write specifically about the topic of the course. Perhaps you will write in response to readings or other assignments in addition to reflecting on your learning experiences. |
 | Class Team Blog | In some classes, students work on group projects and are asked to keep a blog that updates the class on their activities. Here you may have a wider degree of autonomy on the subject matter of your blog, depending on the particulars of the assignment you are given. |
+
 | Type | Characteristics |
 | --- | --- |
 | Individual Blog | This type of blog would give you the greatest autonomy, which can also make it the most challenging kind of assignment. For example, I might ask students to post 20 times with posts that are at least 100 words in length over the course of a semester, but provide no assignment requirements beyond that. |

@@ -88,6 +88,7 @@ So how do you keep track of all these concepts as you write your own research pa
 | Article citation (APA) | Clark, P. A. (2006). Physician participation in executions: Care giver or executioner? The Journal of Law, Medicine &Ethics, 34(1), 95--104. doi:10.1111/j.1748-720x.2006. 00012.x |
 | --- | --- |
 | How did this article change or add to your understanding of the topic? | Other than being a reliable source, this article allowed me to understand the topic in terms of known ethical principles rather than in the terms of the physician’s personal ethical stance. |
+
 | Article summary | The author explores the role of physicians in executions and analyzes the ethical arguments for and against physician involvement in the process. It discusses the urgency in resolving the ethical conflicts. The text analyzes the situation in accordance to certain medical ethical principles such as respect for persons, beneficence, nonmaleficence and justice. Clark argues that physicians should abide by the Code of Medical Ethics regardless of their personal beliefs. Moreover, the author emphasizes that physician participation in the death sentence is unethical. |
 | --- | --- |
 | Quote that you might use in your paper | “This would be a very cruel way to die: awake, paralyzed, unable to move or breathe, while potassium chloride burned through your veins” (Clark, 2006, p. 100). |

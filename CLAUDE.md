@@ -27,8 +27,8 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (365 functions: 93 in `test_cleanups.py`, 28 in
-`test_teacher_resources.py`, 113 in `test_pdf_ingest.py`, 43 in
+Tests (376 functions: 93 in `test_cleanups.py`, 28 in
+`test_teacher_resources.py`, 124 in `test_pdf_ingest.py`, 43 in
 `test_ingest_volume.py`, 28 in
 `test_lint.py`, 23 in `test_pdf_tags.py`, 17 in
 `test_metadata_roundtrip.py`, 6 in
@@ -354,11 +354,45 @@ with "Let's break down the writing situation in college:" on page 6 and had
 it printing after the Works Cited on page 14. `drop_lines_inside_tables`
 therefore keeps the line left standing immediately above each table as that
 table's anchor, which is the only record of where in the prose the table
-stood, and `_anchor_position` matches it back on its last few words, since
-the line has been through `join_lines` by then and sits inside a paragraph.
-A caption still wins where there is one; the anchor is the fallback, and a
-word broken across the line break defeats it, which drops the table to the
-end with the note that says so.
+stood, and `_anchor_position` matches it back: the whole anchor first, then
+its last few words, for a line that has been through `join_lines` by then
+and sits inside a paragraph. A caption still wins where there is one; the
+anchor is the fallback, and a word broken across the line break defeats it,
+which drops the table to the end with the note that says so.
+
+The order of those matters, and matching on the tail alone put volume 1
+chapter 6's zero draft after the Conclusion. The line above that table is
+the "Zero Draft" head, so the tail is the whole of two words, and five
+blocks in the chapter contain them: the head, the paragraphs either side of
+it, and one in the Discussion saying what a zero draft is for. The search
+ran backwards and took the last. Matched whole, the head is the only block
+that is those two words, which is the general case: the line above a table
+is often a head, and a head is a block whose text is exactly that line.
+
+Between the two sits a third tier, a block that merely *begins* with the
+anchor, which is what a head reads as once something has been joined to it.
+Volume 5 chapter 22 prints "Rhetorical Reading Rubric" over its rubric and
+"Activities to Incorporate 'Writing to Learn'" under it, and with the
+table's own lines gone those two heads are consecutive lines, so `assemble`
+joins them into one and no block is the anchor any more. The merged head is
+then the nearest thing to it, and that is where the table goes. Without the
+tier the anchor fell through to the tail, which matches a paragraph a page
+earlier that mentions the rubric by name, so fixing the zero draft alone
+moved this table a section too early. The merge itself is older than any of
+this and loses the chapter a heading; it is the same shape as the caption
+and label merges above, and it has not been fixed.
+
+A short tail is weak however it is searched, so `_anchor_position` takes a
+`floor`,
+the position the table before it took. Tables arrive in page order and their
+anchors are lines in reading order, so among several candidates the first at
+or after the floor is the one in reading order. It is a tie-break, not a
+rule: where nothing matches at or after the floor the last match is still
+taken, since a mis-ordered table beats one at the end of the chapter, and
+`place_tables` counts those separately and says so. That count is the thing
+the notes were missing. `anchored` counts the tables an anchor resolved for,
+not the ones put where the page printed them, so the run reported all twelve
+of that chapter's as anchored while one was pages from its head.
 
 A table is paired with its caption in reading order, which is where this
 differs from the figures. A figure and its caption share a page by

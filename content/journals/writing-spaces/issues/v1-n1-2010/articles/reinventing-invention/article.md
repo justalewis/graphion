@@ -7,7 +7,7 @@ short-title: Reinventing Invention
 short-authors: Trim and Isaac
 volume: 1
 year: 2010
-start-page: 111
+start-page: 110
 source-file: trim-and-isaac--reinventing-invention.pdf
 volume-title: Writing Spaces 1
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 United States License (CC BY-NC-ND 3.0 US).

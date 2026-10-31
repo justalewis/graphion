@@ -125,6 +125,7 @@ In Appendix 2 you’ll find a blank chart that offers a system for reflecting on
 | Features evaluated | Commentary offered | Reflection (Valid or not?) | Planned response |
 | --- | --- | --- | --- |
 | Originality | “I can’t tell whether your goal is mostly to motivate people to vote or to vote for a particular candidate. These points seem to get muddled together.” | Valid. My goal is to motivate all people who can vote to vote, so I need to look for and rework places that seem to imply I only want people who support the same candidates I do to vote. | Revise my thesis to make my key point more explicit. Highlight sections in my draft that mention a particular candidate currently running, and make sure I’m not implying any favoritism. |
+
 | Features evaluated | Commentary offered | Reflection (Valid or not?) | Planned response |
 | --- | --- | --- | --- |
 | Argumentation (arrangement) | “There are so many examples from past elections, and I’m getting lost. Maybe cut some of these examples?” | Not valid. I think the examples are the strongest part of this essay, so I’m not going to cut any -- but maybe I could better explain what each one signifies. | Check and, if it seems necessary, clarify explanations about the significance of every example I include. |

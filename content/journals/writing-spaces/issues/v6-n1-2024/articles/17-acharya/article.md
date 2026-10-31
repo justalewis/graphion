@@ -159,13 +159,14 @@ Consider that different cultures use distinct formats for numbers, dates, and cu
 
 > • Date format: Different countries use different date formats. For example: Units of measurement: Be mindful of the type of measurement units being used in other cultures. For instance, while “kilometer” is commonly used in countries like Nepal, India, Pakistan, and China, “mile” is the preferred unit in the United States, Myanmar, Liberia, and Puerto Rico.
 
-> • Currency: Pay attention to how currency values are formatted and written. For example:
-
 | U.S. | Ghana | Portugal | Luxembourg |
 | --- | --- | --- | --- |
 | 5/29/2023 | 29/5/2023 | 23.05.29 | 29.05.2023 |
 | 5-29-2023 | 29-5-2023 | 2023/05/29 |  |
 | 5/29/23 |  | 29-05-2023 |  |
+
+> • Currency: Pay attention to how currency values are formatted and written. For example:
+
 | U.S. | Nepal | India |
 | --- | --- | --- |
 | $430.50 | रू ४३०.५० | ₹४३०.५० |

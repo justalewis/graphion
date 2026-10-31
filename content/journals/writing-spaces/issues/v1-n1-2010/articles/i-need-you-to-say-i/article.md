@@ -7,7 +7,7 @@ short-title: “I need you to say ‘I’”
 short-authors: Maddalena
 volume: 1
 year: 2010
-start-page: 182
+start-page: 181
 source-file: mckinney-maddalena--i-need-you-to-say-i.pdf
 volume-title: Writing Spaces 1
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).

@@ -291,6 +291,7 @@ Having students reverse engineer a data story in class or as homework is useful 
 | 2 | Great Good Bad Horrible |  |
 | 3 | Great Good Bad Horrible |  |
 | 4 | Great Good Bad Horrible |  |
+
 | 5 | Great Good Bad Horrible |
 | --- | --- |
 | 6 | Great Good Bad Horrible |

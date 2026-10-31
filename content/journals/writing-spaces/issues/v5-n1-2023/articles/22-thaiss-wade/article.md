@@ -8,7 +8,7 @@ short-title: Writing Science in the First Year of College
 short-authors: Thaiss and Wade
 volume: 5
 year: 2023
-start-page: 353
+start-page: 355
 chapter-number: 22
 source-file: 22Thaiss-Wade.pdf
 volume-title: Writing Spaces 5
@@ -100,6 +100,7 @@ Learning *inquiry-based rhetoric* (IBR) develops your metacognitive writing proc
 |  | Questions to Help Writers Set the Agenda for Feedback |
 | --- | --- |
 | Logic | Questions about Critical Thinking and Logic • What is my central claim? • What reasons do I give? • Is my evidence reliable? |
+
 | Emotions | Questions about Why the Work Matters • What gap in research or knowledge of the subject does my work address? • Why does this matter? • What are the implications of my work that I’ve stated? • What next steps do I see for this research? |
 | --- | --- |
 | Character | Questions about Genre and Reader Expectations • What organizational patterns do I follow? • What are the relationships between my points? • Do I provide appropriate detail about my methods and materials? • Who does this research serve? • Are my research methods ethical? • Do my visuals accurately represent my results? • Do I use inclusive language? How understandable would I be to someone reading this draft? • Do I follow ethical and inclusive citation practices (Bali 2020)? |

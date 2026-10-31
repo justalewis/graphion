@@ -238,6 +238,7 @@ To engage your students with the ideas discussed in this chapter, consider havin
 | Develop the presentation | • Are you going to design your own slide deck or are you required to use a corporate template for your presentation? If so, are there restrictions on the type, color, and graphics that you can use? |  |
 |  | • Have you taken cultural considerations into account when planning your color scheme? |  |
 |  | • Have you catered for different accessibility issues when developing the presentation? |  |
+
 | Phase | Practical considerations | Tick when completed/ considered |
 | --- | --- | --- |
 |  | • Does your presentation have opening, body, and closing sections? Have you clearly stated the purpose and structure of the presentation in the opening section? Have you summarized the key points of the presentation at the end? |  |
@@ -250,6 +251,7 @@ To engage your students with the ideas discussed in this chapter, consider havin
 |  | • Have you considered the requirements for any activities that attendees might undertake during your presentation? |  |
 |  | • If you plan to follow-up with attendees afterwards, have you prepared an attendance list for participants to sign? |  |
 |  | • If you were unable to answer one or more questions during your presentation, have you followed up with the relevant attendees? |  |
+
 | Phase | Practical considerations | Tick when completed/ considered |
 | --- | --- | --- |
 |  | • If you are delivering a virtual presentation, have you familiarized yourself with the software so that you know how to mute/unmute attendees and share/un-share files? |  |
