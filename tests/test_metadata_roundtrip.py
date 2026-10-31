@@ -254,6 +254,68 @@ def test_a_figure_the_new_run_did_not_find_carries_nothing():
     assert conversion.carry_alt_text(fresh, "") == (fresh, 0)
 
 
+def test_a_captioned_figure_keeps_its_description_not_its_caption():
+    """After pairing, the description is in fig-alt and the caption is not it.
+
+    `pair_figure_captions` puts the printed caption in the bracket and moves
+    the description to `fig-alt`, so reading the bracket carries a caption and
+    leaves the description behind.
+    """
+    previous = (
+        '![Figure 2. "A College Collage" by Evan Kennedy on YouTube.]'
+        '(assets/figure-p007-1.png)'
+        '{#fig:1 fig-alt="A woman seen from behind, blurred, walking down an '
+        'institutional corridor toward a bright barred window."}\n'
+    )
+    fresh = f"![{pdf_ingest.undescribed_alt(7)}](assets/figure-p007-1.png)\n"
+    out, carried = conversion.carry_alt_text(fresh, previous)
+    assert carried == 1
+    assert "![A woman seen from behind, blurred, walking down an " \
+        "institutional corridor toward a bright barred window.]" in out
+    # The caption belongs to the page and is read off it again every run.
+    assert "A College Collage" not in out
+
+
+def test_a_caption_beside_a_placeholder_is_still_only_a_caption():
+    """Nothing was ever written here, so there is nothing to carry."""
+    previous = (
+        "![Fig. 1. The writing situation.](assets/figure-p004-1.png)"
+        f'{{#fig:1 fig-alt="{pdf_ingest.undescribed_alt(4)}"}}\n'
+    )
+    fresh = "![Undescribed](assets/figure-p004-1.png)\n"
+    out, carried = conversion.carry_alt_text(fresh, previous)
+    assert (out, carried) == (fresh, 0)
+
+
+def test_a_description_goes_to_fig_alt_when_the_bracket_holds_a_caption():
+    """The slot Pandoc reads is the one a description has to land in.
+
+    This is the state `16-vankooten` was published in: the description
+    standing where the caption belonged, and the placeholder left in the
+    attribute that actually reaches a reader.
+    """
+    previous = (
+        "![A tower of empty amber prescription bottles with white caps, "
+        "stacked six rows high.](assets/figure-p006-1.png)"
+        f'{{#fig:1 fig-alt="{pdf_ingest.undescribed_alt(6)}"}}\n'
+    )
+    fresh = (
+        "![Figure 1. A still from a student video.]"
+        "(assets/figure-p006-1.png)"
+        f'{{#fig:1 fig-alt="{pdf_ingest.undescribed_alt(6)}"}}\n'
+    )
+    out, carried = conversion.carry_alt_text(fresh, previous)
+    assert carried == 1
+    assert 'fig-alt="A tower of empty amber prescription bottles with ' \
+        'white caps, stacked six rows high."' in out
+    # The caption the page printed stays where the pairing put it.
+    assert "![Figure 1. A still from a student video.]" in out
+    assert pdf_ingest.undescribed_alt(6) not in out
+    # And carrying again changes nothing.
+    again, carried_again = conversion.carry_alt_text(out, previous)
+    assert (again, carried_again) == (out, 0)
+
+
 def _repaired(body: str) -> str:
     """Run the render-time markdown repairs over a scratch article."""
     article = _scratch_article(f"---\ntitle: T\n---\n\n{body}")

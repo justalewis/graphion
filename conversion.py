@@ -238,13 +238,26 @@ def ingest_docx(
     return IngestResult(raw_md_path=raw_md, log=body, has_tracked_changes=has_tracked)
 
 
-_BODY_IMAGE_RE = re.compile(r"!\[(?P<alt>[^\]]*)\]\((?P<src>assets/[^)]+)\)")
+_BODY_IMAGE_RE = re.compile(
+    r"!\[(?P<alt>[^\]]*)\]\((?P<src>assets/[^)]+)\)(?P<attrs>\{[^}]*\})?")
 # What `pdf_ingest.undescribed_alt` writes over a figure whose page printed no
 # caption to describe it with. Recognised by its shape rather than imported,
 # because what has to be matched is the string a previous run left behind;
 # `test_undescribed_alt_still_matches_its_pattern` keeps the two in step.
 _UNDESCRIBED_ALT_RE = re.compile(
     r"^Undescribed figure from page \d+ of the source$")
+_FIG_ALT_RE = re.compile(r'fig-alt="(?P<text>[^"]*)"')
+# A caption `pair_figure_captions` moved into the bracket opens with the label
+# the page printed over the figure, in any of the three ways this series
+# abbreviates it. Used only to tell a caption from a description in the one
+# slot that can hold either.
+_CAPTION_START_RE = re.compile(r"^(?:Figure|Fig\.?)\s+\d", re.I)
+
+
+def _is_described(text) -> bool:
+    """Whether this string is a description somebody wrote."""
+    text = (text or "").strip()
+    return bool(text) and not _UNDESCRIBED_ALT_RE.match(text)
 
 
 def carry_alt_text(body: str, previous: str) -> tuple:
@@ -268,13 +281,27 @@ def carry_alt_text(body: str, previous: str) -> tuple:
     when the page gave it no caption, so a run that has since found one is
     allowed to improve on it, and `lint.check_alt_text` goes on counting
     whatever is still owed.
+
+    Which slot holds the description is the hard part, because a figure that
+    has a caption keeps the two in different places: `pair_figure_captions`
+    puts the printed caption in the bracket and moves the description to
+    `fig-alt`, where Pandoc reads it. Carrying the bracket alone therefore
+    read a caption as a description and left the real one behind, and because
+    the bracket is also where a fresh ingest puts its alt text, the carry
+    wrote that caption over the next run's. `16-vankooten` is the one chapter
+    in the series whose figure had been through the pairing, and it published
+    "Undescribed figure from page 7 of the source" over a figure an editor had
+    described in full, with the description standing where its caption should
+    have been. So the description is read from `fig-alt` wherever a real one
+    is there, and written to `fig-alt` wherever the target keeps its caption
+    in the bracket. A caption is not carried at all; it is read off the page
+    again on every run, and only the description cannot be regenerated.
     """
-    kept = {
-        m.group("src"): m.group("alt")
-        for m in _BODY_IMAGE_RE.finditer(previous)
-        if m.group("alt").strip()
-        and not _UNDESCRIBED_ALT_RE.match(m.group("alt").strip())
-    }
+    kept = {}
+    for m in _BODY_IMAGE_RE.finditer(previous):
+        described = _carried_description(m)
+        if described:
+            kept[m.group("src")] = described
     if not kept:
         return body, 0
 
@@ -282,13 +309,44 @@ def carry_alt_text(body: str, previous: str) -> tuple:
 
     def swap(match):
         nonlocal carried
-        alt = kept.get(match.group("src"))
-        if alt is None or alt == match.group("alt"):
+        described = kept.get(match.group("src"))
+        if described is None:
             return match.group(0)
+        attrs = match.group("attrs") or ""
+        bracket = match.group("alt")
+        existing = _FIG_ALT_RE.search(attrs)
+        quoted = described.replace('"', "'")
+        if existing:
+            if existing.group("text").strip() == quoted.strip():
+                return match.group(0)
+            attrs = (attrs[:existing.start()] + f'fig-alt="{quoted}"'
+                     + attrs[existing.end():])
+        elif attrs and _CAPTION_START_RE.match(bracket.strip()):
+            # The bracket is this figure's caption, so the description has
+            # nowhere to go but an attribute of its own.
+            attrs = attrs[:-1].rstrip() + f' fig-alt="{quoted}"' + "}"
+        else:
+            if bracket == described:
+                return match.group(0)
+            bracket = described
         carried += 1
-        return f"![{alt}]({match.group('src')})"
+        return f"![{bracket}]({match.group('src')}){attrs}"
 
     return _BODY_IMAGE_RE.sub(swap, body), carried
+
+
+def _carried_description(match) -> str:
+    """The description this image keeps, from whichever slot holds it."""
+    attrs = match.group("attrs") or ""
+    attr = _FIG_ALT_RE.search(attrs)
+    if attr and _is_described(attr.group("text")):
+        return attr.group("text").strip()
+    bracket = match.group("alt").strip()
+    if attr and _CAPTION_START_RE.match(bracket):
+        # A caption beside a placeholder `fig-alt` is still a caption; there
+        # is no description here to carry.
+        return ""
+    return bracket if _is_described(bracket) else ""
 
 
 def ingest_pdf(pdf_path: Path, article_path: Path,

@@ -1460,7 +1460,87 @@ def pair_figure_captions(text: str, log: CleanupLog) -> str:
             j += step
         return None
 
+    def rewrite(m, cm) -> str:
+        """Fold a caption paragraph into its image."""
+        caption = " ".join(cm.group("text").split())
+        attrs = m.group("attrs") or ""
+        inner = attrs[1:-1].strip() if attrs else ""
+        if "#fig:" not in inner:
+            inner = f"#fig:{cm.group('num')} {inner}".strip()
+        # Keep an author's image description as the alt text; the caption
+        # paragraph becomes the figure caption.
+        alt = " ".join(m.group("alt").split()).replace("\\", "")
+        if alt and "fig-alt=" not in inner:
+            inner = inner + ' fig-alt="' + alt.replace('"', "'") + '"'
+        return f"![{caption}]({m.group('path')}){{{inner}}}"
+
+    def parted(a: int, b: int) -> bool:
+        """Whether a caption or a heading stands between two images."""
+        if b - a > _CAPTION_SEARCH_RADIUS:
+            return True
+        return any(
+            _FIG_HEADING_RE.match(paras[j].strip())
+            or _FIG_CAPTION_RE.match(paras[j].strip())
+            for j in range(a + 1, b)
+        )
+
+    def captions_below(origin: int) -> list:
+        """Every unconsumed caption under an image, in document order.
+
+        Bounded the way `scan` is, by a heading or the next image, so what
+        comes back is the captions standing in this image's own run of
+        content.
+        """
+        found = []
+        j = origin + 1
+        while j < len(paras) and (j - origin) <= _CAPTION_SEARCH_RADIUS:
+            para = paras[j].strip()
+            if _FIG_HEADING_RE.match(para) or j in image_set:
+                break
+            if j not in consumed and _FIG_CAPTION_RE.match(para):
+                found.append(j)
+            j += 1
+        return found
+
+    # Images set one after another with only prose between them, followed by
+    # their captions together, are the one arrangement proximity reads
+    # backwards. `scan` stops at the next image, so the last image of the run
+    # is the only one that can reach the captions and it takes the first of
+    # them, leaving every caption one figure out from the picture it names.
+    # Volume 5's 16-vankooten paired the woman in the corridor with "showing
+    # an image of stacked pill bottles", and volume 3's multimodal chapter
+    # left Figures 8 and 9 standing together below both slides they name.
+    # Pairing the two sequences in order is only sound where the counts
+    # agree: a run with fewer captions than images has nothing in it to say
+    # which figures those captions belong to, so it is left to the scan
+    # below, which at worst captions one figure and leaves the rest alone.
+    runs: List[List[int]] = []
     for i in image_positions:
+        if runs and not parted(runs[-1][-1], i):
+            runs[-1].append(i)
+        else:
+            runs.append([i])
+
+    paired: set[int] = set()
+    for run in runs:
+        if len(run) < 2:
+            continue
+        below = captions_below(run[-1])
+        if len(below) != len(run):
+            continue
+        for image_index, caption_index in zip(run, below):
+            im = _FIG_IMAGE_RE.match(paras[image_index].strip())
+            cm = _FIG_CAPTION_RE.match(paras[caption_index].strip())
+            if not (im and cm):
+                continue
+            paras[image_index] = rewrite(im, cm)
+            consumed.add(caption_index)
+            paired.add(image_index)
+            count += 1
+
+    for i in image_positions:
+        if i in paired:
+            continue
         m = _FIG_IMAGE_RE.match(paras[i].strip())
         after = scan(i, 1)
         before = scan(i, -1)
@@ -1475,17 +1555,7 @@ def pair_figure_captions(text: str, log: CleanupLog) -> str:
 
         j, cm = found
         consumed.add(j)
-        caption = " ".join(cm.group("text").split())
-        attrs = m.group("attrs") or ""
-        inner = attrs[1:-1].strip() if attrs else ""
-        if "#fig:" not in inner:
-            inner = f"#fig:{cm.group('num')} {inner}".strip()
-        # Keep an author's image description as the alt text; the caption
-        # paragraph becomes the figure caption.
-        alt = " ".join(m.group("alt").split()).replace("\\", "")
-        if alt and "fig-alt=" not in inner:
-            inner = inner + ' fig-alt="' + alt.replace('"', "'") + '"'
-        paras[i] = f"![{caption}]({m.group('path')}){{{inner}}}"
+        paras[i] = rewrite(m, cm)
         count += 1
 
     if not count:

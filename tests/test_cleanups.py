@@ -363,6 +363,71 @@ def test_pair_figure_captions_is_idempotent():
     assert _pair(once) == once
 
 
+def test_a_run_of_images_takes_its_captions_in_order():
+    """Two figures set together, then both captions, is read backwards.
+
+    `scan` stops at the next image, so the second figure is the only one that
+    can reach the captions and it takes the first of them. Volume 5's
+    16-vankooten published the woman in the corridor under "showing an image
+    of stacked pill bottles" that way.
+    """
+    src = (
+        "Prose above the pair.\n"
+        "\n"
+        "![A tower of empty amber prescription bottles with white caps.]"
+        "(assets/figure-p006-1.png)\n"
+        "\n"
+        "![A woman seen from behind, walking down an institutional corridor.]"
+        "(assets/figure-p007-1.png)\n"
+        "\n"
+        "Figure 1. “A College Collage” by Evan Kennedy, showing an "
+        "image of stacked pill bottles.\n"
+        "\n"
+        "Figure 2. “A College Collage” by Evan Kennedy, with an "
+        "image of a woman.\n"
+    )
+    out = _pair(src)
+    # Each figure takes the caption that names it, and keeps its own
+    # description in the slot Pandoc reads.
+    assert "showing an image of stacked pill bottles." \
+        "](assets/figure-p006-1.png)" in out
+    assert "with an image of a woman.](assets/figure-p007-1.png)" in out
+    assert 'fig-alt="A tower of empty amber prescription bottles with ' \
+        'white caps."' in out
+    assert 'fig-alt="A woman seen from behind, walking down an ' \
+        'institutional corridor."' in out
+    assert "#fig:1" in out and "#fig:2" in out
+    # Neither caption is left standing in the prose.
+    assert "Figure 1. “A College Collage”" not in out
+    assert "Figure 2. “A College Collage”" not in out
+    assert _pair(out) == out
+
+
+def test_a_run_with_fewer_captions_than_images_is_left_alone():
+    """One caption cannot say which of three figures it belongs to.
+
+    A run that prints fewer captions than it has figures has nothing in it to
+    pair them by, so the ordered pairing declines and only the nearest match
+    is made. Volume 6's 15-bennett sets six figures this way under one
+    caption.
+    """
+    src = (
+        "![First.](assets/a.png)\n"
+        "\n"
+        "![Second.](assets/b.png)\n"
+        "\n"
+        "![Third.](assets/c.png)\n"
+        "\n"
+        "Figure 4. The only caption this run prints.\n"
+    )
+    out = _pair(src)
+    assert out.count("#fig:") == 1
+    # The two the caption cannot name are untouched, not captioned by guess.
+    assert "![First.](assets/a.png)" in out
+    assert "![Second.](assets/b.png)" in out
+    assert _pair(out) == out
+
+
 def test_blank_line_runs_are_preserved():
     """The pass rejoins paragraphs, so it must not reflow spacing elsewhere."""
     src = "Alpha.\n\n\nBeta.\n\n\n\nGamma.\n"
