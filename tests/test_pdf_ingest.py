@@ -1646,3 +1646,27 @@ def test_a_table_that_anchors_backwards_is_counted_and_reported():
         blocks, [_table(3, [["A", "B"], ["1", "2"]])],
         {(3, 0): "Only mention of the sample."})
     assert not any("anchored behind" in n for n in clean)
+
+
+def test_a_caption_naming_a_quoted_title_is_still_a_caption():
+    """The capital after the label is what tells a caption from a reference
+    to one. Four captions in this archive put a quoted title there instead,
+    and `16-vankooten`'s Figures 1 and 2 are two of them, which is why that
+    chapter's first two figures read as uncaptioned and its captions were
+    left standing as loose paragraphs after the licence note."""
+    assert pdf_ingest.is_figure_caption(
+        "Figure 1. “A College Collage” by Evan Kennedy on YouTube.")
+    assert pdf_ingest.is_figure_caption(
+        "Figure 2. 'A College Collage' by Evan Kennedy on YouTube.")
+    # Italic as well, which is the other way this archive sets one.
+    assert pdf_ingest.is_figure_caption(
+        "*Figure 3. “Quoted” title.*")
+
+
+def test_a_quotation_mark_does_not_let_a_reference_through():
+    """The capital is still required, just not first; 12 lines in the archive
+    are prose referring to a figure and every one of them continues in lower
+    case."""
+    assert not pdf_ingest.is_figure_caption("Figure 7.6 shows that the mark")
+    assert not pdf_ingest.is_figure_caption(
+        "Figure 2. “the lower case title”")

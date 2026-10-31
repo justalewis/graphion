@@ -1139,8 +1139,18 @@ WEB_IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
 # "Figure 1". Matching only the long form read volume 2 as a book that does
 # not caption its figures at all, and sent twenty of its twenty-two to the
 # undescribed pile with their descriptions sitting in the text above them.
+# The capital is what tells a caption from a reference to one, since the
+# series writes "Figure 4.1: ", "Figure 3.3. " and "Figure 15.1 " alike and
+# punctuation cannot separate them. An opening quotation mark is as good a
+# mark of a caption as a capital, and requiring the capital immediately
+# turned down the four captions in this archive that name a quoted title:
+# `16-vankooten`'s Figures 1 and 2 both begin with "A College Collage",
+# and those two were the figures that looked uncaptioned. The capital is
+# still required, just not first. The table pattern below has the same shape
+# and no instance of this in the archive, so it is left as it is.
 _FIGURE_CAPTION_RE = re.compile(
-    r"^(?:Figure|Fig\.?)\s+(?P<number>\d+(?:\.\d+)*)\s*[:.]?\s+(?=[A-Z])")
+    r"^(?:Figure|Fig\.?)\s+(?P<number>\d+(?:\.\d+)*)\s*[:.]?\s+"
+    r"(?=[“‘\"']?[A-Z])")
 
 
 def unemphasize(text: str) -> str:
