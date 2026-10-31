@@ -43,8 +43,6 @@ nCino is a cloud-based software company that builds an innovative Bank Operating
 ![Waterfall versus Agile. At the left, five boxes descending like a staircase: requirements, design, implementation, testing, maintenance. At the right, a ring of five segments turning through design, define, analyse, test and back, with Agile at the centre, Backlog entering it and Deploy leaving by an arrow.](assets/figure-p003-1.jpg)\
 Figure 1. Waterfall vs. Agile. Image shows the two design methods and their steps.“Waterfall_Vs_Agile” via Wikimedia Commons is licensed under CC BY-SA 4.0
 
-![A company values page headed at nCino, we are guided by six core values, with an illustrated badge for each: Bring Your A-game, Do the Right Thing, Respect Each Other, Make Someone's Day, Have Fun, Be a Winner.](assets/figure-p007-1.png)
-
 The waterfall system can’t always be trusted, especially for collaborative work. As your projects get larger and more complex, this idea of a draft becomes more intimidating.
 
 “Okay, everyone we need a draft by such and such day and time. See you then.” But when the day arrives, somebody hasn’t done their work. Somebody else ran into a challenge that they couldn’t solve on their own. And another person decided they would just write the whole thing. Things are a mess.
@@ -94,6 +92,8 @@ In Ancient Greece, accomplishing any of these meant that communicators needed to
 # Cultivating Your Group Culture
 
 The first step of establishing ongoing fruitful relationships is to make sure everyone is on the same page. This is why most organizations have a clear mission statement, such as the following from nCino: “To transform the financial services industry through innovation, reputation and speed” (“Culture and Careers”). Every employee knows their goal is to help nCino create innovative banking software fast. Note, though, the importance of “ethos”. nCino doesn’t just want to get things done, they want to build a reputation that creates a tight community with banks and their customers. Sometimes organizations even explicitly state what kind of culture or community they want to maintain.
+
+![A company values page headed at nCino, we are guided by six core values, with an illustrated badge for each: Bring Your A-game, Do the Right Thing, Respect Each Other, Make Someone's Day, Have Fun, Be a Winner.](assets/figure-p007-1.png)
 
 Check out nCino’s cultural code in figure 2. Note that only two of their core values are about getting things done. The rest are about building and maintaining strong relationships. In your own group, think about what kind of “culture” you want to create for this project. Is your goal simply to get an A or just to pass reasonably well? If not everyone is interested in an A, then not everyone is going to put in the same effort. It might help to think outside the classroom. How might your project impact the community, the university, or students? Or is there something specific that you want to learn?
 

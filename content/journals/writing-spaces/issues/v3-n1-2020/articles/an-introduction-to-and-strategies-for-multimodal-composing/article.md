@@ -63,9 +63,9 @@ The gestural mode refers to gesture and movement. This mode is often apparent in
 ![Michelle Obama speaks at a lectern lettered Let Girls Learn, both hands pressed flat to her chest and her head tilted, smiling. A microphone is angled toward her and an American flag stands behind.](assets/figure-p008-1.jpg)\
 Figure 4. Picture taken of Michelle Obama while giving a speech that captures the gestural mode. She is standing at a microphone, looking out into the audience, and smiling with her hands clasped against her heart. (“US First Lady, Michelle Obama, speaking at Mulberry School for Girls, London” by DFID licensed under CC BY 2.0)
 
-![A SoundCloud player for a file named New Podcast Project, showing an orange and red illustration of a microphone on a stand with the audio waveform drawn across the lower third.](assets/figure-p009-1.png)
-
 The aural mode refers to what an audience member can or cannot hear. Music is the most obvious representation of the aural mode, but an absence of sound (silence) is also aural. Examples of texts that emphasize the aural mode include podcasts, music videos, concerts, television series, movies, and radio talk shows. Figure 5 is a screenshot of my student’s podcast created to convince teachers to integrate podcasts into their language arts classrooms. A podcast exemplifies the aural mode because of its reliance on sound.
+
+![A SoundCloud player for a file named New Podcast Project, showing an orange and red illustration of a microphone on a stand with the audio waveform drawn across the lower third.](assets/figure-p009-1.png)
 
 A multimodal text combines various modes of communication (hence the combination of the words “multiple” and “mode” in the term “multimodal”). Cheryl E. Ball and Colin Charlton draw from The New London Group in their argument that “[a]ny combination of modes makes a multimodal text, and all text---every piece of communication a human composes---use more than one mode. Thus, all writing is multimodal” (42). However, in some communicative texts, one mode receives more emphasis than the others. For example, academia and writing teachers have historically favored the linguistic mode, often seen in the form of the written college essay. Yet, when you communicate using an essay, you are actually using three modes of communication: linguistic, spatial, and visual. The words represent the linguistic mode (the emphasized mode), the margins and spacing characterize the spatial, and the visual mode includes elements like font, font size, or the use of bold.
 
@@ -171,8 +171,6 @@ When searching for visual and aural materials, you want to consider using openly
 ![The four basic Creative Commons licences, each with its badge, name and a short explanation. Attribution (CC BY), the most open, allows any use with attribution. Attribution-NonCommercial (CC BY-NC) allows any use with attribution but no commercial gain. Attribution-ShareAlike (CC BY-SA) requires the new work to carry the same licence. Attribution-NoDerivs (CC BY-ND) requires the work be used in its original form with no changes.](assets/figure-p016-1.png)\
 Figure 7. The four basic Creative Commons licenses including explanations for each. (Image was created by the author using “About Licenses” by Creative Commons licensed under CC BY 4.0)
 
-![A slide headed Discovering Open or Public Domain Resources showing logos for CC Search, the Free Music Archive, Project Gutenberg, Flickr and the Digital Public Library of America. At the foot, a line reading Image taken from Goodsett PowerPoint is ringed in red, with a note that the attribution lacks a title, clear author, source link and licence.](assets/figure-p017-1.png)
-
 There are various websites such as CC Search, Free Music Archive (FMA), or Digital Public Library of America (DPLA) where you can find openly licensed work. You may also set filters on Flickr or Google Images to locate openly licensed work.
 
 # Collect and Evaluate Technology Tools
@@ -185,10 +183,10 @@ After researching content and collecting materials, think about how you will giv
 
 When citing openly licensed images, videos, sounds, animations, screenshots, etc., it is important to provide an attribution. According to the CC Wiki, an appropriate attribution should include the title, author, source (hyperlinked to the original website), and license (hyperlinked to the license information). Figure 8 represents example of an inappropriate attribution and figure 9 an ideal one.
 
+![An example of an ideal attribution, which includes a hyperlinked title for the image, a clear author name, and license information that is also hyperlinked. (Image was created by the author using “Creative Commons Licensing” by Mandi Goodsett licensed under CC BY 4.0)](assets/figure-p017-1.png){#fig:9 fig-alt="A slide headed Discovering Open or Public Domain Resources showing logos for CC Search, the Free Music Archive, Project Gutenberg, Flickr and the Digital Public Library of America. At the foot, a line reading Image taken from Goodsett PowerPoint is ringed in red, with a note that the attribution lacks a title, clear author, source link and licence."}
+
 ![The same slide of open-resource logos, now with the attribution reading Discovering Open or Public Domain Resources by Amanda Goodsett, licensed under CC BY 4.0, ringed in red, and a note that the attribution provides the relevant content.](assets/figure-p018-1.png)\
 Figure 8. An example of an inappropriate attribution that lacks title, clear author, source link, and license. (Image was created by the author using “Creative Commons Licensing” by Mandi Goodsett licensed under CC BY 4.0)
-
-Figure 9. An example of an ideal attribution, which includes a hyperlinked title for the image, a clear author name, and license information that is also hyperlinked. (Image was created by the author using “Creative Commons Licensing” by Mandi Goodsett licensed under CC BY 4.0)
 
 # Begin Drafting Your Text
 
