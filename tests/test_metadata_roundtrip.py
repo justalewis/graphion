@@ -403,3 +403,69 @@ def test_an_empty_head_row_does_not_read_as_a_delimiter():
     )
     assert "| Draft | Comment |\n\n|  |  |" in out
     assert out.count("| --- | --- |") == 2
+
+
+# ---------- front matter an editor wrote, across a re-ingest ----------
+
+PREVIOUS = """---
+title: The Complexity of Simplicity
+teacher-resources: separate
+images-of-text:
+- figure-p003-1.png
+- figure-p010-1.jpg
+---
+
+Prose.
+"""
+
+
+def test_a_hand_kept_images_of_text_list_survives_a_re_ingest():
+    """Alt text satisfies WCAG 1.1.1 and leaves 1.4.5 where it was, so the
+    figures carrying text as a picture are listed by hand. Ingest reads the
+    front matter off the page, where that list is not, so it went with the
+    rest of it and the chapter read as having no images of text at all."""
+    fm, carried = conversion.carry_editor_fields(
+        {"title": "The Complexity of Simplicity"}, PREVIOUS)
+    assert fm["images-of-text"] == ["figure-p003-1.png", "figure-p010-1.jpg"]
+    assert "images-of-text" in carried
+
+
+def test_the_two_galley_split_survives_a_re_ingest():
+    """`teacher-resources: separate` is a property of how the piece is
+    written and nothing the page states, so a lost one folds the instructor
+    material back into the chapter without saying so."""
+    fm, carried = conversion.carry_editor_fields({}, PREVIOUS)
+    assert fm["teacher-resources"] == "separate"
+    assert "teacher-resources" in carried
+
+
+def test_a_field_this_run_recovered_is_left_alone():
+    """A page that has since started saying something is allowed to."""
+    fm, carried = conversion.carry_editor_fields(
+        {"teacher-resources": "inline"}, PREVIOUS)
+    assert fm["teacher-resources"] == "inline"
+    assert "teacher-resources" not in carried
+
+
+def test_nothing_is_carried_from_an_article_without_front_matter():
+    fm, carried = conversion.carry_editor_fields({"title": "T"}, "Prose only.\n")
+    assert fm == {"title": "T"}
+    assert carried == ()
+
+
+def test_unreadable_front_matter_carries_nothing_rather_than_raising():
+    """A first ingest has no article.md at all, and a half-written one must
+    not take the run down with it."""
+    fm, carried = conversion.carry_editor_fields(
+        {"title": "T"}, "---\ntitle: [unclosed\n---\n\nProse.\n")
+    assert fm == {"title": "T"}
+    assert carried == ()
+
+
+def test_an_empty_list_is_not_carried_over_nothing():
+    """An editor who emptied the list meant it to be empty, and an empty
+    list and a missing one read the same to `check_images_of_text`."""
+    fm, carried = conversion.carry_editor_fields(
+        {}, "---\ntitle: T\nimages-of-text: []\n---\n\nProse.\n")
+    assert "images-of-text" not in fm
+    assert carried == ()

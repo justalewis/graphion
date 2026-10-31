@@ -357,6 +357,65 @@ def _carried_description(match) -> str:
     return bracket if _is_described(bracket) else ""
 
 
+# Front matter an editor wrote that ingest cannot read off the page and that
+# no later stage puts back. The volume facts are deliberately not here:
+# `ingest_volume.py` stamps those, and it stamps them after cleaning for
+# exactly this reason, so carrying them here would make a stale value look
+# like a recovered one.
+CARRIED_FIELDS = ("images-of-text", "teacher-resources")
+
+
+def carry_editor_fields(front_matter: dict, previous: str) -> tuple:
+    """Put an editor's own front matter back after ingest has rebuilt it.
+
+    Ingest reads the front matter off the page every time it runs, so a field
+    that is not on the page is gone on the next run. `carry_alt_text` covers
+    the descriptions because they live in the body; these two live in the
+    front matter and had the same exposure with nothing carrying them.
+
+    `images-of-text` is the costlier of the two. Writing alt text satisfies
+    WCAG 1.1.1 and leaves 1.4.5 where it was, and nothing can tell a
+    photograph of a document from a photograph of anything else without
+    looking, so the list is kept by hand, one entry per figure that carries
+    text as a picture. 113 of this archive's figures are on such a list.
+    Losing one does not fail a check or show up in a galley: it reads as a
+    chapter that has no images of text, which is the shortfall being closed
+    over rather than counted, and `lint.check_images_of_text` then warns
+    about nothing.
+
+    `teacher-resources` decides whether the chapter renders as two galleys.
+    It is a property of how the piece is written rather than anything the
+    page states, so a lost one silently folds the instructor material back
+    into the chapter.
+
+    A field already recovered by this run is left alone, so a page that has
+    since started saying something is allowed to.
+    """
+    import yaml
+
+    if not previous.startswith("---\n"):
+        return front_matter, ()
+    end = previous.find("\n---", 4)
+    if end == -1:
+        return front_matter, ()
+    try:
+        before = yaml.safe_load(previous[4:end]) or {}
+    except Exception:
+        return front_matter, ()
+    if not isinstance(before, dict):
+        return front_matter, ()
+
+    carried = []
+    for field_name in CARRIED_FIELDS:
+        value = before.get(field_name)
+        if value in (None, "", [], {}):
+            continue
+        if front_matter.get(field_name) in (None, "", [], {}):
+            front_matter[field_name] = value
+            carried.append(field_name)
+    return front_matter, tuple(carried)
+
+
 def ingest_pdf(pdf_path: Path, article_path: Path,
                skip_image_digests=frozenset()) -> IngestResult:
     """Reconstruct Markdown from a typeset PDF, write `article-raw.md`.
@@ -398,9 +457,12 @@ def ingest_pdf(pdf_path: Path, article_path: Path,
     # cleanups downstream rebuild article.md from this file.
     existing = article_path / "article.md"
     carried = 0
+    carried_fields: tuple = ()
     if existing.exists():
-        result.body, carried = carry_alt_text(
-            result.body, existing.read_text(encoding="utf-8"))
+        previous = existing.read_text(encoding="utf-8")
+        result.body, carried = carry_alt_text(result.body, previous)
+        result.front_matter, carried_fields = carry_editor_fields(
+            result.front_matter, previous)
     # Record which file this was read out of. The copy beside the article is
     # always called source.pdf, so without this the original name is lost,
     # and that name is the only thing tying a chapter back to its place in a
@@ -421,6 +483,9 @@ def ingest_pdf(pdf_path: Path, article_path: Path,
     if carried:
         body += (f"kept the alt text already written for {carried} "
                  f"figure(s)\n")
+    if carried_fields:
+        body += (f"kept the front matter an editor wrote: "
+                 f"{', '.join(carried_fields)}\n")
     body += "".join(f"  - {n}\n" for n in result.notes)
     _append_log(article_path, "Stage 1: PDF ingest", body)
 
