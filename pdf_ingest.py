@@ -650,7 +650,18 @@ def assemble(lines: list, layout: Layout, vocab: set, compounds: set) -> list:
         # the seven in this chapter ended up inside the notes of the page
         # before. A caption always begins its own block, and its own turn
         # lines, carrying no number either, still join it.
-        is_caption = is_figure_caption(line.plain)
+        #
+        # A table's caption and a bare label are set the same size and go the
+        # same way. Testing only for a figure held until the boxes a table
+        # caption sits over were read as tables: with their lines no longer
+        # left in the prose, the captions of a table carried over several
+        # pages became consecutive lines and joined into one block, so volume
+        # 6's chapter 4 printed "Table 4.1. A Mechanism Description" and two
+        # continuations of it as a single paragraph with no table under any of
+        # them.
+        is_caption = (is_figure_caption(line.plain)
+                      or is_table_caption(line.plain)
+                      or is_bare_label(line.plain))
         if this in ("body", "list") and _is_list_start(line, layout):
             flush()
             kind = "list"
@@ -720,7 +731,8 @@ def blocks_to_markdown(blocks: list) -> str:
             out.append("# " + text)
         elif kind == "quote":
             out.append("> " + text)
-        elif kind == "note" and (is_figure_caption(text) or is_table_caption(text)):
+        elif kind == "note" and (is_figure_caption(text) or is_table_caption(text)
+                                 or is_bare_label(text)):
             # The series sets a figure caption a point smaller than its body,
             # which is the same thing it does to a footnote, so classify reads
             # one as the other. The difference is where it belongs: a footnote
@@ -734,6 +746,9 @@ def blocks_to_markdown(blocks: list) -> str:
             # the chapter, each one three pages from the table it names;
             # `place_tables` had put the tables in the right places, and then
             # this moved every caption off them.
+            #
+            # A label with no description after it goes the same way; see
+            # `is_bare_label`.
             out.append(text)
         elif kind == "note":
             match = _NOTE_RE.match(text)
@@ -931,6 +946,27 @@ def unemphasize(text: str) -> str:
 
 def is_figure_caption(text: str) -> bool:
     return bool(_FIGURE_CAPTION_RE.match(unemphasize(text)))
+
+
+# A label and nothing else. Both abbreviations of both words, since this is
+# the same series that writes "Fig. 1.", "Fig 1.0" and "Figure 1".
+_BARE_LABEL_RE = re.compile(
+    r"^(?:Figure|Fig\.?|Table|Tab\.)\s+\d+(?:\.\d+)*\s*[:.]?$")
+
+
+def is_bare_label(text: str) -> bool:
+    """Whether a line is a figure or table label with no description after it.
+
+    Volume 1's chapter 6 sets the label for each of its draft figures on a
+    line of its own above the box, so there is no description following for
+    `is_figure_caption` to recognise it by, and the label is set small like
+    every caption in the series, so `classify` reads it as a footnote. Once
+    the boxes were read as tables and their own lines stopped being swept up
+    with them, that left "Fig 2", "Fig 3", "Fig 5" and "Fig 6" printing in a
+    row among the references. The label is what the page sets over the
+    figure, so it stays where the page put it.
+    """
+    return bool(_BARE_LABEL_RE.match(unemphasize(text)))
 
 
 # A credit the archive sets as a trailing sentence of the caption, rather
@@ -1185,9 +1221,13 @@ def place_figures(blocks: list, figures: list, caption_pages: dict) -> tuple:
 # failure, because a table that was never found leaves the prose alone.
 TABLE_SETTINGS = {"vertical_strategy": "lines", "horizontal_strategy": "lines"}
 # Below this it is a rule under a heading or a box around a pull quote, not a
-# table. Two columns and two rows is the smallest thing that is one.
+# table. Two columns and two rows is the smallest thing that is one, except
+# where a single row's cells wrap: see `_cells_wrap`, which is the shape that
+# interleaves and the one case the row floor lets through.
 MIN_TABLE_ROWS = 2
 MIN_TABLE_COLS = 2
+# How far apart two rules may sit and still be read as meeting.
+RULE_TOL = 2.0
 _TABLE_CAPTION_RE = re.compile(
     r"^(?:Table|Tab\.)\s+(?P<number>\d+(?:\.\d+)*)\s*[:.]?\s+(?=[A-Z])")
 
@@ -1196,27 +1236,138 @@ def is_table_caption(text: str) -> bool:
     return bool(_TABLE_CAPTION_RE.match(unemphasize(text)))
 
 
+def _cells_wrap(rows: list) -> bool:
+    """Whether any cell holds text that was wrapped across lines.
+
+    This is what separates a one-row box that will interleave from one that
+    cannot, and it is the only reason the row floor has an exception. A cell
+    of wrapped prose contributes a line to every band of the page it crosses,
+    so reading the box across its columns shreds it; a row whose cells are
+    each a single line reads across to exactly what the page printed, so
+    there is nothing to repair and no reason to call it a table. Volume 6's
+    chapter 15 rules a form for ticking seven aesthetic modes, whose only
+    legible row is the one naming them: admitting it would have published a
+    seven-column table with a head and no body.
+
+    `table.extract()` keeps the wrap as a newline, which is why this is asked
+    before `_clean_table` joins the lines back up.
+    """
+    return any("\n" in (cell or "") for row in rows for cell in row)
+
+
+def infer_column_rules(page, tol: float = RULE_TOL) -> list:
+    """The column rules a box drew only as the breaks in its horizontal ones.
+
+    Word gives every cell its own border, so a table set that way rules its
+    top and its bottom once per column, in segments that abut at the column
+    boundary, and draws no vertical rule there at all. That leaves
+    pdfplumber's "lines" strategy with only the two outer verticals to go on:
+    it reads the box as a single column, finds no table worth the name, and
+    the cells interleave into the prose. Volume 6's chapter 4 sets both of
+    its tables that way and ran 1,400 words of commentary through the sample
+    documents it was commenting on, breaking words in half as it went.
+
+    So the column boundary is in the rules after all, and reading it off them
+    keeps the discipline that finds tables by their ruling rather than by the
+    alignment of their text. It is only believed where three things hold,
+    because a break in a horizontal rule is common and on its own means
+    nothing: a strikethrough abuts the next strikethrough, and a contents
+    page's dot leaders abut all the way across, which is 200 spurious columns
+    on one page of volume 5's front matter.
+
+    The segments at that height have to run from one of the box's own
+    vertical rules to the other, so that what is being read is a frame and
+    not a decoration. The same break has to fall at two of those heights, as
+    a column boundary does when the box rules both its top and its bottom.
+    And the box must carry no vertical rule inside it: a box that rules its
+    own columns has already said where they are, and pdfplumber's reading of
+    it is the one to keep. Without that last test the inference reaches
+    tables that are already found and splits their columns further, which is
+    how five chapters that were right gained a narrow empty column.
+
+    Returned as line objects carrying the frame's own top and bottom, so a
+    rule inferred for one box cannot divide another box on the same page.
+    """
+    verticals = []
+    rules: dict = {}
+    for edge in page.edges:
+        if edge.get("orientation") == "v":
+            verticals.append(edge)
+        else:
+            rules.setdefault(round(edge["top"], 0), []).append(
+                (edge["x0"], edge["x1"]))
+    if not verticals:
+        return []
+
+    # Group the rules that span the same pair of verticals: one frame.
+    frames: dict = {}
+    for height, segments in rules.items():
+        if len(segments) < 2:
+            continue
+        segments.sort()
+        left = segments[0][0]
+        right = max(end for _, end in segments)
+        if not any(abs(edge["x0"] - left) <= tol for edge in verticals):
+            continue
+        if not any(abs(edge["x0"] - right) <= tol for edge in verticals):
+            continue
+        breaks = {round((end + start) / 2, 1)
+                  for (_, end), (start, _) in zip(segments, segments[1:])
+                  if abs(start - end) <= tol and left + tol < end < right - tol}
+        if breaks:
+            frames.setdefault((round(left, 1), round(right, 1)), []).append(
+                (height, breaks))
+
+    inferred = []
+    for (left, right), found in frames.items():
+        if len(found) < 2:
+            continue
+        heights = [height for height, _ in found]
+        top, bottom = min(heights), max(heights)
+        if any(left + tol < edge["x0"] < right - tol
+               and edge["bottom"] > top + tol and edge["top"] < bottom - tol
+               for edge in verticals):
+            continue
+        for x in sorted(set.intersection(*(breaks for _, breaks in found))):
+            inferred.append({
+                "object_type": "line",
+                "x0": x, "x1": x, "top": top, "bottom": bottom,
+                "width": 0.0, "height": bottom - top,
+                "doctop": top, "orientation": "v",
+            })
+    return inferred
+
+
 def find_page_tables(page) -> list:
     """The ruled tables on one page, as (bbox, rows), largest first.
 
     pdfplumber reports a table and then the cells inside it as further
     tables, so anything sitting inside another's box is dropped: chapter 11's
     page 11 came back as four tables of which three were pieces of the first.
+
+    The column rules a box left implicit are supplied first, since a box
+    whose columns are not ruled is not found at all; see
+    `infer_column_rules`.
     """
+    settings = dict(TABLE_SETTINGS)
+    inferred = infer_column_rules(page)
+    if inferred:
+        settings["explicit_vertical_lines"] = inferred
     try:
-        found = page.find_tables(table_settings=TABLE_SETTINGS)
+        found = page.find_tables(table_settings=settings)
     except Exception:
         return []
     candidates = []
     for table in found:
         try:
-            rows = _clean_table(table.extract(),
+            extracted = table.extract()
+            rows = _clean_table(extracted,
                                 _symbol_translations(page, table.bbox))
         except Exception:
             continue
-        if len(rows) < MIN_TABLE_ROWS:
-            continue
         if max((len(r) for r in rows), default=0) < MIN_TABLE_COLS:
+            continue
+        if len(rows) < MIN_TABLE_ROWS and not _cells_wrap(extracted):
             continue
         candidates.append((tuple(table.bbox), rows))
 
@@ -1280,6 +1431,14 @@ def _clean_table(rows: list, trans: Optional[dict] = None) -> list:
     breaks and the hyphens in it; "introduc- tion" has to come back together
     or the table reads as badly as the prose it replaces. Columns that are
     entirely empty come from rules pdfplumber counted as boundaries.
+
+    Except in a table of one row, where an empty column is the ordinary
+    thing rather than a phantom. A two-column box carried over onto another
+    page often has nothing beside the sample there, and dropping the column
+    takes the box under the column floor, which puts its text straight back
+    into the prose it was about to shred: two of the five pages volume 6's
+    chapter 4 runs its process description over carry no commentary, and
+    both came through as prose with a caption welded to the front of them.
     """
     table = [[_clean_cell(cell, trans) for cell in row] for row in rows if row]
     table = [row for row in table if any(cell for cell in row)]
@@ -1287,6 +1446,8 @@ def _clean_table(rows: list, trans: Optional[dict] = None) -> list:
         return []
     width = max(len(row) for row in table)
     table = [row + [""] * (width - len(row)) for row in table]
+    if len(table) == 1:
+        return table
     keep = [i for i in range(width) if any(row[i] for row in table)]
     return [[row[i] for i in keep] for row in table]
 
@@ -1308,14 +1469,23 @@ def table_to_markdown(rows: list) -> str:
     say which column a cell is in, and a table read as prose has no columns
     to name. Where the first row is empty in its first cell, as a comparison
     table's corner is, the cell is left empty rather than invented.
+
+    A table of one row has no header to promote, and promoting its only row
+    anyway would put the whole of a cell into a column name: the boxes that
+    arrive this way set a document beside the commentary on it, so the head
+    would have carried 300 words of someone's draft. The row stays the body
+    and the head is left empty, which Pandoc reads as the headerless table
+    it is.
     """
     if not rows:
         return ""
     width = max(len(row) for row in rows)
     body = [row + [""] * (width - len(row)) for row in rows]
-    out = ["| " + " | ".join(body[0]) + " |",
+    head = body[0] if len(body) > 1 else [""] * width
+    rest = body[1:] if len(body) > 1 else body
+    out = ["| " + " | ".join(head) + " |",
            "|" + "|".join([" --- "] * width) + "|"]
-    for row in body[1:]:
+    for row in rest:
         out.append("| " + " | ".join(row) + " |")
     return "\n".join(out)
 

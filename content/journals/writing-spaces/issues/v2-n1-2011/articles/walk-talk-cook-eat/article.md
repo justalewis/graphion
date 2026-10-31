@@ -7,7 +7,7 @@ short-title: Walk, Talk, Cook, Eat
 short-authors: Haller
 volume: 2
 year: 2011
-start-page: 186
+start-page: 184
 source-file: haller--walk-talk-cook-eat.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).

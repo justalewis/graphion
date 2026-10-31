@@ -7,7 +7,7 @@ short-title: How to Read Like a Writer
 short-authors: Bunn
 volume: 2
 year: 2011
-start-page: 68
+start-page: 66
 source-file: bunn--how-to-read.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).

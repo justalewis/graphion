@@ -1006,3 +1006,176 @@ def test_a_captioned_table_still_goes_to_its_caption():
     out, _ = pdf_ingest.place_tables(blocks, tables, anchors)
     kinds = [kind for kind, _ in out]
     assert kinds == ["body", "note", "table", "body"]
+
+
+# ---------- columns a box left unruled ----------
+
+
+def _edge(orientation, x0, x1, top, bottom):
+    return {"orientation": orientation, "x0": x0, "x1": x1,
+            "top": top, "bottom": bottom}
+
+
+class _Edges:
+    """Just enough of a pdfplumber page for the rule inference to read."""
+
+    def __init__(self, edges):
+        self.edges = edges
+
+
+def _word_box(top=84.0, bottom=588.0, left=58.9, right=372.9, split=261.5):
+    """Volume 6 chapter 4's shape: a box whose columns are not ruled.
+
+    Word gives every cell its own border, so the top and bottom rules come
+    in one segment per column, abutting at the column boundary, and no
+    vertical rule is drawn there at all.
+    """
+    return [
+        _edge("v", left, left, top, bottom),
+        _edge("v", right, right, top, bottom),
+        _edge("h", left, split, top, top),
+        _edge("h", split, right, top, top),
+        _edge("h", left, split, bottom, bottom),
+        _edge("h", split, right, bottom, bottom),
+    ]
+
+
+def test_a_column_rule_is_read_off_the_break_in_the_horizontal_rules():
+    """Volume 6's chapter 4 ruled its tables' tops and bottoms per cell and
+    drew no divider, so the "lines" strategy read the box as one column and
+    1,400 words of commentary interleaved into the documents it commented
+    on. The boundary is in the rules; it is just not vertical."""
+    inferred = pdf_ingest.infer_column_rules(_Edges(_word_box()))
+    assert [rule["x0"] for rule in inferred] == [261.5]
+    # Scoped to its own frame, so it cannot divide another box on the page.
+    assert inferred[0]["top"] == 84.0
+    assert inferred[0]["bottom"] == 588.0
+    assert inferred[0]["orientation"] == "v"
+
+
+def test_a_break_that_reaches_no_vertical_rule_is_not_a_column():
+    """A strikethrough abuts the next strikethrough. Volume 1's chapter 6
+    shows deleted text struck through and offered nine such breaks on one
+    page; what makes a rule a frame is that it runs from one of the box's
+    verticals to the other."""
+    edges = [
+        _edge("v", 58.9, 58.9, 84.0, 588.0),
+        _edge("v", 372.9, 372.9, 84.0, 588.0),
+        _edge("h", 73.3, 125.5, 120.0, 120.0),
+        _edge("h", 125.5, 180.0, 120.0, 120.0),
+        _edge("h", 73.3, 125.5, 300.0, 300.0),
+        _edge("h", 125.5, 180.0, 300.0, 300.0),
+    ]
+    assert pdf_ingest.infer_column_rules(_Edges(edges)) == []
+
+
+def test_a_break_at_only_one_height_is_not_a_column():
+    """A column boundary shows up twice, because the box rules its top and
+    its bottom. One is a coincidence, and a contents page's dot leaders
+    abut all the way across: volume 5's front matter offered 200 of them."""
+    edges = _word_box()
+    # Drop the bottom rule's break by running it through in one segment.
+    edges = [e for e in edges if e["bottom"] != 588.0 or e["orientation"] == "v"]
+    edges.append(_edge("h", 58.9, 372.9, 588.0, 588.0))
+    assert pdf_ingest.infer_column_rules(_Edges(edges)) == []
+
+
+def test_a_box_that_rules_its_own_columns_is_left_as_pdfplumber_reads_it():
+    """A box carrying a vertical rule inside it has already said where its
+    columns are. Inferring further boundaries there reached five chapters
+    that were already right and split a narrow empty column off each."""
+    edges = _word_box() + [_edge("v", 261.5, 261.5, 84.0, 588.0)]
+    assert pdf_ingest.infer_column_rules(_Edges(edges)) == []
+
+
+def test_a_page_with_no_vertical_rule_at_all_infers_nothing():
+    """A contents page is ruled only by its leaders."""
+    edges = [_edge("h", 58.5, 200.0, 100.0, 100.0),
+             _edge("h", 200.0, 373.0, 100.0, 100.0)]
+    assert pdf_ingest.infer_column_rules(_Edges(edges)) == []
+
+
+# ---------- the row floor and the shape that interleaves ----------
+
+
+def test_a_wrapped_cell_is_what_tells_a_one_row_box_that_will_interleave():
+    """A cell of wrapped prose puts a line into every band of the page it
+    crosses, so reading the box across its columns shreds it."""
+    assert pdf_ingest._cells_wrap(
+        [["At a Glance\n• Text-to-speech technology reads aloud",
+          "This mechanism de-\nscription begins with a"]])
+
+
+def test_a_one_row_box_of_single_line_cells_does_not_interleave():
+    """Volume 6's chapter 15 rules a form for ticking seven aesthetic modes
+    whose only legible row is the one naming them. Reading it across gives
+    exactly what the page printed, so it is not a table to repair."""
+    assert not pdf_ingest._cells_wrap(
+        [["Aesthetic form realized", "V", "L", "S", "G", "A", "C"]])
+
+
+def test_a_table_of_one_row_keeps_that_row_in_the_body():
+    """Promoting the only row would put 300 words of someone's draft into a
+    column name. Pandoc reads an empty head as the headerless table it is."""
+    markdown = pdf_ingest.table_to_markdown(
+        [["The Exploitation of Multiple Birth Children",
+          "Comment [BLH1]: future readers need a specific date"]])
+    lines = markdown.split("\n")
+    assert lines[0] == "|  |  |"
+    assert lines[1] == "| --- | --- |"
+    assert lines[2] == ("| The Exploitation of Multiple Birth Children "
+                        "| Comment [BLH1]: future readers need a specific date |")
+
+
+def test_a_bare_label_is_not_collected_away_with_the_footnotes():
+    """"Fig 2" has no description after it, so `is_figure_caption` does not
+    recognise it, and it is set small like every caption in the series, so
+    classify reads it as a footnote. Volume 1's chapter 6 printed "Fig 2",
+    "Fig 3", "Fig 5" and "Fig 6" in a row among its references."""
+    assert pdf_ingest.is_bare_label("Fig 2")
+    assert pdf_ingest.is_bare_label("Figure 15.1")
+    assert pdf_ingest.is_bare_label("Table 1")
+    assert pdf_ingest.is_bare_label("Fig. 1.")
+    # A label with a description is a caption, which already stays in place.
+    assert not pdf_ingest.is_bare_label("Fig 2 The Exploitation of Multiples")
+    # And prose that merely refers to one is neither.
+    assert not pdf_ingest.is_bare_label("Table 4.1 is an example that")
+    markdown = pdf_ingest.blocks_to_markdown(
+        [("note", "Fig 2"), ("table", "|  |  |"), ("note", "1. A real note.")])
+    # The label stays where the page put it; the numbered note still goes last.
+    assert markdown.index("Fig 2") < markdown.index("[^1]:")
+
+
+def test_a_one_row_table_keeps_a_column_that_is_empty_on_this_page():
+    """A two-column box carried onto another page often has nothing beside
+    the sample there. Dropping the column takes it under the column floor,
+    which puts its text back into the prose it was about to shred: two of
+    the five pages volume 6's chapter 4 runs its process description over
+    came through that way."""
+    rows = pdf_ingest._clean_table(
+        [["There are multiple origin sites, and when replication\nof DNA begins", ""]])
+    assert len(rows) == 1
+    assert len(rows[0]) == 2
+    assert rows[0][1] == ""
+    # With more than one row an empty column is still a phantom boundary.
+    kept = pdf_ingest._clean_table([["a", ""], ["b", ""]])
+    assert kept == [["a"], ["b"]]
+
+
+def test_each_table_caption_begins_its_own_block():
+    """Once the boxes a caption sits over were read as tables, their lines
+    stopped being left in the prose and the captions of a table carried over
+    several pages became consecutive lines. Joined into one block, volume 6's
+    chapter 4 printed "Table 4.1. A Mechanism Description" and two
+    continuations of it as a single paragraph with no table under any."""
+    lines = [
+        _line("Table 4.1. A Mechanism Description", size=10.0, top=100.0),
+        _line("Table 4.1. A Mechanism Description (continued)",
+              size=10.0, top=120.0),
+        _line("Fig 1.0", size=10.0, top=140.0),
+    ]
+    blocks = pdf_ingest.assemble(lines, LAYOUT, set(), set())
+    texts = [text for _, text in blocks]
+    assert texts == ["Table 4.1. A Mechanism Description",
+                     "Table 4.1. A Mechanism Description (continued)",
+                     "Fig 1.0"]

@@ -8,7 +8,7 @@ short-title: Beyond Black on White
 short-authors: Klein and Shackelford
 volume: 2
 year: 2011
-start-page: 324
+start-page: 322
 source-file: klein-and-shackelford--beyond-black-on-white.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).

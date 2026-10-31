@@ -7,7 +7,7 @@ short-title: Composing the Anthology
 short-authors: Leary
 volume: 1
 year: 2010
-start-page: 221
+start-page: 223
 source-file: leary--composing-the-anthology.pdf
 volume-title: Writing Spaces 1
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).

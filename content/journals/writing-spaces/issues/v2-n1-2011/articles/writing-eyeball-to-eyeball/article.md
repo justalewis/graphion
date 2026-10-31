@@ -6,7 +6,7 @@ short-title: Writing “Eyeball To Eyeball”
 short-authors: Ingalls
 volume: 2
 year: 2011
-start-page: 118
+start-page: 116
 source-file: ingalls--writing-eyeball-to-eyeball.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).

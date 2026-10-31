@@ -8,7 +8,7 @@ short-title: A Student’s Guide to Collaborative Writing Technologies
 short-authors: Barton and Klint
 volume: 2
 year: 2011
-start-page: 311
+start-page: 309
 source-file: barton-and-klint--a-students-guide.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).

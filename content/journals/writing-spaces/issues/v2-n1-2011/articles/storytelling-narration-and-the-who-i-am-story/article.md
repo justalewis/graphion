@@ -7,7 +7,7 @@ short-title: Storytelling, Narration, and the “Who I Am” Story
 short-authors: Ramsdell
 volume: 2
 year: 2011
-start-page: 261
+start-page: 259
 source-file: ramsdell--storytelling-narration.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).

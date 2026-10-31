@@ -7,7 +7,7 @@ short-title: Let’s Party
 short-authors: Richards
 volume: 6
 year: 2024
-start-page: 84
+start-page: 91
 chapter-number: 5
 source-file: 5Richards.pdf
 volume-title: Technical Writing Spaces 6
