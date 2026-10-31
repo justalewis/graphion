@@ -296,6 +296,219 @@ def _line_text(line_text: str, chars: list, supers: Optional[set] = None) -> tup
     return text.strip(), italic_any, fonts
 
 
+# Path-painting operators, each of which ends the current path. A clipping
+# path set with `W` takes effect at whichever of these follows it; `n` is the
+# one that paints nothing, and is how a path is used for clipping alone.
+_PAINT_OPS = ("S", "s", "f", "F", "f_a", "B", "B_a", "b", "b_a", "n")
+# A `W` operator ends where the next token begins, so the byte after it is
+# whitespace, a delimiter, or the `*` of `W*`; it is never a letter or a
+# digit. A page whose stream holds no such pair cannot be clipping anything,
+# which is 90% of this series and saves them the second parse. Matching more
+# than the operator only costs a parse; matching less would lose a page.
+_MAY_CLIP_RE = re.compile(rb"W[^A-Za-z0-9]")
+_clip_reader = None
+
+
+def _may_clip(page) -> bool:
+    """Could this page's content stream set a clipping path at all?"""
+    from pdfminer.pdftypes import resolve1
+
+    try:
+        data = b"".join(resolve1(s).get_data() for s in page.page_obj.contents)
+    except Exception:
+        return True
+    return bool(_MAY_CLIP_RE.search(data))
+
+
+def _clip_classes():
+    """The interpreter and device that read a page's clipping path.
+
+    pdfminer parses `W` and `W*` and then does nothing with them, so every
+    glyph the content stream draws is reported whether the page prints it or
+    not. Built on first use and cached, because pdfminer is reached through
+    pdfplumber and both stay optional.
+    """
+    global _clip_reader
+    if _clip_reader is not None:
+        return _clip_reader
+
+    from pdfminer.converter import PDFPageAggregator
+    from pdfminer.pdfinterp import PDFPageInterpreter
+    from pdfminer.utils import apply_matrix_pt
+
+    def path_bbox(curpath, ctm):
+        """The box a path covers, in the space the glyph boxes use.
+
+        `curpath` holds the operands as the stream wrote them, so the
+        current transformation matrix has still to be applied. A curve
+        contributes its control points, whose box contains the curve, so a
+        clip this cannot describe exactly comes out too large and keeps ink
+        rather than losing it.
+        """
+        points = []
+        for segment in curpath:
+            numbers = [v for v in segment[1:] if isinstance(v, (int, float))]
+            for i in range(0, len(numbers) - 1, 2):
+                points.append(apply_matrix_pt(ctm, (numbers[i], numbers[i + 1])))
+        if not points:
+            return None
+        xs = [p[0] for p in points]
+        ys = [p[1] for p in points]
+        return (min(xs), min(ys), max(xs), max(ys))
+
+    def narrow(clip, box):
+        if clip is None:
+            return box
+        if box is None:
+            return clip
+        return (max(clip[0], box[0]), max(clip[1], box[1]),
+                min(clip[2], box[2]), min(clip[3], box[3]))
+
+    class ClipInterpreter(PDFPageInterpreter):
+        """pdfminer's interpreter, with the clipping path kept.
+
+        The clip is part of the graphics state, so `q` and `Q` have to save
+        and restore it alongside the matrix pdfminer already stacks.
+        """
+
+        def init_state(self, ctm):
+            super().init_state(ctm)
+            self.clip = None
+            self.clipstack: list = []
+            self.pending_clip = False
+
+        def do_q(self):
+            self.clipstack.append(self.clip)
+            super().do_q()
+
+        def do_Q(self):
+            if self.clipstack:
+                self.clip = self.clipstack.pop()
+            super().do_Q()
+
+        def do_W(self):
+            self.pending_clip = True
+
+        def do_W_a(self):
+            self.pending_clip = True
+
+        def settle_clip(self):
+            if self.pending_clip:
+                self.clip = narrow(self.clip, path_bbox(self.curpath, self.ctm))
+                self.pending_clip = False
+
+    def paints(name):
+        painted = getattr(PDFPageInterpreter, "do_" + name, None)
+        if painted is None:
+            return
+
+        def op(self, *args, **kwargs):
+            self.settle_clip()
+            return painted(self, *args, **kwargs)
+
+        setattr(ClipInterpreter, "do_" + name, op)
+
+    for name in _PAINT_OPS:
+        paints(name)
+
+    class ClipDevice(PDFPageAggregator):
+        """Records the box of every glyph drawn wholly outside the clip."""
+
+        def __init__(self, rsrcmgr, **kwargs):
+            super().__init__(rsrcmgr, **kwargs)
+            self.clipped: set = set()
+            self.glyphs = 0
+            self.interpreter = None
+
+        def render_char(self, *args, **kwargs):
+            advance = super().render_char(*args, **kwargs)
+            self.glyphs += 1
+            # pdfminer reports no handle on what it just made, so the glyph
+            # is read back off the layout, which is how pdfplumber stamps a
+            # marked-content id on one.
+            if self.cur_item._objs:
+                box = self.cur_item._objs[-1].bbox
+                if outside_clip(box, self.interpreter.clip):
+                    self.clipped.add(tuple(round(v, 2) for v in box))
+            return advance
+
+    _clip_reader = (ClipInterpreter, ClipDevice)
+    return _clip_reader
+
+
+def _glyph_box(obj) -> tuple:
+    return (round(obj["x0"], 2), round(obj["y0"], 2),
+            round(obj["x1"], 2), round(obj["y1"], 2))
+
+
+def outside_clip(box, clip) -> bool:
+    """Does the clip remove this glyph altogether?
+
+    Wholly outside, never merely trimmed. A clip that cuts through a glyph
+    leaves part of it on the page, and half a letter read is better than a
+    letter dropped; a box reported a fraction of a point past the frame it
+    sits in is the commoner case by far.
+    """
+    if clip is None:
+        return False
+    return not (box[2] > clip[0] and box[0] < clip[2]
+                and box[3] > clip[1] and box[1] < clip[3])
+
+
+def clipped_glyphs(page) -> frozenset:
+    """The glyphs this page draws and then clips away, by their boxes.
+
+    A page may set a clipping path and draw past it, and what falls outside
+    is not printed. pdfplumber reports it all the same, which is how volume
+    1's chapter 6 came through with the overflow of a reproduced Word page
+    interleaved character by character into the prose beside it
+    (`IW ue sseindc etrheliys h ocpaeu tai olenssaorny`): two streams at
+    overlapping baselines, which `extract_text_lines` reads as one line.
+
+    Nothing here is inferred from the look of the page. The clip is read off
+    the content stream, so the question each glyph answers is the one that
+    matters, which is whether the page printed it. Guessing at the shape
+    instead would not have worked anyway: the two streams overlap in x, so
+    no column boundary separates them.
+
+    A second parse of the page buys that, so `_may_clip` is asked first and
+    nine pages in ten never reach here.
+    """
+    if not _may_clip(page):
+        return frozenset()
+    interpreter_class, device_class = _clip_classes()
+    device = device_class(page.pdf.rsrcmgr, laparams=None)
+    interpreter = interpreter_class(page.pdf.rsrcmgr, device)
+    device.interpreter = interpreter
+    interpreter.process_page(page.page_obj)
+    if device.glyphs != len(page.chars):
+        # The two readings have to be of the same page for the boxes to mean
+        # anything. They never disagreed across this series; if they ever do,
+        # the page comes through as it always did.
+        return frozenset()
+    return frozenset(device.clipped)
+
+
+def drop_clipped_ink(page):
+    """The page without the ink it clips away, and how much that was.
+
+    Done before the lines are assembled and before the tables are found,
+    because both read it otherwise: the prose takes the overflow into a
+    paragraph, and a box that happens to enclose it prints it in a cell.
+    Volume 2's chapter 3 carried 71 characters of a comment balloon that
+    the page truncates into a pipe table that way.
+    """
+    try:
+        clipped = clipped_glyphs(page)
+    except Exception:
+        return page, 0
+    if not clipped:
+        return page, 0
+    kept = page.filter(lambda obj: obj.get("object_type") != "char"
+                       or _glyph_box(obj) not in clipped)
+    return kept, len(clipped)
+
+
 def _page_lines(page, page_no: int) -> list:
     """Lines on one page, with the rotated margin furniture dropped.
 
@@ -1806,11 +2019,14 @@ def extract(pdf_path: Path, genre_heads: Optional[tuple] = None,
     page_width = 0.0
     tables_by_page: dict = {}
     table_anchors: dict = {}
+    clipped_ink = 0
     with pdfplumber.open(str(pdf_path)) as pdf:
         if not pdf.pages:
             raise ValueError(f"{pdf_path.name} has no pages.")
         page_width = float(pdf.pages[0].width)
         for page_no, page in enumerate(pdf.pages, 1):
+            page, clipped = drop_clipped_ink(page)
+            clipped_ink += clipped
             all_lines.extend(_page_lines(page, page_no))
             found = find_page_tables(page)
             if found:
@@ -1821,6 +2037,10 @@ def extract(pdf_path: Path, genre_heads: Optional[tuple] = None,
             f"No extractable text in {pdf_path.name}. A scanned PDF needs OCR "
             "before it can be ingested; see ocr.py."
         )
+
+    if clipped_ink:
+        notes.append(f"Dropped {clipped_ink} character(s) the page draws and "
+                     f"then clips away, so they are never printed.")
 
     # Before the layout is learned, so the cover's own type cannot vote on
     # what the body size is, and before the vocabulary, so "Cataloging-in-

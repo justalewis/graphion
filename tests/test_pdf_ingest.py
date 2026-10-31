@@ -1276,3 +1276,117 @@ def test_a_continuation_goes_against_the_part_it_continues():
     assert "Aesthetic form realized" in out[1][1] and "Modes" in out[5][1]
     assert "placed 2 against a caption" in notes[0]
     assert any("carry on the table before them" in n for n in notes)
+
+
+# ---------- ink the page clips away ----------
+
+
+def _clip_interpreter():
+    """The clip-reading interpreter, with nothing to read yet.
+
+    pdfminer wants a resource manager and a device to be constructed; both
+    are inert until a page is processed, so the path operators can be driven
+    by hand and the clip read straight off the state.
+    """
+    from pdfminer.pdfinterp import PDFResourceManager
+
+    interpreter_class, device_class = pdf_ingest._clip_classes()
+    rsrcmgr = PDFResourceManager()
+    interpreter = interpreter_class(rsrcmgr, device_class(rsrcmgr, laparams=None))
+    interpreter.init_state((1.0, 0.0, 0.0, 1.0, 0.0, 0.0))
+    return interpreter
+
+
+def _clip(interpreter, x, y, w, h):
+    """`x y w h re W n`: the way a page frames what it is about to draw."""
+    interpreter.do_re(x, y, w, h)
+    interpreter.do_W()
+    interpreter.do_n()
+
+
+def test_a_clipping_path_is_read_off_the_content_stream():
+    """Volume 1's chapter 6 reproduces a Word page inside a ruled box and
+    lets the text overflow, clipping it at the frame. pdfminer parses `W`
+    and then does nothing with it, so every clipped glyph is reported as if
+    it were printed: `43 356 342 229.999 re W n` is the whole of what says
+    page 21 prints nothing below the box."""
+    interpreter = _clip_interpreter()
+    assert interpreter.clip is None
+    _clip(interpreter, 43.0, 356.0, 342.0, 230.0)
+    assert interpreter.clip == (43.0, 356.0, 385.0, 586.0)
+
+
+def test_the_clip_is_part_of_the_state_q_and_Q_carry():
+    """pdfminer stacks the matrix on `q` and not the clip, so without this
+    a frame set for one figure goes on clipping the rest of the page."""
+    interpreter = _clip_interpreter()
+    interpreter.do_q()
+    _clip(interpreter, 43.0, 356.0, 342.0, 230.0)
+    assert interpreter.clip is not None
+    interpreter.do_Q()
+    assert interpreter.clip is None
+
+
+def test_a_second_clip_narrows_the_first_and_never_widens_it():
+    """Clipping is cumulative: a page that frames a figure and then frames a
+    cell inside it prints only what is in both."""
+    interpreter = _clip_interpreter()
+    _clip(interpreter, 43.0, 356.0, 342.0, 230.0)
+    _clip(interpreter, 0.0, 0.0, 432.0, 648.0)
+    assert interpreter.clip == (43.0, 356.0, 385.0, 586.0)
+
+
+def test_a_clip_that_is_not_a_rectangle_comes_out_too_large():
+    """A curve contributes its control points, whose box contains the curve.
+    Reading such a clip exactly is not worth the risk: a frame that comes
+    out too large keeps ink the page may not print, and one that comes out
+    too small drops ink it does."""
+    interpreter = _clip_interpreter()
+    interpreter.do_m(100.0, 100.0)
+    interpreter.do_c(120.0, 300.0, 180.0, 300.0, 200.0, 100.0)
+    interpreter.do_W()
+    interpreter.do_n()
+    # The curve itself rises nowhere near y=300, which the control points do.
+    assert interpreter.clip == (100.0, 100.0, 200.0, 300.0)
+
+
+def test_a_glyph_wholly_outside_the_frame_was_never_printed():
+    """Page 21's overflow sits below the box at y=356 and reaches the prose
+    at overlapping baselines, which is how `extract_text_lines` came to read
+    `IW ue sseindc etrheliys h ocpaeu tai olenssaorny`: two columns merged
+    character by character."""
+    frame = (43.0, 356.0, 385.0, 586.0)
+    assert pdf_ingest.outside_clip((82.9, 339.0, 88.3, 347.4), frame)
+    # And the Fig 8 label the same page sets above the box.
+    assert pdf_ingest.outside_clip((49.3, 590.0, 65.2, 598.1), frame)
+
+
+def test_a_glyph_the_frame_only_trims_is_kept():
+    """A box reported a fraction of a point past its frame is much commoner
+    than a glyph the frame genuinely halves, and dropping a printed letter
+    is the worse failure of the two."""
+    frame = (43.0, 356.0, 385.0, 586.0)
+    assert not pdf_ingest.outside_clip((380.0, 400.0, 386.2, 410.0), frame)
+    assert not pdf_ingest.outside_clip((100.0, 580.0, 106.0, 587.5), frame)
+
+
+def test_a_glyph_inside_the_frame_and_a_page_that_frames_nothing():
+    frame = (43.0, 356.0, 385.0, 586.0)
+    assert not pdf_ingest.outside_clip((82.9, 400.0, 88.3, 408.4), frame)
+    # No clip in force is the ordinary page, and it prints everything.
+    assert not pdf_ingest.outside_clip((0.0, 0.0, 5.0, 5.0), None)
+
+
+def test_only_a_page_that_could_clip_is_read_twice():
+    """The second parse costs about as much as the first, so it is asked for
+    only where a `W` token could be. An operator ends at whitespace or a
+    delimiter, so matching more than the operator costs a parse and matching
+    less would lose a page: 90% of this series skips it."""
+    matches = pdf_ingest._MAY_CLIP_RE.search
+    assert matches(b"43 356 342 229.999 re W n")
+    assert matches(b"43 356 342 229.999 re W* n")
+    assert matches(b"q 0 0 432 648 re\nW\nn\n")
+    # A W inside a name or a string is not an operator.
+    assert not matches(b"/Wingdings 10 Tf")
+    assert not matches(b"(Wikipedia is good for you) Tj")
+    assert not matches(b"BT /F1 11 Tf (We hope) Tj ET")
