@@ -77,6 +77,7 @@ class MergeReport:
     untagged_sources: list = field(default_factory=list)
     unconformant_sources: list = field(default_factory=list)
     unresolved_pages: list = field(default_factory=list)
+    unresolved_annotations: list = field(default_factory=list)
 
     def summary(self) -> str:
         """One line for a log or a status message; no em-dashes, by house style.
@@ -95,6 +96,9 @@ class MergeReport:
         if self.unresolved_pages:
             bits.append(f"{len(self.unresolved_pages)} pages not reachable "
                         "from the tree")
+        if self.unresolved_annotations:
+            bits.append(f"{len(self.unresolved_annotations)} links whose "
+                        "annotation does not reach its own tag")
         bits.append("PDF/UA-1" if self.claims_pdf_ua else "no conformance claim")
         return "; ".join(bits)
 
@@ -370,6 +374,38 @@ def _page_object_map(reader: PdfReader, added: Sequence) -> dict:
     return mapping
 
 
+def _names_annotation(value, annot) -> bool:
+    """Whether this parent-tree entry holds the /OBJR naming this annotation.
+
+    Walked from the tree rather than read off the copier's own bookkeeping,
+    because the copier counting a link tagged is the thing that needs
+    checking: it counted all 61 in this series while every one of them failed
+    an audit.
+    """
+    wanted = annot.idnum if isinstance(annot, IndirectObject) else None
+    if wanted is None:
+        return False
+    entries = value.get_object() if isinstance(value, IndirectObject) else value
+    if not isinstance(entries, ArrayObject):
+        entries = [entries]
+    for entry in entries:
+        node = entry.get_object() if isinstance(entry, IndirectObject) else entry
+        if not isinstance(node, DictionaryObject):
+            continue
+        kids = node.get("/K")
+        if not isinstance(kids, ArrayObject):
+            kids = [kids]
+        for kid in kids:
+            child = kid.get_object() if isinstance(kid, IndirectObject) else kid
+            if not (isinstance(child, DictionaryObject)
+                    and child.get("/Type") == "/OBJR"):
+                continue
+            obj = child.raw_get("/Obj") if "/Obj" in child else None
+            if isinstance(obj, IndirectObject) and obj.idnum == wanted:
+                return True
+    return False
+
+
 _XMP_TEMPLATE = """<?xpacket begin="﻿" id="W5M0MpCehiHzreSzNTczkc9d"?>
 <x:xmpmeta xmlns:x="adobe:ns:meta/">
  <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
@@ -473,6 +509,25 @@ def concatenate_tagged(
             if parents is not None:
                 dest[NameObject("/StructParents")] = NumberObject(
                     int(parents) + key_offset)
+            # An annotation carries a key of its own, and it is the same
+            # per-document counter. A link is tagged only where its
+            # /StructParent reaches the /OBJR that names it, because that is
+            # the round trip a checker walks, from the annotation inwards
+            # (ISO 32000 7.18.5). Repointing the /OBJR above is one half and
+            # this is the other, and having only the first is the quietest
+            # shape this bug takes: the merge counts the link tagged, the
+            # /OBJR resolves, and every checker still reports the link as
+            # untagged, because the annotation's key is the number its own
+            # chapter gave it and in the bound issue that indexes whichever
+            # element happens to sit there. All 61 links in the series read
+            # that way, and the report said 61 tagged.
+            annots = dest.get("/Annots")
+            for annot in (annots.get_object() if annots is not None else []):
+                target = annot.get_object()
+                key = target.get("/StructParent")
+                if key is not None:
+                    target[NameObject("/StructParent")] = NumberObject(
+                        int(key) + key_offset)
             # PDF/UA wants an explicit tab order on a page that carries
             # annotations (ISO 14289-1 clause 7.18.3); setting it on every
             # page costs nothing and does not rely on the part having had it.
@@ -558,6 +613,23 @@ def concatenate_tagged(
         if int(marked) not in keys:
             report.unresolved_pages.append(index + 1)
 
+    # The same round trip for a link annotation, which is the half of
+    # ISO 32000 7.18.5 a checker actually walks: from the annotation's
+    # /StructParent into the tree, expecting the /OBJR that names it. An
+    # /OBJR on its own reads as untagged, and that is the shape this bug
+    # took, so the count of tagged annotations cannot stand in for it.
+    by_key = dict(parent_pairs)
+    for index, page in enumerate(writer.pages):
+        annots = page.get("/Annots")
+        for annot in (annots.get_object() if annots is not None else []):
+            target = annot.get_object()
+            if target.get("/Subtype") != "/Link":
+                continue
+            key = target.get("/StructParent")
+            if (key is None or int(key) not in keys
+                    or not _names_annotation(by_key[int(key)], annot)):
+                report.unresolved_annotations.append(index + 1)
+
     root = writer._root_object
     root[NameObject("/StructTreeRoot")] = struct_tree_ref
     root[NameObject("/MarkInfo")] = DictionaryObject({
@@ -578,6 +650,7 @@ def concatenate_tagged(
         and not report.untagged_sources
         and not report.dropped_annotations
         and not report.unresolved_pages
+        and not report.unresolved_annotations
         and bool(part_refs)
     )
     # Written as a stream rather than through pypdf's xmp_metadata setter,

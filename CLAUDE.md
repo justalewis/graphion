@@ -27,9 +27,9 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (387 functions: 127 in `test_pdf_ingest.py`, 96 in
+Tests (396 functions: 135 in `test_pdf_ingest.py`, 96 in
 `test_cleanups.py`, 43 in `test_ingest_volume.py`, 29 in
-`test_teacher_resources.py`, 28 in `test_lint.py`, 23 in
+`test_teacher_resources.py`, 28 in `test_lint.py`, 24 in
 `test_pdf_tags.py`, 21 in `test_metadata_roundtrip.py`, 7 in
 `test_pdf_ua.py`, 6 in `test_standalone_html.py`, 4 in
 `test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
@@ -180,14 +180,27 @@ the whole issue as one Typst document would also have worked and is the wrong
 trade: the bound issue would then be a second rendering of each chapter rather
 than the one the standalone galley serves.
 
-Three things do not survive a plain copy and each one fails silently. A
+Four things do not survive a plain copy and each one fails silently. A
 `/ParentTree` key is a per-document counter, so two sources both begin at 0
 and the second overwrites the first; every page of the first then resolves
 into the second's elements, which no checker sees and a screen reader reads as
 the wrong paragraph. An `/OBJR` is the entry that makes a link annotation
 tagged, and it names the annotation object, which the page copy replaced with
 a new one; a dangling `/OBJR` is itself a conformance error, so one that
-cannot be repointed is dropped and counted rather than written out. And an
+cannot be repointed is dropped and counted rather than written out.
+Repointing it is only half of a tagged link, and having only that half is
+the quietest shape in this file: a checker satisfies ISO 32000 7.18.5 from
+the annotation inwards, through its own `/StructParent` into the parent tree,
+expecting the element that holds the `/OBJR`. `/StructParent` is the same
+per-document counter as a page's `/StructParents`, so shifting pages and not
+annotations leaves every link indexing whichever element its own chapter
+happened to number. All 61 links in the series bound that way: the `/OBJR`
+resolved, the merge counted each one tagged, and an audit reported every one
+untagged, which is how `issue.pdf` still failed the fourth of the four
+failures above while the report said PDF/UA-1. The count of tagged
+annotations cannot stand in for the round trip, so the merge now walks it
+from the annotation and `MergeReport.unresolved_annotations` names the pages.
+And an
 element `/ID` has to be unique across a document, while Typst numbers them per
 chapter from the same origin, so each source's ids are prefixed and the
 `/IDTree` is rebuilt over the prefixed names, sorted.
@@ -202,7 +215,8 @@ itself as tagged, and reaches a screen reader with nothing above it.
 
 The merge carries conformance; it cannot create it. `concatenate_tagged`
 stamps `pdfuaid:part` only where every part declared it, no part arrived
-untagged, no annotation was dropped, and every page resolves. A part that
+untagged, no annotation was dropped, every page resolves, and every link
+reaches its own tag from its annotation. A part that
 falls short is named in the report `assemble_issue` passes out as
 `AssemblyResult.notes` and the assemble route flashes. That gate is what
 found the other half of this bug: the issue front matter set no

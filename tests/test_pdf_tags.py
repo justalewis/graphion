@@ -130,7 +130,18 @@ def build_part(path: Path, *, pages: int = 2, title: str = "A Part",
                 NameObject("/Pg"): page_refs[0],
             })]),
         })
-        kids.append(writer._add_object(link_element))
+        link_ref = writer._add_object(link_element)
+        kids.append(link_ref)
+        # A conformant source numbers the annotation as well. A link is
+        # tagged by the round trip from the annotation's /StructParent into
+        # the parent tree, not by the /OBJR alone (ISO 32000 7.18.5), and
+        # leaving this out is why nothing here modelled a conformant link and
+        # nothing could catch a merge that shifted a page's key and not an
+        # annotation's.
+        link_key = len(page_refs)
+        annot[NameObject("/StructParent")] = NumberObject(link_key)
+        parent_nums.append(NumberObject(link_key))
+        parent_nums.append(writer._add_object(ArrayObject([link_ref])))
 
     document.update({
         NameObject("/Type"): NameObject("/StructElem"),
@@ -144,7 +155,8 @@ def build_part(path: Path, *, pages: int = 2, title: str = "A Part",
         NameObject("/ParentTree"): writer._add_object(
             DictionaryObject({NameObject("/Nums"): parent_nums})),
         NameObject("/ParentTreeNextKey"): NumberObject(
-            len(page_refs) if declared_next_key is None else declared_next_key),
+            (len(page_refs) + (1 if annot_ref is not None else 0))
+            if declared_next_key is None else declared_next_key),
     })
     if role_map:
         struct_tree[NameObject("/RoleMap")] = writer._add_object(
@@ -396,6 +408,58 @@ def test_a_tagged_link_annotation_is_repointed_at_the_bound_annotation(tmp_path)
         # whole point is which object it names.
         assert reference.raw_get("/Obj").idnum in held
         assert reference["/Obj"]["/Subtype"] == "/Link"
+
+
+def test_a_link_reaches_its_own_tag_from_the_annotation(tmp_path):
+    """The round trip a checker walks, which an /OBJR alone does not give.
+
+    ISO 32000 7.18.5 is satisfied from the annotation inwards: its
+    /StructParent is a key into the parent tree and what that resolves to is
+    the element holding the /OBJR naming it. /StructParent is the same
+    per-document counter as a page's /StructParents, so a merge that shifts
+    one and not the other leaves every link pointing at whichever element its
+    own chapter happened to number. All 61 links in the Writing Spaces series
+    were bound that way, and because the /OBJR side was correct the merge
+    counted every one of them tagged while an audit reported every one
+    untagged. Nothing about that failure is visible in the file.
+    """
+    parts = [
+        (build_part(tmp_path / "one.pdf", title="One", link=True), "One"),
+        (build_part(tmp_path / "two.pdf", title="Two", link=True), "Two"),
+    ]
+    out = tmp_path / "issue.pdf"
+    report = pdf_tags.concatenate_tagged(parts, out, title="An Issue")
+    assert report.unresolved_annotations == []
+    assert report.claims_pdf_ua
+
+    reader = PdfReader(str(out))
+    tree = reader.trailer["/Root"]["/StructTreeRoot"]
+    nums = tree["/ParentTree"]["/Nums"]
+    by_key = {int(nums[i]): nums[i + 1] for i in range(0, len(nums) - 1, 2)}
+
+    checked = 0
+    for page in reader.pages:
+        for annot in (page.get("/Annots") or []):
+            key = annot.get_object().get("/StructParent")
+            assert key is not None, "a conformant link carries its own key"
+            assert int(key) in by_key, "the key has to be in the parent tree"
+            named = []
+            for entry in by_key[int(key)].get_object():
+                for kid in entry.get_object()["/K"]:
+                    node = kid.get_object()
+                    if node.get("/Type") == "/OBJR":
+                        # raw_get, because subscripting resolves the
+                        # reference and the identity is the whole point.
+                        named.append(node.raw_get("/Obj").idnum)
+            assert annot.idnum in named, \
+                "the key must resolve to the /OBJR naming this annotation"
+            checked += 1
+    assert checked == 2
+    # The two parts both numbered their link from the same origin, so the
+    # keys have to differ once bound or the second overwrites the first.
+    keys = {int(a.get_object()["/StructParent"])
+            for page in reader.pages for a in (page.get("/Annots") or [])}
+    assert len(keys) == 2
 
 
 def test_tab_order_is_set_on_every_page(tmp_path, two_parts):
