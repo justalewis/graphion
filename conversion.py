@@ -977,15 +977,36 @@ def _partition_footnotes(chapter: str, teacher: str) -> tuple:
 # usually prints its terms itself, as a footnote on the opening page, and
 # ingest recovers that: printing the metadata licence as well would state the
 # same thing twice on one document.
+# A notice states terms over this work. The looser forms this once allowed
+# cannot tell one from a figure credit, which names the deed some borrowed
+# picture is under, or from a Works Cited entry naming a website, and a
+# chapter that merely mentions a licence had its colophon suppressed as
+# though it carried one. `understanding-visual-rhetoric` credits seven
+# Flickr photographs "and is licensed under CC BY-NC-ND 2.0"; `8-slattery`
+# tells a student that "sources of possible images include Pexels and
+# Creative Commons"; volume 6 chapter 4 credits a diagram "[CC BY-SA 3.0],
+# via Wikimedia Commons". None of the three states terms over the chapter,
+# and all three published with none. This is the same distinction
+# `_CREDIT_TAIL_RE` draws in `pdf_ingest` and the same shape of error
+# `is_cover_page` guards against: a chapter may discuss a licence without
+# being under one.
 _LICENCE_IN_BODY_RE = re.compile(
-    r"creativecommons\.org|creative\s+commons|is\s+licensed\s+under|"
-    r"\bCC\s?BY\b|all\s+rights\s+reserved",
+    r"this\s+work\s+is\s+licensed\s+under"
+    r"|to\s+view\s+a\s+copy\s+of\s+th(?:is|e)\s+licen[cs]e"
+    r"|subject\s+to\s+the\s+[^.\n]{0,60}terms\s+of\s+use"
+    r"|all\s+rights\s+reserved",
     re.I,
 )
 
 
 def body_states_license(body: str) -> bool:
-    """Whether the text already carries a licence notice of its own."""
+    """Whether the text already carries a licence notice of its own.
+
+    A notice, not a mention: the question this answers is whether the galley
+    would state its terms twice, and only a notice over the work itself
+    does that. A credit under a borrowed figure says what that picture is
+    licensed under and says nothing about the chapter.
+    """
     return bool(_LICENCE_IN_BODY_RE.search(body or ""))
 
 

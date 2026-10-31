@@ -136,11 +136,15 @@ def test_an_unreferenced_note_is_kept_rather_than_dropped():
 
 def test_a_body_that_states_its_licence_is_recognised():
     """A published chapter prints its terms itself, and ingest recovers that
-    note, so printing the metadata licence as well says it twice."""
+    note, so printing the metadata licence as well says it twice.
+
+    The forms here are the ones the series actually sets on an opening page.
+    """
     for text in (
-        "visit http://creativecommons.org/licenses/by-nc-nd/4.0/",
         "This work is licensed under the Creative Commons Attribution",
-        "CC BY-NC-ND 4.0",
+        "To view a copy of this license, visit "
+        "http://creativecommons.org/licenses/by-nc-nd/4.0/",
+        "and is subject to the Writing Spaces Terms of Use",
         "All rights reserved.",
     ):
         assert conversion.body_states_license(text) is True, text
@@ -149,6 +153,33 @@ def test_a_body_that_states_its_licence_is_recognised():
 def test_ordinary_prose_is_not_a_licence_notice():
     for text in ("", "The chapter explores what it means to be a writer.",
                  "Students licensed to drive may park here."):
+        assert conversion.body_states_license(text) is False, text
+
+
+def test_a_figure_credit_is_not_the_chapter_s_own_notice():
+    """A credit says what a borrowed picture is under, not what this work is.
+
+    Taking either for the other suppressed the colophon on chapters that
+    state no terms anywhere, and nine of the series' galleys published that
+    way. Every string here is one a real chapter carries.
+    """
+    for text in (
+        # understanding-visual-rhetoric, over seven Flickr photographs
+        "Image is titled “lines” by Charlotte Kinzie "
+        "(www.flickr.com/photos/ckinzie/252835206) and is licensed under "
+        "CC BY-NC-ND 2.0",
+        # 4-zhou, under a borrowed diagram
+        "The Structure of RNA and DNA (By Difference_DNA_RNA-DE"
+        "[CC BY-SA 3.0], via Wikimedia Commons)",
+        # 8-slattery, telling a student where to look for pictures
+        "Two sources of possible images include Pexels and Creative Commons.",
+        # the-rhetorical-possibilities-of-accessibility, a Works Cited entry
+        "Todd, Gary Lee. “American Cemetery.” *Creative Commons* "
+        "and *Flickr*, https://www.flickr.com/photos/101561334@N08/",
+        # technologies-of-trust, crediting a diagram
+        "“Waterfall_Vs_Agile” via Wikimedia Commons is licensed "
+        "under CC BY-SA 4.0",
+    ):
         assert conversion.body_states_license(text) is False, text
 
 
@@ -171,7 +202,7 @@ def test_each_half_is_judged_on_its_own_text():
     body = (
         "Chapter text with no licence notice at all.\n\n"
         "# Teacher Resources\n\n"
-        "Instructor material, licensed under CC BY-NC-ND 4.0.\n"
+        "Instructor material. This work is licensed under CC BY-NC-ND 4.0.\n"
     )
     chapter, teacher = conversion.split_teacher_resources(body)
     assert conversion.should_print_license(fm, chapter) is True
