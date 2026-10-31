@@ -27,7 +27,7 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (404 functions: 137 in `test_pdf_ingest.py`, 96 in
+Tests (409 functions: 142 in `test_pdf_ingest.py`, 96 in
 `test_cleanups.py`, 43 in `test_ingest_volume.py`, 29 in
 `test_teacher_resources.py`, 28 in `test_lint.py`, 27 in
 `test_metadata_roundtrip.py`, 24 in `test_pdf_tags.py`, 7 in
@@ -367,10 +367,35 @@ set no such page and are untouched.
 chapter's opening page with an asterisk, which falls past `_NOTE_RE` and was
 written out as it was read. Markdown then reads the asterisk as a list marker,
 and 69 chapters printed their licence as a bulleted item in the middle of the
-text. `escape_list_marker` backslashes any leading bullet or numbered-list
-marker on a note that is not a numbered footnote, which leaves the printed
-text as the page set it. The licence belongs in the body: a published chapter
-prints its own terms and `should_print_license()` relies on finding them.
+text. `escape_list_marker` escapes a leading bullet or numbered-list marker
+on a note that is not written out as a footnote definition, which leaves the
+printed text as the page set it. Where it puts the backslash matters: a
+backslash escapes punctuation and nothing else, so it goes in front of a
+bullet and after the digits of a number, and in front of a digit it is not
+an escape at all and Pandoc prints it. The licence belongs in the body: a
+published chapter prints its own terms and `should_print_license()` relies
+on finding them.
+
+**A numbered note nothing refers to is not a footnote.** Some chapters print
+an endnote section headed "Note" or "Notes" at the end, and `_NOTE_RE` reads
+its numbered item exactly as it reads a footnote at the foot of a page, so
+`blocks_to_markdown` lifted the text out from under its own heading and
+wrote it as a Markdown definition. Pandoc drops a definition nothing
+references, with a warning on stderr and nothing in the document, so four
+notes across volume 2 printed in neither galley: the acknowledgement in
+`the-complexity-of-simplicity` crediting by name the student who
+photographed the whiteboard work the chapter is built on, both of
+`everything-changes`, and one of `reading-games` whose own text says it is
+speaking in a footnote. Three of the four are an author crediting other
+people, which is the part of a chapter a pipeline has least business
+dropping. So a numbered note stays where the page put it unless something
+refers to it, counted over the blocks and over the abstract as well, since
+that is front matter rather than a block and a reference in it does resolve
+(`12-laflen` carries one). Two of the four are footnotes whose superscript
+marker was never read rather than endnotes, and there is no raised digit in
+those chapters for `_superscript_runs` to find, so they are kept near where
+they were printed without being reattached to a sentence. That is the same
+trade as `undescribed_alt`: in the document imperfectly beats absent.
 
 **Text set in a symbol font is not text.** A symbol font stores pictures at
 ordinary character codes, so extracting a Wingdings run gives punctuation:
