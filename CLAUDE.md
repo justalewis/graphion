@@ -147,6 +147,21 @@ reference to one the caption already carries, which Pandoc answers by
 setting the note twice. `caption_alt_text` strips a footnote reference and
 only that, since `[desk]` is a description's own bracket.
 
+**A description can be in either slot, and one function knows which.** Use
+`conversion._carried_description()`; do not write the regex. A figure that
+has been through `pair_figure_captions` keeps the printed caption in the
+bracket and the description in `fig-alt`, so a reader that looks only at the
+bracket counts captions as descriptions and misses the placeholders beside
+them. That one-line reader has been written three times in this codebase and
+been wrong every time: it is what let the original bracket defect through,
+what had `verify_all.py` reporting 203 descriptions and 1 placeholder where
+the truth was 201 and 3, and what reported three descriptions altered during
+the figure-placement work when they had merely changed slots. It looks
+obvious and it is wrong for exactly the figures that have captions. At the
+time of writing the archive holds 201 figures, all 201 described by hand
+across 49 chapters, with no placeholder left; `_carried_description` is what
+that was counted with.
+
 Two fields in the front matter have that exposure too, and
 `conversion.carry_editor_fields()` carries them for the same reason, from
 `ingest_pdf`, so they ride through inside `article-raw.md` and survive the
