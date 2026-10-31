@@ -7,7 +7,7 @@ short-title: Stronger Together
 short-authors: José
 volume: 6
 year: 2024
-start-page: 109
+start-page: 110
 chapter-number: 6
 source-file: 6Jose.pdf
 volume-title: Technical Writing Spaces 6

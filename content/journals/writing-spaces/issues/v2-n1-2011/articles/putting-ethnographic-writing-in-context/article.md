@@ -7,7 +7,7 @@ short-title: Putting Ethnographic Writing in Context
 short-authors: Kahn
 volume: 2
 year: 2011
-start-page: 167
+start-page: 171
 source-file: kahn--putting-ethnographic-writing.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).

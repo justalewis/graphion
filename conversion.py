@@ -238,6 +238,59 @@ def ingest_docx(
     return IngestResult(raw_md_path=raw_md, log=body, has_tracked_changes=has_tracked)
 
 
+_BODY_IMAGE_RE = re.compile(r"!\[(?P<alt>[^\]]*)\]\((?P<src>assets/[^)]+)\)")
+# What `pdf_ingest.undescribed_alt` writes over a figure whose page printed no
+# caption to describe it with. Recognised by its shape rather than imported,
+# because what has to be matched is the string a previous run left behind;
+# `test_undescribed_alt_still_matches_its_pattern` keeps the two in step.
+_UNDESCRIBED_ALT_RE = re.compile(
+    r"^Undescribed figure from page \d+ of the source$")
+
+
+def carry_alt_text(body: str, previous: str) -> tuple:
+    """Put an editor's alt text back after ingest has rewritten the body.
+
+    Ingest reconstructs the body from the PDF every time it runs, so a
+    description an editor wrote over a figure is gone on the next run and
+    only `.versions/` has it. The front matter is re-applied by every caller
+    for exactly that reason; alt text is written into the body instead, so it
+    had the same exposure without being named anywhere. Re-ingesting volume 6
+    chapter 15 to pick up a caption fix replaced all seven of its
+    descriptions with machine text, which is work that cannot be regenerated:
+    a caption says what a figure is called and alt text says what is in it,
+    and only the first of those is on the page.
+
+    Matched by asset path, because the filenames are built from the page the
+    raster sits on and are stable from one run to the next, so a description
+    goes back to its own figure even where the figure has moved in the file.
+
+    An `undescribed_alt` placeholder is not carried. It is what ingest writes
+    when the page gave it no caption, so a run that has since found one is
+    allowed to improve on it, and `lint.check_alt_text` goes on counting
+    whatever is still owed.
+    """
+    kept = {
+        m.group("src"): m.group("alt")
+        for m in _BODY_IMAGE_RE.finditer(previous)
+        if m.group("alt").strip()
+        and not _UNDESCRIBED_ALT_RE.match(m.group("alt").strip())
+    }
+    if not kept:
+        return body, 0
+
+    carried = 0
+
+    def swap(match):
+        nonlocal carried
+        alt = kept.get(match.group("src"))
+        if alt is None or alt == match.group("alt"):
+            return match.group(0)
+        carried += 1
+        return f"![{alt}]({match.group('src')})"
+
+    return _BODY_IMAGE_RE.sub(swap, body), carried
+
+
 def ingest_pdf(pdf_path: Path, article_path: Path,
                skip_image_digests=frozenset()) -> IngestResult:
     """Reconstruct Markdown from a typeset PDF, write `article-raw.md`.
@@ -273,6 +326,15 @@ def ingest_pdf(pdf_path: Path, article_path: Path,
     dt = time.time() - t0
 
     raw_md = article_path / "article-raw.md"
+    # A second run over an article an editor has worked on rewrites the body
+    # from the page, so any description written over a figure goes with it.
+    # Carried across here rather than left to `.versions/`, since the
+    # cleanups downstream rebuild article.md from this file.
+    existing = article_path / "article.md"
+    carried = 0
+    if existing.exists():
+        result.body, carried = carry_alt_text(
+            result.body, existing.read_text(encoding="utf-8"))
     # Record which file this was read out of. The copy beside the article is
     # always called source.pdf, so without this the original name is lost,
     # and that name is the only thing tying a chapter back to its place in a
@@ -290,6 +352,9 @@ def ingest_pdf(pdf_path: Path, article_path: Path,
         f"fields recovered: {', '.join(result.front_matter) or '(none)'}\n"
         f"elapsed: {dt:.2f}s\n"
     )
+    if carried:
+        body += (f"kept the alt text already written for {carried} "
+                 f"figure(s)\n")
     body += "".join(f"  - {n}\n" for n in result.notes)
     _append_log(article_path, "Stage 1: PDF ingest", body)
 
@@ -353,8 +418,19 @@ def run_cleanups(article_path: Path, issue_metadata: Optional[dict] = None) -> P
 
     cleaned, log = cleanups.run_all(raw, issue_metadata=extra_metadata)
 
+    # This rebuilds article.md from the raw file, so an editor's alt text goes
+    # the way the front matter does. Every caller re-applies the front matter
+    # itself; the descriptions are carried here, since nothing else holds them.
+    existing = article_path / "article.md"
+    if existing.exists():
+        cleaned, carried = carry_alt_text(
+            cleaned, existing.read_text(encoding="utf-8"))
+        if carried:
+            log.add(f"  - kept the alt text already written for {carried} "
+                    f"figure(s)")
+
     _snapshot_version(article_path)
-    (article_path / "article.md").write_text(cleaned, encoding="utf-8")
+    existing.write_text(cleaned, encoding="utf-8")
     _append_log(article_path, "Stage 2: cleanups", log.render())
     return article_path / "article.md"
 
@@ -687,18 +763,47 @@ def _repair_markdown_quirks_in_file(md_path: Path) -> bool:
     # breaks Pandoc's own grid-table reader. The repair: any blank line
     # sandwiched between two lines that both look like table rows
     # (start with `+` separator or `|` content) gets dropped.
-    new_lines: list[str] = []
-    prev: str = ""
-    pending_blank: bool = False
+    #
+    # Unless what follows the blank begins a table of its own, which is a
+    # header row with its delimiter under it. Two tables do stand back to
+    # back: a table too long for its page is set again at the top of the
+    # next one with its header repeated, and PDF ingest puts the parts
+    # where the pages put them. Welding them cost the blank line between
+    # volume 6 chapter 15's two halves of Table 15.2, and Pandoc then read
+    # the second header and its delimiter as two more rows of the first.
+    lines = text.split("\n")
+
     def _is_table_line(s: str) -> bool:
         s = s.lstrip()
         return s.startswith("+") and "---" in s or s.startswith("|")
-    for line in text.split("\n"):
+
+    def _is_delimiter_row(s: str) -> bool:
+        # A dash is required, or the empty head row a one-column-less table
+        # carries (`|  |  |`) reads as a delimiter and the table below it is
+        # not recognised as one starting. PDF ingest writes that head for
+        # every single-row box it recovers, which is most of volume 1
+        # chapter 6.
+        s = s.strip()
+        return (s.startswith("|") and len(s) > 2
+                and "-" in s and set(s) <= set("|-: "))
+
+    def _starts_a_table(index: int) -> bool:
+        """A header row at `index` with its delimiter on the next line."""
+        head = lines[index].lstrip()
+        return (head.startswith("|") and not _is_delimiter_row(head)
+                and index + 1 < len(lines)
+                and _is_delimiter_row(lines[index + 1]))
+
+    new_lines: list[str] = []
+    prev: str = ""
+    pending_blank: bool = False
+    for index, line in enumerate(lines):
         if line.strip() == "":
             pending_blank = True
             continue
         if pending_blank:
-            if _is_table_line(prev) and _is_table_line(line):
+            if (_is_table_line(prev) and _is_table_line(line)
+                    and not _starts_a_table(index)):
                 # Drop the pending blank; it's an artifact between
                 # table rows.
                 pass

@@ -1179,3 +1179,100 @@ def test_each_table_caption_begins_its_own_block():
     assert texts == ["Table 4.1. A Mechanism Description",
                      "Table 4.1. A Mechanism Description (continued)",
                      "Fig 1.0"]
+
+
+def _table(page, rows, index=0, captioned=False):
+    return {"page": page, "index": index, "rows": rows, "captioned": captioned}
+
+
+def test_a_bare_table_label_is_a_place_a_table_can_go():
+    """All volume 3's vieregge prints over its only table is "Table 1", so
+    without this the table fell to its anchor and came to rest two paragraphs
+    and a block quote below the label that names it."""
+    blocks = [
+        ("body", "Go through and answer each of the questions above."),
+        ("note", "Table 1"),
+        ("body", "That way you can meet them at their level."),
+        ("head", "Exigency Through a Gap in the Research"),
+    ]
+    out, notes = pdf_ingest.place_tables(
+        blocks, [_table(6, [["Questions", "Answers"], ["Mine?", "Yours."]],
+                        captioned=True)])
+    kinds = [kind for kind, _ in out]
+    assert kinds == ["body", "note", "table", "body", "head"]
+    assert "placed 1 against a caption" in notes[0]
+
+
+def test_a_bare_figure_label_takes_no_table_caption_s_place():
+    """Volume 1's chapter 6 sets a bare "Fig 2" over each of its draft boxes,
+    and those boxes are read as tables. Counting the label as a caption would
+    push every table after it one caption along."""
+    assert pdf_ingest.is_bare_table_label("Table 2")
+    assert pdf_ingest.is_bare_table_label("*Tab. 15.1*")
+    assert not pdf_ingest.is_bare_table_label("Fig 2")
+    assert not pdf_ingest.is_bare_table_label("Figure 15.1")
+    # Still a label of some kind, which is what keeps it out of the notes.
+    assert pdf_ingest.is_bare_label("Fig 2")
+
+
+def test_a_repeated_header_at_the_top_of_the_next_page_is_a_continuation():
+    """A table too long for its page is set again at the top of the next one
+    with its header repeated and no caption, because the caption was printed
+    over the first part."""
+    head = ["Aesthetic form realized", "V", "L", "S"]
+    first = _table(12, [head, ["", "X", "", ""]], captioned=True)
+    second = _table(13, [head, ["", "X", "X", ""]])
+    assert pdf_ingest.continues_previous(second, first)
+    # Nothing to continue from.
+    assert not pdf_ingest.continues_previous(first, None)
+    # A page further on is a table of its own, not a turn of this one.
+    assert not pdf_ingest.continues_previous(_table(15, [head]), first)
+    # Different column names.
+    assert not pdf_ingest.continues_previous(
+        _table(13, [["Modes", "Aesthetic form"]]), first)
+
+
+def test_a_captioned_table_under_the_same_column_names_is_not_a_continuation():
+    """Volume 6's chapter 5 sets Tables 5.2 and 5.3 on facing pages under the
+    same four column names, so a repeated header on the next page is not
+    enough on its own. 5.3's page prints its caption above it; a
+    continuation's page prints none."""
+    head = ["Author", "Title", "Publication", "Link/DOI"]
+    first = _table(7, [head, ["Climate Central", "Risk Zone Map", "", ""]],
+                   captioned=True)
+    second = _table(8, [head, ["NOAA", "Sea Level Rise", "", ""]],
+                    captioned=True)
+    assert not pdf_ingest.continues_previous(second, first)
+
+
+def test_a_continuation_goes_against_the_part_it_continues():
+    """It takes no caption of its own, so the captions after it stay with
+    their own tables: this is how the second half of volume 6 chapter 15's
+    Table 15.2 came to stand under the label of the activity's Table 1."""
+    head = ["Aesthetic form realized", "V"]
+    blocks = [
+        ("note", "Table 15.2 Sample Implementation of the Plan"),
+        ("body", "Now consider your own instructions."),
+        ("note", "Table 1"),
+        ("body", "To evaluate your technical instructions, research."),
+    ]
+    anchors = {
+        # The last line of the page each table carries on from.
+        (13, 0): "Table 15.2 Sample Implementation of the Plan",
+        (17, 0): "Table 1",
+    }
+    tables = [
+        _table(12, [head, ["", "X"]], captioned=True),
+        _table(13, [head, ["", "X"]]),
+        _table(16, [["Modes", "Aesthetic form"], ["Visual", "Image"]],
+               captioned=True),
+        _table(17, [["Modes", "Aesthetic form"], ["Aural", "Sound"]]),
+    ]
+    out, notes = pdf_ingest.place_tables(blocks, tables, anchors)
+    kinds = [kind for kind, _ in out]
+    assert kinds == ["note", "table", "table", "body",
+                     "note", "table", "table", "body"]
+    # Each continuation sits under the part it carries on from, header first.
+    assert "Aesthetic form realized" in out[1][1] and "Modes" in out[5][1]
+    assert "placed 2 against a caption" in notes[0]
+    assert any("carry on the table before them" in n for n in notes)

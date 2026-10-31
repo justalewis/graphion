@@ -27,10 +27,10 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (342 functions: 93 in `test_cleanups.py`, 28 in
-`test_teacher_resources.py`, 97 in `test_pdf_ingest.py`, 43 in
+Tests (365 functions: 93 in `test_cleanups.py`, 28 in
+`test_teacher_resources.py`, 113 in `test_pdf_ingest.py`, 43 in
 `test_ingest_volume.py`, 28 in
-`test_lint.py`, 23 in `test_pdf_tags.py`, 10 in
+`test_lint.py`, 23 in `test_pdf_tags.py`, 17 in
 `test_metadata_roundtrip.py`, 6 in
 `test_standalone_html.py`, 7 in `test_pdf_ua.py`, 4 in
 `test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
@@ -117,6 +117,21 @@ an editor has typed. Every caller re-applies that itself. The re-clean route in
 (`app.py:2104`); `ingest_volume.py` is safe only because it enriches after
 cleaning, not before. Re-running it over already-ingested articles reverts them,
 and the only thing that gets the metadata back is `.versions/`.
+
+**Alt text has the same exposure and is carried, not re-applied.** A
+description an editor wrote lives in the body, so a second ingest rewrites it
+away exactly as the front matter is, and nothing above the pipeline holds a
+copy. Re-ingesting volume 6 chapter 15 to pick up a caption fix replaced all
+seven of its descriptions with machine text, which is the one thing in a
+galley that cannot be regenerated: a caption says what a figure is called and
+alt text says what is in it, and only the first of those is on the page. 200
+figures across 49 chapters of the Writing Spaces archive are described by
+hand. `conversion.carry_alt_text()` matches them back by asset path, which is
+stable because the filenames are built from the page the raster sits on, and
+both `ingest_pdf` and `run_cleanups` call it before they write. An
+`undescribed_alt` placeholder is not carried, so a run that has since found a
+caption may improve on it and `lint.check_alt_text` goes on counting what is
+still owed. Any new path that rebuilds the body has to call it too.
 
 **Lint checks** follow the same shape in `lint.py`: return `_ok(...)` or
 `_warn(...)`, then register in `DEFAULT_CHECKS` (`lint.py:405`).
@@ -351,6 +366,30 @@ definition, since the caption is set under the picture; a table's caption is
 set above it and the two part company across a page break, as both of chapter
 11's did. pdfplumber also reports the cells inside a table as further tables,
 so anything inside another's box is dropped.
+
+Pairing the nth table with the nth caption means both counts have to be
+right, and two things threw them out. A table too long for its page is set
+again at the top of the next one with its header repeated and no caption,
+because the caption was printed over the first part, so counting it against
+the next caption in the chapter shifts every table after it one caption
+along: that is how the second half of volume 6 chapter 15's Table 15.2 came
+to stand under the label of the teacher activity's Table 1, with the
+activity's own tables one label out behind it. `continues_previous` leaves it
+out of the count and lets it take its anchor instead, which is the last line
+of the page it carries on from and therefore the part it continues. A
+repeated header on the next page is not enough on its own, since volume 6
+chapter 5 sets Tables 5.2 and 5.3 on facing pages under the same four column
+names; what separates them is that 5.3's page prints its caption above it and
+a continuation's page prints none. Seven tables in the series continue this
+way and that pair is the only one the test has to turn down.
+
+The other is a label with no description after it. `is_table_caption` wants a
+capital to follow, which is what tells a caption from a reference to one, so
+the bare "Table 1" that is all volume 3's `vieregge` prints over its only
+table matched nothing and the table fell to its anchor, coming to rest two
+paragraphs and a block quote below the label naming it. `is_bare_table_label`
+counts it, and it tests the word, because volume 1 chapter 6 sets a bare
+"Fig 2" over each of its draft boxes and those boxes are read as tables.
 
 Alt text comes from the caption with its label and any source credit removed.
 The archive sets the credit two ways, in brackets at the end and as a

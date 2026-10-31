@@ -7,7 +7,7 @@ short-title: Taking Flight
 short-authors: Antlitz
 volume: 1
 year: 2010
-start-page: 87
+start-page: 89
 source-file: antlitz--taking-flight.pdf
 volume-title: Writing Spaces 1
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).

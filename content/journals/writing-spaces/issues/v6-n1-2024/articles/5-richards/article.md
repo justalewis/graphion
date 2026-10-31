@@ -76,7 +76,7 @@ You consider what sources would be useful for the development team to know about
 
 You then decide that for this “review of literature” you’ll just be listing, summarizing, and synthesizing the actual tools themselves. You’ll make a note in there about how there is ample scholarship on these tools, but for the purpose of this project, and its scope, at this time you are choosing to focus on the technical sources.
 
-Table 5.2. Populated Source Spreadsheet for Literature Reviews, Including Both Academic and Technical Sources Table 5.3. Populated Source Spreadsheet for Literature Reviews, Including Both Academic and Technical Sources
+Table 5.2. Populated Source Spreadsheet for Literature Reviews, Including Both Academic and Technical Sources
 
 | Author | Title | Publication | Link/DOI |
 | --- | --- | --- | --- |
@@ -92,6 +92,15 @@ Table 5.2. Populated Source Spreadsheet for Literature Reviews, Including Both A
 | Reliability Rating (1 to 5) | Main Argument/Findings | Connection to Your Project |  |
 | 5 | Hmm. That sea level rise risks should be visualized? More by implication, really. | This resembles a type of tool that I think the development team wants to create. |  |
 
+Table 5.3. Populated Source Spreadsheet for Literature Reviews, Including Both Academic and Technical Sources
+
+| Author | Title | Publication | Link/DOI |
+| --- | --- | --- | --- |
+| Climate Central | Risk Zone Map | Surging Seas? | https://ss2. climatecentral. org |
+| Reliability Rating (1 to 5) | Main Argument/Findings | Connection to Your Project |  |
+| 4? | Like NOAA, the argument is the same. | This resembles a type of tool that I think the development team wants to create---but more attainable since they are also a nonprofit, like we are. |  |
+| . . . | . . . | . . . | . . . |
+
 # Practice
 
 You’ll need practice in “summarizing” technical sources. Consider adapting the table from the previous sections to highlight information that is more relevant to technical sources (e.g., swapped out DOI and reliability for functionality and user base). I’ve input the NOAA source as an example (Table 5.3).
@@ -100,12 +109,6 @@ As most technical writers find out, what constitutes useful sources will constan
 
 Table 5.4. Source Spreadsheet Adapted for Technical Sources
 
-| Author | Title | Publication | Link/DOI |
-| --- | --- | --- | --- |
-| Climate Central | Risk Zone Map | Surging Seas? | https://ss2. climatecentral. org |
-| Reliability Rating (1 to 5) | Main Argument/Findings | Connection to Your Project |  |
-| 4? | Like NOAA, the argument is the same. | This resembles a type of tool that I think the development team wants to create---but more attainable since they are also a nonprofit, like we are. |  |
-| . . . | . . . | . . . | . . . |
 | Agency | Type | Link |
 | --- | --- | --- |
 | NOAA | Government | https://coast.noaa.gov/digitalcoast/tools/ slr.html |

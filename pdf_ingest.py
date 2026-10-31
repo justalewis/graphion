@@ -951,7 +951,7 @@ def is_figure_caption(text: str) -> bool:
 # A label and nothing else. Both abbreviations of both words, since this is
 # the same series that writes "Fig. 1.", "Fig 1.0" and "Figure 1".
 _BARE_LABEL_RE = re.compile(
-    r"^(?:Figure|Fig\.?|Table|Tab\.)\s+\d+(?:\.\d+)*\s*[:.]?$")
+    r"^(?P<word>Figure|Fig\.?|Table|Tab\.)\s+\d+(?:\.\d+)*\s*[:.]?$")
 
 
 def is_bare_label(text: str) -> bool:
@@ -967,6 +967,19 @@ def is_bare_label(text: str) -> bool:
     figure, so it stays where the page put it.
     """
     return bool(_BARE_LABEL_RE.match(unemphasize(text)))
+
+
+def is_bare_table_label(text: str) -> bool:
+    """A bare label naming a table, which is a place a table can be put.
+
+    `place_tables` pairs the nth table with the nth caption, so only a label
+    that names a table may count as one. Volume 1's chapter 6 sets a bare
+    "Fig 2" over each of its draft boxes, and those boxes are read as tables;
+    letting the label take a table caption's place would push every table
+    after it one caption along.
+    """
+    match = _BARE_LABEL_RE.match(unemphasize(text))
+    return bool(match) and match.group("word").lower().startswith("tab")
 
 
 # A credit the archive sets as a trailing sentence of the caption, rather
@@ -1564,6 +1577,35 @@ def _anchor_position(blocks: list, anchor: Optional[str]) -> Optional[int]:
     return None
 
 
+def continues_previous(table: dict, previous: Optional[dict]) -> bool:
+    """Whether a table carries on the one before it across a page break.
+
+    A table too long for its page is set again at the top of the next one
+    with its header row repeated and no caption of its own, because the
+    caption was printed over the first part. It has nothing to be paired
+    with, so counting it against the next caption in the chapter shifts
+    every table after it one caption along: that is how the second half of
+    volume 6 chapter 15's Table 15.2 came to stand under the label of the
+    teacher activity's Table 1, with the activity's own tables one label out
+    behind it.
+
+    Three things have to hold together, and the third is what does the work.
+    Volume 6 chapter 5 sets Tables 5.2 and 5.3 on facing pages under the
+    same four column names, so a repeated header on the next page is not
+    enough on its own; what separates them is that 5.3's page prints its
+    caption above it and a continuation's page prints none. `captioned` is
+    set where a table caption or a bare table label stands higher up the
+    same page. Across the series seven tables continue this way and that one
+    pair is the only thing the test has to turn down.
+    """
+    if previous is None or table.get("captioned"):
+        return False
+    if table["page"] != previous["page"] + 1:
+        return False
+    return (bool(table["rows"]) and bool(previous["rows"])
+            and table["rows"][0] == previous["rows"][0])
+
+
 def place_tables(blocks: list, tables: list, anchors: Optional[dict] = None) -> tuple:
     """Put each table after the caption that names it.
 
@@ -1576,27 +1618,43 @@ def place_tables(blocks: list, tables: list, anchors: Optional[dict] = None) -> 
     since the caption is set under the picture. A table's caption is set above
     it and the two part company across a page break: both of chapter 11's did,
     and pairing them by page matched neither. Tables come in page order and
-    captions in document order, so the nth of one is the nth of the other.
+    captions in document order, so the nth of one is the nth of the other,
+    once the parts that continue another table are left out of the count.
+
+    A bare "Table 1" counts as a caption here. It is all volume 3's
+    `vieregge` prints over its only table, and it is set small like every
+    caption in the series, so without this the table fell to its anchor and
+    came to rest two paragraphs and a block quote below the label naming it.
     """
     caption_positions = [
         position for position, (kind, text) in enumerate(blocks)
-        if kind in ("body", "note", "quote") and is_table_caption(text)
+        if kind in ("body", "note", "quote")
+        and (is_table_caption(text) or is_bare_table_label(text))
     ]
 
     anchors = anchors or {}
     inserts: dict = {}
-    unplaced = anchored = 0
-    for index, table in enumerate(tables):
-        if index < len(caption_positions):
-            position = caption_positions[index]
+    unplaced = anchored = continued = 0
+    captions_used = 0
+    previous = None
+    for table in tables:
+        carries_on = continues_previous(table, previous)
+        previous = table
+        if not carries_on and captions_used < len(caption_positions):
+            position = caption_positions[captions_used]
+            captions_used += 1
         else:
-            # No caption to pair with, so fall back to the line the page
+            # No caption of its own, so fall back to the line the page
             # printed above the table rather than to the end of the chapter.
+            # For a continuation that line is the last one of the page it
+            # carries on from, which puts it against the part it continues.
             position = _anchor_position(
                 blocks, anchors.get((table["page"], table["index"])))
             if position is None:
                 unplaced += 1
                 position = len(blocks) - 1
+            elif carries_on:
+                continued += 1
             else:
                 anchored += 1
         inserts.setdefault(position, []).append(table)
@@ -1613,8 +1671,11 @@ def place_tables(blocks: list, tables: list, anchors: Optional[dict] = None) -> 
     notes = []
     if tables:
         notes.append(f"Read {len(tables)} ruled table(s) as tables; "
-                     f"placed {len(tables) - unplaced - anchored} against a "
-                     f"caption.")
+                     f"placed {captions_used} against a caption.")
+    if continued:
+        notes.append(f"{continued} table(s) carry on the table before them "
+                     f"across a page break, so they take no caption of "
+                     f"their own.")
     if anchored:
         notes.append(f"{anchored} table(s) the series did not caption, put "
                      f"back against the line printed above them.")
@@ -1809,8 +1870,17 @@ def extract(pdf_path: Path, genre_heads: Optional[tuple] = None,
     if tables_by_page:
         tables = []
         for page_no in sorted(tables_by_page):
-            for index, (_bbox, rows) in enumerate(tables_by_page[page_no]):
-                tables.append({"page": page_no, "index": index, "rows": rows})
+            # Whether the page names a table higher up than this one is what
+            # tells a continuation from a second table under the same column
+            # names; `continues_previous` explains why that is the test.
+            labelled = [line.top for line in all_lines
+                        if line.page == page_no
+                        and (is_table_caption(line.plain)
+                             or is_bare_table_label(line.plain))]
+            for index, (bbox, rows) in enumerate(tables_by_page[page_no]):
+                tables.append({"page": page_no, "index": index, "rows": rows,
+                               "captioned": any(top < bbox[1]
+                                                for top in labelled)})
         blocks, table_notes = place_tables(blocks, tables, table_anchors)
         notes.extend(table_notes)
 

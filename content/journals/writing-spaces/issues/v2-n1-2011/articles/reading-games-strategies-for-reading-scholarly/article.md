@@ -6,7 +6,7 @@ short-title: Reading Games
 short-authors: Rosenberg
 volume: 2
 year: 2011
-start-page: 198
+start-page: 202
 source-file: rosenberg--reading-games.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).

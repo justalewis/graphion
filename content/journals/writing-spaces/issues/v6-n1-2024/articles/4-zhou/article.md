@@ -105,7 +105,7 @@ Consider the following definition of the exploded view drawing, a type of visual
 
 Good luck with that definition. It’s not that the writer did a poor job; however, defining this type of concept is best done with visuals. Figure 4.1 allows most readers to understand exploded view drawings immediately.
 
-![An exploded view drawing](assets/figure-p006-1.jpg)\
+![Two line drawings of the same set of game components side by side. At the left, fully assembled: three tiles on a base, one carrying a mound and two carrying cones. At the right, exploded: the same base and cones with nine thin tiles floating in a vertical stack above, each separated from the next, with a bracket marking the height of the stack.](assets/figure-p006-1.jpg)\
 Figure 4.1: An exploded view drawing (Source: United States Patent and Trademark Office)
 
 When using visuals, remember that you must consider copyright issues. You should not simply use images from the Web, social media, or other authors without getting permission.
@@ -116,7 +116,7 @@ Many complex terms can be defined by partitioning their components. Partition el
 
 This definition begins with a sentence definition of renewable energy and extends to the five forms (partitions) of renewable energy: Biomass, hydropower, geothermal, wind, and solar.
 
-![Renewable energy definition using partitions](assets/figure-p007-1.jpg)\
+![A web page headed What is renewable energy? It defines renewable energy as energy from sources that are naturally replenishing but flow-limited, virtually inexhaustible in duration but limited in the amount available per unit of time. A list of the major types follows: biomass, with wood and wood waste, municipal solid waste, landfill gas and biogas, ethanol and biodiesel nested under it, then hydropower, geothermal, wind and solar.](assets/figure-p007-1.jpg)\
 Figure 4.2: Renewable energy definition using partitions (Source: U.S. Energy Information Administration)
 
 > Extend by Comparison and Contrast
@@ -133,7 +133,7 @@ Consider the following definition of “keyboard”:
 
 > A computer keyboard is one of the primary input devices used with a computer. Similar to an electric typewriter, a keyboard is composed of buttons that create letters, numbers, and symbols, as well as perform other functions (“Keyboard”)
 
-![A definition of laminate floor based on comparison (What Are Laminate Floors?)](assets/figure-p008-1.jpg)\
+![A table headed Laminate Floors Compared to Other Floor Coverings, with columns Different From Laminate and Similar to Laminate. Vinyl floor: vinyl is flexible, all vinyl and fully waterproof, and needs no acclimation, but is a close cousin, competitively priced, equally easy to install and similar in look. Solid hardwood: hardwood is solid and can be sanded repeatedly while laminate is thin and never can, but high-definition imaging makes some laminate a dead ringer at a distance. Engineered wood: it has a plywood base and a real wood veneer that laminate lacks, but both have a manufactured wood base and can look very similar. Natural stone: laminate contains no stone and is flexible and thin where stone is hard and solid, but higher-end laminate can look much like stone.](assets/figure-p008-1.jpg)\
 Figure 4.3: A definition of laminate floor based on comparison (What Are Laminate Floors?)
 
 Here the writer thoughtfully uses the analogy of an electric typewriter for readers who are not computer savvy. Analogy is challenging. In this definition, for instance, the writer clearly assumes that more readers are familiar with electric typewriters than keyboards. This assumption might ring true these days. A few decades from now, it perhaps will not. Readers might not need a definition of a keyboard, nor might they be familiar with electric typewriters, except having seen one in museums. Appropriate analogy requires savvy understandings of the audience and context.
@@ -284,12 +284,12 @@ Table 4.2. A Process Description (continued)
 | --- | --- |
 | The bond formed is between the third carbon atom on the deoxyribose sugar of one nucleotide (henceforth known as the 3’) and the fifth carbon atom of another sugar on the next nucleotide (known as the 5’). N.B: 3′ is pronounced ‘three prime’ and 5′ is pronounced ‘five prime’. There are two strands running in opposite or antiparallel directions to each other. These are attached to each other throughout the length of the strand through the bases on each nucleotide. There are 4 different bases associated with DNA; Cytosine, Guanine, Adenine, and Thymine. In normal DNA strands, Cytosine binds to Guanine, and Adenine binds to Thymine. The two strands together form a double helix. Fig 1.0. The Structure of RNA and DNA (By Difference_DNA_RNA-DE[CC BY-SA 3.0], via Wikimedia Commons) Stages of DNA replication DNA replication can be thought of in three stages; Initiation, Elongation, Termination Initiation DNA synthesis is initiated at particular points within the DNA strand known as ‘origins’, which are specific coding regions. These origins are targeted by initiator proteins, which go on to recruit more proteins that help aid the replication process, forming a replication complex around the DNA origin. | Visuals are used to explain the complex DNA structure. The author lays out the linear process that consists of three stages. Using each stage name as a heading, the author provides details about the three stages. |
 
-![The Structure of RNA and DNA (By Differ-](assets/figure-p019-1.jpg)\
+![A labelled comparison of RNA and DNA. At the centre, RNA drawn as a single helix of sugar-phosphates and DNA as a double helix, with nucleobases and a base pair marked by arrows. Down the left, the four nucleobases of RNA with their chemical structures and letters: cytosine C, guanine G, adenine A, uracil U. Down the right, those of DNA: cytosine C, guanine G, adenine A, thymine T.](assets/figure-p019-1.jpg)\
 Fig 1.0. The Structure of RNA and DNA (By Differ-
 
-![Undescribed figure from page 21 of the source](assets/figure-p021-1.jpg)
+![A diagram of DNA replication at the fork. The parent helix is opened at the right by helicase with single-strand binding proteins and topoisomerase; the leading and lagging strands are drawn below and above, each marked 3 prime and 5 prime at its ends. Labels point to DNA polymerase alpha and delta, DNA ligase, RNA primer, DNA primase and an Okazaki fragment on the lagging strand.](assets/figure-p021-1.jpg)
 
-![Undescribed figure from page 22 of the source](assets/figure-p022-1.jpg)
+![Two cutaway drawings of a blood vessel. Panel A, normal red blood cells: round, dished cells flowing freely, with an inset cross-section showing normal haemoglobin. Panel B, abnormal sickled red blood cells: crescent-shaped cells, some clumped and blocking the flow, labelled sticky sickle cells, with an inset cross-section showing abnormal haemoglobin forming strands that cause the sickle shape.](assets/figure-p022-1.jpg)
 
 Table 4.2. A Process Description (continued)
 

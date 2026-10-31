@@ -7,7 +7,7 @@ short-title: On the Other Hand
 short-authors: Krause
 volume: 2
 year: 2011
-start-page: 134
+start-page: 138
 source-file: krause--on-the-other-hand.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).

@@ -7,7 +7,7 @@ short-title: Looking for Trouble
 short-authors: Savini
 volume: 2
 year: 2011
-start-page: 46
+start-page: 50
 source-file: savini--looking-for-trouble.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).

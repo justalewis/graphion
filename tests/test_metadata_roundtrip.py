@@ -9,6 +9,7 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import conversion
+import pdf_ingest
 
 
 def _scratch_article(initial_yaml_body: str) -> Path:
@@ -196,3 +197,104 @@ def test_notes_move_ahead_of_works_cited_in_html():
     # No Works Cited: unchanged.
     no_refs = html.replace('id="works-cited"', 'id="other"')
     assert conversion.move_notes_before_references(no_refs) == no_refs
+
+
+def test_alt_text_an_editor_wrote_survives_a_second_ingest():
+    """The description goes back to its own figure, matched by asset path."""
+    previous = (
+        "---\ntitle: Foo\n---\n\n"
+        "![A quilt block of eight points, each built from rows of small "
+        "diamonds.](assets/figure-p012-1.jpg)\n\n"
+        "Some prose.\n"
+    )
+    # The figure has moved in the file and the caption it now pairs with
+    # supplies a different description.
+    fresh = (
+        "Some prose.\n\n"
+        "![Anishinaabe Quilts](assets/figure-p012-1.jpg)\\n"
+        "Figure 15.3 Anishinaabe Quilts\n"
+    )
+    out, carried = conversion.carry_alt_text(fresh, previous)
+    assert carried == 1
+    assert "![A quilt block of eight points, each built from rows of " \
+        "small diamonds.](assets/figure-p012-1.jpg)" in out
+    # Nothing else about the body is touched, the caption line included.
+    assert out.endswith("Figure 15.3 Anishinaabe Quilts\n")
+    assert out.count("Some prose.") == 1
+
+
+def test_a_placeholder_does_not_hold_a_real_description_out():
+    """`undescribed_alt` is machine text, so a later caption may replace it."""
+    previous = f"![{pdf_ingest.undescribed_alt(7)}](assets/figure-p007-1.jpg)\n"
+    fresh = "![Renewable energy definition using partitions](assets/figure-p007-1.jpg)\n"
+    out, carried = conversion.carry_alt_text(fresh, previous)
+    assert carried == 0
+    assert out == fresh
+    # And the other way round: a description already written wins over a
+    # placeholder the new run produced.
+    out, carried = conversion.carry_alt_text(previous, fresh)
+    assert carried == 1
+    assert "![Renewable energy definition using partitions]" in out
+
+
+def test_undescribed_alt_still_matches_its_pattern():
+    """The carry-forward recognises the string by shape, so it has to hold."""
+    assert conversion._UNDESCRIBED_ALT_RE.match(pdf_ingest.undescribed_alt(1))
+    assert conversion._UNDESCRIBED_ALT_RE.match(pdf_ingest.undescribed_alt(214))
+    assert not conversion._UNDESCRIBED_ALT_RE.match("A real description")
+
+
+def test_a_figure_the_new_run_did_not_find_carries_nothing():
+    """No match by path, so the body comes back exactly as ingest wrote it."""
+    previous = "![Hand-written.](assets/figure-p004-1.jpg)\n"
+    fresh = "![Undescribed](assets/figure-p009-1.png)\n\nProse.\n"
+    out, carried = conversion.carry_alt_text(fresh, previous)
+    assert (out, carried) == (fresh, 0)
+    # An empty previous body is the first-ingest case and must not raise.
+    assert conversion.carry_alt_text(fresh, "") == (fresh, 0)
+
+
+def _repaired(body: str) -> str:
+    """Run the render-time markdown repairs over a scratch article."""
+    article = _scratch_article(f"---\ntitle: T\n---\n\n{body}")
+    try:
+        conversion._repair_markdown_quirks_in_file(article / "article.md")
+        return (article / "article.md").read_text(encoding="utf-8")
+    finally:
+        shutil.rmtree(article, ignore_errors=True)
+
+
+def test_two_tables_back_to_back_keep_the_blank_line_between_them():
+    """A table too long for its page is set again at the top of the next one
+    with its header repeated, and ingest puts both parts where the pages put
+    them. Welding them made Pandoc read the second header and its delimiter
+    as two more rows of the first."""
+    out = _repaired(
+        "| Aesthetic form | V |\n| --- | --- |\n|  | X |\n\n"
+        "| Aesthetic form | V |\n| --- | --- |\n|  | X |\n"
+    )
+    assert "|  | X |\n\n| Aesthetic form | V |" in out
+    assert out.count("| --- | --- |") == 2
+
+
+def test_a_blank_line_inside_one_table_is_still_dropped():
+    """Which is what the repair is for: Pandoc's HTML writer puts a blank
+    line between a header and its own delimiter on very wide content."""
+    out = _repaired("| A | B |\n\n| --- | --- |\n\n| 1 | 2 |\n")
+    assert "| A | B |\n| --- | --- |\n| 1 | 2 |" in out
+    # Grid tables go the same way; their separator is `+---+`, not `| --- |`.
+    grid = _repaired("+---+---+\n\n| 1 | 2 |\n\n+---+---+\n")
+    assert "+---+---+\n| 1 | 2 |\n+---+---+" in grid
+
+
+def test_an_empty_head_row_does_not_read_as_a_delimiter():
+    """PDF ingest gives a single-row box an empty head, so `|  |  |` leads
+    most of volume 1 chapter 6's tables. Reading that as a delimiter row
+    would stop the table below a blank line being recognised as one
+    starting, and the two would be welded after all."""
+    out = _repaired(
+        "|  |  |\n| --- | --- |\n| Draft | Comment |\n\n"
+        "|  |  |\n| --- | --- |\n| More draft | More comment |\n"
+    )
+    assert "| Draft | Comment |\n\n|  |  |" in out
+    assert out.count("| --- | --- |") == 2
