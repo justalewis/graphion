@@ -100,6 +100,8 @@ Collectively, these suggestions and guidelines will help you read and understand
 
 # Notes
 
+1\. In this discussion I draw on Norgaard’s excellent discussion of reading as joining a conversation (1--28). By letting you, the reader, know this in a footnote, I am not only citing my source (I’d be plagiarizing if I didn’t mention this somewhere), but I’m also showing how I enter this conversation and give you a trail to follow if you want to learn more about the metaphor of the conversation. Following standard academic convention, I put the full reference to Norgaard’s text at the end of this article, in the references.
+
 # Works Cited
 
 Norgaard, Rolf. *Composing Knowledge: Readings for College Writers.* Boston: Bedford/St. Martin’s, 2007. Print.
@@ -107,7 +109,5 @@ Norgaard, Rolf. *Composing Knowledge: Readings for College Writers.* Boston: Bed
 Rounsaville, Angela, Rachel Goldberg, Keith Feldman, Cathryn Cabral, and Anis Bawarshi, eds. *Situating Inquiry: An Introduction to Reading, Research, and Writing at the University of Washington.* Boston: Bedford/St. Martin’s, 2008. Print.
 
 \* This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.
-
-[^1]: In this discussion I draw on Norgaard’s excellent discussion of reading as joining a conversation (1--28). By letting you, the reader, know this in a footnote, I am not only citing my source (I’d be plagiarizing if I didn’t mention this somewhere), but I’m also showing how I enter this conversation and give you a trail to follow if you want to learn more about the metaphor of the conversation. Following standard academic convention, I put the full reference to Norgaard’s text at the end of this article, in the references.
 
 [^2]: I draw on---and recommend---Rounsaville et al.’s discussion of rhetorical sensitivity, critical reading and rhetorical reading (1--35).

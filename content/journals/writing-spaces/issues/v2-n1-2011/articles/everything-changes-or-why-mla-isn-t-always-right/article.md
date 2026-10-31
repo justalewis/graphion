@@ -123,6 +123,10 @@ In the Works Cited list that follows, I have chosen to follow the formats includ
 
 # Notes
 
+6\. In this case, I chose to cite the source I actually used, *Bartleby.com,* rather than the source Bartleby cites. I also chose to include the direct URL since it’s short and will take the reader directly to the information I used. I could also have chosen to cite the URL for Bartleby’s home page, where users can search for the information, perhaps including the search term(s) or path(s) in my citation. In other words, there is no one right answer for how to cite many of the sources that scholars may reference. The key, of course, is to provide sufficient information for a reasonable and informed reader to re-locate the same source of information. (NOTE AGAIN---even this may not always be possible. Sometimes sites move or disappear, and even books sometimes go out of print. Online there’s the “wayback” machine, Google sometimes offers cached copies or online sites, and Amazon.com can often help readers locate even difficult-to-find and out-of-print books.) Are we having fun yet?
+
+7\. Thanks to the editors of this collection, Pavel Zemliansky and Charles Lowe, as well as to Jim Kalmbach and Douglas Eyman whose thoughtful and insightful critiques were so helpful in revising and completing this work.
+
 # Works Cited
 
 ACT Fluoride Rinse. http://www.actfluoride.com/numberone.html (4 July 2009). APA. *Publication Manual of the American Psychological Association* 5th ed. Washington, DC: APA, 2001. APME (Associated Press Managing Editors). “AP Statement on Anonymous Sources.” 2009. http://www.apme.com/committees/ credibility/052705anonymous.shtml (4 July 2009).
@@ -148,7 +152,3 @@ Wouters, Paul. *The Citation Culture.* Doctoral Thesis, U of Amsterdam, 1999. ht
 [^4]: The *MLA Handbook* argues that “Readers are now more likely to find resources on the Web by searching for titles and authors’ names than by typing URLs” (182).
 
 [^5]: As I write this, the American Psychological Association has released its new 6th edition. Based on, admittedly, a very quick perusal, it appears that, now that MLA no longer requires inclusion of URLs, APA does, along with strongly recommending inclusion of the DOI (a more stable identifying feature than the URL).
-
-[^6]: In this case, I chose to cite the source I actually used, *Bartleby.com,* rather than the source Bartleby cites. I also chose to include the direct URL since it’s short and will take the reader directly to the information I used. I could also have chosen to cite the URL for Bartleby’s home page, where users can search for the information, perhaps including the search term(s) or path(s) in my citation. In other words, there is no one right answer for how to cite many of the sources that scholars may reference. The key, of course, is to provide sufficient information for a reasonable and informed reader to re-locate the same source of information. (NOTE AGAIN---even this may not always be possible. Sometimes sites move or disappear, and even books sometimes go out of print. Online there’s the “wayback” machine, Google sometimes offers cached copies or online sites, and Amazon.com can often help readers locate even difficult-to-find and out-of-print books.) Are we having fun yet?
-
-[^7]: Thanks to the editors of this collection, Pavel Zemliansky and Charles Lowe, as well as to Jim Kalmbach and Douglas Eyman whose thoughtful and insightful critiques were so helpful in revising and completing this work.

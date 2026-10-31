@@ -343,6 +343,8 @@ The ease of familiarity and the intrinsic value of focus, in the end, may be two
 
 # Note
 
+1\. I created the images for *inSights,* the visual essay throughout the essay, but I have to give special thanks to Jacqueline Casas, a student in the same English 1301 as Brittany and Adbe, who made sure we had readable images of all our whiteboard work. Her skills with a cell phone camera at the end of several classes meant that we could spend class time making connections rather than taking notes.
+
 # Works Cited
 
 Downs, Douglas, and Elizabeth Wardle. “Teaching about Writing, Righting Misconceptions: (Re)Envisioning ‘First Year Composition’ as ‘Introduction to Writing Studies.’ *CCC* 58.4 (2007): 552--85. Print.
@@ -354,5 +356,3 @@ Harrison, Jim. *After Ikkyū and Other Poems.* Boston: Shambhala, 1996. Print. H
 Hutchison, Grant, Scott Hutchison, Bill Kennedy, and Andy Monaghan (Frightened Rabbit). “A Modern Leper.” *Midnight Organ Fight.* Fat Cat Records, 2008.
 
 \* This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.
-
-[^1]: I created the images for *inSights,* the visual essay throughout the essay, but I have to give special thanks to Jacqueline Casas, a student in the same English 1301 as Brittany and Adbe, who made sure we had readable images of all our whiteboard work. Her skills with a cell phone camera at the end of several classes meant that we could spend class time making connections rather than taking notes.
