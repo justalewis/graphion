@@ -461,6 +461,22 @@ def test_caption_alt_text_drops_the_label_and_the_credit():
     assert pdf_ingest.caption_alt_text("Figure 7.1: Chair") == "Chair"
 
 
+def test_a_caption_s_footnote_marker_does_not_reach_the_alt_text():
+    """The series footnotes a figure's source on the caption itself.
+
+    A marker is unreadable aloud and there is no way to reach the note from
+    alt text, and it is a second reference to one the caption already
+    carries, which Pandoc answers by setting the note twice. A bracket the
+    description wrote itself is not a marker and stays.
+    """
+    assert pdf_ingest.caption_alt_text(
+        "Figure 1. References section from Wikipedia's *Web 2.0* article [^5]"
+    ) == "References section from Wikipedia's *Web 2.0* article"
+    assert pdf_ingest.caption_alt_text(
+        "Fig. 2. A school desk labelled [desk], with questions around it"
+    ) == "A school desk labelled [desk], with questions around it"
+
+
 def test_undescribed_alt_names_the_page_it_came_from():
     assert pdf_ingest.undescribed_alt(27) == \
         "Undescribed figure from page 27 of the source"

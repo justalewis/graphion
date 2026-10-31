@@ -1209,6 +1209,14 @@ _CREDIT_TAIL_RE = re.compile(
     r"\s*(?::|\bby\b|\bcourtesy\s+of\b)\s*\S.*$",
     re.IGNORECASE)
 
+# A footnote marker the caption printed, which belongs to the caption and not
+# to the description: this series footnotes a figure's source on the caption
+# itself. Alt text is read aloud with no way to reach a note, and a marker left
+# in it is a second reference to one the caption already carries, which Pandoc
+# answers by setting the note twice. Only a footnote reference goes; `[desk]`
+# is a description's own bracket and stays.
+_FOOTNOTE_REF_RE = re.compile(r"\s*\[\^[^\]\s]+\]")
+
 
 def caption_alt_text(text: str) -> str:
     """Alt text for a figure, from the caption printed under it.
@@ -1227,6 +1235,7 @@ def caption_alt_text(text: str) -> str:
     match = _FIGURE_CAPTION_RE.match(text)
     if match:
         text = text[match.end():]
+    text = _FOOTNOTE_REF_RE.sub("", text)
     text = re.sub(r"\s*\((?:Source|Credit|Courtesy)[^)]*\)\s*$", "", text,
                   flags=re.IGNORECASE)
     # The archive more often sets the credit as its own trailing sentence

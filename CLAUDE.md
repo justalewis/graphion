@@ -27,12 +27,11 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (376 functions: 93 in `test_cleanups.py`, 28 in
-`test_teacher_resources.py`, 124 in `test_pdf_ingest.py`, 43 in
-`test_ingest_volume.py`, 28 in
-`test_lint.py`, 23 in `test_pdf_tags.py`, 17 in
-`test_metadata_roundtrip.py`, 6 in
-`test_standalone_html.py`, 7 in `test_pdf_ua.py`, 4 in
+Tests (387 functions: 127 in `test_pdf_ingest.py`, 96 in
+`test_cleanups.py`, 43 in `test_ingest_volume.py`, 29 in
+`test_teacher_resources.py`, 28 in `test_lint.py`, 23 in
+`test_pdf_tags.py`, 21 in `test_metadata_roundtrip.py`, 7 in
+`test_pdf_ua.py`, 6 in `test_standalone_html.py`, 4 in
 `test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
 runs without Pandoc; `test_journal_filter.py` needs it and skips where it is
 absent:
@@ -132,6 +131,20 @@ both `ingest_pdf` and `run_cleanups` call it before they write. An
 `undescribed_alt` placeholder is not carried, so a run that has since found a
 caption may improve on it and `lint.check_alt_text` goes on counting what is
 still owed. Any new path that rebuilds the body has to call it too.
+
+Two things about that match are easy to get wrong, and the archive holds
+one of each. The alt is read with a lazy pattern rather than a class
+excluding `]`, because a description may carry a bracket of its own:
+`the-complexity-of-simplicity` describes a photograph as "labelled
+[desk]". A class stopping at the first `]` does not match such an image
+at all, so the carry reads no description off it and writes none onto it,
+saying nothing either way; `lint._IMAGE_RE` already spells it lazily. And
+a caption that footnotes its source hands the next run an alt ending
+`[^5]`, which is what triggered that and is wrong by itself: alt text is
+read aloud with no way to reach a note, and the marker is a second
+reference to one the caption already carries, which Pandoc answers by
+setting the note twice. `caption_alt_text` strips a footnote reference and
+only that, since `[desk]` is a description's own bracket.
 
 **Lint checks** follow the same shape in `lint.py`: return `_ok(...)` or
 `_warn(...)`, then register in `DEFAULT_CHECKS` (`lint.py:405`).

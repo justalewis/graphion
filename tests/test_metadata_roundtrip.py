@@ -316,6 +316,49 @@ def test_a_description_goes_to_fig_alt_when_the_bracket_holds_a_caption():
     assert (again, carried_again) == (out, 0)
 
 
+def test_a_bracket_in_the_alt_does_not_hide_a_figure_from_the_carry():
+    """A description may hold a bracket, and so may the alt ingest writes.
+
+    `the-complexity-of-simplicity` describes a photograph as "labelled
+    [desk]", and a caption that footnotes its source leaves ingest an alt
+    ending "[^5]". An alt spelled as a class excluding `]` matched neither
+    image, so the carry read no description off the first and wrote none onto
+    the second, saying nothing either way: re-ingesting
+    `wikipedia-is-good-for-you` to pick up a caption fix published the
+    caption over a description that way.
+    """
+    previous = (
+        "![A school desk photographed from the side, labelled [desk], with "
+        "questions written around it.](assets/figure-p005-1.jpg)\n"
+    )
+    out, carried = conversion.carry_alt_text(
+        "![A desk](assets/figure-p005-1.jpg)\n", previous)
+    assert carried == 1
+    assert "labelled [desk], with questions" in out
+
+    # The other half: the description goes back over an alt that itself
+    # carries a footnote marker, and the caption line below it is untouched.
+    previous = (
+        "![A references section in two columns: twenty-five numbered "
+        "citations, each ending in an external-link icon.]"
+        "(assets/figure-p007-1.png)\n"
+    )
+    caption = "Figure 1. References section from Wikipedia's article [^5]"
+    fresh = (
+        "![References section from Wikipedia's article [^5]]"
+        "(assets/figure-p007-1.png)" + "\\" + "\n" + caption + "\n"
+    )
+    out, carried = conversion.carry_alt_text(fresh, previous)
+    assert carried == 1
+    assert out.startswith(
+        "![A references section in two columns: twenty-five numbered "
+        "citations, each ending in an external-link icon.]"
+        "(assets/figure-p007-1.png)")
+    assert out.endswith(caption + "\n")
+    # And carrying again changes nothing.
+    assert conversion.carry_alt_text(out, previous) == (out, 0)
+
+
 def _repaired(body: str) -> str:
     """Run the render-time markdown repairs over a scratch article."""
     article = _scratch_article(f"---\ntitle: T\n---\n\n{body}")

@@ -238,8 +238,16 @@ def ingest_docx(
     return IngestResult(raw_md_path=raw_md, log=body, has_tracked_changes=has_tracked)
 
 
+# The alt is lazy rather than a class that excludes `]`, because a description
+# may carry a bracket of its own: a footnote marker the caption brought with it,
+# or a bracketed word in an editor's prose ("labelled [desk]"). A class that
+# stops at the first `]` does not match such an image at all, so the carry below
+# neither reads its description nor writes one back, and reports nothing either
+# way; re-ingesting `wikipedia-is-good-for-you` to pick up a caption fix lost a
+# description exactly there. Expanding to the last `]` before the `](` is what
+# `lint._IMAGE_RE` already does.
 _BODY_IMAGE_RE = re.compile(
-    r"!\[(?P<alt>[^\]]*)\]\((?P<src>assets/[^)]+)\)(?P<attrs>\{[^}]*\})?")
+    r"!\[(?P<alt>.*?)\]\((?P<src>assets/[^)]+)\)(?P<attrs>\{[^}]*\})?")
 # What `pdf_ingest.undescribed_alt` writes over a figure whose page printed no
 # caption to describe it with. Recognised by its shape rather than imported,
 # because what has to be matched is the string a previous run left behind;
