@@ -1954,9 +1954,23 @@ def _caption_key(text: str) -> str:
     arrives with an asterisk on the front and the two keys differ by that
     one character. Recognising the caption was not enough to place the
     figure; the pairing is what the key does.
+
+    Emphasis inside the caption comes off as well, and this is the only
+    place it does. `unemphasize` takes off what wraps the whole line and no
+    more, because emphasis within a caption is the caption's own and belongs
+    in the text that prints. A key is a different thing: it is matched
+    against the caption as `extract_text` reads it off the page, which
+    carries no font information and so no markers at all, so one marker
+    anywhere inside the first eight words makes the two keys differ and the
+    figure has nothing to anchor to. Volume 1's wikipedia-is-good-for-you
+    sets in italic the article titles its captions name, and "*Web 2.0*" and
+    "*Writing*" fall inside the key for Figures 1 and 2: both pictures were
+    left uncaptioned at the end of the chapter while Figures 3 to 6 paired,
+    whose italics sit past the eighth word.
     """
+    plain = re.sub(r"[*_]", "", unemphasize(text))
     return " ".join(
-        re.sub(r"\s+", " ", unemphasize(text)).strip().split()[:8]).lower()
+        re.sub(r"\s+", " ", plain).strip().split()[:8]).lower()
 
 
 # The standalone chapter download opens on a page the bound volume does not

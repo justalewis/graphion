@@ -797,6 +797,33 @@ def test_an_italic_caption_pairs_with_its_figure():
     assert pdf_ingest._caption_key(page) == pdf_ingest._caption_key(block)
 
 
+def test_a_caption_whose_own_words_are_italic_pairs_with_its_figure():
+    """Emphasis inside the key has to come off, not only emphasis round it.
+
+    `extract_text` reads the page with no font information, so the printed
+    side of the comparison can carry no markers at all. Volume 1's
+    wikipedia-is-good-for-you sets in italic the article titles its captions
+    name, and those fall inside the first eight words for Figures 1 and 2,
+    which left both pictures uncaptioned at the end of the chapter while
+    Figures 3 to 6 paired, whose italics sit past the eighth word.
+    """
+    for page, block in [
+        ("Figure 1. References section from Wikipedia’s Web 2.0 article 5",
+         "Figure 1. References section from Wikipedia’s *Web 2.0* "
+         "article [^5]"),
+        ("Figure 2. Further reading section from Wikipedia’s Writing "
+         "article",
+         "Figure 2. Further reading section from Wikipedia’s *Writing* "
+         "article"),
+    ]:
+        assert pdf_ingest._caption_key(page) == pdf_ingest._caption_key(block)
+    # The emphasis is taken off the key only. A caption still prints the
+    # italics the page set, since they are the caption's own.
+    block = "Figure 2. Further reading section from Wikipedia’s *Writing*"
+    assert "*Writing*" in block
+    assert "*" not in pdf_ingest._caption_key(block)
+
+
 def test_an_italic_caption_places_the_figure_before_the_back_matter():
     blocks = [("body", "Prose about the photograph."),
               ("body", "*Fig. 1. Nicaraguan woman on a side street.*"),
