@@ -27,10 +27,10 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (396 functions: 135 in `test_pdf_ingest.py`, 96 in
+Tests (404 functions: 137 in `test_pdf_ingest.py`, 96 in
 `test_cleanups.py`, 43 in `test_ingest_volume.py`, 29 in
-`test_teacher_resources.py`, 28 in `test_lint.py`, 24 in
-`test_pdf_tags.py`, 21 in `test_metadata_roundtrip.py`, 7 in
+`test_teacher_resources.py`, 28 in `test_lint.py`, 27 in
+`test_metadata_roundtrip.py`, 24 in `test_pdf_tags.py`, 7 in
 `test_pdf_ua.py`, 6 in `test_standalone_html.py`, 4 in
 `test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
 runs without Pandoc; `test_journal_filter.py` needs it and skips where it is
@@ -146,6 +146,23 @@ read aloud with no way to reach a note, and the marker is a second
 reference to one the caption already carries, which Pandoc answers by
 setting the note twice. `caption_alt_text` strips a footnote reference and
 only that, since `[desk]` is a description's own bracket.
+
+Two fields in the front matter have that exposure too, and
+`conversion.carry_editor_fields()` carries them for the same reason, from
+`ingest_pdf`, so they ride through inside `article-raw.md` and survive the
+rebuild. `images-of-text` is the costlier one: the list is kept by hand
+because nothing can tell a photograph of a document from a photograph of
+anything else without looking, and losing it fails no check and changes no
+galley, so the chapter simply reads as one with no images of text and
+`lint.check_images_of_text` warns about nothing. `teacher-resources` decides
+whether the chapter renders as two galleys, which is a property of how the
+piece is written rather than anything the page states. The volume facts are
+deliberately not carried: `ingest_volume.py` stamps those after cleaning, so
+carrying them here would let a stale value look like a recovered one, and
+the licence is the field in this archive that least tolerates being rounded
+off. Reading the front matter before a re-ingest and writing it back is what
+a caller has to do for those; `ingest_volume.py` re-reads at line 365, after
+`run_cleanups`, so what it re-applies is whatever ingest produced.
 
 **Lint checks** follow the same shape in `lint.py`: return `_ok(...)` or
 `_warn(...)`, then register in `DEFAULT_CHECKS` (`lint.py:405`).
@@ -390,7 +407,17 @@ notes. And punctuation cannot tell a caption from a reference to one, because
 the archive writes all three of "Figure 4.1: ", "Figure 3.3. " and
 "Figure 15.1 "; what separates them is the capital that follows, since a
 caption continues with the figure's name and prose continues with a verb
-("Figure 7.6 shows that").
+("Figure 7.6 shows that"). The capital is still required but not first,
+because four captions in the series name a quoted title and put a left
+quotation mark there instead: `16-vankooten`'s Figures 1 and 2 both begin
+with "A College Collage", `14-blakesley`'s Figure 2 and
+`assessing-source-credibility`'s Figure 3 the same way. Those two figures of
+`16-vankooten` were the ones that looked uncaptioned, and the cost was not
+the caption but what followed from it, below. Measured over the archive, 172
+captions follow their label with a capital, 4 with a quotation mark, and the
+12 lines that are prose referring to a figure all continue in lower case, so
+admitting the quotation mark lets none of them through. `is_table_caption`
+has the same shape and the archive holds no instance of it.
 
 The label itself is abbreviated three ways, consistently within a volume and
 not across the series: volume 2 prints "Fig. 1." over all seventeen of its
@@ -422,6 +449,46 @@ Figure, and the figures filter numbers every Figure from 1 in document order,
 which would print "Figure 1." over a caption reading "Figure 7.1" and leave
 every "see Figure 7.3" in the prose pointing at the wrong picture. A
 reconstruction keeps the printed numbering.
+
+**A figure whose page printed no caption is placed by the hole it left.**
+With no caption to be paired with it has no position either, so it used to
+follow the last captioned figure before it or close the document. 35 figures
+in 14 chapters came out that way, and volume 2's
+`the-complexity-of-simplicity` captions none of its seven collages, so there
+was no last captioned figure and all seven closed the document together,
+printing after the Works Cited in a chapter whose own prose calls them a
+visual essay embedded in the following pages.
+
+A figure is set into the text block, so the lines part around it and leave a
+gap many times `layout.line_pitch`. That gap is a record of where in the
+prose it stood and it is in the lines already being read, so nothing has to
+make pypdf and pdfplumber agree about which image on a page is which.
+
+The gap means nothing on its own, and this is the part to keep. A captioned
+figure parts the text identically, so does a table, and so does a section
+ending partway down its page: over those fourteen chapters a gap rule alone
+catches 22 of the 24 stranded-figure pages and 59 of the 236 pages that
+strand nothing. Placing a figure on that evidence would be the failure this
+module least wants, present and wrong, and nothing downstream can see a
+picture sitting in the wrong paragraph. So
+`figure_anchors_from_holes()` counts a hole only where nothing else on the
+page could have left it: no caption line, no table, and exactly as many
+holes as the page has uncaptioned figures. The anchor is the line above the
+hole, or the last line of the page before where the hole is at the head of
+the page, and `_anchor_position` places it by the same tiers and the same
+reading-order floor the tables use. 13 of the 35 are placed and 22 keep the
+old behaviour with the reason in the notes, which is the right way round:
+volume 6's `15-bennett` sets five of its figures on a design spread whose
+only lines are the series wordmark forwards and reversed, and the table test
+declines that page.
+
+Recognising a caption comes first. Three of the seven chapters this moved
+were stranding figures only because `_FIGURE_CAPTION_RE` turned down a
+quoted title, and reading the hole for them placed the image in the prose
+and left the caption behind as a loose paragraph after the licence note,
+which is worse than where it started. A figure placed this way still carries
+`undescribed_alt`, because where a figure sits and what is in it are
+different questions and only the first is answerable from the page.
 
 **Tables are found by their rules, never by the alignment of their text.**
 `TABLE_SETTINGS` asks pdfplumber for the "lines" strategy only. This archive
