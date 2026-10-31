@@ -116,7 +116,9 @@ As you can see, we can actually learn a lot about writing simply by paying expli
 
 Adorno, Theodor W. “Punctuation Marks.” *The Antioch Review*, translated by Shierry Weber Nicholsen, vol. 48, no. 3, 1990, 300-05. *JSTOR*, www.jstor. org/stable/4612221. Accessed 10 May 2019.
 
-Bishop, Wendy. “Reading, Stealing, and Writing Like a Writer.” *Elements of Alternate Style: Essays on Writing and Revision.* Ed. Wendy Bishop. Portsmouth, NH: Boynton/Cook, 1997, pp. 119-30 Bunn, Mike. “How to Read Like a Writer.” *Writing Spaces, Readings on* *Writing,* vol. 2, 2010. Eds. Charles Lowe and Pavel Zemliansky. WAC Clearinghouse. Accessed: 10 May 2019. https://writingspaces.org/ bunn--how-to-read-like-a-writer Ellis, Rod. Introduction. “Implicit and Explicit Learning, Knowledge and Instruction.” *Implicit and Explicit Knowledge in Second Language Learning, Testing and Teaching.* Ed. Rod Ellis. Multilingual Matters, 2009, pp. 3-26.
+Bishop, Wendy. “Reading, Stealing, and Writing Like a Writer.” *Elements of Alternate Style: Essays on Writing and Revision.* Ed. Wendy Bishop. Portsmouth, NH: Boynton/Cook, 1997, pp. 119-30 Bunn, Mike. “How to Read Like a Writer.” *Writing Spaces, Readings on* *Writing,* vol. 2, 2010. Eds. Charles Lowe and Pavel Zemliansky. WAC Clearinghouse. Accessed: 10 May 2019. https://writingspaces.org/ bunn--how-to-read-like-a-writer
+
+Ellis, Rod. Introduction. “Implicit and Explicit Learning, Knowledge and Instruction.” *Implicit and Explicit Knowledge in Second Language Learning, Testing and Teaching.* Ed. Rod Ellis. Multilingual Matters, 2009, pp. 3-26.
 
 Mann, Nancy. “Point Counterpoint: Teaching Punctuation as Information Management.” *College Composition and Communication*, vol. 54, no. 3, 2003, pp. 359-93.
 

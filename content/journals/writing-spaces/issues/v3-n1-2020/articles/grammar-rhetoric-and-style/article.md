@@ -112,7 +112,9 @@ Benzon, Paul. “Lost in Transcription: Postwar Typewriting Culture, Andy Warhol
 
 Kolln, Martha. *Rhetorical Grammar*. Longman, 2003. Micciche, Laura R. “Making a Case for Rhetorical Grammar.” *College Composition* *and Communication*, vol. 55, no. 4, Jun.2004, pp. 716-737. *ProQuest*, http:// search.proquest.com.ezproxy.gvsu.edu/docview/62073590?accountid=39473.
 
-Morenberg, Max. *Doing Grammar*. Oxford UP, 1997. Stewart, L. L., Beob G. Kim, B. R. Gramm, R. D. Nimmo, and H. H. Stein. “Effects of Dietary Carbadox on Apparent Ileal Digestibility of Amino Acids in Weanling Pigs.” *American Journal of Animal and Veterinary Sciences*, vol. 5 no. 3, 2010, pp. 168-174. https://nutrition.ansci.illinois.edu/sites/default/files/ AmJAnimVetSci5.168-174.pdf *Vault Dweller’s Survival Guide*. Bethesda Softworks. 2008.
+Morenberg, Max. *Doing Grammar*. Oxford UP, 1997. Stewart, L. L., Beob G. Kim, B. R. Gramm, R. D. Nimmo, and H. H. Stein. “Effects of Dietary Carbadox on Apparent Ileal Digestibility of Amino Acids in Weanling Pigs.” *American Journal of Animal and Veterinary Sciences*, vol. 5 no. 3, 2010, pp. 168-174. https://nutrition.ansci.illinois.edu/sites/default/files/ AmJAnimVetSci5.168-174.pdf
+
+*Vault Dweller’s Survival Guide*. Bethesda Softworks. 2008.
 
 # Teacher Resources for Grammar, Rhetoric, and Style by Craig Hulst
 

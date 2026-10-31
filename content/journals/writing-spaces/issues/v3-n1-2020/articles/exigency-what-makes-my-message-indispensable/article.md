@@ -113,7 +113,9 @@ These strategies are oftentimes used simultaneously, and you may have noticed th
 
 # Works Cited
 
-Bloomberg, Michael. “Mayor Bloomberg Discusses the Landmarks Preservation Commission Vote on 45--47 Park Place.” *NYC*, uploaded by The City of New York, 3 Aug. 2010, https://www1.nyc.gov/office-of-the-mayor/news/337-10/ mayor-bloomberg-the-landmarks-preservation-commission-vote-45-47-parkplace#/2 Cope, Wendy. “Lonely Hearts.” *An Introduction to Poetry*, edited by X. J. Kennedy and Dana Gioia, 13th ed., Longman, 2010, pp. 61.
+Bloomberg, Michael. “Mayor Bloomberg Discusses the Landmarks Preservation Commission Vote on 45--47 Park Place.” *NYC*, uploaded by The City of New York, 3 Aug. 2010, https://www1.nyc.gov/office-of-the-mayor/news/337-10/ mayor-bloomberg-the-landmarks-preservation-commission-vote-45-47-parkplace#/2
+
+Cope, Wendy. “Lonely Hearts.” *An Introduction to Poetry*, edited by X. J. Kennedy and Dana Gioia, 13th ed., Longman, 2010, pp. 61.
 
 Downie Jr., Leonard and Michael Schudson. “The Reconstruction of American Journalism.” *Columbia Journalism Review*, vol. 48, no. 4, Nov/Dec 2009, https://archives.cjr.org/reconstruction/the_reconstruction_of_american.php.
 

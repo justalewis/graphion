@@ -196,7 +196,9 @@ Creswell, John W. *Research Design: Qualitative, Quantitative, and Mixed Methods
 
 Gibson, William J., and Andrew Brown. *Working with Qualitative Data*. London, Sage, 2009.
 
-*Google Trends*. (n.d.). Retrieved April 11, 2021, from https://trends.google.com/ trends/explore Guest, Greg, et al. *Collecting Qualitative Data: A Field Manual for Applied Research.* Sage, 2013.
+*Google Trends*. (n.d.). Retrieved April 11, 2021, from https://trends.google.com/ trends/explore
+
+Guest, Greg, et al. *Collecting Qualitative Data: A Field Manual for Applied Research.* Sage, 2013.
 
 *HealthData.gov*. (n.d.). Retrieved April 11, 2021, from https://healthdata.gov/ Lavrakas, Paul J. *Encyclopedia of Survey Research Methods.* Sage, 2008. Mackey, Allison, and Sue M. Gass. *Second Language Research: Methodology and* *Design.* Lawrence Erlbaum Associates, 2005.
 

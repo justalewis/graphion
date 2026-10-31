@@ -119,7 +119,9 @@ From automated cleanup vehicles to carbon taxes, you can join other students in 
 
 Berry, Gregory. “Organizing against Multinational Corporate Power in Cancer Alley: The Activist Community as Primary Stakeholder.” *Organization and Environment*, vol. 16, no. 1, 2003, pp. 3-33. https://doi.org/10.1177/108602660225
 
-Baurick, Tristan, et al. “Welcome to ‘Cancer Alley,’ Where Toxic Air Is About to Get Worse.” *ProPublica,* 30 Oct. 2019. https://www.propublica.org/article/ welcome-to-cancer-alley-where-toxic-air-is-about-to-get-worse Casarez, Selina. “Medicine without Borders: Personal Narrative.” 4 Sept. 2019. English 109, University of Arizona, student paper.
+Baurick, Tristan, et al. “Welcome to ‘Cancer Alley,’ Where Toxic Air Is About to Get Worse.” *ProPublica,* 30 Oct. 2019. https://www.propublica.org/article/ welcome-to-cancer-alley-where-toxic-air-is-about-to-get-worse
+
+Casarez, Selina. “Medicine without Borders: Personal Narrative.” 4 Sept. 2019. English 109, University of Arizona, student paper.
 
 Freire, Paolo. *Pedagogy of the Oppressed*. New York: Continuum Press, 1996. McNeal, Dominic. “School Inequality in North/East Philly.” 3 Jul. 2017. English 101, University of Arizona, student paper.
 

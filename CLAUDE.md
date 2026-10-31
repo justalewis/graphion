@@ -123,9 +123,10 @@ away exactly as the front matter is, and nothing above the pipeline holds a
 copy. Re-ingesting volume 6 chapter 15 to pick up a caption fix replaced all
 seven of its descriptions with machine text, which is the one thing in a
 galley that cannot be regenerated: a caption says what a figure is called and
-alt text says what is in it, and only the first of those is on the page. 200
+alt text says what is in it, and only the first of those is on the page. 201
 figures across 49 chapters of the Writing Spaces archive are described by
-hand. `conversion.carry_alt_text()` matches them back by asset path, which is
+hand; the figure read 200 for as long as the pattern below could not see a
+description holding a bracket. `conversion.carry_alt_text()` matches them back by asset path, which is
 stable because the filenames are built from the page the raster sits on, and
 both `ingest_pdf` and `run_cleanups` call it before they write. An
 `undescribed_alt` placeholder is not carried, so a run that has since found a

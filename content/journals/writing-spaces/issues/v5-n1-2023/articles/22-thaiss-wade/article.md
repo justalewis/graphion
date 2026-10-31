@@ -172,7 +172,9 @@ Bala, Maha. “Inclusive Citation: How Diverse are Your References?” *Reflecti
 
 Bratta, Phil, and Malea Powell. “Introduction to the Special Issue: Entering the Cultural Rhetorics Conversations” *enculturation* 21 (2016). 8 March 2022, http://enculturation.net/entering-the-cultural-rhetorics-conversations
 
-De Fontenelle, Bernard. *Entretiens sur la pluralité des mondes* (Paris, 1686); translated as *Conversations on a Plurality of Worlds*. London, 1715. Translator Aphra Behn. 8 March 2022, https://archive.org/details/weeksconversatio00font/ page/n3/mode/2up Flower, Linda, and John R. Hayes. “A Cognitive Process Theory of Writing.” *College Composition and Communication*, vol. 32, no. 4, 1981, pp. 365--387. JSTOR, 8 March 2022, www.jstor.org/stable/356600.
+De Fontenelle, Bernard. *Entretiens sur la pluralité des mondes* (Paris, 1686); translated as *Conversations on a Plurality of Worlds*. London, 1715. Translator Aphra Behn. 8 March 2022, https://archive.org/details/weeksconversatio00font/ page/n3/mode/2up
+
+Flower, Linda, and John R. Hayes. “A Cognitive Process Theory of Writing.” *College Composition and Communication*, vol. 32, no. 4, 1981, pp. 365--387. JSTOR, 8 March 2022, www.jstor.org/stable/356600.
 
 Lessner, Steven and Collin Craig. “Finding Your Way In: Invention as Inquiry Based Learning in First Year Writing.” *Writing Spaces*. Vol 1, 2010. 8 March 2022, https://wac.colostate.edu/docs/books/writingspaces1/lessner-and-craig-finding-your-way-in.pdf
 

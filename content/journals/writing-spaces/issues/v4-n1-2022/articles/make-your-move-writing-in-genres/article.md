@@ -215,7 +215,11 @@ Devitt, Amy, et al. *Scenes of Writing.* Pearson Education, 2004. Dirk, Kerry. �
 
 Hyon, Sunny. *Introducing Genre and English for Specific Purposes*. Routledge, 2018. Miller, Carolyn R. “Genre as Social Action.” *Quarterly Journal of Speech,* vol. 70, no. 2, 1984 pp. 151-167.
 
-“Proposal from Building Tomorrow to Echoing Green.” *Candid.Learning*, Candid, 2020, https://learning.candid.org/resources/sample-documents/ proposal-from-building-tomorrow-to-echoing-green/ “Proposal from The Griot Project to Neighborhood Connections.” *Candid.Learning*, Candid, 2020, https://learning.candid.org/resources/sample-documents/ proposal-from-the-griot-project-to-neighborhood-connections/ “Sample Documents”. *Candid.Learning*, Candid, 2020, https://learning.candid. org/resources/sample-documents/ “Proposal from Southeast Community College to Community Health Endowment of Lincoln.” *Candid.Learning*, Candid, 2020, https://learning.candid. org/resources/sample-documents/proposal-from-southeast-community-college-to-community-health-endowment-of-lincoln/ Swales, John M. *Genre Analysis: English in Academic and Research Settings*. Cambridge University Press, 1990.
+“Proposal from Building Tomorrow to Echoing Green.” *Candid.Learning*, Candid, 2020, https://learning.candid.org/resources/sample-documents/ proposal-from-building-tomorrow-to-echoing-green/
+
+“Proposal from The Griot Project to Neighborhood Connections.” *Candid.Learning*, Candid, 2020, https://learning.candid.org/resources/sample-documents/ proposal-from-the-griot-project-to-neighborhood-connections/
+
+“Sample Documents”. *Candid.Learning*, Candid, 2020, https://learning.candid. org/resources/sample-documents/ “Proposal from Southeast Community College to Community Health Endowment of Lincoln.” *Candid.Learning*, Candid, 2020, https://learning.candid. org/resources/sample-documents/proposal-from-southeast-community-college-to-community-health-endowment-of-lincoln/ Swales, John M. *Genre Analysis: English in Academic and Research Settings*. Cambridge University Press, 1990.
 
 Tardy, Christine M. *Genre-Based Writing: What Every ESL Teacher Needs to Know*. University of Michigan, 2019.
 

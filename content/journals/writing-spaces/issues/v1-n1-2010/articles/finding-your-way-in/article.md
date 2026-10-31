@@ -8,7 +8,7 @@ short-title: “Finding Your Way In”
 short-authors: Lessner and Craig
 volume: 1
 year: 2010
-start-page: 129
+start-page: 130
 source-file: lessner-and-craig--finding-your-way-in.pdf
 volume-title: Writing Spaces 1
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 United States License (CC BY-NC-ND 3.0 US).

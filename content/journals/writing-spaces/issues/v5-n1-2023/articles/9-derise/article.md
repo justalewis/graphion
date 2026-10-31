@@ -108,7 +108,9 @@ Belle, Elly. “How 2020 Created Community for Disabled People.” *Teen Vogue*.
 
 Carillo, Ellen and Alice Horning. “Effectively and Efficiently Reading the Credibility of Online Sources.” *Writing Spaces: Readings on Writing,* edited by Dana Driscoll, Megan Heise, Mary Stewart, and Matthew Vetter, vol. 4, 2021, pp. 35-50. https://writingspaces.org/?page_id=758
 
-Caulfield, Mike. “2021’s Misinformation Will Look a Lot Like 2020’s (and 2019’s, and . . .).” *Nieman Lab.* https://www.niemanlab. org/2020/12/2021s-misinformation-will-look-a-lot-like-2020s-and-2019s-and/ “Coronavirus: How Pro-Mask Posts Boost the Anti-Mask Movement.” *First Draft.* 20 August 2020. https://firstdraftnews.org/articles/ coronavirus-how-pro-mask-posts-boost-the-anti-mask-movement/ Devitt, Amy J. “Generalizing about Genre: New Conceptions of an Old Concept.” *College Composition and Communication,* vol. 44, no. 4, Dec. 1993, pp. 573-586. *JSTOR*, doi.org/10.2307/358391.
+Caulfield, Mike. “2021’s Misinformation Will Look a Lot Like 2020’s (and 2019’s, and . . .).” *Nieman Lab.* https://www.niemanlab. org/2020/12/2021s-misinformation-will-look-a-lot-like-2020s-and-2019s-and/ “Coronavirus: How Pro-Mask Posts Boost the Anti-Mask Movement.” *First Draft.* 20 August 2020. https://firstdraftnews.org/articles/ coronavirus-how-pro-mask-posts-boost-the-anti-mask-movement/
+
+Devitt, Amy J. “Generalizing about Genre: New Conceptions of an Old Concept.” *College Composition and Communication,* vol. 44, no. 4, Dec. 1993, pp. 573-586. *JSTOR*, doi.org/10.2307/358391.
 
 Eberhardt, Jennifer. *Biased: Uncovering the Hidden Prejudice That Shapes What We* *See, Think, and Do.* New York: Viking, 2019.
 

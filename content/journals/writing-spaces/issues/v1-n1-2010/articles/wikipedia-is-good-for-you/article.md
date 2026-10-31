@@ -7,7 +7,7 @@ short-title: Wikipedia Is Good for You!?
 short-authors: Purdy
 volume: 1
 year: 2010
-start-page: 204
+start-page: 205
 source-file: purdy--wikipedia-is-good-for-you.pdf
 volume-title: Writing Spaces 1
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
@@ -59,8 +59,10 @@ To use Wikipedia as a source of ideas, read the Wikipedia article on your topic 
 
 You can also use Wikipedia as a gateway to other texts to consult for your research. Wikipedia’s Verifiability Policy requires that material posted to articles be verifiable---that is, be cited (Bruns 114, “Wikipedia:Verifiability”)---so articles include bibliographies, as shown in figure 1. They also frequently include “further reading,” “external link,” or “see also” lists, as shown in figure 2. These lists provide the names of---and often direct links to---other sources. Take advantage of these leads. When you have decided on a topic and are searching for sources to develop and support your thinking, look at these references, external links, and further reading lists. Wikipedia’s Verifiability Policy, however, does not stipulate what kinds of sources contributors must cite to verify the information they post, so these reference and further reading lists do not necessarily provide connections to trustworthy, valid texts appropriate for citing in an academic paper (but, then again, neither do other sources). You still need to evaluate a source to determine if it is suitable for use.
 
+![A Wikipedia references section set in two columns: twenty-five numbered citations for the Web 2.0 article, each ending in an external-link icon.](assets/figure-p007-1.png)\
 Figure 1. References section from Wikipedia’s *Web 2.0* article [^5]
 
+![A Wikipedia Further reading section: seven entries, among them a history of writing from hieroglyph to multimedia, three ERIC digests on writing instruction, a German discussion of Barthes, Breton, Deleuze and Federman, and links on the origins and history of writing. A tooltip shows one entry's URL.](assets/figure-p007-2.png)\
 Figure 2. Further reading section from Wikipedia’s *Writing* article
 
 Utilizing Wikipedia as a gateway to other sources should not replace going to the library or using your library’s online databases. In fact, reviewing the Wikipedia article on your topic can help you better discover sources in your school’s library. You might read Wikipedia articles to help you generate search terms to use for finding sources in your school library’s catalog and online databases. Ashley Gill (who, like all students quoted in this essay, consented to the use of her real name) explains how she used Wikipedia in this way for an award-winning research project for her school’s first year composition class:
@@ -194,10 +196,6 @@ Seigenthaler, John. “A False Wikipedia Biography.” *USA Today.* Gannett Co.,
 Wilson, Mark A. “Professors Should Embrace Wikipedia.” *Inside Higher Ed.* Inside Higher Ed, 1 April 2008. Web. 1 April 2008.
 
 “Writing.” *Wikipedia.* Wikimedia Foundation, 11:13, 9 June 2004. Web. 9 Nov. 2004.
-
-![A Wikipedia references section set in two columns: twenty-five numbered citations for the Web 2.0 article, each ending in an external-link icon.](assets/figure-p007-1.png)
-
-![A Wikipedia Further reading section: seven entries, among them a history of writing from hieroglyph to multimedia, three ERIC digests on writing instruction, a German discussion of Barthes, Breton, Deleuze and Federman, and links on the origins and history of writing. A tooltip shows one entry's URL.](assets/figure-p007-2.png)
 
 \* This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 United States License and is subject to the Writing Spaces Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces Terms of Use, visit http://writingspaces. org/terms-of-use.
 

@@ -120,7 +120,9 @@ Flores, Nelson. “From Academic Language to Language Architecture: Challenging 
 
 Flores, Nelson, and Jonathan Rosa. “Undoing Appropriateness: Raciolinguistic Ideologies and Language Diversity in Education.” *Harvard Educational Review*, vol. 85, no. 2, 2015, pp. 149-301.
 
-Frohman, Denice. *Accents*. YouTube, 30 Dec. 2013, https://www.youtube.com/ watch?v=qtOXiNx4jgQ García, Ofelia. *Bilingual Education in the 21st Century: A Global Perspective*. Wiley-Blackwell, 2009.
+Frohman, Denice. *Accents*. YouTube, 30 Dec. 2013, https://www.youtube.com/ watch?v=qtOXiNx4jgQ
+
+García, Ofelia. *Bilingual Education in the 21st Century: A Global Perspective*. Wiley-Blackwell, 2009.
 
 Gonzales, Laura. *Sites of Translation*. University of Michigan Press, 2018. Horner, Bruce, and Sara P. Alvarez. “Defining Translinguality.” *Literacy in Composition Studies*, vol.7, no. 2, 2019, pp. 1-30.
 
@@ -138,7 +140,9 @@ Martínez, Tiffany. “Academia, Love Me Back.” *Tiffany Martínez*, 27 Oct. 2
 
 Pough, Gwendolyn. “2011 CCCC Chair’s Address: It’s Bigger than Comp/Rhet: Contested and Undisciplined.” *College Composition and Communication*, vol. 63, no. 2, 2011, pp. 301-313.
 
-“Talk American.” *Code-Switch* from NPR, 8 August 2018, https://www.npr.org/ transcripts/636442508 Vuong, Ocean. *A Life Worthy of Our Breath*. Interview by Krista Tippett, 30 Apr. 2020, https://onbeing.org/programs/ocean-vuong-a-life-worthy-of-our-breath/.
+“Talk American.” *Code-Switch* from NPR, 8 August 2018, https://www.npr.org/ transcripts/636442508
+
+Vuong, Ocean. *A Life Worthy of Our Breath*. Interview by Krista Tippett, 30 Apr. 2020, https://onbeing.org/programs/ocean-vuong-a-life-worthy-of-our-breath/.
 
 # Teacher Resources for “Workin’ Languages: Who We Are Matters in Our Writing”
 
