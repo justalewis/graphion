@@ -1119,7 +1119,8 @@ def test_table_caption_is_not_collected_with_the_footnotes():
     "Table 5.2" and "Table 5.4" in a row at the end of the chapter, each one
     pages away from the table it names."""
     blocks = [
-        ("body", "The spreadsheet below collects what each source contributes."),
+        ("body", "The spreadsheet below collects what each source "
+                 "contributes.[^1]"),
         ("note", "Table 5.1. Source Spreadsheet for Literature Reviews"),
         ("table", "| Source | Claim |\n| --- | --- |\n| Smith | Yes |"),
         ("note", "1. A numbered footnote still goes to the end."),
@@ -1306,7 +1307,8 @@ def test_a_bare_label_is_not_collected_away_with_the_footnotes():
     # And prose that merely refers to one is neither.
     assert not pdf_ingest.is_bare_label("Table 4.1 is an example that")
     markdown = pdf_ingest.blocks_to_markdown(
-        [("note", "Fig 2"), ("table", "|  |  |"), ("note", "1. A real note.")])
+        [("body", "The draft box below.[^1]"), ("note", "Fig 2"),
+         ("table", "|  |  |"), ("note", "1. A real note.")])
     # The label stays where the page put it; the numbered note still goes last.
     assert markdown.index("Fig 2") < markdown.index("[^1]:")
 
@@ -1670,3 +1672,63 @@ def test_a_quotation_mark_does_not_let_a_reference_through():
     assert not pdf_ingest.is_figure_caption("Figure 7.6 shows that the mark")
     assert not pdf_ingest.is_figure_caption(
         "Figure 2. “the lower case title”")
+
+
+def test_a_note_nothing_refers_to_stays_where_the_page_printed_it():
+    """Some chapters print an endnote section headed "Note" at the end, and
+    `_NOTE_RE` reads its numbered item exactly as it reads a footnote at the
+    foot of a page. Written as a Markdown definition it is dropped by Pandoc
+    with a warning and nothing else, so `the-complexity-of-simplicity`'s
+    acknowledgement of the student who photographed its whiteboard work
+    printed in neither galley."""
+    blocks = [("body", "Prose."),
+              ("head", "Note"),
+              ("note", "1. I created the images for inSights, with thanks "
+                       "to Jacqueline Casas.")]
+    out = pdf_ingest.blocks_to_markdown(blocks)
+    assert "Jacqueline Casas" in out
+    assert "[^1]:" not in out
+    # Under its own heading, not collected at the end.
+    assert out.index("# Note") < out.index("Jacqueline")
+    # And escaped, so Markdown does not read the label as a list marker.
+    assert r"1\. I created" in out
+
+
+def test_a_note_the_prose_refers_to_is_still_a_footnote():
+    blocks = [("body", "A claim.[^1]"),
+              ("note", "1. The evidence for it.")]
+    out = pdf_ingest.blocks_to_markdown(blocks)
+    assert "[^1]: The evidence for it." in out
+    assert r"1\." not in out
+
+
+def test_a_note_the_abstract_refers_to_is_still_a_footnote():
+    """The abstract is front matter rather than a block, and a reference in
+    it does resolve; `12-laflen` carries one."""
+    blocks = [("body", "Prose with no marker."),
+              ("note", "1. The evidence for it.")]
+    out = pdf_ingest.blocks_to_markdown(
+        blocks, abstract="An overview with a marker.[^1]")
+    assert "[^1]: The evidence for it." in out
+
+
+def test_a_definition_is_not_mistaken_for_a_reference():
+    """`[^1]:` in a block is a definition, so it must not count as the
+    reference that keeps the note a footnote."""
+    blocks = [("body", "[^1]: a stray definition"),
+              ("note", "1. The note itself.")]
+    out = pdf_ingest.blocks_to_markdown(blocks)
+    assert r"1\. The note itself." in out
+
+
+def test_a_numbered_marker_is_escaped_after_its_digits():
+    """A backslash escapes punctuation and nothing else, so "\1." prints the
+    backslash; Pandoc renders it literally. The period is what has to be
+    escaped for a number, and the character itself for a bullet."""
+    assert pdf_ingest.escape_list_marker("1. A note.") == r"1\. A note."
+    assert pdf_ingest.escape_list_marker("12) A note.") == r"12\) A note."
+    assert pdf_ingest.escape_list_marker("* The licence.") == r"\* The licence."
+    # Still idempotent, in both shapes.
+    for text in ("1. A note.", "* The licence."):
+        once = pdf_ingest.escape_list_marker(text)
+        assert pdf_ingest.escape_list_marker(once) == once

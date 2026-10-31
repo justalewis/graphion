@@ -742,13 +742,19 @@ def classify(line: Line, layout: Layout) -> str:
 
 _LIST_RE = re.compile(r"^(\d{1,2})[.)]\s+")
 _NOTE_RE = re.compile(r"^(\d{1,3})[.)]\s+")
+
+# A reference to a note, not a definition of one, which is what the trailing
+# colon rules out.
+_FOOTNOTE_KEY_RE = re.compile(r"\[\^([^\]\s]+)\](?!:)")
 # A footnote marked with a symbol rather than a number, which this series
 # uses for the licence it prints on a chapter's opening page.
 _MARKER_START_RE = re.compile(r"^([*+\-]|\d{1,3}[.)])\s+")
+# The digits of an ordered marker, so the backslash can go after them.
+_ORDERED_START_RE = re.compile(r"^(\d{1,3})[.)]\s+")
 
 
 def escape_list_marker(text: str) -> str:
-    """Keep a line that opens with a bullet character from becoming a bullet.
+    """Keep a line that opens with a list marker from becoming a list.
 
     The licence footnote is marked with an asterisk, not a number, so it
     falls past `_NOTE_RE` and is written out as it was read. Markdown then
@@ -756,7 +762,16 @@ def escape_list_marker(text: str) -> str:
     a bulleted item in the middle of the chapter, which is where 69 of the
     series' chapters had it. Escaping the marker leaves the printed text
     exactly as the page set it.
+
+    A number is escaped after its digits and a bullet in front, because a
+    backslash escapes punctuation and nothing else: "\\1." is not an escape
+    at all, and Pandoc prints the backslash. Only a note that nothing refers
+    to reaches this with a number in front of it, which is why the one-rule
+    version stood while every numbered note was becoming a definition.
     """
+    ordered = _ORDERED_START_RE.match(text)
+    if ordered:
+        return text[:ordered.end(1)] + "\\" + text[ordered.end(1):]
     if _MARKER_START_RE.match(text):
         return "\\" + text
     return text
@@ -923,7 +938,7 @@ def assemble(lines: list, layout: Layout, vocab: set, compounds: set) -> list:
     return blocks
 
 
-def blocks_to_markdown(blocks: list) -> str:
+def blocks_to_markdown(blocks: list, abstract: str = "") -> str:
     """Render blocks as Markdown, with footnotes collected at the end.
 
     A printed footnote sits at the foot of the page it is referenced from,
@@ -931,7 +946,26 @@ def blocks_to_markdown(blocks: list) -> str:
     flattened. Markdown wants the definition anywhere and the reference in
     place, so the definitions are gathered here and the body closes over
     them, leaving the prose unbroken.
+
+    A numbered note that nothing refers to is not a footnote. Some chapters
+    print an endnote section headed "Note" at the end, and `_NOTE_RE` reads
+    its numbered item exactly as it reads a footnote at the foot of a page,
+    so the text was lifted out from under its own heading and written as a
+    Markdown definition. Pandoc drops a definition nothing references, with
+    a warning and nothing else, so those notes printed in neither galley:
+    four of them across volume 2, among them an acknowledgement crediting
+    the student by name who photographed the whiteboard work a chapter is
+    built on. One that nothing references is left where the page put it,
+    with its marker escaped so Markdown does not read "1." as a list.
+
+    `abstract` is scanned for references too, because it is front matter
+    rather than a block and a reference in it does resolve; `12-laflen`
+    carries one.
     """
+    referenced = set(_FOOTNOTE_KEY_RE.findall(abstract or ""))
+    for _, text in blocks:
+        referenced.update(_FOOTNOTE_KEY_RE.findall(text))
+
     out, notes = [], []
     for kind, text in blocks:
         if kind in ("figure", "table"):
@@ -965,8 +999,10 @@ def blocks_to_markdown(blocks: list) -> str:
             out.append(text)
         elif kind == "note":
             match = _NOTE_RE.match(text)
-            if match:
+            if match and match.group(1) in referenced:
                 notes.append(f"[^{match.group(1)}]: {text[match.end():]}")
+            elif match:
+                out.append(escape_list_marker(text))
             else:
                 notes.append(escape_list_marker(text))
         else:
@@ -2320,7 +2356,7 @@ def extract(pdf_path: Path, genre_heads: Optional[tuple] = None,
                                              figure_anchors)
         notes.extend(figure_notes)
 
-    body = blocks_to_markdown(blocks)
+    body = blocks_to_markdown(blocks, fm.get("abstract", ""))
 
     hyphens = sum(1 for l in kept if l.text.endswith("-"))
     notes.append(f"Rejoined {hyphens} word(s) broken across a line.")
