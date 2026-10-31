@@ -1371,7 +1371,99 @@ def extract_figures(pdf_path: Path, assets_dir: Path,
     return out
 
 
-def place_figures(blocks: list, figures: list, caption_pages: dict) -> tuple:
+# A figure is set into the text block, so the lines part around it and leave a
+# hole many times the leading. Where a page printed no caption, that hole is
+# the only record of where in the prose the figure stood, and it is in the
+# lines already being read: no raster bbox, and so no need for a second
+# library to agree with pypdf about which image on the page is which.
+FIGURE_HOLE_FACTOR = 4.0
+
+
+def _text_holes(page_lines: list, layout: Layout, factor: float) -> list:
+    """Every gap in one page's text wide enough to have held a figure.
+
+    One entry per hole, in order down the page: the line above it, or None
+    where the hole is at the head of the page and the line above it is the
+    last line of the page before.
+    """
+    holes: list = []
+    if (page_lines[0].top - layout.body_top) / layout.line_pitch >= factor:
+        holes.append(None)
+    for above, below in zip(page_lines, page_lines[1:]):
+        if (below.top - above.top) / layout.line_pitch >= factor:
+            holes.append(above)
+    if (layout.body_bottom - page_lines[-1].top) / layout.line_pitch >= factor:
+        holes.append(page_lines[-1])
+    return holes
+
+
+def figure_anchors_from_holes(lines: list, layout: Layout, figures: list,
+                              caption_pages: dict, table_pages,
+                              factor: float = FIGURE_HOLE_FACTOR) -> dict:
+    """The line each uncaptioned figure was printed under, read off its page.
+
+    A hole in the text means nothing by itself. A captioned figure leaves the
+    same hole, so does a table, and so does a section that ends partway down
+    its page: measured over the fourteen chapters of this archive that strand
+    a figure, a hole rule alone catches 22 of the 24 stranded-figure pages and
+    59 of the 236 pages that carry no stranded figure. Placing a figure on
+    that evidence would be the failure this module least wants, the one that
+    is present and wrong, and it would be unreviewable: nothing downstream
+    can see that a picture sits in the wrong paragraph.
+
+    So the hole counts only on a page where nothing else could have left it.
+    The page carries no caption line, no table, and exactly as many holes as
+    it has uncaptioned figures; anything else and the figure keeps the old
+    behaviour and the notes go on saying so. That leaves 13 of this archive's
+    35 stranded figures placed and 22 untouched, which is the right way round:
+    the seven collages of `the-complexity-of-simplicity` are a visual essay
+    the chapter says is "embedded in the following pages" and were printing
+    after the Works Cited, while volume 6's `15-bennett` sets its figures on a
+    design spread whose only lines are the series wordmark, forwards and
+    reversed, and has nothing an anchor could honestly be read from.
+    """
+    if not layout.line_pitch:
+        return {}
+
+    uncaptioned: dict = {}
+    for figure in figures:
+        if caption_pages.get((figure["page"], figure["index"]), ""):
+            continue
+        uncaptioned.setdefault(figure["page"], []).append(figure)
+    if not uncaptioned:
+        return {}
+
+    by_page: dict = {}
+    for line in lines:
+        by_page.setdefault(line.page, []).append(line)
+
+    anchors: dict = {}
+    for page_no, page_figures in uncaptioned.items():
+        if page_no in table_pages:
+            continue
+        page_lines = sorted(by_page.get(page_no, []), key=lambda l: l.top)
+        # A full-page plate parts no text, so its page says nothing about
+        # where in the prose it belongs.
+        if not page_lines:
+            continue
+        if any(is_figure_caption(line.plain) for line in page_lines):
+            continue
+        holes = _text_holes(page_lines, layout, factor)
+        if len(holes) != len(page_figures):
+            continue
+        for figure, above in zip(sorted(page_figures,
+                                        key=lambda f: f["index"]), holes):
+            if above is None:
+                earlier = [l for l in lines if l.page < page_no]
+                if not earlier:
+                    continue
+                above = max(earlier, key=lambda l: (l.page, l.top))
+            anchors[(figure["page"], figure["index"])] = above.plain
+    return anchors
+
+
+def place_figures(blocks: list, figures: list, caption_pages: dict,
+                  figure_anchors: Optional[dict] = None) -> tuple:
     """Put each figure into the blocks, beside the caption that names it.
 
     A captioned figure joins its caption in one block, as an image and a hard
@@ -1382,9 +1474,16 @@ def place_figures(blocks: list, figures: list, caption_pages: dict) -> tuple:
     "see Figure 7.3" in the prose pointing at the wrong picture. The printed
     numbering is the one a reconstruction has to keep.
 
-    A figure with no caption has no anchor and no description. It follows the
-    last captioned figure before it, or closes the document if there is none,
-    and it is counted in the notes rather than dropped.
+    A figure whose page printed no caption has no caption to be placed beside,
+    and `figure_anchors_from_holes` reads the line it was printed under off
+    the page where the page allows it. The figure then goes after the block
+    holding that line, by the same `_anchor_position` the tables use, with the
+    same `floor` keeping several of them in reading order. It still has no
+    description, so the notes still ask for one.
+
+    Failing both it follows the last captioned figure before it, or closes the
+    document if there is none, and it is counted in the notes rather than
+    dropped.
     """
     caption_at = {}
     for position, (kind, text) in enumerate(blocks):
@@ -1396,20 +1495,30 @@ def place_figures(blocks: list, figures: list, caption_pages: dict) -> tuple:
     inserts: dict = {}
     notes: list = []
     unplaced = 0
+    anchored = 0
+    floor = 0
     last_captioned = None
     for figure in figures:
         caption = caption_pages.get((figure["page"], figure["index"]), "")
-        if caption:
-            position = caption_at.get(_caption_key(caption))
-        else:
-            position = None
-        if position is None:
-            unplaced += 1
-            target = last_captioned if last_captioned is not None else len(blocks)
-            inserts.setdefault(target, []).append((figure, ""))
-        else:
+        position = caption_at.get(_caption_key(caption)) if caption else None
+        if position is not None:
             inserts.setdefault(position, []).append((figure, caption))
             last_captioned = position
+            floor = max(floor, position)
+            continue
+        anchor = (figure_anchors or {}).get(
+            (figure["page"], figure["index"]))
+        at = _anchor_position(blocks, anchor, floor)
+        if at is not None:
+            # The anchor is the line the page printed above the figure, so
+            # the figure goes after the block holding it.
+            inserts.setdefault(at + 1, []).append((figure, ""))
+            anchored += 1
+            floor = max(floor, at + 1)
+            continue
+        unplaced += 1
+        target = last_captioned if last_captioned is not None else len(blocks)
+        inserts.setdefault(target, []).append((figure, ""))
 
     out: list = []
     for position, block in enumerate(blocks):
@@ -1437,10 +1546,14 @@ def place_figures(blocks: list, figures: list, caption_pages: dict) -> tuple:
                         f"![{undescribed_alt(figure['page'])}]"
                         f"(assets/{figure['name']})"))
 
-    placed = len(figures) - unplaced
     if figures:
-        notes.append(f"Extracted {len(figures)} figure(s); placed {placed} "
-                     f"beside the caption naming it.")
+        notes.append(f"Extracted {len(figures)} figure(s); placed "
+                     f"{len(figures) - unplaced - anchored} beside the "
+                     f"caption naming it.")
+    if anchored:
+        notes.append(f"{anchored} figure(s) carry no caption and were placed "
+                     f"where their page's text parts to let them in. They "
+                     f"have no alt text; describe them by hand.")
     if unplaced:
         notes.append(f"{unplaced} figure(s) carry no caption, so they have no "
                      f"alt text and sit after the figure before them; place "
@@ -2191,7 +2304,10 @@ def extract(pdf_path: Path, genre_heads: Optional[tuple] = None,
             if figure["index"] < len(lines):
                 caption_pages[(figure["page"], figure["index"])] = \
                     lines[figure["index"]].plain
-        blocks, figure_notes = place_figures(blocks, figures, caption_pages)
+        figure_anchors = figure_anchors_from_holes(
+            kept, layout, figures, caption_pages, set(tables_by_page))
+        blocks, figure_notes = place_figures(blocks, figures, caption_pages,
+                                             figure_anchors)
         notes.extend(figure_notes)
 
     body = blocks_to_markdown(blocks)

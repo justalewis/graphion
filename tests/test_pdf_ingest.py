@@ -524,6 +524,128 @@ def test_an_uncaptioned_figure_is_kept_and_said_to_be_undescribed():
     assert any("no caption" in note for note in notes)
 
 
+# ---------- an uncaptioned figure, placed by the hole it left ----------
+
+HOLE_LAYOUT = pdf_ingest.Layout(
+    body_size=11.0, body_left=58.5, body_right=376.3,
+    body_top=63.9, body_bottom=300.0, page_centre=216.0, line_pitch=13.2,
+)
+
+ODD_BALANCE = "At minimum, you have a teacher striking an odd balance."
+
+
+def _parted_page(page=5):
+    """One page whose text parts once, where a collage was printed."""
+    return [
+        _line("why not make it work for us in the writing classroom?",
+              top=63.9, page=page),
+        _line(ODD_BALANCE, top=77.1, page=page),
+        # Thirteen lines of nothing: this is where the picture sat.
+        _line("TEACHER: How can I best help students?", top=250.0, page=page),
+        _line("You have a project your teacher has assigned.",
+              top=263.2, page=page),
+        _line("And there is you, the student.", top=300.0, page=page),
+    ]
+
+
+def test_an_uncaptioned_figure_is_placed_where_its_page_parts():
+    """`the-complexity-of-simplicity` captions none of its seven collages, so
+    all seven were printing after the Works Cited, though the chapter calls
+    them a visual essay embedded in the following pages. The hole the setting
+    leaves for a figure is the only record of where it stood."""
+    figures = [{"page": 5, "index": 0, "name": "figure-p005-1.jpg"}]
+    anchors = pdf_ingest.figure_anchors_from_holes(
+        _parted_page(), HOLE_LAYOUT, figures, {}, set())
+    assert anchors == {(5, 0): ODD_BALANCE}
+
+    blocks = [("body", "Prose from the page before."),
+              ("body", ODD_BALANCE),
+              ("body", "TEACHER: How can I best help students?")]
+    out, notes = pdf_ingest.place_figures(blocks, figures, {}, anchors)
+    assert [kind for kind, _ in out] == ["body", "body", "figure", "body"]
+    assert out[2][1] == ("![Undescribed figure from page 5 of the source]"
+                         "(assets/figure-p005-1.jpg)")
+    assert any("text parts" in note for note in notes)
+
+
+def test_a_figure_at_the_head_of_its_page_takes_the_page_before():
+    """Three of that chapter's collages are set at the top of their page, so
+    the line they stand under is the last line of the page before, which is
+    where reading order puts them."""
+    lines = [_line("the last line of the page before.", top=290.0, page=4)]
+    lines += [l for l in _parted_page() if l.top > 100.0]
+    figures = [{"page": 5, "index": 0, "name": "figure-p005-1.jpg"}]
+    anchors = pdf_ingest.figure_anchors_from_holes(
+        lines, HOLE_LAYOUT, figures, {}, set())
+    assert anchors == {(5, 0): "the last line of the page before."}
+
+
+def test_a_hole_a_caption_could_have_left_places_nothing():
+    """A captioned figure parts the text exactly as an uncaptioned one does,
+    so a page carrying a caption cannot say which hole belongs to which."""
+    lines = _parted_page()
+    lines.append(_line("Figure 3. A rowhouse display.", top=200.0, page=5))
+    figures = [{"page": 5, "index": 0, "name": "figure-p005-1.jpg"}]
+    assert pdf_ingest.figure_anchors_from_holes(
+        lines, HOLE_LAYOUT, figures, {}, set()) == {}
+
+
+def test_a_hole_a_table_could_have_left_places_nothing():
+    """A table parts the text too, and its own lines come out of the prose,
+    which leaves a hole of the same shape. Volume 6's `15-bennett` sets its
+    figures on a page like that, whose only lines are the series wordmark
+    forwards and reversed."""
+    figures = [{"page": 5, "index": 0, "name": "figure-p005-1.jpg"}]
+    assert pdf_ingest.figure_anchors_from_holes(
+        _parted_page(), HOLE_LAYOUT, figures, {}, {5}) == {}
+
+
+def test_more_figures_than_holes_places_nothing():
+    """Two figures and one hole cannot be told apart, so neither moves."""
+    figures = [{"page": 5, "index": 0, "name": "figure-p005-1.jpg"},
+               {"page": 5, "index": 1, "name": "figure-p005-2.jpg"}]
+    assert pdf_ingest.figure_anchors_from_holes(
+        _parted_page(), HOLE_LAYOUT, figures, {}, set()) == {}
+
+
+def test_a_figure_whose_page_printed_a_caption_is_left_to_the_caption():
+    """The hole rule is for figures with no caption. One that has a caption is
+    paired with it as before, and never anchored instead."""
+    figures = [{"page": 5, "index": 0, "name": "figure-p005-1.jpg"}]
+    caption_pages = {(5, 0): "Figure 3. A rowhouse display."}
+    assert pdf_ingest.figure_anchors_from_holes(
+        _parted_page(), HOLE_LAYOUT, figures, caption_pages, set()) == {}
+
+
+def test_two_anchored_figures_stay_in_reading_order():
+    """`_anchor_position`'s floor is what keeps them in order: both anchors
+    are the same words here, as a repeated head would be."""
+    blocks = [("body", "Prose."), ("head", ODD_BALANCE),
+              ("body", "More prose."), ("head", ODD_BALANCE),
+              ("body", "Last prose.")]
+    figures = [{"page": 5, "index": 0, "name": "figure-p005-1.jpg"},
+               {"page": 7, "index": 0, "name": "figure-p007-1.jpg"}]
+    anchors = {(5, 0): ODD_BALANCE, (7, 0): ODD_BALANCE}
+    out, _ = pdf_ingest.place_figures(blocks, figures, {}, anchors)
+    names = [t for kind, t in out if kind == "figure"]
+    assert "figure-p005-1.jpg" in names[0]
+    assert "figure-p007-1.jpg" in names[1]
+    assert [kind for kind, _ in out] == \
+        ["body", "head", "figure", "body", "head", "figure", "body"]
+
+
+def test_a_chapter_with_no_pitch_learned_anchors_nothing():
+    """`line_pitch` of zero means it could not be learned, and the gap rule
+    stays out of the way rather than dividing by it."""
+    flat = pdf_ingest.Layout(
+        body_size=11.0, body_left=58.5, body_right=376.3, body_top=63.9,
+        body_bottom=300.0, page_centre=216.0,
+    )
+    figures = [{"page": 5, "index": 0, "name": "figure-p005-1.jpg"}]
+    assert pdf_ingest.figure_anchors_from_holes(
+        _parted_page(), flat, figures, {}, set()) == {}
+
+
 def test_a_caption_after_a_footnote_starts_its_own_block():
     """A caption is set at footnote size, so it reads as a note, and a new
     note only begins at a number. Carrying none, three of the seven captions
