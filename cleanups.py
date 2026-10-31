@@ -764,6 +764,17 @@ def unfragment_works_cited(text: str, log: CleanupLog) -> str:
         # but the visible content is the URL)
         if re.search(r"https?://[\w./?#\-=&%_]+$", s):
             return True
+        # And the same URL with the line break still in it. A long URL is
+        # broken after a slash, and `join_lines` leaves the space there
+        # because neither side is half a word, so the citation does not end
+        # with the URL and this test failed. An APA list ends most of its
+        # entries that way, so each one swallowed the next and the whole of
+        # volume 1 chapter 6's nine references came out as one paragraph of
+        # 246 words. Terminality only licenses a break that
+        # `starts_new_entry` has already endorsed, so reading a wrapped URL
+        # as terminal risks far less than merging a reference list does.
+        if re.search(r"https?://[\w./?#\-=&%_]+$", re.sub(r"(?<=/)\s+", "", s)):
+            return True
         return False
 
     merged: list[str] = []

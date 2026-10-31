@@ -351,6 +351,38 @@ def test_caption_beyond_the_backstop_is_left_alone():
     assert "Figure 7. Too far away" in out
 
 
+def test_a_reference_ending_in_a_wrapped_url_does_not_swallow_the_next():
+    """A long URL broken after a slash keeps the space, so the entry does not
+    end with the URL and the terminality test failed.
+
+    An APA list ends most of its entries that way, so each one swallowed the
+    one below it. Volume 1 chapter 6's nine references came out as a single
+    paragraph of 246 words.
+    """
+    src = (
+        "# References\n"
+        "\n"
+        "Carroll, L. (2009, Feb 6). Octuplet backlash: Are we just jealous? "
+        "*msnbc.com*. Retrieved on February 6, 2009, from "
+        "http://www.msnbc.msn.com/ id/29039266/\n"
+        "\n"
+        "Celizic, M. (2009, Feb 6). Octuplet mom defends choices. *TODAY*. "
+        "Retrieved February 6, 2009, from http://multiples.about.com/od/ "
+        "funfacts/\n"
+        "\n"
+        "Fennell, T. (1998, Mar 16). Justice at long last. "
+        "*Maclean’s, 111*(11), 26.\n"
+    )
+    log = cleanups.CleanupLog()
+    out = cleanups.unfragment_works_cited(src, log)
+    # Three entries, three paragraphs: each break is kept.
+    assert out.count("Carroll, L.") == 1
+    assert "id/29039266/\n\nCelizic, M." in out
+    assert "funfacts/\n\nFennell, T." in out
+    # An unwrapped URL still ends an entry, as it did before.
+    assert cleanups.unfragment_works_cited(out, cleanups.CleanupLog()) == out
+
+
 def test_pair_figure_captions_is_idempotent():
     src = (
         "Figure 1. Flowchart showing the capital appeals process.\n"
