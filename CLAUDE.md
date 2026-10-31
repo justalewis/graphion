@@ -224,6 +224,79 @@ learned per document rather than hardcoded: a series that redesigns between
 volumes should degrade, not silently misread. Use pdfplumber, not PyMuPDF,
 which is AGPL and would reach the whole deployed app.
 
+**Ink a page clips away was never printed.** A content stream can set a
+clipping path with `W` or `W*` and then draw past it, and what falls outside
+the path does not appear on the page. pdfminer parses both operators and does
+nothing with them, since `do_W` and `do_W_a` are empty method bodies, so every
+clipped glyph is reported as though it were ink. Volume 1's chapter 6
+reproduces draft Word pages inside ruled boxes and lets the text overflow the
+box; the overflow and the prose beside it sit at baselines within pdfplumber's
+3pt tolerance, so `extract_text_lines` read the two as one line and the
+chapter published `IW ue sseindc etrheliys h ocpaeu tai olenssaorny`, two
+texts merged character by character in x order. The same chapter published a
+duplicate of several passages, the clipped overflow collected after the Works
+Cited, and the bare `Fig 2` to `Fig 5` labels that Word prints over its own
+text frames and the book prints nowhere.
+
+So the question each glyph has to answer is not where it sits but whether the
+page printed it, and the content stream answers that directly.
+`clipped_glyphs` reads the clip with an interpreter of its own,
+`drop_clipped_ink` filters the page, and `extract` calls it at the top of the
+page loop and counts what it dropped into a note. Nothing is inferred from the
+look of the page. The obvious reading of this defect is that the two streams
+are columns to be separated by the horizontal gaps between their characters;
+they are not columns, because they overlap in x, so there is no boundary to
+find.
+
+Two coarser attributions pass on that chapter and destroy others. Every glyph
+of the figure carries `tag='PlacedPDF'` and no body glyph does, so taking the
+union of the clips set inside each marked-content section and dropping that
+section's glyphs outside it looks sound; `11Cicchino` page 11 is a ruled table
+whose cells each set their own clip, the union covers only some of them, and
+1,760 printed characters of the table fall outside it. Dropping anything
+outside any clip on the page is worse. `antlitz--taking-flight` page 10 and
+`purdy--wikipedia-is-good-for-you` page 9 set a clip for an image while no
+marked-content section is open, so the whole body of each page is untagged and
+outside it, which costs 1,118 and 1,614 characters of ordinary prose. Only
+per-glyph attribution survives the series, and that needs the interpreter.
+
+The reader has to get four things right, and each of them cost something in
+testing. The clip is part of the graphics state and pdfminer's is not: `do_q`
+and `do_Q` stack the matrix, the text state and the graphics state, so the
+clip is carried in overrides of both, or a frame set for one figure goes on
+clipping the rest of the page. `curpath` holds the operands as the stream
+wrote them, in user space, because applying the CTM is the device's job, so
+the reader applies it itself. A clip that is not a rectangle comes out too
+large, since a curve contributes its control points and their box contains the
+curve. And `outside_clip` asks whether the clip removes a glyph altogether
+rather than whether it touches it, because a box reported a fraction of a
+point past the frame it sits in is far commoner than one the frame genuinely
+halves. Those last two err in the same direction on purpose: a clip read too
+large is the better failure, because the ink it keeps was drawn where the page
+prints nothing and costs a reader a stray character, while one read too small
+drops a word that was printed.
+
+`drop_clipped_ink` runs before `find_page_tables`, not merely before line
+assembly. Volume 2's chapter 3 was carrying 71 characters of a comment balloon
+that the page truncates inside a detected table, so the galley printed inside
+a cell text the book does not show. That is the failure
+`drop_lines_inside_tables` exists to prevent, and it is invisible for the same
+reason.
+
+The second parse roughly doubles the cost of a page, so `_may_clip` reads the
+raw stream for `W` followed by a non-alphanumeric byte, which is the least a
+page must contain for the operator to be there at all. It matches 197 of the
+series' 1,965 pages and misses none of the 15 that clip, so nine pages in ten
+skip the second reading; an ordinary chapter costs about 3% more, and chapter
+6, which clips on ten pages, about 75%. Matching more than the operator only
+costs a parse. Matching less would lose a page, which is why the test is on
+the byte and not on `W\s+n`.
+
+Both readings have to be of the same page for a glyph box to mean anything, so
+`clipped_glyphs` compares its own glyph count with `len(page.chars)` and
+returns nothing when they disagree. They never disagreed across this series,
+and a page where they ever do comes through as it always did.
+
 **The chapter does not always begin on page one.** The standalone chapter
 download in volumes 1 to 3 opens on a page the bound book does not have: the
 series boilerplate, the publisher's copyright page with its CIP block, and
