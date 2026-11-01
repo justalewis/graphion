@@ -20,6 +20,7 @@ from pathlib import Path
 from typing import Callable, Iterable, Optional
 
 import conversion
+import math_alt
 
 
 @dataclass
@@ -552,6 +553,64 @@ def check_images_of_text(article: dict, fm: dict, body: str) -> LintResult:
     )
 
 
+def check_math_alt_text(article: dict, fm: dict, body: str) -> LintResult:
+    """Report equations with no spoken description.
+
+    PDF/UA-1 wants a formula read aloud the way it wants a figure
+    described, and Typst enforces it, so before `math_alt.py` existed one
+    equation cost an article its conformance identifier and nothing said
+    so: `check_alt_text` reads Markdown image syntax, and an equation is
+    not an image.
+
+    A warning rather than a failure, which is the difference between this
+    and `check_alt_text`. Every equation now carries alt text by the time
+    it reaches Typst, so the galley conforms either way; what is at stake
+    is whether a reader hears the formula or hears that there is one.
+    `check_images_of_text` draws the line in the same place and for the
+    same reason, and the point of both is that the shortfall stays
+    countable rather than being closed over.
+
+    An expression this reads aloud is read correctly, since `math_alt`
+    declines whole rather than guessing, so a generated description is
+    reported and not flagged.
+    """
+    found = math_alt.expressions(body)
+    if not found:
+        return _ok("math-alt-text", "No equations in the article.")
+    descriptions = math_alt.author_descriptions(fm)
+    counts = {math_alt.AUTHOR: 0, math_alt.GENERATED: 0,
+              math_alt.UNDESCRIBED_SOURCE: 0}
+    undescribed = []
+    for expr in found:
+        _alt, source = math_alt.alt_for(expr.tex, descriptions)
+        counts[source] += 1
+        if source == math_alt.UNDESCRIBED_SOURCE:
+            undescribed.append(expr.tex)
+    total = len(found)
+    if not counts[math_alt.UNDESCRIBED_SOURCE]:
+        return _ok(
+            "math-alt-text",
+            f"All {total} equation(s) have a spoken description.",
+        )
+    details = [
+        "A screen reader announces only that an equation is there. Write "
+        "the reading into the article's `math-alt` front matter, keyed by "
+        "the expression as it appears in the body.",
+    ]
+    if counts[math_alt.GENERATED]:
+        details.append(
+            f"{counts[math_alt.GENERATED]} other(s) are read aloud from "
+            f"the expression itself, which needs no editing."
+        )
+    details.append("Undescribed: " + "; ".join(undescribed[:8]))
+    return _warn(
+        "math-alt-text",
+        f"{len(undescribed)} of {total} equation(s) have no spoken "
+        f"description.",
+        details,
+    )
+
+
 DEFAULT_CHECKS: list[Callable] = [
     check_required_fields,
     check_orcid_format,
@@ -565,6 +624,7 @@ DEFAULT_CHECKS: list[Callable] = [
     check_unstripped_artifacts,
     check_unreadable_characters,
     check_alt_text,
+    check_math_alt_text,
     check_images_of_text,
     check_figure_coverage,
     check_figure_references,

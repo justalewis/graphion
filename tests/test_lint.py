@@ -243,3 +243,44 @@ def test_a_single_image_of_text_may_be_given_as_a_string():
         "![A resume](assets/figure-p008-1.png)")
     assert result.level == "warn"
     assert "1 of 1" in result.summary
+
+
+def test_an_undescribed_equation_is_reported():
+    """Before math_alt.py this article linted clean and shipped without
+    the PDF/UA-1 conformance identifier: check_alt_text reads Markdown
+    image syntax, and an equation is not an image."""
+    body = r"The estimator is $$\sum_{i=1}^{n} x_i$$ throughout."
+    result = lint.check_math_alt_text({}, {}, body)
+    assert result.level == "warn"
+    assert "1 of 1" in result.summary
+    assert "sum" in result.details[-1]
+
+
+def test_an_equation_the_reader_can_speak_passes():
+    """A warning here would be noise: math_alt declines whole rather than
+    guessing, so a generated reading is a correct one."""
+    body = "Significant at $p < .05$, with $n$ in each cell."
+    assert lint.check_math_alt_text({}, {}, body).level == "pass"
+
+
+def test_an_author_description_clears_the_warning():
+    fm = {"math-alt": {r"\sum_{i=1}^{n} x_i": "the sum of x sub i over i"}}
+    body = r"The estimator is $$\sum_{i=1}^{n} x_i$$ throughout."
+    assert lint.check_math_alt_text({}, fm, body).level == "pass"
+
+
+def test_the_generated_readings_are_counted_beside_the_shortfall():
+    """So an editor can tell how much of the article is actually owed."""
+    body = r"Both $n$ and $p < .05$, and then $$\int_0^1 f(x)\,dx$$."
+    result = lint.check_math_alt_text({}, {}, body)
+    assert result.level == "warn"
+    assert "1 of 3" in result.summary
+    assert any("2 other(s)" in d for d in result.details)
+
+
+def test_an_article_with_no_math_passes():
+    assert lint.check_math_alt_text({}, {}, "Ordinary prose.").level == "pass"
+
+
+def test_the_math_check_runs_in_the_default_pass():
+    assert lint.check_math_alt_text in lint.DEFAULT_CHECKS

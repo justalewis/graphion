@@ -27,14 +27,15 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (409 functions: 142 in `test_pdf_ingest.py`, 96 in
-`test_cleanups.py`, 43 in `test_ingest_volume.py`, 29 in
-`test_teacher_resources.py`, 28 in `test_lint.py`, 27 in
-`test_metadata_roundtrip.py`, 24 in `test_pdf_tags.py`, 7 in
-`test_pdf_ua.py`, 6 in `test_standalone_html.py`, 4 in
-`test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
-runs without Pandoc; `test_journal_filter.py` needs it and skips where it is
-absent:
+Tests (442 functions, 465 cases once the parametrized ones expand: 142 in
+`test_pdf_ingest.py`, 96 in `test_cleanups.py`, 43 in
+`test_ingest_volume.py`, 34 in `test_lint.py`, 29 in
+`test_teacher_resources.py`, 28 in `test_metadata_roundtrip.py`, 24 in
+`test_math_alt.py`, 24 in `test_pdf_tags.py`, 9 in `test_pdf_ua.py`, 6 in
+`test_standalone_html.py`, 4 in `test_journal_filter.py`, 3 in
+`test_preprocessors.py`). Most of the suite runs without Pandoc;
+`test_journal_filter.py` needs it, and `test_math_alt.py` needs it for the
+filter round trip alone. Both skip where it is absent:
 
 ```bash
 python -m pytest tests/ -q
@@ -89,7 +90,7 @@ contextmanager and the `query_one` / `query_all` / `execute` helpers in `db.py`.
 **Cleanup passes are pure and idempotent.** Every Stage 2 pass in `cleanups.py`
 has the signature `(text: str, log: CleanupLog) -> str`, records its work via
 `log.record(name, count)` (an optional `note=` argument exists), and is
-registered in `DEFAULT_PASSES` (`cleanups.py:1444`). Running the pipeline twice
+registered in `DEFAULT_PASSES` (`cleanups.py:1587`). Running the pipeline twice
 must produce identical output.
 Any new pass needs a unit test in `tests/test_cleanups.py` with at least one
 input/output pair plus an idempotence assertion.
@@ -162,16 +163,19 @@ time of writing the archive holds 201 figures, all 201 described by hand
 across 49 chapters, with no placeholder left; `_carried_description` is what
 that was counted with.
 
-Two fields in the front matter have that exposure too, and
+Three fields in the front matter have that exposure too, and
 `conversion.carry_editor_fields()` carries them for the same reason, from
 `ingest_pdf`, so they ride through inside `article-raw.md` and survive the
-rebuild. `images-of-text` is the costlier one: the list is kept by hand
+rebuild. `images-of-text` is the costliest: the list is kept by hand
 because nothing can tell a photograph of a document from a photograph of
 anything else without looking, and losing it fails no check and changes no
 galley, so the chapter simply reads as one with no images of text and
 `lint.check_images_of_text` warns about nothing. `teacher-resources` decides
 whether the chapter renders as two galleys, which is a property of how the
-piece is written rather than anything the page states. The volume facts are
+piece is written rather than anything the page states. `math-alt` is what an
+equation says aloud, and it is the same shape again: a lost one leaves the
+galley conformant and a reader hearing that there is a formula rather than
+hearing the formula. The volume facts are
 deliberately not carried: `ingest_volume.py` stamps those after cleaning, so
 carrying them here would let a stale value look like a recovered one, and
 the licence is the field in this archive that least tolerates being rounded
@@ -180,7 +184,7 @@ a caller has to do for those; `ingest_volume.py` re-reads at line 365, after
 `run_cleanups`, so what it re-applies is whatever ingest produced.
 
 **Lint checks** follow the same shape in `lint.py`: return `_ok(...)` or
-`_warn(...)`, then register in `DEFAULT_CHECKS` (`lint.py:405`).
+`_warn(...)`, then register in `DEFAULT_CHECKS` (`lint.py:614`).
 
 **Galleys are PDF/UA-1.** `conversion._compile_typst()` compiles every PDF
 with `pdf_standards` set from `config.PDF_UA_STANDARD`, which is what emits
@@ -192,6 +196,67 @@ render and logs why, so an editor never loses a galley to this. The usual
 cause is an image with no alt text, which `lint.check_alt_text` fails on
 first. A bound issue is as conformant as its parts and no more, which is what
 `pdf_tags.py` is for.
+
+**An equation is the other thing Typst refuses, and it refused silently.**
+A `math.equation` carrying no `alt` aborts the compile the way an undescribed
+figure does, and Pandoc's Typst writer emits a bare `$...$`, so one formula
+anywhere in an article sent `_compile_typst` down the fallback path above and
+the galley shipped with no conformance identifier. Nothing reported it either:
+`lint.check_alt_text` matches Markdown image syntax, an equation is not an
+image, and the article linted clean. It had
+never fired only because neither journal here had set an equation yet, so a
+journal with mathematics in it would have hit this on its first article.
+
+`filters/math-alt.lua` puts the `alt` on, by wrapping each equation in a
+content block that sets it. That leaves Pandoc to write the math, which
+matters: the TeX to Typst translation (`\frac{a}{b}` to `frac(a, b)`,
+`\bar{x}` to `macron(x)`) is Pandoc's, and a second copy of it in a filter
+would be a worse one. The filter is app level rather than per journal, unlike
+the figures and journal filters beside it at the call sites, because how a
+caption is set is a journal's design and whether a formula can be read aloud
+is not; the accessible half of the HTML template living in one bundle is
+already how this codebase learned that a per journal copy is a copy that does
+not travel.
+
+What the equation says aloud is decided in `math_alt.py`, and the filter only
+emits a sentinel holding the expression hex encoded, which
+`conversion._fill_math_alt` substitutes. Python owns it because
+`lint.check_math_alt_text` reports the same descriptions the galley carries,
+and two copies of that judgement would drift apart; hex because the sentinel
+has to survive a Typst string literal and a formula is mostly backslashes and
+quotation marks. Any new path that renders Markdown to Typst needs
+`_math_alt_filter_args()` and `_fill_math_alt()` both, or it is back where
+this started. `_md_to_typst_fragment` has them, because the issue front
+matter is where this codebase has already lost conformance once without
+noticing.
+
+`speak()` reads only a vocabulary it can read one way and returns None for
+everything else, which is the point of it rather than a shortfall. A formula
+read half right is present and wrong in a galley that passes every audit: a
+reader told "a over b over c" for a nested fraction has been told something
+false, and no checker can see it. So a compound numerator carries an explicit
+end marker, since the page shows a grouping that speech does not, and
+anything outside the vocabulary declines whole rather than in part. The tilde
+is the plainest case for leaving a symbol out: it reads "is similar to" in
+geometry and "is distributed as" in statistics, the expression cannot say
+which, and so it declines. An expression that declines gets
+`math_alt.undescribed()`, which keeps the galley conformant and leaves
+`lint.check_math_alt_text` counting what is owed, exactly as
+`undescribed_alt` does for a figure whose page printed no caption.
+
+An author's own reading always wins and is kept by hand in the article's
+`math-alt` front matter, keyed by the expression as written and matched on
+whitespace alone. Write the key in single-quoted YAML, where a backslash is
+literal; double quotes need every one of them doubled, and getting that wrong
+aborts the render with a YAML parse error rather than losing the key quietly.
+It is the third entry in `CARRIED_FIELDS`, for the reason the other two are
+there: nothing can derive it, and losing it fails no check and changes no
+galley to look at.
+
+The HTML, EPUB and JATS galleys need none of this. Pandoc's writers emit real
+MathML with an `application/x-tex` annotation, so the filter is gated on
+`FORMAT == "typst"` and a raw Typst inline in the HTML would be a
+regression.
 
 **A bound issue is tagged by merging, not by re-rendering.** Adding a page to
 a pypdf writer copies the page. The structure tree, the `/ParentTree` that
@@ -763,9 +828,9 @@ Anything touching Claude (`stylize.py`, `llm_cleanup.py`) requires
 
 ## Layout notes
 
-- `app.py` (2702 lines) is the whole HTTP surface. `conversion.py` (2258) is the
+- `app.py` (2702 lines) is the whole HTTP surface. `conversion.py` (2593) is the
   pipeline. Those two hold most of the complexity.
-- `pdf_tags.py` (604) is the only module that touches PDF object structure
+- `pdf_tags.py` (677) is the only module that touches PDF object structure
   directly; it binds rendered galleys into a tagged issue. It reaches into
   pypdf's `_add_object` and `_root_object` because pypdf exposes no public API
   for a structure tree or the catalog's `/Lang`.
@@ -773,6 +838,11 @@ Anything touching Claude (`stylize.py`, `llm_cleanup.py`) requires
   CSS, Pandoc HTML template, Typst template, Lua filters, CSL stylesheet,
   wordmark, and the Claude `style-guide.md`. The LiCS bundle is the worked
   example; `new_journal.py <slug> "Name"` clones it.
+- `filters/` holds the Pandoc Lua filters that belong to the app rather than
+  to a journal, which at present is `math-alt.lua` alone. The test for
+  whether a filter goes here or in a bundle is whether a new journal should
+  be able to start without it: `new_journal.py` clones a bundle, so anything
+  it clones is something a journal can also drop.
 - Typst compiles with `root=CONTENT_DIR` so templates can reference image assets
   under `content/`.
 - Pandoc 3 emits Figure blocks rather than `Para[Image]`; the figures filter

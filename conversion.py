@@ -17,10 +17,11 @@ import pypandoc
 
 import cleanups
 import db
+import math_alt
 import pdf_ingest
 import pdf_tags
 import preprocessors
-from config import CONTENT_DIR, PDF_UA_STANDARD, VERSIONS_KEEP
+from config import BASE_DIR, CONTENT_DIR, PDF_UA_STANDARD, VERSIONS_KEEP
 
 
 # ---------- helpers ----------
@@ -362,7 +363,7 @@ def _carried_description(match) -> str:
 # `ingest_volume.py` stamps those, and it stamps them after cleaning for
 # exactly this reason, so carrying them here would make a stale value look
 # like a recovered one.
-CARRIED_FIELDS = ("images-of-text", "teacher-resources")
+CARRIED_FIELDS = ("images-of-text", "teacher-resources", "math-alt")
 
 
 def carry_editor_fields(front_matter: dict, previous: str) -> tuple:
@@ -370,10 +371,10 @@ def carry_editor_fields(front_matter: dict, previous: str) -> tuple:
 
     Ingest reads the front matter off the page every time it runs, so a field
     that is not on the page is gone on the next run. `carry_alt_text` covers
-    the descriptions because they live in the body; these two live in the
+    the descriptions because they live in the body; these three live in the
     front matter and had the same exposure with nothing carrying them.
 
-    `images-of-text` is the costlier of the two. Writing alt text satisfies
+    `images-of-text` is the costliest of the three. Writing alt text satisfies
     WCAG 1.1.1 and leaves 1.4.5 where it was, and nothing can tell a
     photograph of a document from a photograph of anything else without
     looking, so the list is kept by hand, one entry per figure that carries
@@ -387,6 +388,13 @@ def carry_editor_fields(front_matter: dict, previous: str) -> tuple:
     It is a property of how the piece is written rather than anything the
     page states, so a lost one silently folds the instructor material back
     into the chapter.
+
+    `math-alt` is what an equation says aloud, and it has the same shape as
+    the other two: nothing can derive it, the page does not state it, and
+    losing it fails no check and changes no galley to look at. The equation
+    goes on carrying alt text either way, because `math_alt.alt_for` falls
+    back to a placeholder, so the only mark it leaves is a reader hearing
+    that there is a formula instead of hearing the formula.
 
     A field already recovered by this run is left alone, so a page that has
     since started saying something is allowed to.
@@ -1366,6 +1374,57 @@ def _fill_typst_authors(typ_text: str, fm: dict) -> str:
     return typ_text
 
 
+MATH_ALT_FILTER = BASE_DIR / "filters" / "math-alt.lua"
+
+# `filters/math-alt.lua` writes one of these per equation, holding the
+# expression hex encoded; see that file for why the alt text is filled in
+# here rather than there.
+_MATH_ALT_SENTINEL_RE = re.compile(
+    r"GRAPHION-MATH-ALT-(?P<hex>[0-9a-f]*)-END"
+)
+
+
+def _math_alt_filter_args() -> list:
+    """The Pandoc arguments that put alt text on every equation.
+
+    This is app level rather than per journal, unlike the figures and
+    journal filters beside it at the call sites. How a caption is set is a
+    journal's design; whether a formula can be read aloud is not, and the
+    accessible half of the HTML template living in one bundle is already
+    how this codebase learned that a per journal copy is a copy that does
+    not travel. `new_journal.py` clones a bundle; it cannot clone this.
+    """
+    if not MATH_ALT_FILTER.exists():
+        return []
+    return [f"--lua-filter={MATH_ALT_FILTER}"]
+
+
+def _fill_math_alt(typ_text: str, fm: Optional[dict] = None) -> str:
+    """Replace each equation's alt-text sentinel with what it says aloud.
+
+    The expression arrives hex encoded, so what reaches Typst is whatever
+    `math_alt.alt_for` makes of the TeX Pandoc actually parsed. An author's
+    own `math-alt` description wins; failing that the expression is read
+    aloud where it can be read unambiguously, and placeholdered where it
+    cannot, which keeps the galley conformant and leaves
+    `lint.check_math_alt_text` counting what is still owed.
+    """
+    descriptions = math_alt.author_descriptions(fm or {})
+
+    def substitute(match) -> str:
+        try:
+            tex = bytes.fromhex(match.group("hex")).decode("utf-8")
+        except (ValueError, UnicodeDecodeError):
+            # A sentinel this cannot read is still an equation that needs
+            # an alt, and an unsubstituted one would reach the page as the
+            # text of it.
+            return _typst_escape_string(math_alt.undescribed())
+        alt, _source = math_alt.alt_for(tex, descriptions)
+        return _typst_escape_string(alt)
+
+    return _MATH_ALT_SENTINEL_RE.sub(substitute, typ_text)
+
+
 def journal_short_name(journal_slug: str) -> str:
     """Short journal label for running headers, e.g. "LiCS".
 
@@ -1504,6 +1563,7 @@ def render_pdf(article_path: Path, journal_slug: str, part: str = "chapter") -> 
         extra.append(f"--lua-filter={fig_filter}")
     if lua_filter.exists():
         extra.append(f"--lua-filter={lua_filter}")
+    extra.extend(_math_alt_filter_args())
     extra.extend(_citation_args(article_path, journal_slug))
     pypandoc.convert_file(
         str(md),
@@ -1524,6 +1584,10 @@ def render_pdf(article_path: Path, journal_slug: str, part: str = "chapter") -> 
         fm = _teacher_front_matter(fm)
     typ_text = typst_input.read_text(encoding="utf-8")
     typ_text = _fill_typst_authors(typ_text, fm)
+    # Read from the article's own front matter, not the part's: a split
+    # article is one piece of writing and an author describes an equation
+    # once, whichever galley it lands in.
+    typ_text = _fill_math_alt(typ_text, _fm_for_license)
     # Drop any `#link(<label>)[...]` whose label isn't declared anywhere
     # in the document. This commonly happens when an article was produced
     # via a Pandoc HTML round-trip that left orphan footnote references
@@ -2022,13 +2086,22 @@ def _authors_inline(authors) -> str:
 
 def _md_to_typst_fragment(md_text: Optional[str]) -> str:
     """Convert a Markdown string to a Typst content fragment via Pandoc.
-    Returns an empty string if the input is empty."""
+    Returns an empty string if the input is empty.
+
+    Equations get their alt text here too, for the same reason the article
+    path does: an undescribed one costs the bound issue its conformance,
+    and the issue front matter is where this codebase has already lost it
+    once, silently, for all six volumes. There is nowhere for an editor to
+    write a description of an equation in an issue's prose, so the reading
+    is the generated one or the placeholder.
+    """
     if not md_text or not md_text.strip():
         return ""
-    return pypandoc.convert_text(
+    fragment = pypandoc.convert_text(
         md_text, to="typst", format="markdown",
-        extra_args=["--wrap=preserve"],
+        extra_args=["--wrap=preserve"] + _math_alt_filter_args(),
     )
+    return _fill_math_alt(fragment)
 
 
 def _read_editor_intro_body(article: Optional[dict]) -> str:

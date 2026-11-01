@@ -23,6 +23,12 @@ Graphion/
                         BibTeX parsing for structured citations.
   jats.py             ← JATS XML emitter.
   lint.py             ← Composable per-article validation checks.
+  math_alt.py         ← What an equation says aloud. Reads a vocabulary it
+                        can read one way and declines everything else, so
+                        a formula is never half read; the placeholder it
+                        falls back to is what keeps the galley conformant.
+                        Shared by the render path and lint, because the
+                        two have to report the same descriptions.
   citation_styles.py  ← Bundled CSL stylesheets + picker logic.
   bib_builder.py      ← Heuristic prose-Works-Cited → BibTeX parser
                         (powers the top-nav Bib Builder page).
@@ -44,6 +50,11 @@ Graphion/
                         source of truth, not GRAPHION_ADMIN_PASSWORD.
   smoketest.py        ← End-to-end pipeline runner for development.
   render_pages.py     ← Rasterize a PDF to PNG (for previews).
+  filters/            ← Pandoc Lua filters that belong to the app rather
+                        than to a journal. math-alt.lua puts alt text on
+                        every equation. A journal's own filters live in
+                        its template bundle; this is for the things a
+                        new journal must not be able to start without.
   templates/          ← Jinja2 admin UI templates
   static/             ← CSS (Lewis Design System tokens + project stylesheet)
   content/            ← Journals, articles, issues — filesystem-first
@@ -170,7 +181,7 @@ Run all tests:
 python -m pytest tests/ -q
 ```
 
-Currently 342 passing. Unit-tested:
+Currently 465 passing. Unit-tested:
 
 - `cleanups.py` — every cleanup pass with input/output pairs + idempotence checks.
 - `conversion.py` metadata round-trip — YAML read/write with sanitization and field ordering.
@@ -182,6 +193,10 @@ Currently 342 passing. Unit-tested:
 - `conversion._compile_typst` — PDF/UA declaration, and the fallback that
   keeps an editor's galley when the standard cannot be met. Typst arrives
   through `typst-py`, so it needs no separate binary.
+- `math_alt.py` — what the vocabulary reads, and what it declines. The
+  declines are the half worth testing: a reading that is nearly right is
+  present and wrong in a galley no checker can fault. The filter round
+  trip through Pandoc is in the same file and skips where Pandoc is absent.
 
 Not yet unit-tested:
 

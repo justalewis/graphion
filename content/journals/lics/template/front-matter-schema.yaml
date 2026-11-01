@@ -23,3 +23,11 @@ optional:
   - start-page      # computed by issue assembly
   - end-page        # computed by issue assembly
   - copyright       # default applied by template if absent
+  - images-of-text  # one entry per figure whose content is text set as a
+                    # picture (WCAG 1.4.5). Kept by hand, because nothing
+                    # can tell a photograph of a document from a
+                    # photograph of anything else without looking.
+  - math-alt        # what an equation says aloud, keyed by the expression
+                    # as written. Single-quoted YAML keys, where a
+                    # backslash is literal. Only needed where the reading
+                    # cannot be derived; `Run lint` reports which.

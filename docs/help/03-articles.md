@@ -78,18 +78,23 @@ Remove the override at any time via the **Remove override** button. The file liv
 
 ## Linting
 
-Click **Run lint** for a one-shot validation pass with 11 checks:
+Click **Run lint** for a one-shot validation pass with 16 checks:
 
 - required fields (title, short-title, short-authors, author)
 - ORCID format
 - DOI format (`10.NNNN/...` shape)
 - Short title length
+- Short title matching the full title (catches a typo that shows only in the running header)
 - Short authors length
 - Hyperlink well-formedness
 - Works Cited section presence
 - In-text citations matching Works Cited surnames (heuristic; the BibTeX system is more authoritative)
 - Leftover cleanup-pass artifacts
+- Characters no reader can read (private use and control codepoints, which arrive from symbol fonts)
 - Image alt text presence
+- Equations with no spoken description (see [Figures](06-figures.md#equations))
+- Figures carrying text as a picture, from the `images-of-text` list
+- Figure coverage (an article that refers to figures it does not contain)
 - Figure cross-references (every `@fig:X` resolves to a defined image)
 
 Results are pass/warn/fail. Warnings don't block publishing — they advise.

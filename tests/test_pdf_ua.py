@@ -34,6 +34,23 @@ NEEDS_ALT = """#set document(title: [A Rendered Galley], author: ("Jane Doe",))
 #figure(caption: [A caption])[#rect(width: 2cm, height: 1cm)]
 """
 
+# An equation is the other thing Typst refuses, and it was the quieter of
+# the two: a figure with no alt text fails `lint.check_alt_text` first,
+# while nothing looked at math at all.
+BARE_MATH = """#set document(title: [A Rendered Galley], author: ("Jane Doe",))
+#set text(lang: "en")
+Inline $a^2 + b^2 = c^2$ in a sentence.
+"""
+
+# What `filters/math-alt.lua` writes around the same equation. The `alt`
+# goes on through a set rule in a content block rather than on the call,
+# because Pandoc writes the math and the filter only wraps it.
+DESCRIBED_MATH = """#set document(title: [A Rendered Galley], author: ("Jane Doe",))
+#set text(lang: "en")
+Inline #[#set math.equation(alt: "a squared plus b squared equals c \
+squared"); $a^2 + b^2 = c^2$] in a sentence.
+"""
+
 BROKEN = """#set document(title: [A Rendered Galley])
 #this-function-does-not-exist()
 """
@@ -72,6 +89,39 @@ def _markers(pdf_path: Path) -> dict:
     }
 
 
+def _alt_texts(pdf_path: Path) -> list:
+    """Every /Alt in the structure tree.
+
+    Walked rather than grepped out of the file, because a checker reads the
+    tree and a string that happens to sit in the bytes proves nothing about
+    what reaches a screen reader.
+    """
+    reader = pypdf.PdfReader(str(pdf_path))
+    root = reader.trailer["/Root"]
+    found: list = []
+    seen: set = set()
+
+    def walk(node):
+        node = node.get_object() if hasattr(node, "get_object") else node
+        if isinstance(node, list):
+            for kid in node:
+                walk(kid)
+            return
+        if not isinstance(node, dict):
+            return
+        if id(node) in seen:
+            return
+        seen.add(id(node))
+        if "/Alt" in node:
+            found.append(str(node["/Alt"]))
+        if "/K" in node:
+            walk(node["/K"])
+
+    if "/StructTreeRoot" in root:
+        walk(root["/StructTreeRoot"])
+    return found
+
+
 def test_clean_document_declares_pdf_ua(tmp_path):
     typ = _write(tmp_path, "clean.typ", CLEAN)
     out = tmp_path / "clean.pdf"
@@ -95,6 +145,38 @@ def test_missing_alt_text_falls_back_to_a_readable_pdf(tmp_path):
 
     assert out.exists() and out.stat().st_size > 0
     assert _markers(out)["ua_part"] is None
+
+
+def test_an_equation_with_no_alt_text_costs_the_galley_its_conformance(tmp_path):
+    """One equation anywhere in an article was enough, and silently.
+
+    Pandoc's Typst writer emits a bare `$...$`, which is this document, so
+    before `filters/math-alt.lua` an article with a single formula in it
+    rendered through the fallback below and shipped with no conformance
+    identifier. Nothing reported it either: `lint.check_alt_text` reads
+    Markdown image syntax, and an equation is not an image.
+    """
+    typ = _write(tmp_path, "baremath.typ", BARE_MATH)
+    out = tmp_path / "baremath.pdf"
+
+    assert conversion._compile_typst(typ, out, root=tmp_path) is False
+
+    assert out.exists() and out.stat().st_size > 0
+    assert _markers(out)["ua_part"] is None
+
+
+def test_an_equation_carrying_alt_text_conforms(tmp_path):
+    """And the alt reaches the structure tree, which is where a checker
+    looks for it; a galley that merely compiled would prove nothing."""
+    typ = _write(tmp_path, "describedmath.typ", DESCRIBED_MATH)
+    out = tmp_path / "describedmath.pdf"
+
+    assert conversion._compile_typst(typ, out, root=tmp_path) is True
+
+    markers = _markers(out)
+    assert markers["ua_part"] == "1"
+    assert markers["tagged"] is True
+    assert "a squared plus b squared equals c squared" in _alt_texts(out)
 
 
 def test_fallback_is_recorded_in_the_conversion_log(tmp_path):

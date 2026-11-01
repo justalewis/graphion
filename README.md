@@ -32,7 +32,10 @@ Two problems it tries to solve:
    hanging-indent works cited via `class="references"`) and
    **tagged PDFs** via Typst's native tagging support, with
    document-level structure preserved so screen readers can navigate
-   sections, headings, and figures.
+   sections, headings, and figures. Equations carry a spoken description
+   too, generated where the expression reads one way and written by hand
+   where it does not; the lint pass reports which are still owed rather
+   than closing over the shortfall.
 
 2. **Scholarly infrastructure.** The same Markdown source emits
    **JATS XML** (the lingua franca of academic indexing) with

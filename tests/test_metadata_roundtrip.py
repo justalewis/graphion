@@ -439,6 +439,21 @@ def test_the_two_galley_split_survives_a_re_ingest():
     assert "teacher-resources" in carried
 
 
+def test_a_hand_written_equation_reading_survives_a_re_ingest():
+    """`math-alt` has the same shape as the other two: nothing can derive
+    what an author means a formula to say, and a lost one leaves the galley
+    conformant and a reader hearing that there is a formula."""
+    previous = (
+        "---\ntitle: A Chapter\nmath-alt:\n"
+        "  'a^2 + b^2 = c^2': the Pythagorean theorem\n"
+        "---\n\nProse.\n"
+    )
+    fm, carried = conversion.carry_editor_fields({"title": "A Chapter"},
+                                                 previous)
+    assert fm["math-alt"] == {"a^2 + b^2 = c^2": "the Pythagorean theorem"}
+    assert "math-alt" in carried
+
+
 def test_a_field_this_run_recovered_is_left_alone():
     """A page that has since started saying something is allowed to."""
     fm, carried = conversion.carry_editor_fields(

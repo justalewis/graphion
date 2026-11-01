@@ -70,14 +70,55 @@ figures-list: true
 
 The filter appends a "List of Figures" section listing each figure by number and caption.
 
+## Equations
+
+An equation needs a spoken description for the same reason a figure does, and
+the tagged PDF enforces it: Typst refuses an equation it cannot read aloud, so
+one undescribed formula costs the galley its PDF/UA-1 conformance.
+
+Most of the time nothing is required of you. Simple expressions are read from
+the expression itself, so `$p < .05$` goes into the galley as "p is less than
+.05" and `$a^2 + b^2 = c^2$` as "a squared plus b squared equals c squared".
+Anything that reads more than one way is declined rather than guessed at,
+because a formula read half right is worse than one a reader is told is
+undescribed: a summation, an integral, a nested fraction, or a tilde (which is
+"is similar to" in geometry and "is distributed as" in statistics) all come
+through as "Undescribed equation".
+
+Write those yourself, in the article's front matter, keyed by the expression as
+it appears in the body:
+
+```yaml
+math-alt:
+  '\sum_{i=1}^{n} x_i': the sum of x sub i, from i equals 1 to n
+  'a^2 + b^2 = c^2': the Pythagorean theorem
+```
+
+Single quotes around the key, where a backslash means a backslash. Double
+quotes need every backslash doubled, and getting that wrong stops the render
+with a YAML error. Spacing inside the key does not matter. A description you
+write always wins, so it is also how you replace a reading you do not like.
+
+**Run lint** reports how many equations are still undescribed and names them.
+The galley is conformant either way, which is why it is a warning: what is at
+stake is whether a reader hears the formula or hears that there is one.
+
+The HTML and EPUB galleys need none of this. They carry real MathML, which a
+screen reader navigates on its own.
+
 ## What lint checks
 
 Run **Run lint** on the article to verify:
 
 - **Alt text** — every image has non-empty alt text.
+- **Equation descriptions** — every equation is read aloud rather than placeholdered.
+- **Images of text** — the figures listed in `images-of-text` are reported, since a description satisfies WCAG 1.1.1 and leaves 1.4.5 where it was.
+- **Figure coverage** — an article that refers to figures it does not contain, which the alt text check cannot see and reads as a pass.
 - **Figure references** — every `@fig:X` points at a real `{#fig:X}` image; no figure labels are duplicated; figures defined but never referenced are flagged.
 
-Both are warnings rather than failures, so you can ship intentional decorative images and intentionally-unreferenced figures. But fix what you can — accessibility tooling and indexers care.
+Alt text is a failure and the rest are warnings, so you can ship intentional
+decorative images and intentionally-unreferenced figures. But fix what you can;
+accessibility tooling and indexers care.
 
 ## Limits
 
