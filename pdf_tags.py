@@ -58,7 +58,23 @@ from pypdf.generic import (
 # stands.
 _REWRITTEN = frozenset({"/P", "/Pg", "/K", "/ID"})
 
+# What `_xmp_packet` below writes, read back. Both live in this module so
+# that neither can drift from the other, and so that there is one answer to
+# what a file declares: `assess.py` reads the same two, and the register and
+# the merge gate both act on the result.
+#
+# They are deliberately strict. A property in RDF is either an element or a
+# quoted attribute, so these two forms are everything a conforming packet can
+# say, and a looser pattern buys nothing at a real cost. Allowing any few
+# characters between the name and a digit reads `<pdfuaid:part x="1">` as a
+# declaration of part 1, which is a conformance claim invented out of a
+# neighbouring attribute. Overstating conformance is the failure with no
+# symptom here; missing an exotic encoding shows up as a fail an editor can
+# go and look at. Across the 311 PDFs in this archive the two readings agree,
+# so the choice costs nothing now and decides the next source's reading.
 _UA_PART_RE = re.compile(r"pdfuaid:part\s*(?:>\s*|=\s*['\"])(\d)")
+_TITLE_RE = re.compile(
+    r"<dc:title>.*?<rdf:li[^>]*>(?P<title>.*?)</rdf:li>", re.S)
 
 
 @dataclass
@@ -133,17 +149,37 @@ def _as_text(value) -> str:
     return str(value)
 
 
-def _declared_ua_part(reader: PdfReader) -> Optional[int]:
-    """The PDF/UA part a document's XMP claims, or None if it claims none."""
-    meta = reader.trailer["/Root"].get("/Metadata")
-    if meta is None:
-        return None
+def xmp_packet_text(reader: PdfReader) -> str:
+    """A document's XMP packet as text, or "" where it carries none.
+
+    Everything the two readers below look for is in here, so the packet is
+    pulled out once and handed to both rather than extracted per field.
+    """
     try:
-        raw = meta.get_object().get_data().decode("utf-8", "replace")
+        meta = reader.trailer["/Root"].get("/Metadata")
+        if meta is None:
+            return ""
+        return meta.get_object().get_data().decode("utf-8", "replace")
     except Exception:
-        return None
-    match = _UA_PART_RE.search(raw)
+        return ""
+
+
+def declared_ua_part(packet: str) -> Optional[int]:
+    """The PDF/UA part an XMP packet claims, or None if it claims none."""
+    match = _UA_PART_RE.search(packet or "")
     return int(match.group(1)) if match else None
+
+
+def declared_title(packet: str) -> str:
+    """The dc:title an XMP packet carries, or "".
+
+    This is the field ISO 14289-1 clause 5 reads. The Info dictionary's
+    /Title is a different entry, and a bound issue carried that one and
+    failed the check for want of this one, which is why `_xmp_packet` writes
+    it and why both are reported separately where they disagree.
+    """
+    match = _TITLE_RE.search(packet or "")
+    return match.group("title").strip() if match else ""
 
 
 class _SourceCopier:
@@ -488,7 +524,7 @@ def concatenate_tagged(
         added = [writer.add_page(page) for page in reader.pages]
         object_map = _page_object_map(reader, added)
 
-        if _declared_ua_part(reader) is None:
+        if declared_ua_part(xmp_packet_text(reader)) is None:
             report.unconformant_sources.append(Path(path).name)
 
         struct_root = reader.trailer["/Root"].get("/StructTreeRoot")

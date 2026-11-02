@@ -18,7 +18,8 @@ Graphion/
   pdf_tags.py         ← Binds rendered galleys into one tagged issue PDF,
                         rebuilding the structure tree and parent tree that
                         a page copy leaves behind. The only module that
-                        works on PDF object structure directly.
+                        works on PDF object structure directly, and the
+                        one place an XMP packet is written and read.
   crossref.py         ← CrossRef deposit XML emitter, DOI assignment,
                         BibTeX parsing for structured citations.
   jats.py             ← JATS XML emitter.
@@ -208,7 +209,7 @@ Run all tests:
 python -m pytest tests/ -q
 ```
 
-Currently 513 passing. Unit-tested:
+Currently 515 passing. Unit-tested:
 
 - `cleanups.py` — every cleanup pass with input/output pairs + idempotence checks.
 - `conversion.py` metadata round-trip — YAML read/write with sanitization and field ordering.
@@ -217,6 +218,8 @@ Currently 513 passing. Unit-tested:
 - `lint.py` — each registered check.
 - `pdf_tags.py` — the structure-tree merge: parent-tree offsets, repointed
   link annotations, alt text, unique element ids, and the conformance gate.
+  Also the XMP reading the gate and the register both act on, pinned to the
+  two forms RDF can state a property in.
 - `conversion._compile_typst` — PDF/UA declaration, and the fallback that
   keeps an editor's galley when the standard cannot be met. Typst arrives
   through `typst-py`, so it needs no separate binary.

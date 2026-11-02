@@ -563,6 +563,42 @@ def test_one_unconformant_part_withholds_the_claim(tmp_path):
     assert report.elements > 0
 
 
+def test_a_declaration_is_read_from_the_element_or_a_quoted_attribute(tmp_path):
+    """The two forms RDF can state a property in, and nothing else.
+
+    This reading answers for both the merge gate and the register, so it is
+    worth pinning. A looser pattern, which is what `assess.py` carried until
+    the two were collapsed, reads a digit out of whatever sits near the
+    property name: `<pdfuaid:part x="1">` declares nothing and came back as
+    part 1. Overstating conformance is the failure with no symptom here, so
+    the reading errs the other way and an exotic encoding reads as a fail
+    somebody can go and look at.
+    """
+    assert pdf_tags.declared_ua_part("<pdfuaid:part>1</pdfuaid:part>") == 1
+    assert pdf_tags.declared_ua_part('pdfuaid:part="1"') == 1
+    assert pdf_tags.declared_ua_part("pdfuaid:part='1'") == 1
+
+    assert pdf_tags.declared_ua_part('<pdfuaid:part x="1">') is None
+    assert pdf_tags.declared_ua_part("<pdfuaid:part/>") is None
+    assert pdf_tags.declared_ua_part("") is None
+
+
+def test_a_file_with_no_xmp_packet_declares_nothing(tmp_path):
+    """A plain pypdf round trip carries no packet at all, which is the state
+    every bound issue in this archive was in."""
+    writer = PdfWriter()
+    writer.append(PdfReader(str(build_part(tmp_path / "one.pdf", title="One"))))
+    stripped = tmp_path / "stripped.pdf"
+    with open(stripped, "wb") as handle:
+        writer.write(handle)
+
+    reader = PdfReader(str(stripped))
+
+    assert pdf_tags.xmp_packet_text(reader) == ""
+    assert pdf_tags.declared_ua_part(pdf_tags.xmp_packet_text(reader)) is None
+    assert pdf_tags.declared_title(pdf_tags.xmp_packet_text(reader)) == ""
+
+
 def test_an_untagged_part_is_named_and_its_pages_still_bind(tmp_path):
     parts = [
         (build_part(tmp_path / "one.pdf", title="One"), "One"),

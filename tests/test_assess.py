@@ -88,8 +88,8 @@ def test_the_light_reading_agrees_with_the_full_one(described):
     claim without the page-by-page counting that follows it, because a
     rendered galley has to be asked that question often and the rest of the
     pass costs real time. Keeping them in step is the point: a second copy
-    of a conformance reading drifts from the first, which is why
-    `_UA_PART_RE` is written here and not in three places.
+    of a conformance reading drifts from the first, which is why what a
+    packet declares is read by `pdf_tags`, beside the code that writes one.
     """
     light = assess.read_declaration(described)
     full = assess.assess_pdf(described)

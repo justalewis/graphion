@@ -27,11 +27,11 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (490 functions, 513 cases once the parametrized ones expand: 142 in
+Tests (492 functions, 515 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 43 in
 `test_ingest_volume.py`, 34 in `test_lint.py`, 29 in
 `test_teacher_resources.py`, 28 in `test_metadata_roundtrip.py`, 24 in
-`test_math_alt.py`, 27 in `test_register.py`, 24 in `test_pdf_tags.py`,
+`test_math_alt.py`, 27 in `test_register.py`, 26 in `test_pdf_tags.py`,
 21 in `test_assess.py`, 9 in `test_pdf_ua.py`, 6 in `test_standalone_html.py`,
 4 in `test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
 runs without Pandoc; `test_journal_filter.py` needs it, and
@@ -296,8 +296,8 @@ currently shipping through the fallback.
 
 `assess.read_declaration()` is that reading: `assess_pdf()` without the
 page-by-page counting that follows it, so there is one reader and not two.
-`_UA_PART_RE` stays written once in `assess.py`, for the reason
-`_carried_description` exists.
+What a packet declares is read by `pdf_tags`, beside the code that writes
+one, for the reason `_carried_description` exists.
 
 The hash is taken by the caller, before the check runs, and passed to
 `record_*`. Hashing inside the write would date the run to whenever the
@@ -967,10 +967,18 @@ Anything touching Claude (`stylize.py`, `llm_cleanup.py`) requires
 
 - `app.py` (2821 lines) is the whole HTTP surface. `conversion.py` (2593) is the
   pipeline. Those two hold most of the complexity.
-- `pdf_tags.py` (677) is the only module that touches PDF object structure
+- `pdf_tags.py` (713) is the only module that touches PDF object structure
   directly; it binds rendered galleys into a tagged issue. It reaches into
   pypdf's `_add_object` and `_root_object` because pypdf exposes no public API
-  for a structure tree or the catalog's `/Lang`.
+  for a structure tree or the catalog's `/Lang`. It also reads an XMP packet
+  back (`xmp_packet_text`, `declared_ua_part`, `declared_title`), beside the
+  `_xmp_packet` that writes one, so the reading cannot drift from the
+  writing; `assess.py` calls those rather than keeping a pattern of its own.
+  Its pdfuaid:part pattern takes an element or a quoted attribute and nothing
+  else, because the looser one `assess.py` used to hold reads a digit out of
+  a neighbouring attribute, and a conformance claim invented that way is the
+  failure with no symptom. Across the 311 PDFs here the two readings agree,
+  so the choice decides the next source's reading rather than this one's.
 - Per-journal template bundles live at `content/journals/<slug>/template/`:
   CSS, Pandoc HTML template, Typst template, Lua filters, CSL stylesheet,
   wordmark, and the Claude `style-guide.md`. The LiCS bundle is the worked

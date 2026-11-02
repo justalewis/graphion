@@ -43,14 +43,13 @@ from pathlib import Path
 from typing import Optional
 
 import pdf_ingest
+import pdf_tags
 
-# A dc:title in the XMP packet, which is what ISO 14289-1 clause 5 reads.
-# The Info dictionary's /Title is not the same field and does not satisfy
-# it; a bound issue carried one and failed the check for want of the
-# other, which is why both are reported separately below.
-_XMP_TITLE_RE = re.compile(
-    r"<dc:title>.*?<rdf:li[^>]*>(?P<title>.*?)</rdf:li>", re.S)
-_UA_PART_RE = re.compile(r"pdfuaid:part[^0-9]{0,8}(\d)")
+# What a file declares about itself is read by `pdf_tags`, which is also
+# what writes an XMP packet when it binds an issue. One module for both, so
+# the reading cannot drift from the writing, and so the merge gate and this
+# pass cannot answer the same question differently; this pass held a looser
+# copy of the pdfuaid:part pattern until the two were collapsed.
 
 # An image on most of a document's pages is furniture: a series wordmark,
 # a rule, a publisher's device. `ingest_volume.image_digests` makes this
@@ -133,16 +132,6 @@ class Assessment:
         return self.tagged_figures or self.figures
 
 
-def _xmp(reader) -> str:
-    meta = reader.trailer["/Root"].get("/Metadata")
-    if meta is None:
-        return ""
-    try:
-        return meta.get_object().get_data().decode("utf-8", "replace")
-    except Exception:
-        return ""
-
-
 def _read_catalog(assessment: Assessment, reader) -> None:
     """The conformance the file states, read off the catalog and the XMP."""
     root = reader.trailer["/Root"]
@@ -154,11 +143,9 @@ def _read_catalog(assessment: Assessment, reader) -> None:
         assessment.info_title = str((reader.metadata or {}).get("/Title") or "")
     except Exception:
         assessment.info_title = ""
-    packet = _xmp(reader)
-    part = _UA_PART_RE.search(packet)
-    assessment.declared_ua_part = int(part.group(1)) if part else None
-    title = _XMP_TITLE_RE.search(packet)
-    assessment.xmp_title = (title.group("title").strip() if title else "")
+    packet = pdf_tags.xmp_packet_text(reader)
+    assessment.declared_ua_part = pdf_tags.declared_ua_part(packet)
+    assessment.xmp_title = pdf_tags.declared_title(packet)
 
 
 def _read_links(assessment: Assessment, reader) -> None:
@@ -345,9 +332,9 @@ def read_declaration(path: Path) -> Assessment:
     the XMP, and no page is parsed.
 
     Separate entry point, one reader. `_read_catalog` is what decides, and
-    `_UA_PART_RE` is written once in this module, because a second copy of
-    a conformance reading drifts from the first and this codebase has the
-    scars to prove it.
+    what a packet declares is read by `pdf_tags`, beside the code that
+    writes one, because a second copy of a conformance reading drifts from
+    the first.
     """
     assessment = Assessment(path=Path(path))
     reader = _open(assessment, path)
