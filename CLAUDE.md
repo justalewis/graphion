@@ -27,12 +27,12 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (480 functions, 503 cases once the parametrized ones expand: 142 in
+Tests (490 functions, 513 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 43 in
 `test_ingest_volume.py`, 34 in `test_lint.py`, 29 in
 `test_teacher_resources.py`, 28 in `test_metadata_roundtrip.py`, 24 in
-`test_math_alt.py`, 24 in `test_pdf_tags.py`, 19 in `test_assess.py`, 19 in
-`test_register.py`, 9 in `test_pdf_ua.py`, 6 in `test_standalone_html.py`,
+`test_math_alt.py`, 27 in `test_register.py`, 24 in `test_pdf_tags.py`,
+21 in `test_assess.py`, 9 in `test_pdf_ua.py`, 6 in `test_standalone_html.py`,
 4 in `test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
 runs without Pandoc; `test_journal_filter.py` needs it, and
 `test_math_alt.py` needs it for the filter round trip alone. Both skip
@@ -263,11 +263,49 @@ that state. And a validator that could not run records `warn`, since verapdf
 missing from PATH is not the galley failing, and putting either verdict on
 record would be a claim nothing checked.
 
+**The fourth kind reads the galley instead of being handed a verdict.**
+Lint, verapdf and pa11y pass their results to `register`;
+`register.record_pdfua()` opens `article.pdf` itself and asks what it declares
+about its own conformance, through `assess.read_declaration()`. That is the
+question `_compile_typst`'s fallback used to answer in a render log and nowhere
+a count could reach. Typst validates PDF/UA rather than stamping it, so one
+undescribed figure or one bare equation aborts the compile; the fallback then
+writes the galley unconstrained, which is how an editor keeps a galley out of
+it, and what ships is readable and unconformant with a log line as its only
+trace.
+
+Reading the artifact answers more than catching the compile would. A galley
+rendered before any of this existed states its conformance as plainly as one
+rendered this morning, so the archive could be answered for without
+re-rendering 115 chapters. And the shortfall is caught however it arrived,
+which it had to be: the six issue front matters that silently lost the
+standard did so for want of a title and not for want of alt text. What the
+artifact cannot say is why, and the render log still holds that.
+
+Five lines go on record per galley, and the title is two fields of which one
+counts: clause 5 reads `dc:title` in the XMP packet, the Info dictionary's
+`/Title` is a different entry, and the summary says so where it finds exactly
+that pairing. A `teacher-resources.pdf` is read into the same run, since a
+second galley that lost the standard is the same hole as the first; that
+leaves the run dated to `article.pdf` alone, which is the soft edge here and
+is worth more than leaving the teacher galley unread. A file pypdf cannot open
+records `warn`, by the rule a validator missing from PATH already follows. Run
+over the archive, all 115 rendered galleys declare all five and 66 of them
+carry a teacher galley that declares them too, so nothing in this series is
+currently shipping through the fallback.
+
+`assess.read_declaration()` is that reading: `assess_pdf()` without the
+page-by-page counting that follows it, so there is one reader and not two.
+`_UA_PART_RE` stays written once in `assess.py`, for the reason
+`_carried_description` exists.
+
 The hash is taken by the caller, before the check runs, and passed to
 `record_*`. Hashing inside the write would date the run to whenever the
 writing happened, which is after the reading. It is exact for one writer and
 assumes the single gunicorn worker `deploy/entrypoint.sh` configures, which is
-the assumption the login limiter already makes.
+the assumption the login limiter already makes. `record_pdfua` is the one
+exception and hashes for itself, because it is also the reader and there is no
+gap between the two for the bytes to move in.
 
 `check_runs` is a new table, so it goes in `db.py`'s `SCHEMA` as
 `CREATE TABLE IF NOT EXISTS`, the way `conversions` does, and not in
@@ -276,11 +314,13 @@ the assumption the login limiter already makes.
 article has to take its recorded runs with it.
 
 Standings are read by hashing on every page load rather than cached. Measured
-over the archive that is 348 files and 61 MB for 118 articles, which came to
-0.62s, and a cache keyed on mtime would be the weak evidence this exists to
-replace. The corpus lint route is lint only: verapdf and pa11y are subprocesses
-with a 120s timeout each, so a pass over 118 articles belongs in a job runner
-rather than in a request.
+over the archive that is 348 files and 61 MB for 118 articles: 0.5s of hashing
+and 0.8s of lookups, four to an article, and a cache keyed on mtime would be
+the weak evidence this exists to replace. Two kinds read `article.pdf`, so
+`standing()` hashes each file once per call rather than once per kind. The
+corpus route runs the two in-process checks, lint and the declaration:
+verapdf and pa11y are subprocesses with a 120s timeout each, so a pass over
+118 articles belongs in a job runner rather than in a request.
 
 **Galleys are PDF/UA-1.** `conversion._compile_typst()` compiles every PDF
 with `pdf_standards` set from `config.PDF_UA_STANDARD`, which is what emits
@@ -288,9 +328,10 @@ the conformance identifier and the ViewerPreferences `/DisplayDocTitle` entry
 that an accessibility audit checks for (ISO 14289-1 clause 5; WCAG 2.4.2).
 Typst validates the standard rather than merely declaring it, so content that
 cannot conform aborts the compile. The helper falls back to an unconstrained
-render and logs why, so an editor never loses a galley to this. The usual
-cause is an image with no alt text, which `lint.check_alt_text` fails on
-first. A bound issue is as conformant as its parts and no more, which is what
+render and logs why, so an editor never loses a galley to this, and
+`register.record_pdfua()` reads the galley afterwards so the fallback is
+counted rather than left in a log nobody totals. The usual cause is an image
+with no alt text, which `lint.check_alt_text` fails on first. A bound issue is as conformant as its parts and no more, which is what
 `pdf_tags.py` is for.
 
 **An equation is the other thing Typst refuses, and it refused silently.**

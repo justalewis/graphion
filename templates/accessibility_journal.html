@@ -90,11 +90,12 @@
     </tbody>
   </table>
 
-  <form method="post" action="{{ url_for('accessibility_run_lint', slug=journal['slug']) }}"
+  <form method="post" action="{{ url_for('accessibility_run_checks', slug=journal['slug']) }}"
         style="margin-top: var(--space-5);">
-    <button type="submit" class="button">Lint every article and record it</button>
+    <button type="submit" class="button">Check every article and record it</button>
     <span class="dim" style="margin-left: var(--space-3); font-size: var(--text-sm);">
-      Lint only. The PDF/UA and HTML audits call external tools, so they stay
+      Lint, plus what each galley declares about its own conformance. The
+      verapdf and pa11y audits call external tools, so those stay
       per-article.
     </span>
   </form>
@@ -119,7 +120,8 @@
           <br /><code class="dim" style="font-size: var(--text-xs);">{{ a['slug'] }}</code>
         </td>
         {% for kind in kinds %}
-        <td><span class="state {{ st[kind].tone }}">{{ st[kind].label }}</span></td>
+        <td><span class="state {{ st[kind].tone }}"
+                  title="{{ kind_labels[kind] }}: {{ st[kind].label }}">{{ st[kind].label }}</span></td>
         {% endfor %}
         <td class="ran-at">{{ st['lint'].ran_at or '' }}</td>
       </tr>

@@ -81,6 +81,36 @@ def test_a_conformant_galley_reads_as_conformant(described):
     assert result.lang == "en"
 
 
+def test_the_light_reading_agrees_with_the_full_one(described):
+    """One reader, two entry points.
+
+    `read_declaration` is this module's reading of a file's own conformance
+    claim without the page-by-page counting that follows it, because a
+    rendered galley has to be asked that question often and the rest of the
+    pass costs real time. Keeping them in step is the point: a second copy
+    of a conformance reading drifts from the first, which is why
+    `_UA_PART_RE` is written here and not in three places.
+    """
+    light = assess.read_declaration(described)
+    full = assess.assess_pdf(described)
+
+    for field in ("readable", "pages", "tagged", "declared_ua_part",
+                  "xmp_title", "info_title", "lang", "display_doctitle"):
+        assert getattr(light, field) == getattr(full, field), field
+    assert light.conformant == full.conformant
+
+
+def test_the_light_reading_names_a_file_that_will_not_open(tmp_path):
+    broken = tmp_path / "broken.pdf"
+    broken.write_bytes(b"this is not a PDF")
+
+    result = assess.read_declaration(broken)
+
+    assert result.readable is False
+    assert result.error
+    assert result.conformant is False
+
+
 def test_an_untagged_copy_reads_as_needing_work(described, tmp_path):
     """A plain pypdf round trip is the fixture, because that is the defect.
 

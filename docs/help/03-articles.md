@@ -102,14 +102,23 @@ Results are pass/warn/fail. Warnings don't block publishing — they advise.
 Every run is recorded, with the date and a hash of the `article.md` it read.
 The **Accessibility** page in the top nav rolls those up per journal, so
 "where does this journal stand" is one page rather than one article at a
-time, and it carries a button that lints every article in a journal in one
+time, and it carries a button that checks every article in a journal in one
 pass. The two validators, **Validate PDF/UA** and **Audit HTML**, are
 recorded the same way when you run them per article.
 
+The PDF galley answers for itself. Every render reads the finished
+`article.pdf` back and records what it declares about its own conformance:
+whether it is tagged, whether it carries the PDF/UA-1 identifier, whether its
+XMP metadata holds a title, whether it opens showing that title rather than
+the filename, and whether it states a language. Typst checks PDF/UA instead
+of merely claiming it, so one undescribed figure makes it refuse; the render
+falls back so you still get a galley, and this is the line that tells you
+afterwards that it did. The reason Typst gave is in the article's **Logs**
+tab. An article that renders a separate teacher galley has that one read too.
+
 A recorded result counts only while the file it read is unchanged. Edit the
-article and its last lint shows as *checked against an older version*, not as
-a pass; the page would otherwise look better the longer nobody re-ran
-anything.
+article and its last lint shows as *older version*, not as a pass; the page
+would otherwise look better the longer nobody re-ran anything.
 
 ## Rendering
 

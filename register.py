@@ -34,6 +34,11 @@ finding forever, newest of its name and belonging to a run that is over.
 The hash is taken once, before the check runs, which is exact for a single
 writer and assumes the one gunicorn worker `deploy/entrypoint.sh` configures,
 the same assumption the login limiter in `app.py` already makes.
+
+Three kinds take a verdict from whoever ran the tool. The fourth, `pdfua`,
+reads the galley itself and asks what it declares about its own conformance,
+which is what `conversion._compile_typst`'s fallback used to say in a render
+log and nowhere a count could reach.
 """
 from __future__ import annotations
 
@@ -52,17 +57,49 @@ import db
 # the source it came from.
 CHECKED_FILE = {
     "lint": "article.md",
+    "pdfua": "article.pdf",
     "verapdf": "article.pdf",
     "pa11y": "article.html",
 }
 
-KINDS = ("lint", "verapdf", "pa11y")
+KINDS = ("lint", "pdfua", "verapdf", "pa11y")
 
 KIND_LABELS = {
     "lint": "Lint",
-    "verapdf": "PDF/UA (verapdf)",
+    "pdfua": "PDF/UA declared",
+    "verapdf": "PDF/UA audited (verapdf)",
     "pa11y": "HTML audit (pa11y)",
 }
+
+# What ISO 14289-1 requires a conforming file to say about itself, read off
+# the catalog and the XMP. Typst writes all five only when the standard is
+# asked for, so a galley that went down `conversion._compile_typst`'s
+# fallback path reads here as a missing identifier.
+#
+# The title is two fields and only one of them counts. Clause 5 reads
+# `dc:title` in the XMP packet; the Info dictionary's `/Title` is a
+# different entry, and six bound issues in this archive carried that one
+# and failed the check for want of the other, which is why the summary
+# below says so when it finds exactly that.
+_DECLARATION = (
+    ("tagged", "tagged",
+     "Tagged: the file carries a structure tree.",
+     "Untagged: no structure tree, so nothing above the text is marked up."),
+    ("pdfua-identifier", "declared_ua_part",
+     "Declares PDF/UA-1 (ISO 14289-1 clause 5).",
+     "No declared PDF/UA conformance, so an audit has nothing to check "
+     "the galley against."),
+    ("document-title", "xmp_title",
+     "Carries a document title in XMP (dc:title).",
+     "No dc:title in XMP, which is the field clause 5 reads."),
+    ("display-doc-title", "display_doctitle",
+     "Opens showing the title rather than the filename (/DisplayDocTitle).",
+     "No /DisplayDocTitle, so a reader is shown the filename (WCAG 2.4.2)."),
+    ("document-language", "lang",
+     "States a document language (/Lang).",
+     "No document language, so a screen reader has to guess the voice "
+     "(WCAG 3.1.1)."),
+)
 
 NEVER = "never"
 ABSENT = "absent"
@@ -153,6 +190,86 @@ def record_lint(article_id: int, project_path, results: Iterable,
     findings = [Finding(r.name, r.level, r.summary, list(r.details))
                 for r in results]
     return record(article_id, "lint", findings, content_hash)
+
+
+def record_pdfua(article_id: int, project_path,
+                 content_hash: Optional[str] = None) -> Optional[str]:
+    """Record what the rendered galley declares about its own conformance.
+
+    This is the question `conversion._compile_typst`'s fallback used to
+    leave in a log line and nowhere else. Typst validates PDF/UA rather
+    than merely declaring it, so one undescribed figure or one bare
+    equation aborts the compile, and the fallback renders the galley
+    without the standard so that an editor never loses a galley to this.
+    What ships is then readable and unconformant, and the only trace was a
+    line in the render log that nothing counted and no page totalled.
+
+    Reading the artifact rather than catching the compile answers more than
+    the fallback does. A galley rendered before any of this existed states
+    its conformance as plainly as one rendered this morning, so the archive
+    can be answered for without re-rendering 115 chapters; and the failure
+    is caught however it arrived, which matters, because the six issue
+    front matters that silently lost the standard did so for want of a
+    title rather than for want of alt text.
+
+    Unlike every other kind here, this one reads the file itself instead of
+    taking a verdict from a caller, so it hashes and reads in one place and
+    there is no gap for the bytes to move in. The others take the hash from
+    whoever ran the check, because only that caller knows which bytes it
+    saw.
+    """
+    content_hash = content_hash or hash_for(project_path, "pdfua")
+    if content_hash is None:
+        return None
+    # Imported here rather than at the top: only this kind needs it, and it
+    # pulls pdfplumber in behind it.
+    import assess
+
+    read = assess.read_declaration(Path(project_path) / CHECKED_FILE["pdfua"])
+    if not read.readable:
+        # A file pypdf cannot open has not failed a conformance check; it
+        # has not had one. Same rule as a validator missing from PATH.
+        return record(article_id, "pdfua",
+                      [Finding("pdfua", "warn", f"Not read: {read.error}")],
+                      content_hash)
+
+    findings = []
+    for name, attr, ok, bad in _DECLARATION:
+        if getattr(read, attr):
+            findings.append(Finding(name, "pass", ok))
+        elif name == "document-title" and read.info_title:
+            findings.append(Finding(name, "fail", bad + " The Info dictionary "
+                                    "carries a title; that is a different field."))
+        else:
+            findings.append(Finding(name, "fail", bad))
+
+    # An article with `teacher-resources: separate` renders two galleys, and
+    # a second galley that quietly lost the standard is the same hole as the
+    # first. It is carried in this run rather than given one of its own,
+    # which leaves the run dated to `article.pdf` alone; `render_all` writes
+    # the two together, so in practice they move at once, and the soft edge
+    # is worth more than leaving the teacher galley unchecked.
+    teacher = Path(project_path) / "teacher-resources.pdf"
+    if teacher.exists():
+        t = assess.read_declaration(teacher)
+        if not t.readable:
+            findings.append(Finding(
+                "teacher-galley", "warn",
+                f"teacher-resources.pdf could not be read: {t.error}"))
+        else:
+            missing = [name for name, attr, _ok, _bad in _DECLARATION
+                       if not getattr(t, attr)]
+            if missing:
+                findings.append(Finding(
+                    "teacher-galley", "fail",
+                    "teacher-resources.pdf does not declare: "
+                    + ", ".join(missing) + "."))
+            else:
+                findings.append(Finding(
+                    "teacher-galley", "pass",
+                    "teacher-resources.pdf declares the same."))
+
+    return record(article_id, "pdfua", findings, content_hash)
 
 
 def record_verapdf(article_id: int, project_path, passed: bool,
@@ -275,7 +392,10 @@ class Standing:
         if self.state == ABSENT:
             return f"no {CHECKED_FILE[self.kind]}"
         if self.state == STALE:
-            return "checked against an older version"
+            # Short, because it is read in a table cell beside three
+            # others. What it means is spelled out in `Rollup.note()`,
+            # which the page carries under the totals.
+            return "older version"
         return {"pass": "clean", "warn": "warnings", "fail": "failing"}.get(
             self.level or "", "checked")
 
@@ -283,8 +403,17 @@ class Standing:
 def standing(article_id: int, project_path, kinds: Sequence[str] = KINDS
              ) -> Dict[str, Standing]:
     out = {}
+    # What a galley declares and whether the declaration holds up are two
+    # kinds reading one PDF, so the file is hashed once per call instead of
+    # once per kind. Within a single call there is no question of the bytes
+    # differing between the two readings, and over a journal page it is the
+    # difference between hashing the archive's galleys once and twice.
+    hashes: Dict[str, Optional[str]] = {}
     for kind in kinds:
-        current = hash_for(project_path, kind)
+        source = CHECKED_FILE[kind]
+        if source not in hashes:
+            hashes[source] = hash_file(Path(project_path) / source)
+        current = hashes[source]
         findings = latest_run(article_id, kind)
         if current is None:
             out[kind] = Standing(kind, ABSENT,
@@ -350,7 +479,9 @@ class Rollup:
             "as such and not as a pass, since the content has moved under it. "
             "How many figures carry text as a picture is in neither column; "
             "that is kept by hand in each article's images-of-text field, and "
-            "nothing but looking settles it."
+            "nothing but looking settles it. A bound issue.pdf is not an "
+            "article and is not counted here either; what a merge could and "
+            "could not carry is reported as the issue is assembled."
         )
 
 
@@ -388,6 +519,6 @@ __all__ = [
     "NEVER", "ABSENT", "STALE", "CURRENT",
     "Finding", "Recorded", "Standing", "KindRollup", "Rollup",
     "hash_bytes", "hash_file", "hash_for",
-    "record", "record_lint", "record_verapdf", "record_pa11y",
+    "record", "record_lint", "record_pdfua", "record_verapdf", "record_pa11y",
     "latest_run", "standing", "rollup",
 ]

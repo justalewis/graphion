@@ -15,9 +15,36 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+import conversion
 import db
 import lint
 import register
+
+# A galley that can declare the standard, and one that cannot. Typst
+# validates PDF/UA rather than stamping it, so the figure with no alt text
+# aborts the conformant compile and `_compile_typst` falls back to an
+# unconstrained render: the PDF is written either way, which is the whole
+# point of the fallback and the reason the shortfall needs recording
+# somewhere a count can reach it. `tests/test_pdf_ua.py` is where the
+# compile step itself is tested.
+CONFORMANT = """#set document(title: [A Rendered Galley], author: ("Jane Doe",))
+#set text(lang: "en")
+= A Heading
+
+Body text, carrying nothing that needs alt text.
+"""
+
+FALLS_BACK = """#set document(title: [A Rendered Galley], author: ("Jane Doe",))
+#set text(lang: "en")
+#figure(caption: [A caption])[#rect(width: 2cm, height: 1cm)]
+"""
+
+
+def _galley(root, out: Path, source: str = CONFORMANT) -> bool:
+    """Compile `source` to `out`. Returns True where PDF/UA-1 was declared."""
+    typ = out.parent / (out.stem + ".typ")
+    typ.write_text(source, encoding="utf-8")
+    return conversion._compile_typst(typ, out, root=root)
 
 
 @pytest.fixture
@@ -178,6 +205,7 @@ def test_a_galley_that_was_never_rendered_reads_as_absent(store):
     st = register.standing(art["id"], art["project_path"])
 
     assert st["verapdf"].state == register.ABSENT
+    assert st["pdfua"].state == register.ABSENT
     assert st["pa11y"].state == register.ABSENT
     assert st["lint"].state == register.NEVER
 
@@ -268,10 +296,13 @@ def test_pa11y_errors_read_as_a_failure(article):
 def test_each_kind_hashes_the_file_its_check_reads(article):
     """A lint result dated to the galley, or a PDF/UA verdict dated to the
     Markdown, would go stale on the wrong edit and stay current on the one
-    that mattered."""
+    that mattered. Two kinds do read the same file, because what a galley
+    declares and whether the declaration holds up are two questions about
+    one PDF."""
     hashes = {k: register.hash_for(article["project_path"], k)
               for k in register.KINDS}
-    assert len(set(hashes.values())) == 3
+    assert hashes["pdfua"] == hashes["verapdf"]
+    assert len({hashes["lint"], hashes["verapdf"], hashes["pa11y"]}) == 3
 
     register.record_lint(article["id"], article["project_path"], _clean_lint())
     register.record_verapdf(article["id"], article["project_path"], True, {})
@@ -281,6 +312,130 @@ def test_each_kind_hashes_the_file_its_check_reads(article):
     st = register.standing(article["id"], article["project_path"])
     assert st["lint"].state == register.CURRENT
     assert st["verapdf"].state == register.STALE
+
+
+# ---------- what a galley declares about itself ----------
+
+def test_a_conformant_galley_records_every_declaration_as_a_pass(store):
+    art = _add_article(store, "conformant")
+    pdf = Path(art["project_path"], "article.pdf")
+    assert _galley(store, pdf, CONFORMANT) is True
+
+    assert register.record_pdfua(art["id"], art["project_path"])
+    st = register.standing(art["id"], art["project_path"])["pdfua"]
+
+    assert st.state == register.CURRENT
+    assert st.clean
+    assert {f.check_name for f in st.findings} == {
+        "tagged", "pdfua-identifier", "document-title",
+        "display-doc-title", "document-language"}
+
+
+def test_a_galley_that_fell_back_is_recorded_as_failing(store):
+    """The hole this closes.
+
+    Typst validates PDF/UA rather than stamping it, so one undescribed
+    figure aborts the conformant compile and the fallback writes the galley
+    without the standard: readable, and failing any audit. The editor keeps
+    their galley, which is what the fallback is for, and until this was
+    recorded the only trace of the shortfall was a line in the article's
+    render log that no page totalled and no report could cite.
+    """
+    art = _add_article(store, "fell-back")
+    pdf = Path(art["project_path"], "article.pdf")
+    assert _galley(store, pdf, FALLS_BACK) is False
+    assert pdf.exists()
+
+    register.record_pdfua(art["id"], art["project_path"])
+    st = register.standing(art["id"], art["project_path"])["pdfua"]
+
+    assert st.state == register.CURRENT
+    assert st.level == "fail"
+    assert st.tone == "bad"
+    identifier = [f for f in st.findings if f.check_name == "pdfua-identifier"]
+    assert identifier and identifier[0].level == "fail"
+
+
+def test_a_title_in_the_info_dictionary_is_not_a_document_title(store, monkeypatch):
+    """Clause 5 reads dc:title in the XMP packet, and the Info dictionary's
+    /Title is a different entry. Six bound issues in this archive set the
+    one, carried no XMP at all, and failed the check looking titled to
+    anyone who opened them, so the summary says which field is missing."""
+    import assess
+    art = _add_article(store, "info-titled", files=("article.md", "article.pdf"))
+    monkeypatch.setattr(assess, "read_declaration", lambda path: assess.Assessment(
+        path=Path(path), tagged=True, declared_ua_part=1, xmp_title="",
+        info_title="A Rendered Galley", lang="en", display_doctitle=True))
+
+    register.record_pdfua(art["id"], art["project_path"])
+    title = [f for f in register.latest_run(art["id"], "pdfua")
+             if f.check_name == "document-title"][0]
+
+    assert title.level == "fail"
+    assert "Info dictionary" in title.summary
+
+
+def test_the_teacher_galley_is_read_too(store):
+    """An article with `teacher-resources: separate` renders two galleys,
+    and a second one that quietly lost the standard is the same hole as the
+    first."""
+    art = _add_article(store, "two-galleys")
+    _galley(store, Path(art["project_path"], "article.pdf"), CONFORMANT)
+    _galley(store, Path(art["project_path"], "teacher-resources.pdf"), FALLS_BACK)
+
+    register.record_pdfua(art["id"], art["project_path"])
+    st = register.standing(art["id"], art["project_path"])["pdfua"]
+
+    assert st.level == "fail"
+    teacher = [f for f in st.findings if f.check_name == "teacher-galley"]
+    assert teacher and "pdfua-identifier" in teacher[0].summary
+
+
+def test_an_article_with_one_galley_is_not_asked_about_a_second(store):
+    art = _add_article(store, "one-galley")
+    _galley(store, Path(art["project_path"], "article.pdf"), CONFORMANT)
+
+    register.record_pdfua(art["id"], art["project_path"])
+    st = register.standing(art["id"], art["project_path"])["pdfua"]
+
+    assert "teacher-galley" not in {f.check_name for f in st.findings}
+    assert st.clean
+
+
+def test_a_galley_pypdf_cannot_open_is_a_warning_not_a_verdict(store):
+    """Same rule as a validator missing from PATH: a file that could not be
+    read has not failed a conformance check, it has not had one."""
+    art = _add_article(store, "not-a-pdf", files=("article.md", "article.pdf"))
+
+    register.record_pdfua(art["id"], art["project_path"])
+    st = register.standing(art["id"], art["project_path"])["pdfua"]
+
+    assert st.level == "warn"
+    assert "Not read" in st.findings[0].summary
+
+
+def test_re_rendering_a_galley_unsettles_its_declaration(store):
+    """What was recorded is a statement about the file that was there then.
+    A galley rendered again is a different file, and the register says so
+    rather than carrying the old verdict forward."""
+    art = _add_article(store, "re-rendered")
+    pdf = Path(art["project_path"], "article.pdf")
+    _galley(store, pdf, CONFORMANT)
+    register.record_pdfua(art["id"], art["project_path"])
+    assert register.standing(art["id"], art["project_path"])["pdfua"].clean
+
+    _galley(store, pdf, FALLS_BACK)
+
+    st = register.standing(art["id"], art["project_path"])["pdfua"]
+    assert st.state == register.STALE
+    assert st.settled is False
+
+
+def test_recording_a_declaration_is_declined_where_there_is_no_galley(store):
+    art = _add_article(store, "source-only-2")
+
+    assert register.record_pdfua(art["id"], art["project_path"]) is None
+    assert register.latest_run(art["id"], "pdfua") == []
 
 
 # ---------- the rollup adds up and says what it leaves out ----------

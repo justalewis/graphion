@@ -112,6 +112,7 @@ app.py:upload_article       — POST /journals/<slug>/upload
 
 app.py:article_render       — POST /articles/<id>/render
   → conversion.render_all        — Stage 4
+  → register.record_pdfua         what the galley declares, read back off it
 
 app.py:article_lint         — GET  /articles/<id>/lint
   → register.hash_for             hash article.md BEFORE the checks read it
@@ -120,6 +121,11 @@ app.py:article_lint         — GET  /articles/<id>/lint
 
 app.py:accessibility_journal — GET /accessibility/<slug>
   → register.rollup               per article, per check, current or not
+
+app.py:accessibility_run_checks — POST /accessibility/<slug>/run-checks
+  → lint.run + register.record_lint        every article, one pass
+  → register.record_pdfua                  every rendered galley
+    → assess.read_declaration              catalog and XMP, no page parsed
 
 app.py:article_metadata     — POST /articles/<id>/metadata
   → conversion.write_article_metadata
@@ -202,7 +208,7 @@ Run all tests:
 python -m pytest tests/ -q
 ```
 
-Currently 503 passing. Unit-tested:
+Currently 513 passing. Unit-tested:
 
 - `cleanups.py` — every cleanup pass with input/output pairs + idempotence checks.
 - `conversion.py` metadata round-trip — YAML read/write with sanitization and field ordering.
@@ -222,7 +228,9 @@ Currently 503 passing. Unit-tested:
   that have moved, a check that no longer runs, a galley that was never
   rendered, and a tool that could not speak. A register whose stored passes
   kept counting would read better the longer it went unrefreshed, which is
-  the one failure here with no symptom.
+  the one failure here with no symptom. The declaration cases compile a real
+  galley both ways, because a fallback that goes unrecorded is the shortfall
+  this kind exists to count.
 - `assess.py` — the two readings of a figure count and which one wins, and
   that a folder comes out of an assessment byte for byte as it went in. The
   second is the contract: this pass is pointed at an archive before any

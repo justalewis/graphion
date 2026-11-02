@@ -440,12 +440,21 @@ Persist every check with a timestamp and a content hash, and roll it up.
   rather than a verdict.
 - ~~One page per journal that answers "where does this stand".~~ Done:
   `/accessibility` per journal, `/accessibility/<slug>` broken out by issue
-  and article, with a corpus lint route that records a run for every article
-  in one pass.
-- Still to do: record the PDF/UA fallback as a check result rather than only a
-  log line. `conversion._compile_typst` still writes that to the render log
-  alone, which remains the only trace that a galley lost its conformance
-  identifier, and it is the one result here that nothing surfaces.
+  and article, with a corpus route that records lint and the galley
+  declaration for every article in one pass.
+- ~~Record the PDF/UA fallback as a check result rather than only a log~~
+  ~~line.~~ Done, by reading the galley rather than by catching the compile:
+  `register.record_pdfua()` asks `article.pdf` what it declares about its own
+  conformance, through `assess.read_declaration()`. Five lines go on record
+  per galley (tagged, the PDF/UA identifier, `dc:title` in XMP,
+  `/DisplayDocTitle`, `/Lang`) and a `teacher-resources.pdf` is read into the
+  same run. Reading the artifact answers for a galley rendered long before
+  any of this existed, which is how the archive could be answered for without
+  re-rendering 115 chapters, and it catches the shortfall however it arrived
+  rather than only where this app did the compiling. What it cannot say is
+  why; the render log still holds the reason Typst gave. All 115 rendered
+  galleys declare all five, so nothing in the series is currently shipping
+  through the fallback.
 - Still to do: the per-journal page counts articles by check, not the units
   that cost time. Figures described, figures owed, images of text, equations
   and tables are all inside the recorded lint findings and none is totalled

@@ -321,18 +321,48 @@ def _read_text(assessment: Assessment, pdf, deep: bool) -> None:
         assessment.unreadable_characters = int(digits.group(1)) if digits else 1
 
 
-def assess_pdf(path: Path, deep: bool = False) -> Assessment:
-    """Read one PDF. Writes nothing, anywhere, ever."""
-    import pdfplumber
+def _open(assessment: Assessment, path):
+    """The reader, or None with the reason recorded on the assessment."""
     from pypdf import PdfReader
 
-    assessment = Assessment(path=Path(path))
     try:
         reader = PdfReader(str(path))
         assessment.pages = len(reader.pages)
+        return reader
     except Exception as exc:
         assessment.readable = False
         assessment.error = f"{type(exc).__name__}: {exc}"
+        return None
+
+
+def read_declaration(path: Path) -> Assessment:
+    """What a PDF states about its own conformance, and nothing else.
+
+    `assess_pdf` reads this on its way to counting what remediating an
+    archive would cost, which means opening every page. A galley that has
+    just been rendered needs only the first part of that, and needs it
+    often enough that the rest is worth not doing: this is the catalog and
+    the XMP, and no page is parsed.
+
+    Separate entry point, one reader. `_read_catalog` is what decides, and
+    `_UA_PART_RE` is written once in this module, because a second copy of
+    a conformance reading drifts from the first and this codebase has the
+    scars to prove it.
+    """
+    assessment = Assessment(path=Path(path))
+    reader = _open(assessment, path)
+    if reader is not None:
+        _read_catalog(assessment, reader)
+    return assessment
+
+
+def assess_pdf(path: Path, deep: bool = False) -> Assessment:
+    """Read one PDF. Writes nothing, anywhere, ever."""
+    import pdfplumber
+
+    assessment = Assessment(path=Path(path))
+    reader = _open(assessment, path)
+    if reader is None:
         return assessment
 
     _read_catalog(assessment, reader)

@@ -1086,6 +1086,7 @@ def register_routes(app: Flask):
             )
 
             render_result = conversion.render_all(apath, article["journal_slug"])
+            register.record_pdfua(article_id, apath)
             if render_result.errors:
                 flash(
                     "Metadata saved, but re-render had issues: " + "; ".join(render_result.errors),
@@ -1268,6 +1269,12 @@ def register_routes(app: Flask):
             abort(404)
         apath = Path(article["project_path"])
         result = conversion.render_all(apath, article["journal_slug"])
+        # Recorded from the galley rather than from the compile. Typst
+        # validates PDF/UA instead of declaring it, so one undescribed
+        # figure sends `conversion._compile_typst` down its fallback path
+        # and the PDF ships readable and unconformant; the fallback writes
+        # that to the render log, which nothing counted.
+        register.record_pdfua(article_id, apath)
         return jsonify({
             "html": str(result.html_path) if result.html_path else None,
             "pdf": str(result.pdf_path) if result.pdf_path else None,
@@ -1737,6 +1744,11 @@ def register_routes(app: Flask):
         )
         register.record_verapdf(article_id, article["project_path"], passed,
                                 report, content_hash=content_hash)
+        # What the galley declares, against the same bytes verapdf read. The
+        # two answer different questions: this one is what the file says
+        # about itself, and verapdf is whether the claim holds up.
+        register.record_pdfua(article_id, article["project_path"],
+                              content_hash=content_hash)
         view_url = url_for("serve_verapdf_report", article_id=article_id)
         if passed:
             flash(Markup(
@@ -2564,9 +2576,12 @@ def register_routes(app: Flask):
 
     # Every standing is read by hashing the file on disk, which is what tells
     # a recorded pass from a current one. Measured over the Writing Spaces
-    # archive that is 348 files and 61 MB for 118 articles, which came to
-    # 0.62s; the page is a deliberate "where do we stand" view rather than
-    # something loaded in a loop, so it is read fresh rather than cached.
+    # archive that is 348 files and 61 MB for 118 articles: 0.5s of hashing
+    # and 0.8s of lookups, four to an article. The page is a deliberate
+    # "where do we stand" view rather than something loaded in a loop, so it
+    # is read fresh rather than cached; a cache keyed on mtime would be the
+    # weak evidence the register exists to replace. The half worth attacking
+    # first is the lookups, which could be one query a journal.
 
     @app.route("/accessibility")
     @login_required
@@ -2626,14 +2641,16 @@ def register_routes(app: Flask):
             kind_labels=register.KIND_LABELS,
         )
 
-    @app.route("/accessibility/<slug>/run-lint", methods=["POST"])
+    @app.route("/accessibility/<slug>/run-checks", methods=["POST"])
     @login_required
-    def accessibility_run_lint(slug):
-        """Lint every article in the journal and record each run.
+    def accessibility_run_checks(slug):
+        """Run the in-process checks over a whole journal and record each.
 
-        Only lint. verapdf and pa11y are subprocesses with a 120s timeout
-        each, so a corpus pass over them belongs in a job runner rather than
-        in a request; they stay per-article until there is one.
+        Lint reads `article.md` and the declaration check reads the galley's
+        catalog and XMP, so both are cheap enough to run in a request.
+        verapdf and pa11y are subprocesses with a 120s timeout each, so a
+        corpus pass over those belongs in a job runner and they stay
+        per-article until there is one.
         """
         journal = db.query_one("SELECT id, slug FROM journals WHERE slug = ?", (slug,))
         if not journal:
@@ -2644,27 +2661,41 @@ def register_routes(app: Flask):
             "WHERE a.journal_id = ?",
             (journal["id"],),
         )
-        recorded = 0
+        linted = 0
+        declared = 0
+        no_galley = 0
         skipped = []
         for row in articles:
             article = dict(row)
             content_hash = register.hash_for(article["project_path"], "lint")
             if content_hash is None:
                 skipped.append(article["slug"])
-                continue
+            else:
+                try:
+                    results = lint.run(article)
+                    register.record_lint(article["id"], article["project_path"],
+                                         results, content_hash=content_hash)
+                    linted += 1
+                except Exception as exc:
+                    skipped.append(f"{article['slug']} ({type(exc).__name__})")
+            # An article with no galley owes a render, which is a state the
+            # register already has a name for; it is not a skip and not a
+            # failure, so it is counted apart from both.
             try:
-                results = lint.run(article)
+                if register.record_pdfua(article["id"], article["project_path"]):
+                    declared += 1
+                else:
+                    no_galley += 1
             except Exception as exc:
-                skipped.append(f"{article['slug']} ({type(exc).__name__})")
-                continue
-            register.record_lint(article["id"], article["project_path"],
-                                 results, content_hash=content_hash)
-            recorded += 1
-        msg = f"Linted and recorded {recorded} article(s)."
+                skipped.append(f"{article['slug']} galley ({type(exc).__name__})")
+        msg = (f"Linted {linted} article(s) and read {declared} galley "
+               f"declaration(s).")
+        if no_galley:
+            msg += f" {no_galley} have no article.pdf rendered yet."
         if skipped:
-            msg += (f" {len(skipped)} had no article.md to read or could not "
-                    f"be linted: {', '.join(skipped[:10])}")
-        flash(msg, "success" if not skipped else "warning")
+            msg += (f" {len(skipped)} could not be read: "
+                    f"{', '.join(skipped[:10])}")
+        flash(msg, "warning" if skipped else "success")
         return redirect(url_for("accessibility_journal", slug=slug))
 
     # ---------- help / docs ----------
