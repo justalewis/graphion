@@ -23,6 +23,13 @@ Graphion/
                         BibTeX parsing for structured citations.
   jats.py             ← JATS XML emitter.
   lint.py             ← Composable per-article validation checks.
+  assess.py           ← What remediating a PDF would take, read without
+                        ingesting it. Reads only; no article directory,
+                        no database row, no file beside the PDF. Point it
+                        at a folder a journal sent and it reports the
+                        conformance each file arrives with, the work
+                        remediation would have to produce, and what no
+                        reading of a page can settle.
   math_alt.py         ← What an equation says aloud. Reads a vocabulary it
                         can read one way and declines everything else, so
                         a formula is never half read; the placeholder it
@@ -181,7 +188,7 @@ Run all tests:
 python -m pytest tests/ -q
 ```
 
-Currently 465 passing. Unit-tested:
+Currently 484 passing. Unit-tested:
 
 - `cleanups.py` — every cleanup pass with input/output pairs + idempotence checks.
 - `conversion.py` metadata round-trip — YAML read/write with sanitization and field ordering.
@@ -197,6 +204,10 @@ Currently 465 passing. Unit-tested:
   declines are the half worth testing: a reading that is nearly right is
   present and wrong in a galley no checker can fault. The filter round
   trip through Pandoc is in the same file and skips where Pandoc is absent.
+- `assess.py` — the two readings of a figure count and which one wins, and
+  that a folder comes out of an assessment byte for byte as it went in. The
+  second is the contract: this pass is pointed at an archive before any
+  agreement exists, so it must not leave anything behind.
 
 Not yet unit-tested:
 

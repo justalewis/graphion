@@ -249,7 +249,7 @@ answered by opening 115 pages and adding up by hand. An ACR answers the same
 question, criterion by criterion and with a date on it, so the register this
 gap describes is a prerequisite for the evidence rather than a convenience.
 
-### 3.4 Nothing can assess content Graphion did not ingest
+### 3.4 Nothing could assess content Graphion did not ingest (fixed)
 
 Every check in `lint.py` takes an article row and reads `article.md`. There is
 no way to point the tool at a folder of a journal's existing PDFs or at a live
@@ -265,8 +265,40 @@ many tables, how many pages are image-only, how many set symbol fonts, how
 many clip their ink, whether the existing PDFs declare any tagging at all.
 
 Most of the reading needed for this already exists in `pdf_ingest.py`. What
-does not exist is a mode that reads without writing and reports instead of
+did not exist was a mode that reads without writing and reports instead of
 ingesting.
+
+`assess.py` is that mode. `python assess.py <folder>` reports, per file, the
+conformance it arrives with (tagged, declared PDF/UA part, `dc:title` in XMP,
+`/Lang`), the work remediation would have to produce (figures still owing a
+description, pages that are scans and need OCR first, ruled tables under
+`--deep`, cover pages, clipped ink, link annotations that cannot reach a tag,
+characters no reader can read), and a folder summary. It writes nothing: no
+article directory, no database row, no file beside the PDF, which is the
+whole point of pointing it at an archive before any agreement exists.
+
+Two things it does are worth stating to a journal, because they are what
+separates this from a scan that returns a score.
+
+It tells work already done from work still owed. A tagged PDF states how many
+figure elements it holds and how many carry a description, so a journal is
+not quoted for its own back catalogue. Where there is no structure tree the
+embedded rasters are the fallback, and where the two readings disagree both
+numbers are printed rather than resolved into one.
+
+It reports what it cannot know. How many figures carry text as a picture is
+not in any total, and the summary says so, because that number is the
+difference between an archive that is described and one that satisfies WCAG
+1.4.5 and nothing but looking settles it.
+
+Run over the Writing Spaces archive it reads the legacy `source.pdf` files
+correctly: no PDF/UA declaration, no `dc:title`, no document language, the
+series cover page ahead of the text, and on one chapter 88 characters across
+three pages that the page draws and then clips away.
+
+What is still missing from §3.3 is the other half: these readings are not
+persisted, dated or tied to a content hash, so the pass answers "where does
+this stand today" and cannot yet answer "what changed since the last run."
 
 ### 3.5 Tables stop at what a pipe table can express
 
@@ -390,16 +422,22 @@ aggregate statement with the shortfalls named.
 A read-only pass over content Graphion did not produce, so a journal can see
 the size of the job before commissioning it.
 
-- Point it at a folder of PDFs or a journal's HTML. It writes nothing.
-- Reuse `pdf_ingest`'s readers to count what drives the work: figures, figures
-  with any existing description, tables, ruled versus unruled, image-only
-  pages, symbol-font pages, clipped pages, cover pages, pages whose structure
-  had to be inferred.
-- Run `verapdf` over their existing PDFs and `pa11y` over their existing HTML,
-  and report what is already there rather than assuming nothing is.
-- Output a per-item statement and an aggregate, denominated in the units that
-  cost time: figures to describe, tables to rebuild, pages to proofread after
-  OCR, articles that need structure inferred rather than read.
+- ~~Point it at a folder of PDFs. It writes nothing.~~ Done: `assess.py`.
+- ~~Reuse `pdf_ingest`'s readers to count what drives the work~~ Done:
+  figures, figures already described, image-only pages, clipped ink, cover
+  pages, untagged link annotations, unreadable characters, and tables under
+  `--deep`.
+- ~~A per-item statement and an aggregate~~ Done, denominated in the units
+  that cost time, with what cannot be read off the page named rather than
+  left out of the total.
+- Still to do: a journal's HTML, which this does not touch at all.
+- Still to do: run `verapdf` over their existing PDFs and `pa11y` over their
+  existing HTML, and report what is already there rather than assuming
+  nothing is. `validators.py` wraps both; neither is wired into this pass,
+  so what it reports about conformance is what the file declares rather than
+  what a checker confirms, and it says so.
+- Still to do: symbol-font pages, and articles whose structure had to be
+  inferred rather than read. Both are knowable and neither is counted yet.
 
 ### Stage 4: the description queue (about four days)
 

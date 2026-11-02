@@ -27,15 +27,16 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (442 functions, 465 cases once the parametrized ones expand: 142 in
+Tests (461 functions, 484 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 43 in
 `test_ingest_volume.py`, 34 in `test_lint.py`, 29 in
 `test_teacher_resources.py`, 28 in `test_metadata_roundtrip.py`, 24 in
-`test_math_alt.py`, 24 in `test_pdf_tags.py`, 9 in `test_pdf_ua.py`, 6 in
-`test_standalone_html.py`, 4 in `test_journal_filter.py`, 3 in
-`test_preprocessors.py`). Most of the suite runs without Pandoc;
-`test_journal_filter.py` needs it, and `test_math_alt.py` needs it for the
-filter round trip alone. Both skip where it is absent:
+`test_math_alt.py`, 24 in `test_pdf_tags.py`, 19 in `test_assess.py`, 9 in
+`test_pdf_ua.py`, 6 in `test_standalone_html.py`, 4 in
+`test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
+runs without Pandoc; `test_journal_filter.py` needs it, and
+`test_math_alt.py` needs it for the filter round trip alone. Both skip
+where it is absent:
 
 ```bash
 python -m pytest tests/ -q
@@ -185,6 +186,52 @@ a caller has to do for those; `ingest_volume.py` re-reads at line 365, after
 
 **Lint checks** follow the same shape in `lint.py`: return `_ok(...)` or
 `_warn(...)`, then register in `DEFAULT_CHECKS` (`lint.py:614`).
+
+**`assess.py` answers the question that comes before ingest, and it writes
+nothing.** Every check in `lint.py` takes an article row and reads
+`article.md`, so all of them run on content Graphion already holds. Taking
+content in is `ingest_pdf`, which is slow and destructive and the wrong
+thing to point at a stranger's back catalogue, so what a journal asks first,
+which is what remediating its archive would cost, could not be answered
+without first committing to the archive. `assess.py` reads instead: no
+article directory, no database row, no file beside the PDF. A run over a
+folder someone sent leaves the folder as it was, and
+`test_assessing_a_folder_leaves_it_exactly_as_it_was` is what holds that.
+
+It reports in two registers on purpose. The conformance a PDF arrives with
+is a fact the file states, read off the catalog and the XMP. What
+remediation would have to produce is a count of work, reported with the
+reasoning attached so the number can be checked. What it cannot know is
+reported too, because nothing can tell a photograph of a document from a
+photograph of anything else, and `images-of-text` is the number that
+decides whether an archive is finished.
+
+**Where a structure tree exists, it decides, and the obvious subtraction is
+wrong for exactly the files that have one.** A tagged PDF states how many
+`/Figure` elements it holds and how many carry an `/Alt`, so what is owed is
+the difference between those two. Taking the raster count as the base
+instead looks equivalent: it is not, because the two readings count
+different things. Volume 2's `critical-thinking-in-college-writing` tags six
+figures, describes one, and embeds a single raster that clears the size
+floor, the other five being vector art or too small; read the wrong way
+round that chapter owes nothing, read from the tree it owes five, and five
+is what the page shows. This was found by running the pass over the
+archive rather than over its fixtures, which is the only way it could
+have been. The raster count stays as the fallback for an untagged file,
+which states nothing, and the two counts are both reported when they
+disagree rather than silently resolved.
+
+**`_may_clip` is a prefilter and not a determination.** It matches the least
+a page must contain for the clip operator to be there at all, which over
+this series is 197 pages against the 15 that actually clip, so reporting its
+hits as clipped ink is wrong thirteen times in fourteen. Call
+`pdf_ingest.clipped_glyphs`, which runs `_may_clip` itself and spares most
+pages the second parse anyway. The first version of `assess.py` reported a
+Typst galley as clipping ink for want of this.
+
+The unreadable-character count calls `lint.check_unreadable_characters`
+rather than carrying its own copy of the pattern. One function knows, for
+the reason `_carried_description` exists.
 
 **Galleys are PDF/UA-1.** `conversion._compile_typst()` compiles every PDF
 with `pdf_standards` set from `config.PDF_UA_STANDARD`, which is what emits
