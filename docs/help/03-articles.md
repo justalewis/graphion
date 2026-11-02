@@ -99,6 +99,18 @@ Click **Run lint** for a one-shot validation pass with 16 checks:
 
 Results are pass/warn/fail. Warnings don't block publishing — they advise.
 
+Every run is recorded, with the date and a hash of the `article.md` it read.
+The **Accessibility** page in the top nav rolls those up per journal, so
+"where does this journal stand" is one page rather than one article at a
+time, and it carries a button that lints every article in a journal in one
+pass. The two validators, **Validate PDF/UA** and **Audit HTML**, are
+recorded the same way when you run them per article.
+
+A recorded result counts only while the file it read is unchanged. Edit the
+article and its last lint shows as *checked against an older version*, not as
+a pass; the page would otherwise look better the longer nobody re-ran
+anything.
+
 ## Rendering
 
 Click **Render** to regenerate HTML and PDF. Both run sequentially via Pandoc (HTML) and Pandoc-to-Typst-then-typst-py (PDF). EPUB and JATS are rendered on demand the first time you request them.

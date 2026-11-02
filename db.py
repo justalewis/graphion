@@ -79,10 +79,27 @@ CREATE TABLE IF NOT EXISTS conversions (
     success INTEGER DEFAULT 1
 );
 
+CREATE TABLE IF NOT EXISTS check_runs (
+    id INTEGER PRIMARY KEY,
+    article_id INTEGER NOT NULL REFERENCES articles(id) ON DELETE CASCADE,
+    run_id TEXT NOT NULL,
+    kind TEXT NOT NULL,
+    check_name TEXT NOT NULL,
+    level TEXT NOT NULL,
+    summary TEXT,
+    details_json TEXT,
+    source_name TEXT NOT NULL,
+    content_hash TEXT NOT NULL,
+    ran_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE INDEX IF NOT EXISTS idx_articles_journal ON articles(journal_id);
 CREATE INDEX IF NOT EXISTS idx_articles_issue ON articles(issue_id);
 CREATE INDEX IF NOT EXISTS idx_authors_article ON authors(article_id);
 CREATE INDEX IF NOT EXISTS idx_conversions_article ON conversions(article_id);
+CREATE INDEX IF NOT EXISTS idx_check_runs_article ON check_runs(article_id);
+CREATE INDEX IF NOT EXISTS idx_check_runs_lookup
+    ON check_runs(article_id, kind, check_name, ran_at);
 """
 
 

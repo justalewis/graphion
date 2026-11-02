@@ -24,6 +24,7 @@ import db
 import jats
 import lint
 import ojs_client
+import register
 import standalone_html
 from auth import User, login_manager
 from config import (
@@ -1306,7 +1307,7 @@ def register_routes(app: Flask):
             abort(404)
         p = Path(article["project_path"]) / "verapdf-report.json"
         if not p.exists():
-            flash("No verapdf report yet — run Validate PDF/UA first.", "error")
+            flash("No verapdf report yet; run Validate PDF/UA first.", "error")
             return redirect(url_for("article_home", article_id=article_id))
         try:
             report = json.loads(p.read_text(encoding="utf-8"))
@@ -1329,7 +1330,7 @@ def register_routes(app: Flask):
             abort(404)
         p = Path(article["project_path"]) / "pa11y-report.json"
         if not p.exists():
-            flash("No pa11y report yet — run Audit HTML accessibility first.", "error")
+            flash("No pa11y report yet; run Audit HTML accessibility first.", "error")
             return redirect(url_for("article_home", article_id=article_id))
         try:
             issues = json.loads(p.read_text(encoding="utf-8"))
@@ -1726,11 +1727,16 @@ def register_routes(app: Flask):
         if not pdf.exists():
             flash("No article.pdf to validate. Render first.", "error")
             return redirect(url_for("article_home", article_id=article_id))
+        # Hashed before the run, so the register dates the verdict to the
+        # bytes verapdf read rather than to whatever is there afterwards.
+        content_hash = register.hash_for(article["project_path"], "verapdf")
         passed, report = validators.run_verapdf(pdf)
         # Save the full report next to the PDF for later inspection.
         (Path(article["project_path"]) / "verapdf-report.json").write_text(
             __import__("json").dumps(report, indent=2), encoding="utf-8",
         )
+        register.record_verapdf(article_id, article["project_path"], passed,
+                                report, content_hash=content_hash)
         view_url = url_for("serve_verapdf_report", article_id=article_id)
         if passed:
             flash(Markup(
@@ -1755,14 +1761,17 @@ def register_routes(app: Flask):
         if not html.exists():
             flash("No article.html to audit. Render first.", "error")
             return redirect(url_for("article_home", article_id=article_id))
+        content_hash = register.hash_for(article["project_path"], "pa11y")
         passed, issues = validators.run_pa11y(html)
         (Path(article["project_path"]) / "pa11y-report.json").write_text(
             __import__("json").dumps(issues, indent=2), encoding="utf-8",
         )
+        register.record_pa11y(article_id, article["project_path"], passed,
+                              issues, content_hash=content_hash)
         view_url = url_for("serve_pa11y_report", article_id=article_id)
         if passed:
             flash(Markup(
-                f"Accessibility audit clean — 0 issues found. <a href='{view_url}' target='_blank'>View report →</a>"
+                f"Accessibility audit clean; 0 issues found. <a href='{view_url}' target='_blank'>View report →</a>"
             ), "success")
         else:
             errors = sum(1 for i in issues if i.get("type") == "error")
@@ -2535,7 +2544,10 @@ def register_routes(app: Flask):
         )
         if not article:
             abort(404)
+        content_hash = register.hash_for(article["project_path"], "lint")
         results = lint.run(dict(article))
+        register.record_lint(article_id, article["project_path"], results,
+                             content_hash=content_hash)
         counts = {
             "fail": sum(1 for r in results if r.level == "fail"),
             "warn": sum(1 for r in results if r.level == "warn"),
@@ -2547,6 +2559,113 @@ def register_routes(app: Flask):
             results=results,
             counts=counts,
         )
+
+    # ---------- accessibility register ----------
+
+    # Every standing is read by hashing the file on disk, which is what tells
+    # a recorded pass from a current one. Measured over the Writing Spaces
+    # archive that is 348 files and 61 MB for 118 articles, which came to
+    # 0.62s; the page is a deliberate "where do we stand" view rather than
+    # something loaded in a loop, so it is read fresh rather than cached.
+
+    @app.route("/accessibility")
+    @login_required
+    def accessibility_home():
+        journals = db.query_all("SELECT * FROM journals ORDER BY name")
+        summaries = []
+        for j in journals:
+            articles = db.query_all(
+                "SELECT id, project_path FROM articles WHERE journal_id = ?",
+                (j["id"],),
+            )
+            summaries.append({
+                "journal": j,
+                "rollup": register.rollup([dict(a) for a in articles]),
+            })
+        return render_template(
+            "accessibility.html",
+            summaries=summaries,
+            kinds=register.KINDS,
+            kind_labels=register.KIND_LABELS,
+        )
+
+    @app.route("/accessibility/<slug>")
+    @login_required
+    def accessibility_journal(slug):
+        journal = db.query_one("SELECT * FROM journals WHERE slug = ?", (slug,))
+        if not journal:
+            abort(404)
+        articles = db.query_all(
+            "SELECT a.*, i.volume, i.issue_number, i.year, i.title AS issue_title "
+            "FROM articles a LEFT JOIN issues i ON a.issue_id = i.id "
+            "WHERE a.journal_id = ? "
+            "ORDER BY i.year, i.volume, i.issue_number, a.order_in_issue, a.slug",
+            (journal["id"],),
+        )
+        roll = register.rollup([dict(a) for a in articles])
+        # Grouped for reading, in the order the query returned, so an issue
+        # stays in volume order and the unassigned drafts fall at the end.
+        groups = []
+        for row in roll.rows:
+            a = row["article"]
+            if a.get("volume") is None:
+                label = "Not in an issue"
+            else:
+                label = f"Volume {a['volume']}, number {a['issue_number']}"
+                if a.get("year"):
+                    label += f" ({a['year']})"
+            if not groups or groups[-1]["label"] != label:
+                groups.append({"label": label, "rows": []})
+            groups[-1]["rows"].append(row)
+        return render_template(
+            "accessibility_journal.html",
+            journal=journal,
+            rollup=roll,
+            groups=groups,
+            kinds=register.KINDS,
+            kind_labels=register.KIND_LABELS,
+        )
+
+    @app.route("/accessibility/<slug>/run-lint", methods=["POST"])
+    @login_required
+    def accessibility_run_lint(slug):
+        """Lint every article in the journal and record each run.
+
+        Only lint. verapdf and pa11y are subprocesses with a 120s timeout
+        each, so a corpus pass over them belongs in a job runner rather than
+        in a request; they stay per-article until there is one.
+        """
+        journal = db.query_one("SELECT id, slug FROM journals WHERE slug = ?", (slug,))
+        if not journal:
+            abort(404)
+        articles = db.query_all(
+            "SELECT a.*, j.slug AS journal_slug, j.name AS journal_name "
+            "FROM articles a JOIN journals j ON a.journal_id = j.id "
+            "WHERE a.journal_id = ?",
+            (journal["id"],),
+        )
+        recorded = 0
+        skipped = []
+        for row in articles:
+            article = dict(row)
+            content_hash = register.hash_for(article["project_path"], "lint")
+            if content_hash is None:
+                skipped.append(article["slug"])
+                continue
+            try:
+                results = lint.run(article)
+            except Exception as exc:
+                skipped.append(f"{article['slug']} ({type(exc).__name__})")
+                continue
+            register.record_lint(article["id"], article["project_path"],
+                                 results, content_hash=content_hash)
+            recorded += 1
+        msg = f"Linted and recorded {recorded} article(s)."
+        if skipped:
+            msg += (f" {len(skipped)} had no article.md to read or could not "
+                    f"be linted: {', '.join(skipped[:10])}")
+        flash(msg, "success" if not skipped else "warning")
+        return redirect(url_for("accessibility_journal", slug=slug))
 
     # ---------- help / docs ----------
 

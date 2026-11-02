@@ -27,13 +27,13 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (461 functions, 484 cases once the parametrized ones expand: 142 in
+Tests (480 functions, 503 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 43 in
 `test_ingest_volume.py`, 34 in `test_lint.py`, 29 in
 `test_teacher_resources.py`, 28 in `test_metadata_roundtrip.py`, 24 in
-`test_math_alt.py`, 24 in `test_pdf_tags.py`, 19 in `test_assess.py`, 9 in
-`test_pdf_ua.py`, 6 in `test_standalone_html.py`, 4 in
-`test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
+`test_math_alt.py`, 24 in `test_pdf_tags.py`, 19 in `test_assess.py`, 19 in
+`test_register.py`, 9 in `test_pdf_ua.py`, 6 in `test_standalone_html.py`,
+4 in `test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
 runs without Pandoc; `test_journal_filter.py` needs it, and
 `test_math_alt.py` needs it for the filter round trip alone. Both skip
 where it is absent:
@@ -232,6 +232,55 @@ Typst galley as clipping ink for want of this.
 The unreadable-character count calls `lint.check_unreadable_characters`
 rather than carrying its own copy of the pattern. One function knows, for
 the reason `_carried_description` exists.
+
+**`register.py` records what was checked, when, and against which bytes, and
+a result that is not current does not count.** `lint.run()` rendered its
+results into a page and discarded them, and the two validator reports landed
+beside the galley with no date and nothing saying which version of the
+article they described, so "where does this journal stand" meant opening 115
+pages. The register stores each run against a sha256 of the file the check
+read, and `register.standing()` compares that hash with the file now on disk.
+
+That comparison is the feature. A stored pass whose hash no longer matches is
+`stale`, not `pass`, and `Rollup` counts it under `unanswered` beside the runs
+that never happened. Reporting the latest row's level instead would make the
+page read better the longer nobody refreshed it, with every number wrong in
+the flattering direction and nothing on the page to show it; an accessibility
+conformance report built on that would be citing checks that ran before the
+content moved. `Standing.settled` is the one predicate every count goes
+through, and `Standing.tone` decides the colour in Python so a template cannot
+quietly answer it differently.
+
+Three more distinctions are load-bearing and each would be easy to collapse.
+A run is identified by its `run_id` rather than reconstructed as the newest
+row per check name, because those differ the moment the set of checks changes:
+a check retired from `DEFAULT_CHECKS` is forever the newest of its name, and
+would go on reporting a finding nothing is looking for. `absent` is not
+`fail`, because an article with no `article.pdf` owes a render rather than a
+conformance failure, and folding the two would overstate remediation and
+understate what already conforms; 3 of Writing Spaces' 118 articles are in
+that state. And a validator that could not run records `warn`, since verapdf
+missing from PATH is not the galley failing, and putting either verdict on
+record would be a claim nothing checked.
+
+The hash is taken by the caller, before the check runs, and passed to
+`record_*`. Hashing inside the write would date the run to whenever the
+writing happened, which is after the reading. It is exact for one writer and
+assumes the single gunicorn worker `deploy/entrypoint.sh` configures, which is
+the assumption the login limiter already makes.
+
+`check_runs` is a new table, so it goes in `db.py`'s `SCHEMA` as
+`CREATE TABLE IF NOT EXISTS`, the way `conversions` does, and not in
+`_apply_migrations()`, which adds columns to tables that exist. Its
+`article_id` foreign key carries `ON DELETE CASCADE` on purpose: a deleted
+article has to take its recorded runs with it.
+
+Standings are read by hashing on every page load rather than cached. Measured
+over the archive that is 348 files and 61 MB for 118 articles, which came to
+0.62s, and a cache keyed on mtime would be the weak evidence this exists to
+replace. The corpus lint route is lint only: verapdf and pa11y are subprocesses
+with a 120s timeout each, so a pass over 118 articles belongs in a job runner
+rather than in a request.
 
 **Galleys are PDF/UA-1.** `conversion._compile_typst()` compiles every PDF
 with `pdf_standards` set from `config.PDF_UA_STANDARD`, which is what emits
@@ -875,7 +924,7 @@ Anything touching Claude (`stylize.py`, `llm_cleanup.py`) requires
 
 ## Layout notes
 
-- `app.py` (2702 lines) is the whole HTTP surface. `conversion.py` (2593) is the
+- `app.py` (2821 lines) is the whole HTTP surface. `conversion.py` (2593) is the
   pipeline. Those two hold most of the complexity.
 - `pdf_tags.py` (677) is the only module that touches PDF object structure
   directly; it binds rendered galleys into a tagged issue. It reaches into

@@ -23,6 +23,12 @@ Graphion/
                         BibTeX parsing for structured citations.
   jats.py             ← JATS XML emitter.
   lint.py             ← Composable per-article validation checks.
+  register.py         ← What was checked, when, and against which bytes.
+                        Each run is stored against a hash of the file the
+                        check read, so a stored pass can be told from a
+                        current one; one taken against content that has
+                        since changed counts as unanswered, not as done.
+                        Feeds the journal rollup at /accessibility.
   assess.py           ← What remediating a PDF would take, read without
                         ingesting it. Reads only; no article directory,
                         no database row, no file beside the PDF. Point it
@@ -107,6 +113,14 @@ app.py:upload_article       — POST /journals/<slug>/upload
 app.py:article_render       — POST /articles/<id>/render
   → conversion.render_all        — Stage 4
 
+app.py:article_lint         — GET  /articles/<id>/lint
+  → register.hash_for             hash article.md BEFORE the checks read it
+  → lint.run                      Stage 5
+  → register.record_lint          one run, dated to those bytes
+
+app.py:accessibility_journal — GET /accessibility/<slug>
+  → register.rollup               per article, per check, current or not
+
 app.py:article_metadata     — POST /articles/<id>/metadata
   → conversion.write_article_metadata
   → conversion.render_all (auto-render)
@@ -188,7 +202,7 @@ Run all tests:
 python -m pytest tests/ -q
 ```
 
-Currently 484 passing. Unit-tested:
+Currently 503 passing. Unit-tested:
 
 - `cleanups.py` — every cleanup pass with input/output pairs + idempotence checks.
 - `conversion.py` metadata round-trip — YAML read/write with sanitization and field ordering.
@@ -204,6 +218,11 @@ Currently 484 passing. Unit-tested:
   declines are the half worth testing: a reading that is nearly right is
   present and wrong in a galley no checker can fault. The filter round
   trip through Pandoc is in the same file and skips where Pandoc is absent.
+- `register.py` — mostly what must not be counted: a pass against bytes
+  that have moved, a check that no longer runs, a galley that was never
+  rendered, and a tool that could not speak. A register whose stored passes
+  kept counting would read better the longer it went unrefreshed, which is
+  the one failure here with no symptom.
 - `assess.py` — the two readings of a figure count and which one wins, and
   that a folder comes out of an assessment byte for byte as it went in. The
   second is the contract: this pass is pointed at an archive before any

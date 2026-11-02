@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Accessibility{% endblock %}
+{% block head %}
+<style>
+  .reg-table { width: 100%; border-collapse: collapse; margin-top: var(--space-4); }
+  .reg-table th, .reg-table td {
+    text-align: left;
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 1px solid var(--rule);
+    font-size: var(--text-sm);
+  }
+  .reg-table th {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .reg-table td.num { text-align: right; font-family: var(--font-mono); }
+  .reg-kind { color: var(--muted); }
+  .tally { font-family: var(--font-mono); font-size: var(--text-sm); }
+  .tally .good { color: var(--status-good-fg); }
+  .tally .warn { color: var(--status-warn-fg); }
+  .tally .bad  { color: var(--status-error-fg); }
+  .tally .unknown { color: var(--muted); }
+  .reg-note {
+    margin-top: var(--space-5);
+    padding: var(--space-4) var(--space-5);
+    border-left: 3px solid var(--rule);
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+</style>
+{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>Accessibility</h1>
+  <p class="dim">
+    Where each journal stands, read from the register rather than from the
+    articles. A result counts as current only where a run is on record against
+    the file now on disk.
+  </p>
+
+  {% for s in summaries %}
+  <h2 style="margin-top: var(--space-6);">
+    <a href="{{ url_for('accessibility_journal', slug=s['journal']['slug']) }}">{{ s['journal']['name'] }}</a>
+  </h2>
+  <p class="dim">{{ s['rollup'].articles }} article(s)</p>
+
+  <table class="reg-table">
+    <thead>
+      <tr>
+        <th>Check</th>
+        <th class="num">Clean</th>
+        <th class="num">Warnings</th>
+        <th class="num">Failing</th>
+        <th class="num">Older version</th>
+        <th class="num">Not checked</th>
+        <th class="num">No file</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for kind in kinds %}
+      {% set k = s['rollup'].kinds[kind] %}
+      <tr>
+        <td class="reg-kind">{{ kind_labels[kind] }}</td>
+        <td class="num"><span class="tally good">{{ k.clean }}</span></td>
+        <td class="num"><span class="tally warn">{{ k.warn }}</span></td>
+        <td class="num"><span class="tally bad">{{ k.fail }}</span></td>
+        <td class="num"><span class="tally unknown">{{ k.stale }}</span></td>
+        <td class="num"><span class="tally unknown">{{ k.never }}</span></td>
+        <td class="num"><span class="tally unknown">{{ k.absent }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="dim">No journals yet.</p>
+  {% endfor %}
+
+  <div class="reg-note">{{ summaries[0]['rollup'].note() if summaries else '' }}</div>
+</section>
+{% endblock %}

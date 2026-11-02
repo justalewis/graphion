@@ -227,9 +227,9 @@ it, because it replaces the heading text with a duplicate string that can
 drift. Whatever the accessible markup is, it belongs in whichever bundle
 `new_journal.py` copies, and the divergence between bundles belongs in a test.
 
-### 3.3 There is no corpus view, and no check is persisted
+### 3.3 There was no corpus view, and no check was persisted (fixed)
 
-Every accessibility surface in the app is per-article and route-only:
+Every accessibility surface in the app was per-article and route-only:
 
 ```
 /articles/<id>/lint
@@ -239,15 +239,43 @@ Every accessibility surface in the app is per-article and route-only:
 /articles/<id>/pa11y-report
 ```
 
-There is no issue-level or journal-level rollup, and `lint.run()` results are
-rendered and discarded: nothing records that a check ran, when, or against
-which version of the article. The two validator reports are written to disk
-but are not dated, not tied to a content hash, and not aggregated.
+There was no issue-level or journal-level rollup, and `lint.run()` results were
+rendered and discarded: nothing recorded that a check ran, when, or against
+which version of the article. The two validator reports were written to
+disk but not dated, not tied to a content hash, and not aggregated.
 
-So the question a journal will ask first, "where do we stand," can only be
+So the question a journal will ask first, "where do we stand," could only be
 answered by opening 115 pages and adding up by hand. An ACR answers the same
-question, criterion by criterion and with a date on it, so the register this
-gap describes is a prerequisite for the evidence rather than a convenience.
+question, criterion by criterion and with a date on it, so the register is a
+prerequisite for the evidence rather than a convenience.
+
+`register.py` and the `check_runs` table are that register. Every lint run and
+every validator run is stored against a sha256 of the file the check read, and
+`/accessibility` rolls the result up per journal while `/accessibility/<slug>`
+breaks it out by issue and article.
+
+The hash is what makes a stored result evidence rather than a claim. A run
+whose hash no longer matches the file is reported as taken against an older
+version and counted as unanswered, never as a pass. A page that folded those
+in would read better the longer nobody refreshed it, which is the shape of
+failure this whole document is about: the numbers would improve on their own
+and nothing would show why.
+
+Three states sit beside the result and each is kept apart from it. An article
+with no rendered galley owes a render, not a conformance failure. A check that
+has never run is not a pass. A validator missing from PATH records a warning,
+because verapdf absent is not the galley failing and either verdict would be a
+claim nothing checked.
+
+Run over Writing Spaces, one pass of the corpus lint route recorded 1,888
+findings across 118 runs, 16 checks per article, and the journal reads 7 clean,
+102 with warnings and 9 failing. verapdf and pa11y read 0 of 118 answered,
+because neither has ever been run against this archive; that is the honest
+number and it is the one the page was built to make visible.
+
+What remains is the ACR itself. The register now holds dated, hash-tied
+results, and nothing yet renders them as a conformance report against the
+WCAG criteria a buyer asks about.
 
 ### 3.4 Nothing could assess content Graphion did not ingest (fixed)
 
@@ -403,15 +431,27 @@ Everything in §3.1, §3.2, §3.5 and §3.6. Concretely:
 
 Persist every check with a timestamp and a content hash, and roll it up.
 
-- New tables for check results, additive per the migration rule in
-  `CLAUDE.md`: which check, which article, which version, what level, when.
-- Record `verapdf` and `pa11y` runs the same way, including that they were not
-  run and why.
-- Record the PDF/UA fallback as a check result rather than only a log line,
-  since that log is currently the only trace that a galley lost conformance.
-- One page per journal and per issue that answers "where does this stand":
-  articles conformant, figures described, figures owed, images of text,
-  equations, tables, when each was last verified.
+- ~~A table for check results: which check, which article, which version,~~
+  ~~what level, when.~~ Done: `check_runs` and `register.py`. It is a new
+  table in `db.py`'s `SCHEMA`, not a column added in `_apply_migrations()`,
+  which is what the migration rule in `CLAUDE.md` covers.
+- ~~Record `verapdf` and `pa11y` runs the same way, including that they were~~
+  ~~not run and why.~~ Done, and a tool that could not run records a warning
+  rather than a verdict.
+- ~~One page per journal that answers "where does this stand".~~ Done:
+  `/accessibility` per journal, `/accessibility/<slug>` broken out by issue
+  and article, with a corpus lint route that records a run for every article
+  in one pass.
+- Still to do: record the PDF/UA fallback as a check result rather than only a
+  log line. `conversion._compile_typst` still writes that to the render log
+  alone, which remains the only trace that a galley lost its conformance
+  identifier, and it is the one result here that nothing surfaces.
+- Still to do: the per-journal page counts articles by check, not the units
+  that cost time. Figures described, figures owed, images of text, equations
+  and tables are all inside the recorded lint findings and none is totalled
+  yet.
+- Still to do: an issue is a heading on the journal page rather than a route
+  of its own, so there is no per-issue permalink to hand anyone.
 
 This is the piece everything else depends on. It converts the per-article
 checks into the thing a journal and an ACR both need, which is a dated,
