@@ -707,3 +707,13 @@ pre.diff .hunk { color: var(--muted); background: rgba(120, 100, 60, 0.08); disp
   color: var(--muted);
   margin-left: var(--space-2);
 }
+
+/* Counts in the register tables ------------------------------ */
+/* Written `.tally.good` and not `.tally .good`: both classes sit on the
+   one element, so the descendant form matched nothing and every count on
+   the accessibility pages came out in the body colour. */
+.tally { font-family: var(--font-mono); font-size: var(--text-sm); }
+.tally.good    { color: var(--status-good-fg); }
+.tally.warn    { color: var(--status-warn-fg); }
+.tally.bad     { color: var(--status-error-fg); }
+.tally.unknown { color: var(--muted); }

@@ -90,6 +90,35 @@
     </tbody>
   </table>
 
+  <h2 class="group-head">What is still owed</h2>
+  {% if rollup.work.rows() %}
+  <table class="reg-table">
+    <thead>
+      <tr>
+        <th>Unit</th>
+        <th class="num">Count</th>
+        <th class="num">Of</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in rollup.work.rows() %}
+      <tr>
+        <td class="reg-kind">{{ r['label'] }}</td>
+        <td class="num">
+          <span class="tally {{ 'warn' if r['owed'] and r['count'] else 'good' }}">{{ r['count'] }}</span>
+        </td>
+        <td class="num">{{ r['of'] if r['of'] is not none else '' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="reg-note">{{ rollup.work.note() }}</div>
+  {% else %}
+  <p class="dim">
+    Nothing counted yet. Run the checks below and the units come with them.
+  </p>
+  {% endif %}
+
   <form method="post" action="{{ url_for('accessibility_run_checks', slug=journal['slug']) }}"
         style="margin-top: var(--space-5);">
     <button type="submit" class="button">Check every article and record it</button>

@@ -122,6 +122,7 @@ app.py:article_lint         — GET  /articles/<id>/lint
 
 app.py:accessibility_journal — GET /accessibility/<slug>
   → register.rollup               per article, per check, current or not
+    → Rollup.work                 the units owed, over the current runs only
 
 app.py:accessibility_run_checks — POST /accessibility/<slug>/run-checks
   → lint.run + register.record_lint        every article, one pass
@@ -209,13 +210,16 @@ Run all tests:
 python -m pytest tests/ -q
 ```
 
-Currently 515 passing. Unit-tested:
+Currently 530 passing. Unit-tested:
 
 - `cleanups.py` — every cleanup pass with input/output pairs + idempotence checks.
 - `conversion.py` metadata round-trip — YAML read/write with sanitization and field ordering.
 - `pdf_ingest.py` — the layout heuristics, per case that drove each one.
 - `ingest_volume.py` — filename conventions, manifests, the collected-volume skip.
-- `lint.py` — each registered check.
+- `lint.py` — each registered check, plus the counts they carry: that no
+  two checks claim the same unit name, that a passing check still reports
+  its scale, and that a description is found in whichever of the two slots
+  holds it.
 - `pdf_tags.py` — the structure-tree merge: parent-tree offsets, repointed
   link annotations, alt text, unique element ids, and the conformance gate.
   Also the XMP reading the gate and the register both act on, pinned to the

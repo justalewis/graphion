@@ -160,6 +160,9 @@ def _apply_migrations():
         "issues": [
             ("header_season", "TEXT"),
         ],
+        "check_runs": [
+            ("units_json", "TEXT"),
+        ],
     }
     with cursor() as cur:
         for table, cols in additions.items():

@@ -36,7 +36,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -301,11 +300,13 @@ def _read_text(assessment: Assessment, pdf, deep: bool) -> None:
                 pass
 
     # The same check the lint pass runs, called rather than copied: a
-    # second reader for this has been written wrong here before.
+    # second reader for this has been written wrong here before. The
+    # count comes off `units` rather than out of the summary, which this
+    # read with a regex over the other module's prose until the check
+    # carried the number itself.
     result = lint.check_unreadable_characters({}, {}, "\n".join(body))
-    if result.level != "pass":
-        digits = re.search(r"^(\d+)", result.summary)
-        assessment.unreadable_characters = int(digits.group(1)) if digits else 1
+    assessment.unreadable_characters = result.units.get(
+        "unreadable-characters", 0)
 
 
 def _open(assessment: Assessment, path):

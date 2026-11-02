@@ -18,11 +18,6 @@
   }
   .reg-table td.num { text-align: right; font-family: var(--font-mono); }
   .reg-kind { color: var(--muted); }
-  .tally { font-family: var(--font-mono); font-size: var(--text-sm); }
-  .tally .good { color: var(--status-good-fg); }
-  .tally .warn { color: var(--status-warn-fg); }
-  .tally .bad  { color: var(--status-error-fg); }
-  .tally .unknown { color: var(--muted); }
   .reg-note {
     margin-top: var(--space-5);
     padding: var(--space-4) var(--space-5);
@@ -45,7 +40,13 @@
   <h2 style="margin-top: var(--space-6);">
     <a href="{{ url_for('accessibility_journal', slug=s['journal']['slug']) }}">{{ s['journal']['name'] }}</a>
   </h2>
-  <p class="dim">{{ s['rollup'].articles }} article(s)</p>
+  <p class="dim">
+    {{ s['rollup'].articles }} article(s)
+    {%- if s['rollup'].work.articles %}
+    &middot; {{ s['rollup'].work.owed }} unit(s) of work outstanding, counted
+    over {{ s['rollup'].work.articles }} of them
+    {%- endif %}
+  </p>
 
   <table class="reg-table">
     <thead>

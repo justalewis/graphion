@@ -27,12 +27,12 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (492 functions, 515 cases once the parametrized ones expand: 142 in
+Tests (507 functions, 530 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 43 in
-`test_ingest_volume.py`, 34 in `test_lint.py`, 29 in
-`test_teacher_resources.py`, 28 in `test_metadata_roundtrip.py`, 24 in
-`test_math_alt.py`, 27 in `test_register.py`, 26 in `test_pdf_tags.py`,
-21 in `test_assess.py`, 9 in `test_pdf_ua.py`, 6 in `test_standalone_html.py`,
+`test_ingest_volume.py`, 42 in `test_lint.py`, 34 in `test_register.py`,
+29 in `test_teacher_resources.py`, 28 in `test_metadata_roundtrip.py`,
+26 in `test_pdf_tags.py`, 24 in `test_math_alt.py`, 21 in `test_assess.py`,
+9 in `test_pdf_ua.py`, 6 in `test_standalone_html.py`,
 4 in `test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
 runs without Pandoc; `test_journal_filter.py` needs it, and
 `test_math_alt.py` needs it for the filter round trip alone. Both skip
@@ -126,9 +126,9 @@ copy. Re-ingesting volume 6 chapter 15 to pick up a caption fix replaced all
 seven of its descriptions with machine text, which is the one thing in a
 galley that cannot be regenerated: a caption says what a figure is called and
 alt text says what is in it, and only the first of those is on the page. 201
-figures across 49 chapters of the Writing Spaces archive are described by
-hand; the figure read 200 for as long as the pattern below could not see a
-description holding a bracket. `conversion.carry_alt_text()` matches them back by asset path, which is
+of the 203 figures across 50 chapters of the Writing Spaces archive are
+described by hand; the figure read 200 for as long as the pattern below could
+not see a description holding a bracket. `conversion.carry_alt_text()` matches them back by asset path, which is
 stable because the filenames are built from the page the raster sits on, and
 both `ingest_pdf` and `run_cleanups` call it before they write. An
 `undescribed_alt` placeholder is not carried, so a run that has since found a
@@ -159,10 +159,18 @@ been wrong every time: it is what let the original bracket defect through,
 what had `verify_all.py` reporting 203 descriptions and 1 placeholder where
 the truth was 201 and 3, and what reported three descriptions altered during
 the figure-placement work when they had merely changed slots. It looks
-obvious and it is wrong for exactly the figures that have captions. At the
-time of writing the archive holds 201 figures, all 201 described by hand
-across 49 chapters, with no placeholder left; `_carried_description` is what
-that was counted with.
+obvious and it is wrong for exactly the figures that have captions.
+`lint.check_alt_text` calls it rather than matching the bracket itself,
+which is the difference between reporting a description as still owed and
+reporting one that has already been written into the other slot; the archive
+holds no figure in that shape today, so no run would have caught it and
+`test_both_slots_are_read_the_same_way` is what holds it instead.
+
+At the time of writing the archive holds 203 figures across 50 chapters, 201
+of them described by hand and 2 still carrying a placeholder.
+`_carried_description` is what that was counted with, and the number now
+comes off `register`'s work table rather than out of a one-off script, so it
+is a reading anybody can repeat.
 
 Three fields in the front matter have that exposure too, and
 `conversion.carry_editor_fields()` carries them for the same reason, from
@@ -321,6 +329,38 @@ the weak evidence this exists to replace. Two kinds read `article.pdf`, so
 corpus route runs the two in-process checks, lint and the declaration:
 verapdf and pa11y are subprocesses with a 120s timeout each, so a pass over
 118 articles belongs in a job runner rather than in a request.
+
+**A level says whether, and a journal asks how much first.**
+`lint.LintResult` carries `units`, the count behind its summary, and
+`register` stores that beside the finding so an archive can be totalled.
+`Rollup.work` adds the units up; `WORK_ROWS` declares which ones a page
+shows and what to call them. Over Writing Spaces it comes to 119 units
+outstanding: 115 figures carrying text as a picture, 2 whose alt text says
+only that they are undescribed, and 2 the prose refers to and the galley
+does not hold, against 201 figures already described by hand.
+
+Three rules hold it together. A unit name belongs to exactly one check,
+because the rollup sums a name across articles and two checks both
+reporting `figures` would double every figure in the archive;
+`check_images_of_text` reads the same images `check_alt_text` counts and
+deliberately does not count them again, and
+`test_no_two_checks_claim_the_same_unit` runs every check over the same
+bodies to hold that. A passing result carries its units too, or the
+denominator is only the articles with something wrong with them. And only
+an article whose lint run is current is totalled, by the rule the rest of
+the register runs on: a work total drawn from runs taken against content
+that has since moved would drift the flattering way and say nothing about
+it, so `Work.note()` carries the coverage next to the number.
+
+`units_json` is a column added to `check_runs` by `_apply_migrations()`,
+which is where a column on an existing table goes; the table itself was new
+and so went in `SCHEMA`. A row written before it reads back as no units
+rather than as zero.
+
+The counts were always worked out and then written into a sentence, which is
+why `assess.py` read one back with a regex over `lint`'s own prose. It takes
+the number off `units` now, and that was the last place in this codebase
+reading a number out of its own output.
 
 **Galleys are PDF/UA-1.** `conversion._compile_typst()` compiles every PDF
 with `pdf_standards` set from `config.PDF_UA_STANDARD`, which is what emits
@@ -854,8 +894,8 @@ that refers to figures it does not contain, which `check_alt_text` cannot see
 and reads as a pass.
 
 Writing alt text satisfies WCAG 1.1.1 and leaves 1.4.5 exactly where it
-was. 113 of this series' 196 figures carry text as a picture, which is a
-property of what the books are: a technical writing volume teaches a genre
+was. 115 of this series' 203 figures carry text as a picture, across 37 of
+its chapters, which is a property of what the books are: a technical writing volume teaches a genre
 by showing one, and volume 2 reproduces student essays as collages. Nothing
 can tell a photograph of a document from a photograph of anything else
 without looking, so each one is listed by hand in the article's

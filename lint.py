@@ -15,7 +15,7 @@ roughly by severity then by check name.
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Iterable, Optional
 
@@ -25,22 +25,46 @@ import math_alt
 
 @dataclass
 class LintResult:
+    """One check's answer, with the count behind it kept as a number.
+
+    A level says whether an article has work outstanding; it does not say
+    how much, and how much is the question a journal asks first. Every
+    counting check here already works the number out and then writes it
+    into a sentence, so the only way to total an archive was to read those
+    sentences back, which `assess.py` did with a regex over this module's
+    own prose for want of anywhere better to look.
+
+    Two rules hold `units` together. A name belongs to exactly one check,
+    because `register.rollup` sums a name across articles and two checks
+    both reporting `figures` would count every figure twice;
+    `test_no_two_checks_claim_the_same_unit` is what holds that. And a
+    passing result carries its units too, or an archive's figure count
+    would be the figures in the articles that have something wrong with
+    them.
+    """
+
     name: str           # short identifier, e.g. "orcid-format"
     level: str          # "pass", "warn", "fail"
     summary: str        # one-line summary shown in the UI
     details: list       # zero-or-more longer notes / offending items
+    units: dict = field(default_factory=dict)   # what it counted, by name
 
 
-def _ok(name: str, summary: str) -> LintResult:
-    return LintResult(name=name, level="pass", summary=summary, details=[])
+def _ok(name: str, summary: str, units: Optional[dict] = None) -> LintResult:
+    return LintResult(name=name, level="pass", summary=summary, details=[],
+                      units=units or {})
 
 
-def _warn(name: str, summary: str, details: Optional[list] = None) -> LintResult:
-    return LintResult(name=name, level="warn", summary=summary, details=details or [])
+def _warn(name: str, summary: str, details: Optional[list] = None,
+          units: Optional[dict] = None) -> LintResult:
+    return LintResult(name=name, level="warn", summary=summary,
+                      details=details or [], units=units or {})
 
 
-def _fail(name: str, summary: str, details: Optional[list] = None) -> LintResult:
-    return LintResult(name=name, level="fail", summary=summary, details=details or [])
+def _fail(name: str, summary: str, details: Optional[list] = None,
+          units: Optional[dict] = None) -> LintResult:
+    return LintResult(name=name, level="fail", summary=summary,
+                      details=details or [], units=units or {})
 
 
 # ---------- individual checks ----------
@@ -323,6 +347,10 @@ def check_unstripped_artifacts(article: dict, fm: dict, body: str) -> LintResult
 
 _IMAGE_RE = re.compile(r"!\[(?P<alt>.*?)\]\([^)]+\)(?:\{(?P<attrs>[^}]*)\})?")
 _ALT_ATTR_RE = re.compile(r"\balt\s*=")
+# The attribute slot `pair_figure_captions` writes a description into,
+# as against a plain `alt=`, which Pandoc passes through and which
+# `_ALT_ATTR_RE` also matches.
+_FIG_ALT_ATTR_RE = re.compile(r"\bfig-alt\s*=")
 
 
 def check_alt_text(article: dict, fm: dict, body: str) -> LintResult:
@@ -338,7 +366,23 @@ def check_alt_text(article: dict, fm: dict, body: str) -> LintResult:
     for match in _IMAGE_RE.finditer(body):
         total += 1
         alt = match.group("alt").strip()
-        if not alt and not _ALT_ATTR_RE.search(match.group("attrs") or ""):
+        # A description can sit in either slot and one function knows which.
+        # A figure through `pair_figure_captions` keeps the printed caption
+        # in the bracket and the description in `fig-alt`, so a reader that
+        # looks only at the bracket sees a caption there and reports a
+        # description as still owed that somebody has already written.
+        # Reading the bracket alone is the mistake this codebase has made
+        # three times; `test_both_slots_are_read_the_same_way` pins it.
+        elsewhere = conversion._carried_description(match)
+        attrs = match.group("attrs") or ""
+        if elsewhere and elsewhere != alt:
+            continue
+        if not elsewhere and _FIG_ALT_ATTR_RE.search(attrs):
+            # The description slot is `fig-alt` and it holds no description,
+            # so whatever the bracket carries is this figure's caption.
+            undescribed += 1
+            continue
+        if not alt and not _ALT_ATTR_RE.search(attrs):
             missing += 1
             continue
         if _UNDESCRIBED_ALT_RE.match(alt):
@@ -358,7 +402,16 @@ def check_alt_text(article: dict, fm: dict, body: str) -> LintResult:
         if caption and probe and probe in caption.group(1).lower():
             from_caption += 1
     if not total:
-        return _ok("alt-text", "No images in the article.")
+        return _ok("alt-text", "No images in the article.", {"figures": 0})
+    # The four are disjoint: an image is counted once and the branches above
+    # return or continue, so what is left over is described by hand.
+    units = {
+        "figures": total,
+        "figures-no-alt": missing,
+        "figures-undescribed": undescribed,
+        "figures-caption-as-alt": from_caption,
+        "figures-described": total - missing - undescribed - from_caption,
+    }
     if missing:
         return _fail(
             "alt-text",
@@ -369,6 +422,7 @@ def check_alt_text(article: dict, fm: dict, body: str) -> LintResult:
                 "so the PDF falls back to a non-conformant render and will be "
                 "flagged in an accessibility audit.",
             ],
+            units,
         )
     if undescribed or from_caption:
         details = []
@@ -390,8 +444,9 @@ def check_alt_text(article: dict, fm: dict, body: str) -> LintResult:
             f"{undescribed + from_caption} of {total} image(s) need a "
             f"written description.",
             details,
+            units,
         )
-    return _ok("alt-text", f"All {total} image(s) have alt text.")
+    return _ok("alt-text", f"All {total} image(s) have alt text.", units)
 
 
 _UNDESCRIBED_ALT_RE = re.compile(r"^Undescribed figure from page \d+")
@@ -409,12 +464,15 @@ def check_figure_coverage(article: dict, fm: dict, body: str) -> LintResult:
     references = set(_FIGURE_NUMBER_RE.findall(body))
     images = len(_IMAGE_RE.findall(body))
     if not references:
-        return _ok("figure-coverage", "The text refers to no figures.")
+        return _ok("figure-coverage", "The text refers to no figures.",
+                   {"figures-referred-to": 0, "figures-referred-absent": 0})
     if images:
         return _ok(
             "figure-coverage",
             f"{len(references)} figure(s) referred to, {images} image(s) "
             f"present.",
+            {"figures-referred-to": len(references),
+             "figures-referred-absent": 0},
         )
     return _warn(
         "figure-coverage",
@@ -424,6 +482,8 @@ def check_figure_coverage(article: dict, fm: dict, body: str) -> LintResult:
             "Figures referred to: "
             + ", ".join(sorted(references)[:12]),
         ],
+        {"figures-referred-to": len(references),
+         "figures-referred-absent": len(references)},
     )
 
 
@@ -501,7 +561,8 @@ def check_unreadable_characters(article: dict, fm: dict, body: str) -> LintResul
     found = _UNREADABLE_RE.findall(body)
     if not found:
         return _ok("unreadable-characters",
-                   "No private use or control characters.")
+                   "No private use or control characters.",
+                   {"unreadable-characters": 0})
     counts: dict = {}
     for ch in found:
         counts[ch] = counts.get(ch, 0) + 1
@@ -514,6 +575,7 @@ def check_unreadable_characters(article: dict, fm: dict, body: str) -> LintResul
         "unreadable-characters",
         f"{len(found)} character(s) no reader can read.",
         details,
+        {"unreadable-characters": len(found)},
     )
 
 
@@ -541,7 +603,10 @@ def check_images_of_text(article: dict, fm: dict, body: str) -> LintResult:
         listed = [listed]
     images = len(_IMAGE_RE.findall(body))
     if not listed:
-        return _ok("images-of-text", "No figure is recorded as text.")
+        return _ok("images-of-text", "No figure is recorded as text.",
+                   {"images-of-text": 0})
+    # The figure count belongs to `check_alt_text`, which reads the same
+    # images; reporting it here too would double every figure in the rollup.
     return _warn(
         "images-of-text",
         f"{len(listed)} of {images} figure(s) carry text as a picture.",
@@ -550,6 +615,7 @@ def check_images_of_text(article: dict, fm: dict, body: str) -> LintResult:
             "(WCAG 1.4.5); transcribing them into the chapter is the fix.",
             "Figures: " + ", ".join(str(x) for x in listed[:12]),
         ],
+        {"images-of-text": len(listed)},
     )
 
 
@@ -576,7 +642,8 @@ def check_math_alt_text(article: dict, fm: dict, body: str) -> LintResult:
     """
     found = math_alt.expressions(body)
     if not found:
-        return _ok("math-alt-text", "No equations in the article.")
+        return _ok("math-alt-text", "No equations in the article.",
+                   {"equations": 0})
     descriptions = math_alt.author_descriptions(fm)
     counts = {math_alt.AUTHOR: 0, math_alt.GENERATED: 0,
               math_alt.UNDESCRIBED_SOURCE: 0}
@@ -587,10 +654,17 @@ def check_math_alt_text(article: dict, fm: dict, body: str) -> LintResult:
         if source == math_alt.UNDESCRIBED_SOURCE:
             undescribed.append(expr.tex)
     total = len(found)
+    units = {
+        "equations": total,
+        "equations-undescribed": counts[math_alt.UNDESCRIBED_SOURCE],
+        "equations-author-described": counts[math_alt.AUTHOR],
+        "equations-generated": counts[math_alt.GENERATED],
+    }
     if not counts[math_alt.UNDESCRIBED_SOURCE]:
         return _ok(
             "math-alt-text",
             f"All {total} equation(s) have a spoken description.",
+            units,
         )
     details = [
         "A screen reader announces only that an equation is there. Write "
@@ -608,6 +682,7 @@ def check_math_alt_text(article: dict, fm: dict, body: str) -> LintResult:
         f"{len(undescribed)} of {total} equation(s) have no spoken "
         f"description.",
         details,
+        units,
     )
 
 

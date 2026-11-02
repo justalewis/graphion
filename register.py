@@ -142,11 +142,17 @@ def hash_for(project_path, kind: str) -> Optional[str]:
 @dataclass
 class Finding:
     """One line of a recorded run. `lint.LintResult` maps onto this; so does
-    a whole-tool verdict from a validator, which has one finding."""
+    a whole-tool verdict from a validator, which has one finding.
+
+    `units` is what the check counted, by name, and it is the difference
+    between knowing that an archive has work left and knowing how much. A
+    name belongs to one check, because `rollup` sums a name across articles.
+    """
     check_name: str
     level: str
     summary: str = ""
     details: list = field(default_factory=list)
+    units: dict = field(default_factory=dict)
 
 
 def record(article_id: int, kind: str, findings: Sequence[Finding],
@@ -167,10 +173,11 @@ def record(article_id: int, kind: str, findings: Sequence[Finding],
         for f in findings:
             cur.execute(
                 "INSERT INTO check_runs (article_id, run_id, kind, check_name, "
-                "level, summary, details_json, source_name, content_hash) "
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "level, summary, details_json, source_name, content_hash, "
+                "units_json) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 (article_id, run_id, kind, f.check_name, f.level, f.summary,
-                 json.dumps(list(f.details)), source_name, content_hash),
+                 json.dumps(list(f.details)), source_name, content_hash,
+                 json.dumps(dict(f.units or {}))),
             )
     return run_id
 
@@ -187,7 +194,8 @@ def record_lint(article_id: int, project_path, results: Iterable,
     content_hash = content_hash or hash_for(project_path, "lint")
     if content_hash is None:
         return None
-    findings = [Finding(r.name, r.level, r.summary, list(r.details))
+    findings = [Finding(r.name, r.level, r.summary, list(r.details),
+                        dict(getattr(r, "units", None) or {}))
                 for r in results]
     return record(article_id, "lint", findings, content_hash)
 
@@ -325,6 +333,7 @@ class Recorded:
     details: list
     ran_at: str
     content_hash: str
+    units: dict = field(default_factory=dict)
 
 
 def latest_run(article_id: int, kind: str) -> List[Recorded]:
@@ -335,7 +344,8 @@ def latest_run(article_id: int, kind: str) -> List[Recorded]:
     and the run it belonged to is over.
     """
     rows = db.query_all(
-        "SELECT check_name, level, summary, details_json, ran_at, content_hash "
+        "SELECT check_name, level, summary, details_json, ran_at, "
+        "content_hash, units_json "
         "FROM check_runs WHERE article_id = ? AND kind = ? AND run_id = ("
         "  SELECT run_id FROM check_runs WHERE article_id = ? AND kind = ? "
         "  ORDER BY id DESC LIMIT 1)",
@@ -347,8 +357,13 @@ def latest_run(article_id: int, kind: str) -> List[Recorded]:
             details = json.loads(r["details_json"] or "[]")
         except json.JSONDecodeError:
             details = []
+        try:
+            units = json.loads(r["units_json"] or "{}")
+        except json.JSONDecodeError:
+            units = {}
         out.append(Recorded(r["check_name"], r["level"], r["summary"] or "",
-                            details, r["ran_at"], r["content_hash"]))
+                            details, r["ran_at"], r["content_hash"],
+                            units if isinstance(units, dict) else {}))
     out.sort(key=lambda r: (_SEVERITY.get(r.level, 99), r.check_name))
     return out
 
@@ -466,10 +481,117 @@ class KindRollup:
 
 
 @dataclass
+class WorkRow:
+    """One line of the work table: a unit, what to call it, what it is of."""
+    unit: str
+    label: str
+    of: Optional[str] = None
+    owed: bool = True
+
+
+# What the counts mean, in the order an editor would work through them.
+# `owed` is writing or transcribing still to be done; the rest is work the
+# archive has already had, reported beside it because a number for what is
+# left means little without one for what is finished.
+#
+# Each unit is reported by exactly one check, which is what lets these be
+# summed across articles. `figures` is `check_alt_text`'s, counted off the
+# images in the body, and `check_images_of_text` reads the same images
+# without counting them again for that reason.
+WORK_ROWS = (
+    WorkRow("figures-no-alt", "Figures with no alt text", "figures"),
+    WorkRow("figures-undescribed",
+            "Figures whose alt text says only that they are undescribed",
+            "figures"),
+    WorkRow("figures-caption-as-alt",
+            "Figures whose printed caption stands in for a description",
+            "figures"),
+    WorkRow("images-of-text", "Figures carrying text as a picture (WCAG 1.4.5)",
+            "figures"),
+    WorkRow("equations-undescribed", "Equations with no spoken description",
+            "equations"),
+    WorkRow("figures-referred-absent",
+            "Figures the text refers to and does not contain",
+            "figures-referred-to"),
+    WorkRow("unreadable-characters", "Characters no reader can read"),
+    WorkRow("figures-described", "Figures described by hand", "figures",
+            owed=False),
+    WorkRow("equations-author-described",
+            "Equations an author read aloud", "equations", owed=False),
+    WorkRow("equations-generated",
+            "Equations read aloud from the expression itself", "equations",
+            owed=False),
+)
+
+
+@dataclass
+class Work:
+    """What an archive still owes, in the units that cost somebody time.
+
+    A level says an article has something outstanding; it does not say how
+    much, and how much is what a journal asks before it asks anything else.
+    These are the counts the checks already worked out, summed.
+
+    Only articles whose lint run is current are counted, for the reason the
+    rest of this module exists: a total that drew on runs taken against
+    content that has since moved would be a number nobody could stand
+    behind, and it would drift the right way without saying so. What the
+    total leaves out is carried beside it rather than rounded in.
+    """
+    units: Dict[str, int] = field(default_factory=dict)
+    articles: int = 0
+    unanswered: int = 0
+
+    def add(self, findings: Iterable[Recorded]) -> None:
+        self.articles += 1
+        for f in findings:
+            for name, n in (f.units or {}).items():
+                if isinstance(n, int):
+                    self.units[name] = self.units.get(name, 0) + n
+
+    @property
+    def owed(self) -> int:
+        """Every unit of work still outstanding, added up.
+
+        Across kinds of work rather than within one, so it is a size and not
+        a schedule: a character to retype and a figure to describe are both
+        one here and are not the same afternoon.
+        """
+        return sum(self.units.get(r.unit, 0) for r in WORK_ROWS if r.owed)
+
+    def rows(self) -> list:
+        """The declared rows that this journal has anything to say about."""
+        out = []
+        for row in WORK_ROWS:
+            count = self.units.get(row.unit, 0)
+            of = self.units.get(row.of, 0) if row.of else None
+            if not count and not of:
+                continue
+            out.append({"label": row.label, "count": count, "of": of,
+                        "owed": row.owed, "unit": row.unit})
+        return out
+
+    def note(self) -> str:
+        covered = (f"Totalled over the {self.articles} article(s) whose lint "
+                   f"is current.")
+        if self.unanswered:
+            covered += (f" {self.unanswered} are not counted here, because no "
+                        f"lint run is on record against the file now on disk.")
+        return covered + (
+            " A figure counts as carrying text as a picture only where "
+            "somebody has put it on the article's images-of-text list by "
+            "hand, since nothing can tell a photograph of a document from a "
+            "photograph of anything else; a zero on that line can mean that "
+            "nobody has looked yet."
+        )
+
+
+@dataclass
 class Rollup:
     articles: int = 0
     kinds: Dict[str, KindRollup] = field(default_factory=dict)
     rows: list = field(default_factory=list)
+    work: Work = field(default_factory=Work)
 
     def note(self) -> str:
         """What the totals above do not cover, said rather than left out."""
@@ -510,6 +632,16 @@ def rollup(articles: Iterable[dict], kinds: Sequence[str] = KINDS) -> Rollup:
                 bucket.absent += 1
             else:
                 bucket.never += 1
+        # The units come off the lint run, so the coverage statement is
+        # about that one kind. A stale article contributes nothing and is
+        # counted as uncovered instead, which is the whole point of the
+        # hash: a work total built on runs taken against content that has
+        # since moved reads better than the archive is.
+        lint_standing = st.get("lint")
+        if lint_standing is not None and lint_standing.settled:
+            out.work.add(lint_standing.findings)
+        else:
+            out.work.unanswered += 1
         out.rows.append({"article": article, "standing": st})
     return out
 
@@ -518,6 +650,7 @@ __all__ = [
     "CHECKED_FILE", "KINDS", "KIND_LABELS",
     "NEVER", "ABSENT", "STALE", "CURRENT",
     "Finding", "Recorded", "Standing", "KindRollup", "Rollup",
+    "WorkRow", "WORK_ROWS", "Work",
     "hash_bytes", "hash_file", "hash_for",
     "record", "record_lint", "record_pdfua", "record_verapdf", "record_pa11y",
     "latest_run", "standing", "rollup",

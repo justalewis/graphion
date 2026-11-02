@@ -284,3 +284,154 @@ def test_an_article_with_no_math_passes():
 
 def test_the_math_check_runs_in_the_default_pass():
     assert lint.check_math_alt_text in lint.DEFAULT_CHECKS
+
+
+# ---------- the counts behind the summaries ----------
+
+UNDESCRIBED = "Undescribed figure from page 4 of the source"
+BODY_WITH_WORK = "\n\n".join([
+    "# A Chapter",
+    "Prose that mentions Figure 1.1 and Figure 1.2 in passing.",
+    "![A rectangle in burnt orange](assets/one.png)",
+    "![" + UNDESCRIBED + "](assets/two.png)",
+    "![Figure 1.1. A caption, which is not a description.](assets/three.png)",
+    "Figure 1.1. A caption, which is not a description.",
+    "An equation, $a^2 + b^2 = c^2$, in a sentence.",
+])
+BODY_WITH_FAILURES = "\n\n".join([
+    "# A Chapter",
+    "![](assets/four.png)",
+    "A private use codepoint sits here: \uf0fc.",
+])
+BODIES = [
+    ({}, ""),
+    ({"images-of-text": ["Figure 1.1"]}, BODY_WITH_WORK),
+    ({}, BODY_WITH_FAILURES),
+]
+
+
+def _units_by_check():
+    """Every unit name each check reports, over every return path the
+    bodies above can reach."""
+    seen = {}
+    for fm, body in BODIES:
+        for check in lint.DEFAULT_CHECKS:
+            result = check({}, fm, body)
+            seen.setdefault(result.name, set()).update(result.units)
+    return seen
+
+
+def test_no_two_checks_claim_the_same_unit():
+    """`register.rollup` sums a unit name across articles, so a name that
+    two checks both report would count the same thing twice. The figure
+    count is the live case: `check_images_of_text` reads the same images
+    `check_alt_text` counts, and deliberately does not count them again.
+    """
+    owners = {}
+    for check_name, units in _units_by_check().items():
+        for unit in units:
+            assert unit not in owners, (
+                unit + " reported by both " + owners[unit] + " and " + check_name)
+            owners[unit] = check_name
+
+    assert owners["figures"] == "alt-text"
+    assert owners["images-of-text"] == "images-of-text"
+
+
+def test_a_passing_check_still_reports_its_scale():
+    """An archive's figure count has to include the articles with nothing
+    wrong with them, or the denominator is only the troubled ones."""
+    result = lint.check_alt_text(
+        {}, {}, "![A rectangle in burnt orange](assets/one.png)")
+
+    assert result.level == "pass"
+    assert result.units == {
+        "figures": 1, "figures-no-alt": 0, "figures-undescribed": 0,
+        "figures-caption-as-alt": 0, "figures-described": 1,
+    }
+
+
+def test_the_figure_counts_partition_the_figures():
+    """Four states, each image in exactly one, so they add back up. A
+    double-counted figure would inflate what an archive is told it owes."""
+    u = lint.check_alt_text({}, {}, BODY_WITH_WORK).units
+
+    assert u["figures"] == 3
+    assert (u["figures-no-alt"] + u["figures-undescribed"]
+            + u["figures-caption-as-alt"]
+            + u["figures-described"]) == u["figures"]
+    assert u["figures-undescribed"] == 1
+    assert u["figures-caption-as-alt"] == 1
+
+
+def test_an_article_with_no_figures_counts_none_rather_than_nothing():
+    result = lint.check_alt_text({}, {}, "# A Chapter\n\nProse only.")
+
+    assert result.level == "pass"
+    assert result.units == {"figures": 0}
+
+
+def test_the_unreadable_count_is_a_number_not_a_sentence():
+    """`assess.py` read this out of the summary with a regex until the check
+    carried it, and the comment there said a second reader for this had
+    already been written wrong once."""
+    result = lint.check_unreadable_characters(
+        {}, {}, "Two of them: \uf0fc\uf0fd.")
+
+    assert result.level == "fail"
+    assert result.units == {"unreadable-characters": 2}
+
+
+def test_an_images_of_text_list_is_counted_without_recounting_the_figures():
+    result = lint.check_images_of_text(
+        {}, {"images-of-text": ["Figure 1.1", "Figure 1.2"]}, BODY_WITH_WORK)
+
+    assert result.units == {"images-of-text": 2}
+    assert "figures" not in result.units
+
+
+def test_both_slots_are_read_the_same_way():
+    """A description can sit in the bracket or in `fig-alt`, and one
+    function knows which.
+
+    A figure through `pair_figure_captions` keeps the printed caption in the
+    bracket and the description in the attribute, so a reader that looks
+    only at the bracket sees a caption and reports a description as still
+    owed when somebody has already written it. That one-line reader has been
+    written wrong three times in this codebase, which is why
+    `conversion._carried_description` exists and why this check calls it
+    instead of matching the bracket itself.
+
+    The pairing does not currently occur in this archive: of 203 figures,
+    one carries a `fig-alt` attribute and its bracket is not a caption. So
+    the case below is the one no run would have caught.
+    """
+    caption = "Figure 1.1. A caption, which is not a description."
+    placeholder = "Undescribed figure from page 4 of the source"
+    description = "A rectangle in burnt orange"
+    shapes = {
+        "![" + description + "](a.png)": "figures-described",
+        "![" + caption + '](a.png){#fig:x fig-alt="' + description + '"}':
+            "figures-described",
+        "![" + caption + '](a.png){#fig:x fig-alt="' + placeholder + '"}':
+            "figures-undescribed",
+        "![" + placeholder + "](a.png)": "figures-undescribed",
+        "![](a.png)": "figures-no-alt",
+    }
+    for body, expected in shapes.items():
+        units = lint.check_alt_text({}, {}, body).units
+        counted = [k for k in units if k != "figures" and units[k]]
+        assert counted == [expected], (body, counted)
+
+
+def test_a_caption_standing_in_for_a_description_is_still_owed():
+    """With no attribute at all the bracket is the only slot, and a caption
+    sitting in it is a starting point rather than a description. The printed
+    caption below the figure is what gives it away."""
+    caption = "Figure 1.1. A rubric for rhetorical reading."
+    body = "![" + caption + "](a.png)" + chr(10) + caption
+
+    units = lint.check_alt_text({}, {}, body).units
+
+    assert units["figures-caption-as-alt"] == 1
+    assert units["figures-described"] == 0

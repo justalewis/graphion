@@ -465,6 +465,121 @@ def test_the_rollup_says_what_is_in_neither_column(store):
     assert "older version" in note
 
 
+def _counted(figures=4, described=1, caption_as_alt=1, undescribed=1,
+             no_alt=1, images_of_text=0):
+    return [
+        lint.LintResult("alt-text", "warn", "Some figures need work.", [], {
+            "figures": figures,
+            "figures-no-alt": no_alt,
+            "figures-undescribed": undescribed,
+            "figures-caption-as-alt": caption_as_alt,
+            "figures-described": described,
+        }),
+        lint.LintResult("images-of-text", "warn", "Some carry text.", [],
+                        {"images-of-text": images_of_text}),
+    ]
+
+
+# ---------- how much, not whether ----------
+
+def test_a_stale_article_contributes_nothing_to_the_work_total(article):
+    """The number this page exists to give is what an archive still owes,
+    and a total drawn from runs taken against content that has since moved
+    would be a number nobody could stand behind. It would also drift the
+    flattering way without saying so, since the counts stop moving while
+    the articles do not."""
+    register.record_lint(article["id"], article["project_path"], _counted())
+    before = register.rollup([article]).work
+    assert before.owed == 3
+    assert before.articles == 1
+    assert before.unanswered == 0
+
+    Path(article["project_path"], "article.md").write_text(
+        "Body, revised.", encoding="utf-8")
+
+    after = register.rollup([article]).work
+    assert after.owed == 0
+    assert after.units == {}
+    assert after.articles == 0
+    assert after.unanswered == 1
+
+
+def test_the_work_total_sums_a_unit_across_articles(store):
+    arts = [_add_article(store, "a%d" % i) for i in range(3)]
+    for art in arts:
+        register.record_lint(art["id"], art["project_path"],
+                             _counted(figures=4, images_of_text=2))
+
+    work = register.rollup(arts).work
+
+    assert work.units["figures"] == 12
+    assert work.units["images-of-text"] == 6
+    assert work.articles == 3
+
+
+def test_the_note_says_how_many_articles_it_could_not_count(store):
+    counted = _add_article(store, "counted")
+    register.record_lint(counted["id"], counted["project_path"], _counted())
+    silent = _add_article(store, "never-linted")
+
+    note = register.rollup([counted, silent]).work.note()
+
+    assert "1 article(s)" in note
+    assert "1 are not counted here" in note
+    assert "images-of-text" in note
+
+
+def test_a_unit_no_article_reports_is_left_off_the_table(article):
+    """A journal with no mathematics should not be shown a row of zeros
+    about equations it does not have."""
+    register.record_lint(article["id"], article["project_path"], _counted())
+
+    labels = [r["unit"] for r in register.rollup([article]).work.rows()]
+
+    assert "figures-no-alt" in labels
+    assert not any(l.startswith("equations") for l in labels)
+
+
+def test_a_figure_already_described_is_reported_beside_what_is_owed(article):
+    """Work done and work owed, in the two registers `assess.py` reports in
+    and for the same reason: a number for what is left means little without
+    one for what is finished."""
+    register.record_lint(article["id"], article["project_path"],
+                         _counted(figures=10, described=7, caption_as_alt=3,
+                                  undescribed=0, no_alt=0))
+
+    rows = {r["unit"]: r for r in register.rollup([article]).work.rows()}
+
+    assert rows["figures-described"]["count"] == 7
+    assert rows["figures-described"]["owed"] is False
+    assert rows["figures-caption-as-alt"]["count"] == 3
+    assert rows["figures-caption-as-alt"]["of"] == 10
+
+
+def test_units_survive_the_round_trip_through_the_database(article):
+    register.record_lint(article["id"], article["project_path"], _counted())
+
+    recorded = {f.check_name: f.units
+                for f in register.latest_run(article["id"], "lint")}
+
+    assert recorded["alt-text"]["figures"] == 4
+    assert recorded["images-of-text"] == {"images-of-text": 0}
+
+
+def test_a_run_recorded_before_units_existed_reads_as_none(article):
+    """Rows written by the version before this one carry no units_json, and
+    a column added by a migration comes back NULL rather than absent."""
+    register.record_lint(article["id"], article["project_path"], _counted())
+    db.execute("UPDATE check_runs SET units_json = NULL WHERE article_id = ?",
+               (article["id"],))
+
+    work = register.rollup([article]).work
+
+    assert work.articles == 1
+    assert work.owed == 0
+    assert work.rows() == []
+
+
 def test_an_empty_journal_rolls_up_to_nothing(store):
     roll = register.rollup([])
 

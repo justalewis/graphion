@@ -120,6 +120,16 @@ A recorded result counts only while the file it read is unchanged. Edit the
 article and its last lint shows as *older version*, not as a pass; the page
 would otherwise look better the longer nobody re-ran anything.
 
+The journal page also totals the work itself, under **What is still owed**.
+A pass or a warning tells you an article has something outstanding; it does
+not tell you how much, and how much is usually the first thing you want to
+know. So the figures with no alt text, the ones whose alt text says only
+that they are undescribed, the ones carrying text as a picture, the
+equations with no spoken description and the figures the prose refers to
+and the galley does not hold are all added up across the journal, with the
+figures already described by hand beside them. Only articles whose lint is
+current are counted, and the note under the table says how many are not.
+
 ## Rendering
 
 Click **Render** to regenerate HTML and PDF. Both run sequentially via Pandoc (HTML) and Pandoc-to-Typst-then-typst-py (PDF). EPUB and JATS are rendered on demand the first time you request them.

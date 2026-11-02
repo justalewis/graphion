@@ -455,10 +455,17 @@ Persist every check with a timestamp and a content hash, and roll it up.
   why; the render log still holds the reason Typst gave. All 115 rendered
   galleys declare all five, so nothing in the series is currently shipping
   through the fallback.
-- Still to do: the per-journal page counts articles by check, not the units
-  that cost time. Figures described, figures owed, images of text, equations
-  and tables are all inside the recorded lint findings and none is totalled
-  yet.
+- ~~The per-journal page counts articles by check, not the units that cost~~
+  ~~time.~~ Done. `lint.LintResult` carries `units`, the count behind its
+  summary; `register` stores it beside the finding and `Rollup.work` totals
+  it. Writing Spaces comes to 119 units outstanding: 115 figures carrying
+  text as a picture, 2 whose alt text says only that they are undescribed,
+  and 2 the prose refers to and the galley does not hold, against 201
+  figures described by hand. Only an article whose lint run is current is
+  counted, so the number cannot drift the flattering way while nobody
+  re-runs anything, and `Work.note()` carries the coverage beside it.
+  Tables are still not counted: `assess.py` can count them in a PDF, and
+  nothing counts them in an article.
 - Still to do: an issue is a heading on the journal page rather than a route
   of its own, so there is no per-issue permalink to hand anyone.
 
