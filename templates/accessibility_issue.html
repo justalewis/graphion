@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% import "_register_tables.html" as reg %}
+{% block title %}Accessibility | {{ label }}{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>Accessibility: {{ label }}</h1>
+  <p class="dim">
+    {{ journal['name'] }}
+    &middot; <a href="{{ url_for('accessibility_journal', slug=journal['slug']) }}">All issues</a>
+    &middot; <a href="{{ url_for('accessibility_acr', slug=journal['slug']) }}">Conformance report</a>
+    {% if issue['title'] %}&middot; {{ issue['title'] }}{% endif %}
+  </p>
+
+  {{ reg.kind_table(rollup, kinds, kind_labels) }}
+
+  {{ reg.work_table(rollup.work) }}
+
+  <h2 class="group-head">Articles</h2>
+  {{ reg.article_table(rollup.rows, kinds, kind_labels) }}
+
+  <div class="reg-note">{{ rollup.note() }}</div>
+</section>
+{% endblock %}

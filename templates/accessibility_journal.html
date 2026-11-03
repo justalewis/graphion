@@ -1,56 +1,6 @@
 {% extends "base.html" %}
+{% import "_register_tables.html" as reg %}
 {% block title %}Accessibility | {{ journal['name'] }}{% endblock %}
-{% block head %}
-<style>
-  .reg-table { width: 100%; border-collapse: collapse; margin-top: var(--space-4); }
-  .reg-table th, .reg-table td {
-    text-align: left;
-    padding: var(--space-2) var(--space-3);
-    border-bottom: 1px solid var(--rule);
-    font-size: var(--text-sm);
-  }
-  .reg-table th {
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    letter-spacing: var(--tracking-wide);
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .reg-table td.num { text-align: right; font-family: var(--font-mono); }
-  .reg-kind { color: var(--muted); }
-
-  .state {
-    display: inline-block;
-    padding: 0.1rem 0.5rem;
-    border-radius: var(--radius-pill);
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    letter-spacing: var(--tracking-wide);
-    white-space: nowrap;
-  }
-  .state.good    { background: var(--status-good-bg);  color: var(--status-good-fg); }
-  .state.warn    { background: var(--status-warn-bg);  color: var(--status-warn-fg); }
-  .state.bad     { background: var(--status-error-bg); color: var(--status-error-fg); }
-  .state.unknown { background: var(--rule); color: var(--muted); }
-
-  .group-head {
-    margin-top: var(--space-6);
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    letter-spacing: var(--tracking-wide);
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .reg-note {
-    margin-top: var(--space-5);
-    padding: var(--space-4) var(--space-5);
-    border-left: 3px solid var(--rule);
-    color: var(--muted);
-    font-size: var(--text-sm);
-  }
-  .ran-at { color: var(--muted); font-size: var(--text-xs); font-family: var(--font-mono); }
-</style>
-{% endblock %}
 {% block content %}
 <section class="card">
   <h1>Accessibility: {{ journal['name'] }}</h1>
@@ -61,66 +11,9 @@
     &middot; <a href="{{ url_for('accessibility_acr', slug=journal['slug']) }}">Conformance report</a>
   </p>
 
-  <table class="reg-table">
-    <thead>
-      <tr>
-        <th>Check</th>
-        <th class="num">Clean</th>
-        <th class="num">Warnings</th>
-        <th class="num">Failing</th>
-        <th class="num">Older version</th>
-        <th class="num">Not checked</th>
-        <th class="num">Tool not run</th>
-        <th class="num">No file</th>
-        <th class="num">Answered</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for kind in kinds %}
-      {% set k = rollup.kinds[kind] %}
-      <tr>
-        <td class="reg-kind">{{ kind_labels[kind] }}</td>
-        <td class="num">{{ k.clean }}</td>
-        <td class="num">{{ k.warn }}</td>
-        <td class="num">{{ k.fail }}</td>
-        <td class="num">{{ k.stale }}</td>
-        <td class="num">{{ k.never }}</td>
-        <td class="num">{{ k.unrun }}</td>
-        <td class="num">{{ k.absent }}</td>
-        <td class="num">{{ k.settled }} of {{ k.total }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  {{ reg.kind_table(rollup, kinds, kind_labels) }}
 
-  <h2 class="group-head">What is still owed</h2>
-  {% if rollup.work.rows() %}
-  <table class="reg-table">
-    <thead>
-      <tr>
-        <th>Unit</th>
-        <th class="num">Count</th>
-        <th class="num">Of</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for r in rollup.work.rows() %}
-      <tr>
-        <td class="reg-kind">{{ r['label'] }}</td>
-        <td class="num">
-          <span class="tally {{ 'warn' if r['owed'] and r['count'] else 'good' }}">{{ r['count'] }}</span>
-        </td>
-        <td class="num">{{ r['of'] if r['of'] is not none else '' }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  <div class="reg-note">{{ rollup.work.note() }}</div>
-  {% else %}
-  <p class="dim">
-    Nothing counted yet. Run the checks below and the units come with them.
-  </p>
-  {% endif %}
+  {{ reg.work_table(rollup.work) }}
 
   <form method="post" action="{{ url_for('accessibility_run_checks', slug=journal['slug']) }}"
         style="margin-top: var(--space-5);">
@@ -133,33 +26,14 @@
   </form>
 
   {% for g in groups %}
-  <h2 class="group-head">{{ g['label'] }}</h2>
-  <table class="reg-table">
-    <thead>
-      <tr>
-        <th>Article</th>
-        {% for kind in kinds %}<th>{{ kind_labels[kind] }}</th>{% endfor %}
-        <th>Last lint</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for row in g['rows'] %}
-      {% set a = row['article'] %}
-      {% set st = row['standing'] %}
-      <tr>
-        <td>
-          <a href="{{ url_for('article_lint', article_id=a['id']) }}">{{ a['title'] }}</a>
-          <br /><code class="dim" style="font-size: var(--text-xs);">{{ a['slug'] }}</code>
-        </td>
-        {% for kind in kinds %}
-        <td><span class="state {{ st[kind].tone }}"
-                  title="{{ kind_labels[kind] }}: {{ st[kind].label }}">{{ st[kind].label }}</span></td>
-        {% endfor %}
-        <td class="ran-at">{{ st['lint'].ran_at or '' }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <h2 class="group-head">
+    {% if g['issue_id'] %}
+    <a href="{{ url_for('accessibility_issue', slug=journal['slug'], issue_id=g['issue_id']) }}">{{ g['label'] }}</a>
+    {% else %}
+    {{ g['label'] }}
+    {% endif %}
+  </h2>
+  {{ reg.article_table(g['rows'], kinds, kind_labels) }}
   {% endfor %}
 
   <div class="reg-note">{{ rollup.note() }}</div>

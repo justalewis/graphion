@@ -2634,23 +2634,56 @@ def register_routes(app: Flask):
         roll = register.rollup([dict(a) for a in articles])
         # Grouped for reading, in the order the query returned, so an issue
         # stays in volume order and the unassigned drafts fall at the end.
+        # Each group carries its issue id, which is what gives the heading
+        # somewhere to link to.
         groups = []
         for row in roll.rows:
             a = row["article"]
-            if a.get("volume") is None:
-                label = "Not in an issue"
-            else:
-                label = f"Volume {a['volume']}, number {a['issue_number']}"
-                if a.get("year"):
-                    label += f" ({a['year']})"
+            label = _issue_label(a)
             if not groups or groups[-1]["label"] != label:
-                groups.append({"label": label, "rows": []})
+                groups.append({"label": label, "rows": [],
+                               "issue_id": a.get("issue_id")})
             groups[-1]["rows"].append(row)
         return render_template(
             "accessibility_journal.html",
             journal=journal,
             rollup=roll,
             groups=groups,
+            kinds=register.KINDS,
+            kind_labels=register.KIND_LABELS,
+        )
+
+    @app.route("/accessibility/<slug>/issues/<int:issue_id>")
+    @login_required
+    def accessibility_issue(slug, issue_id):
+        """One issue, which is the unit an editor actually works in.
+
+        It was a heading on the journal page and nothing else, so there was
+        no address to hand anybody: "volume 2 stands here" could only be
+        said by sending them the whole journal and telling them where to
+        scroll.
+        """
+        journal = db.query_one("SELECT * FROM journals WHERE slug = ?", (slug,))
+        if not journal:
+            abort(404)
+        issue = db.query_one(
+            "SELECT * FROM issues WHERE id = ? AND journal_id = ?",
+            (issue_id, journal["id"]),
+        )
+        if not issue:
+            abort(404)
+        articles = db.query_all(
+            "SELECT a.*, i.volume, i.issue_number, i.year "
+            "FROM articles a LEFT JOIN issues i ON a.issue_id = i.id "
+            "WHERE a.issue_id = ? ORDER BY a.order_in_issue, a.slug",
+            (issue_id,),
+        )
+        return render_template(
+            "accessibility_issue.html",
+            journal=journal,
+            issue=issue,
+            label=_issue_label(dict(issue), from_issue=True),
+            rollup=register.rollup([dict(a) for a in articles]),
             kinds=register.KINDS,
             kind_labels=register.KIND_LABELS,
         )
@@ -2845,6 +2878,22 @@ def register_routes(app: Flask):
     @app.route("/healthz")
     def healthz():
         return {"ok": True}
+
+
+def _issue_label(row: dict, from_issue: bool = False) -> str:
+    """How an issue is named on the register pages.
+
+    One function, because the journal page groups its headings by this
+    string and the issue page titles itself with it. Two copies would
+    drift, and the first thing a reader would notice is a heading that
+    does not match the page it links to.
+    """
+    if row.get("volume") is None:
+        return (row.get("title") or "Untitled issue") if from_issue             else "Not in an issue"
+    label = f"Volume {row['volume']}, number {row['issue_number']}"
+    if row.get("year"):
+        label += f" ({row['year']})"
+    return label
 
 
 def _peek_title(md_path: Path) -> Optional[str]:

@@ -139,6 +139,9 @@ app.py:article_lint         — GET  /articles/<id>/lint
   → lint.run                      Stage 5
   → register.record_lint          one run, dated to those bytes
 
+app.py:accessibility_issue  — GET /accessibility/<slug>/issues/<id>
+  → register.rollup               the same three tables, one issue's worth
+
 app.py:accessibility_acr    — GET /accessibility/<slug>/acr
   → acr.report                    a level per criterion, from the register
     → register.standing           only runs current against the file on disk
@@ -234,7 +237,7 @@ Run all tests:
 python -m pytest tests/ -q
 ```
 
-Currently 606 passing. Unit-tested:
+Currently 614 passing. Unit-tested:
 
 - `cleanups.py` — every cleanup pass with input/output pairs + idempotence checks.
 - `conversion.py` metadata round-trip — YAML read/write with sanitization and field ordering.
@@ -262,6 +265,10 @@ Currently 606 passing. Unit-tested:
   the one failure here with no symptom. The declaration cases compile a real
   galley both ways, because a fallback that goes unrecorded is the shortfall
   this kind exists to count.
+- the register's routes — that an issue has an address, that it shows its
+  own articles and no others, that an id belonging to another journal is
+  not found, and that the heading and the page it links to name the issue
+  the same way.
 - `acr.py` — the four ways a generated report could flatter the archive:
   filling in a criterion nothing checks, calling one Not Applicable without
   establishing it, counting an article whose run has gone stale, and

@@ -124,6 +124,11 @@ falls back so you still get a galley, and this is the line that tells you
 afterwards that it did. The reason Typst gave is in the article's **Logs**
 tab. An article that renders a separate teacher galley has that one read too.
 
+Each issue heading on the journal page is a link to that issue's own page,
+which carries the same tables for its articles alone. That is the address
+to send somebody when the question is about one volume rather than a
+journal.
+
 The journal page links to a **conformance report**: all 50 WCAG 2.1 Level
 A and AA criteria with a support level against each, the checks that back
 it named on the row, and the date. It is generated from the register rather

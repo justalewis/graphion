@@ -517,8 +517,14 @@ Persist every check with a timestamp and a content hash, and roll it up.
   so a second pass is cheap and an interrupted one resumes. Neither tool is
   installed here yet, so the columns are still empty; the runner refuses to
   start without them rather than writing a row that answers nothing.
-- Still to do: an issue is a heading on the journal page rather than a route
-  of its own, so there is no per-issue permalink to hand anyone.
+- ~~An issue is a heading on the journal page rather than a route of its~~
+  ~~own.~~ Done: `/accessibility/<slug>/issues/<id>`, with its own rollup,
+  work table and article list. The heading on the journal page links to it.
+  One function names an issue, because the heading and the page it links to
+  both use that string and two copies would drift. The three tables are
+  Jinja macros in `templates/_register_tables.html` rather than copies per
+  page, and the styling moved into `static/style.css`, which is where a
+  broken `.tally` selector had already survived being written twice.
 
 This is the piece everything else depends on. It converts the per-article
 checks into the thing a journal and an ACR both need, which is a dated,

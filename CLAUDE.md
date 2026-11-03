@@ -27,13 +27,13 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (571 functions, 606 cases once the parametrized ones expand: 142 in
+Tests (579 functions, 614 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 43 in
 `test_ingest_volume.py`, 42 in `test_lint.py`, 36 in `test_register.py`,
 29 in `test_teacher_resources.py`, 28 in `test_metadata_roundtrip.py`,
 26 in `test_pdf_tags.py`, 24 in `test_math_alt.py`, 21 in `test_assess.py`,
 18 in `test_acr.py`, 14 in `test_epub_a11y.py`,
-13 in `test_template_bundles.py`,
+13 in `test_template_bundles.py`, 8 in `test_accessibility_routes.py`,
 12 in `test_validate_galleys.py`,
 9 in `test_pdf_ua.py`, 5 in `test_validators.py`,
 6 in `test_standalone_html.py`, 4 in `test_journal_filter.py`,
@@ -483,6 +483,20 @@ The HTML, EPUB and JATS galleys need none of this. Pandoc's writers emit real
 MathML with an `application/x-tex` annotation, so the filter is gated on
 `FORMAT == "typst"` and a raw Typst inline in the HTML would be a
 regression.
+
+**An issue has an address.** `/accessibility/<slug>/issues/<id>` carries
+the same rollup, work table and article list for one issue, and the
+heading on the journal page links to it. It was a heading and nothing
+else, so "volume 2 stands here" could only be said by sending somebody the
+whole journal and telling them where to scroll.
+
+`app._issue_label()` names an issue, once, because the journal page groups
+its headings by that string and the issue page titles itself with it: two
+copies would drift and the first thing a reader would notice is a heading
+that does not match the page it opened. The three tables are macros in
+`templates/_register_tables.html` for the same reason, and the register
+styling moved into `static/style.css`, where it should have been before a
+broken `.tally` selector survived being written into two templates.
 
 **The conformance report is derived, so it cannot say more than the checks
 found.** `acr.py` and `/accessibility/<slug>/acr` put all 50 WCAG 2.1 Level

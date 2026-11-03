@@ -1,32 +1,5 @@
 {% extends "base.html" %}
 {% block title %}Accessibility{% endblock %}
-{% block head %}
-<style>
-  .reg-table { width: 100%; border-collapse: collapse; margin-top: var(--space-4); }
-  .reg-table th, .reg-table td {
-    text-align: left;
-    padding: var(--space-2) var(--space-3);
-    border-bottom: 1px solid var(--rule);
-    font-size: var(--text-sm);
-  }
-  .reg-table th {
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    letter-spacing: var(--tracking-wide);
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .reg-table td.num { text-align: right; font-family: var(--font-mono); }
-  .reg-kind { color: var(--muted); }
-  .reg-note {
-    margin-top: var(--space-5);
-    padding: var(--space-4) var(--space-5);
-    border-left: 3px solid var(--rule);
-    color: var(--muted);
-    font-size: var(--text-sm);
-  }
-</style>
-{% endblock %}
 {% block content %}
 <section class="card">
   <h1>Accessibility</h1>

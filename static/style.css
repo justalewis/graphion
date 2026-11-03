@@ -717,3 +717,55 @@ pre.diff .hunk { color: var(--muted); background: rgba(120, 100, 60, 0.08); disp
 .tally.warn    { color: var(--status-warn-fg); }
 .tally.bad     { color: var(--status-error-fg); }
 .tally.unknown { color: var(--muted); }
+
+/* Register and conformance pages ------------------------------ */
+/* Three templates draw these tables. The rules lived in two of them,
+   identically, which is how the .tally selector stayed broken in both. */
+.reg-table { width: 100%; border-collapse: collapse; margin-top: var(--space-4); }
+.reg-table th, .reg-table td {
+  text-align: left;
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--rule);
+  font-size: var(--text-sm);
+}
+.reg-table th {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.reg-table td.num { text-align: right; font-family: var(--font-mono); }
+.reg-kind { color: var(--muted); }
+
+.state {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: var(--tracking-wide);
+  white-space: nowrap;
+}
+.state.good    { background: var(--status-good-bg);  color: var(--status-good-fg); }
+.state.warn    { background: var(--status-warn-bg);  color: var(--status-warn-fg); }
+.state.bad     { background: var(--status-error-bg); color: var(--status-error-fg); }
+.state.unknown { background: var(--rule); color: var(--muted); }
+
+.group-head {
+  margin-top: var(--space-6);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.group-head a { color: inherit; }
+.reg-note {
+  margin-top: var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  border-left: 3px solid var(--rule);
+  color: var(--muted);
+  font-size: var(--text-sm);
+}
+.ran-at { color: var(--muted); font-size: var(--text-xs); font-family: var(--font-mono); }

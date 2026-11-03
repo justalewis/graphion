@@ -1,0 +1,99 @@
+{# The register's three tables, drawn the same way wherever they appear.
+
+   A journal, an issue and the all-journals page ask the same question of
+   different sets of articles, so the markup is written once here rather
+   than copied per page. The styling lives in static/style.css for the same
+   reason; it was copied between two templates and a broken selector stayed
+   broken in both. #}
+
+{% macro kind_table(rollup, kinds, kind_labels, answered=True) %}
+<table class="reg-table">
+  <thead>
+    <tr>
+      <th>Check</th>
+      <th class="num">Clean</th>
+      <th class="num">Warnings</th>
+      <th class="num">Failing</th>
+      <th class="num">Older version</th>
+      <th class="num">Not checked</th>
+      <th class="num">Tool not run</th>
+      <th class="num">No file</th>
+      {% if answered %}<th class="num">Answered</th>{% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for kind in kinds %}
+    {% set k = rollup.kinds[kind] %}
+    <tr>
+      <td class="reg-kind">{{ kind_labels[kind] }}</td>
+      <td class="num"><span class="tally good">{{ k.clean }}</span></td>
+      <td class="num"><span class="tally warn">{{ k.warn }}</span></td>
+      <td class="num"><span class="tally bad">{{ k.fail }}</span></td>
+      <td class="num"><span class="tally unknown">{{ k.stale }}</span></td>
+      <td class="num"><span class="tally unknown">{{ k.never }}</span></td>
+      <td class="num"><span class="tally unknown">{{ k.unrun }}</span></td>
+      <td class="num"><span class="tally unknown">{{ k.absent }}</span></td>
+      {% if answered %}<td class="num">{{ k.settled }} of {{ k.total }}</td>{% endif %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endmacro %}
+
+
+{% macro work_table(work) %}
+<h2 class="group-head">What is still owed</h2>
+{% if work.rows() %}
+<table class="reg-table">
+  <thead>
+    <tr><th>Unit</th><th class="num">Count</th><th class="num">Of</th></tr>
+  </thead>
+  <tbody>
+    {% for r in work.rows() %}
+    <tr>
+      <td class="reg-kind">{{ r['label'] }}</td>
+      <td class="num">
+        <span class="tally {{ 'warn' if r['owed'] and r['count'] else 'good' }}">{{ r['count'] }}</span>
+      </td>
+      <td class="num">{{ r['of'] if r['of'] is not none else '' }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<div class="reg-note">{{ work.note() }}</div>
+{% else %}
+<p class="dim">
+  Nothing counted yet. Run the checks and the units come with them.
+</p>
+{% endif %}
+{% endmacro %}
+
+
+{% macro article_table(rows, kinds, kind_labels) %}
+<table class="reg-table">
+  <thead>
+    <tr>
+      <th>Article</th>
+      {% for kind in kinds %}<th>{{ kind_labels[kind] }}</th>{% endfor %}
+      <th>Last lint</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in rows %}
+    {% set a = row['article'] %}
+    {% set st = row['standing'] %}
+    <tr>
+      <td>
+        <a href="{{ url_for('article_lint', article_id=a['id']) }}">{{ a['title'] }}</a>
+        <br /><code class="dim" style="font-size: var(--text-xs);">{{ a['slug'] }}</code>
+      </td>
+      {% for kind in kinds %}
+      <td><span class="state {{ st[kind].tone }}"
+                title="{{ kind_labels[kind] }}: {{ st[kind].label }}">{{ st[kind].label }}</span></td>
+      {% endfor %}
+      <td class="ran-at">{{ st['lint'].ran_at or '' }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endmacro %}
