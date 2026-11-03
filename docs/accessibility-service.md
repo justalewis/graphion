@@ -364,9 +364,37 @@ and, recommended, `schema:accessibilitySummary` and
 `dcterms:conformsTo` with the exact string `EPUB Accessibility 1.1 - WCAG 2.1
 Level AA` and an `a11y:certifiedBy` naming the evaluator.
 
-Half a day of work. Without it a library catalogue has nothing to tell a
-reader about the file, and this is the one item in this list whose date has
-already passed.
+**Fixed, and the premise above was half wrong.** Pandoc 3.11 does write
+some of it: `accessMode: textual`, `accessModeSufficient: textual`,
+`accessibilityFeature: alternativeText, readingOrder, structuralNavigation,
+tableOfContents` and `accessibilityHazard: none`, the same block for every
+file it converts. Two of those are claims about content it has not read.
+`alternativeText` is asserted whether or not a figure carries a
+description, and `accessModeSufficient: textual` tells a reader who cannot
+see the pictures that they are missing nothing. A false accessibility claim
+is worse than a missing one, because the reader acts on it.
+
+`epub_a11y.py` replaces that block with what the article can actually say,
+reading the counts from `lint` so the EPUB and the accessibility page
+cannot drift apart. It adds `accessibilitySummary`, which Pandoc does not
+write and a catalogue prints verbatim, and it writes `dcterms:conformsTo`
+with `a11y:certifiedBy` only where the article's checks bear the claim.
+Over Writing Spaces that is 78 chapters claiming WCAG 2.1 AA conformance
+and 37 withholding it, every one of the 37 because it sets words as a
+picture, which is a Level AA failure however well the figure is described.
+
+Pandoc's `--epub-metadata` could not carry any of it: the `<meta property>`
+elements in that file are dropped and the defaults written instead, so the
+package document is edited after the fact and the uncompressed `mimetype`
+entry put back first.
+
+Rendering an EPUB also turned up that it had never carried its figures.
+Pandoc resolves a relative resource path against the working directory
+rather than against the file it is reading, so `assets/figure-...` found
+nothing and every image was dropped with a warning on stderr. One chapter
+went from 22 KB and no pictures to 229 KB and five. The HTML galley never
+showed this, because it sits in the article directory and a browser
+resolves the same path for it.
 
 ### 3.7 There is no surface for writing alt text
 

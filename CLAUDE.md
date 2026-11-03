@@ -27,13 +27,13 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (526 functions, 549 cases once the parametrized ones expand: 142 in
+Tests (540 functions, 563 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 43 in
 `test_ingest_volume.py`, 42 in `test_lint.py`, 36 in `test_register.py`,
 29 in `test_teacher_resources.py`, 28 in `test_metadata_roundtrip.py`,
 26 in `test_pdf_tags.py`, 24 in `test_math_alt.py`, 21 in `test_assess.py`,
-12 in `test_validate_galleys.py`, 9 in `test_pdf_ua.py`,
-5 in `test_validators.py`,
+14 in `test_epub_a11y.py`, 12 in `test_validate_galleys.py`,
+9 in `test_pdf_ua.py`, 5 in `test_validators.py`,
 6 in `test_standalone_html.py`, 4 in `test_journal_filter.py`,
 3 in `test_preprocessors.py`). Most of the suite
 runs without Pandoc; `test_journal_filter.py` needs it, and
@@ -481,6 +481,53 @@ The HTML, EPUB and JATS galleys need none of this. Pandoc's writers emit real
 MathML with an `application/x-tex` annotation, so the filter is gated on
 `FORMAT == "typst"` and a raw Typst inline in the HTML would be a
 regression.
+
+**The EPUB declares what a reader can do with it, and Pandoc's version of
+that is two claims it has not checked.** Pandoc 3 writes an accessibility
+block into every EPUB it converts: `accessMode: textual`,
+`accessModeSufficient: textual`, `accessibilityFeature: alternativeText,
+readingOrder, structuralNavigation, tableOfContents`, and
+`accessibilityHazard: none`. The same block every time. `alternativeText`
+is asserted whether or not a single figure carries a description, and
+`accessModeSufficient: textual` says a reader who cannot see the pictures
+is missing nothing. For a chapter with an undescribed figure both are
+false, and a false accessibility claim is worse than a missing one: it
+tells a reader the book will work for them, and they find out afterwards.
+
+`epub_a11y.describe()` works each value out from the article and
+`epub_a11y.stamp()` replaces Pandoc's block rather than adding to it, so
+two `accessModeSufficient` values never sit side by side contradicting each
+other. The counts come from `lint`, which already works them out for the
+accessibility page, so what the EPUB says and what the page reports cannot
+drift. `MathML` names the markup, which Pandoc emits either way; whether a
+formula also carries a reading is what the conformance claim turns on.
+
+`dcterms:conformsTo` is written only where the article's own checks bear
+it, with `a11y:certifiedBy` naming who says so. WCAG 2.1 AA includes 1.4.5,
+so a chapter that sets words as a picture does not conform however well the
+figure is described, and it gets the discoverability metadata, which every
+publication owes, and no claim. Over Writing Spaces that is 78 claiming and
+37 withholding, all 37 for 1.4.5. `accessibilitySummary` is written either
+way and says what is not true as well as what is, because a catalogue
+prints it verbatim.
+
+Pandoc's `--epub-metadata` cannot carry any of this: the `<meta property>`
+elements in that file are dropped and the defaults written instead. So the
+package document is edited after Pandoc has written it, which means
+rebuilding the zip, which means putting `mimetype` back first and
+uncompressed. That is what a reading system checks before it trusts
+anything else in the container, and a rewrite that deflates it produces a
+file that opens nowhere while every other test passes.
+
+**The EPUB had never carried its figures.** Pandoc resolves a relative
+resource path against the working directory rather than against the file it
+is reading, so a body saying `assets/figure-p007-1.jpg` found nothing and
+every image was dropped with a warning on stderr. `--resource-path` set to
+the article directory fixes it; one chapter went from 22 KB and no pictures
+to 229 KB and five. Nothing had noticed because the EPUB renders on demand
+and none had ever been rendered in this archive, and because the HTML
+galley sits in the article directory, where a browser resolves the same
+path correctly.
 
 **A bound issue is tagged by merging, not by re-rendering.** Adding a page to
 a pypdf writer copies the page. The structure tree, the `/ParentTree` that
@@ -1054,6 +1101,11 @@ Anything touching Claude (`stylize.py`, `llm_cleanup.py`) requires
 
 - `app.py` (2821 lines) is the whole HTTP surface. `conversion.py` (2593) is the
   pipeline. Those two hold most of the complexity.
+- `epub_a11y.py` is the only module that touches EPUB package structure,
+  for the same reason `pdf_tags.py` is the only one that touches PDF
+  object structure: rewriting a container is a thing to do in one place.
+  It imports `lint` inside `describe()` rather than at the top, because
+  `conversion` imports this module and `lint` imports `conversion`.
 - `pdf_tags.py` (713) is the only module that touches PDF object structure
   directly; it binds rendered galleys into a tagged issue. It reaches into
   pypdf's `_add_object` and `_root_object` because pypdf exposes no public API

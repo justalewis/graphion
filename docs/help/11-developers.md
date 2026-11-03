@@ -62,6 +62,12 @@ Graphion/
   change_password.py  ← Rotate a user's password; prompts via getpass so the
                         value stays out of shell history. The DB hash is the
                         source of truth, not GRAPHION_ADMIN_PASSWORD.
+  epub_a11y.py        ← What the EPUB declares about what a reader can do
+                        with it, worked out from the article rather than
+                        asserted. Replaces Pandoc's own block, which claims
+                        alt text for every file it converts and says text
+                        alone is always sufficient. Writes a conformance
+                        claim only where the article's checks bear it.
   validate_galleys.py ← Runs verapdf and pa11y over a journal's galleys and
                         records each in the register. A script rather than a
                         route because each tool is a subprocess with a 120s
@@ -218,7 +224,7 @@ Run all tests:
 python -m pytest tests/ -q
 ```
 
-Currently 549 passing. Unit-tested:
+Currently 563 passing. Unit-tested:
 
 - `cleanups.py` — every cleanup pass with input/output pairs + idempotence checks.
 - `conversion.py` metadata round-trip — YAML read/write with sanitization and field ordering.
@@ -246,6 +252,11 @@ Currently 549 passing. Unit-tested:
   the one failure here with no symptom. The declaration cases compile a real
   galley both ways, because a fallback that goes unrecorded is the shortfall
   this kind exists to count.
+- `epub_a11y.py` — mostly what must not be claimed: alternative text for a
+  figure nobody described, sufficiency for a page of words set as a picture,
+  and conformance for either. Plus the container rule a rewrite has to keep,
+  since an EPUB whose `mimetype` entry is compressed opens nowhere and no
+  other test would notice.
 - `validators.py` — how each tool is named when it is called. Neither is an
   executable on Windows, and a bare name that `shutil.which` resolves but
   `CreateProcess` will not run is the worst answer available: the probe says

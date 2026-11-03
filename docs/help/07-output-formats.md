@@ -58,6 +58,16 @@ For continuous-pagination across an issue, each article gets `start-page` set du
 
 Best for: e-reader distribution, libraries, accessibility consumers who prefer reflowable text.
 
+The file declares what a reader can do with it, which is what a library
+catalogue reads before anyone downloads it: the senses the content comes
+through, whether text alone is enough, what has been done to help, and a
+summary in plain words. Those are worked out from the article rather than
+asserted, so a chapter with an undescribed figure does not claim to have
+alt text, and one that sets words as a picture says text alone is not
+enough. A WCAG 2.1 AA conformance claim is written only where the
+article's own checks support it; an image of text is a Level AA failure,
+so those chapters carry the description metadata and no claim.
+
 ## JATS XML
 
 `/articles/<id>/jats.xml` — JATS-archiving-1.3 conformant XML. Contains:

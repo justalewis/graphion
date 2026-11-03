@@ -17,6 +17,7 @@ import pypandoc
 
 import cleanups
 import db
+import epub_a11y
 import math_alt
 import pdf_ingest
 import pdf_tags
@@ -1425,6 +1426,16 @@ def _fill_math_alt(typ_text: str, fm: Optional[dict] = None) -> str:
     return _MATH_ALT_SENTINEL_RE.sub(substitute, typ_text)
 
 
+def journal_name(journal_slug: str) -> str:
+    """The journal's full name, or "" where the journal is unknown."""
+    try:
+        row = db.query_one("SELECT name FROM journals WHERE slug = ?",
+                           (journal_slug,))
+    except Exception:
+        return ""
+    return (dict(row).get("name") or "").strip() if row else ""
+
+
 def journal_short_name(journal_slug: str) -> str:
     """Short journal label for running headers, e.g. "LiCS".
 
@@ -1744,6 +1755,15 @@ def render_epub(article_path: Path, journal_slug: str) -> Path:
         "--standalone",
         "--from", "markdown+yaml_metadata_block",
         "--to", "epub3",
+        # An EPUB packages what it references, and Pandoc resolves a
+        # relative resource path against the working directory rather than
+        # against the file it is reading. The body says `assets/figure-...`,
+        # so without this every figure is dropped with a warning on stderr
+        # and the galley ships with none of them: the prose goes on saying
+        # "see Figure 3" and there is nothing to see. The HTML galley never
+        # showed this because it sits in the article directory and the
+        # browser resolves the same path for it.
+        "--resource-path", str(article_path),
     ]
     fig_filter = tpl / "figures-filter.lua"
     if fig_filter.exists():
@@ -1755,7 +1775,7 @@ def render_epub(article_path: Path, journal_slug: str) -> Path:
     if override_css.exists():
         extra.extend(["--css", str(override_css)])
     extra.extend(_citation_args(article_path, journal_slug))
-    fm, _ = read_article_metadata(article_path)
+    fm, body = read_article_metadata(article_path)
     extra.extend(_epub_author_args(fm))
 
     pypandoc.convert_file(
@@ -1765,6 +1785,13 @@ def render_epub(article_path: Path, journal_slug: str) -> Path:
         outputfile=str(out),
         extra_args=extra,
     )
+    # Pandoc writes an accessibility block of its own, the same one for
+    # every file it converts, which asserts alternativeText and says a
+    # reader who cannot see the figures is missing nothing. Both are
+    # claims about content it has not read. `epub_a11y` replaces them with
+    # what this article can actually say.
+    epub_a11y.stamp(out, epub_a11y.describe(fm, body,
+                                            certifier=journal_name(journal_slug)))
     return out
 
 
