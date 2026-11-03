@@ -218,7 +218,7 @@ Run all tests:
 python -m pytest tests/ -q
 ```
 
-Currently 544 passing. Unit-tested:
+Currently 549 passing. Unit-tested:
 
 - `cleanups.py` — every cleanup pass with input/output pairs + idempotence checks.
 - `conversion.py` metadata round-trip — YAML read/write with sanitization and field ordering.
@@ -246,6 +246,10 @@ Currently 544 passing. Unit-tested:
   the one failure here with no symptom. The declaration cases compile a real
   galley both ways, because a fallback that goes unrecorded is the shortfall
   this kind exists to count.
+- `validators.py` — how each tool is named when it is called. Neither is an
+  executable on Windows, and a bare name that `shutil.which` resolves but
+  `CreateProcess` will not run is the worst answer available: the probe says
+  the tool is installed and every call raises.
 - `validate_galleys.py` — the two ways a corpus pass could do damage rather
   than nothing: writing a "tool not installed" row over a real verdict, and
   dating a verdict to the file as it stands after the subprocess returns

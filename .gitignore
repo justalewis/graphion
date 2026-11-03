@@ -20,6 +20,8 @@ content/**/teacher-resources.pdf
 content/**/teacher-resources.html
 content/**/article.epub
 content/**/conversion.log
+content/**/verapdf-report.json
+content/**/pa11y-report.json
 content/**/.versions/
 content/**/source.docx
 content/**/source.pdf

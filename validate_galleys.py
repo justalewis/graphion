@@ -182,11 +182,14 @@ def main() -> int:
 
     articles = articles_for(args.journal)
     plan = []
+    left_out = 0
     for article in articles:
         for kind in kinds:
             reason = to_do(article, kind, args.skip_current)
             if reason:
                 plan.append((article, kind, reason))
+            else:
+                left_out += 1
         if args.limit and len({a["id"] for a, _k, _r in plan}) >= args.limit:
             break
 
@@ -197,9 +200,12 @@ def main() -> int:
         n = sum(1 for _a, k, _r in plan if k == kind)
         state = "ready" if TOOLS[kind]["available"]() else "NOT INSTALLED"
         print(f"  {TOOLS[kind]['label']:8s} {n:4d} queued  [{state}]")
-    skipped = len(articles) * len(kinds) - len(plan)
-    if skipped:
-        print(f"  {skipped} left out: no galley rendered, or already current")
+    # Counted while planning rather than subtracted from the whole journal,
+    # which reported every article past a `--limit` as left out.
+    if left_out:
+        print(f"  {left_out} left out: no galley rendered, or already current")
+    if args.limit and len(articles) > args.limit:
+        print(f"  stopped at --limit {args.limit}")
 
     if args.dry_run:
         for article, kind, reason in plan[:40]:

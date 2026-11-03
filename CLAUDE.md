@@ -27,12 +27,13 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (521 functions, 544 cases once the parametrized ones expand: 142 in
+Tests (526 functions, 549 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 43 in
 `test_ingest_volume.py`, 42 in `test_lint.py`, 36 in `test_register.py`,
 29 in `test_teacher_resources.py`, 28 in `test_metadata_roundtrip.py`,
 26 in `test_pdf_tags.py`, 24 in `test_math_alt.py`, 21 in `test_assess.py`,
 12 in `test_validate_galleys.py`, 9 in `test_pdf_ua.py`,
+5 in `test_validators.py`,
 6 in `test_standalone_html.py`, 4 in `test_journal_filter.py`,
 3 in `test_preprocessors.py`). Most of the suite
 runs without Pandoc; `test_journal_filter.py` needs it, and
@@ -394,6 +395,19 @@ run and an `unrun` one are both back in the plan, since neither is an
 answer. The report JSON lands beside the galley exactly where the
 per-article button writes it, so the article page shows what the pass
 found.
+
+**Neither tool is an executable on Windows, so call the path and not the
+name.** verapdf installs a `verapdf.BAT` launcher and npm writes a
+`pa11y.CMD` shim. `shutil.which` finds both through PATHEXT, and
+`CreateProcess` runs neither from the bare name, so
+`subprocess.run(["verapdf", ...])` raises FileNotFoundError while
+`verapdf_available()` says the tool is there. That pairing is the worst of
+the three answers available, because the probe gates the call: the register
+would have taken 115 crashes from a tool it had just confirmed was
+installed. `run_verapdf` passes the path `shutil.which` returned, which
+`run_pa11y` already did. Installed here at `C:/Users/jlewis2/verapdf`,
+which is not on the system PATH; the shell that runs the pass has to put it
+there.
 
 **Galleys are PDF/UA-1.** `conversion._compile_typst()` compiles every PDF
 with `pdf_standards` set from `config.PDF_UA_STANDARD`, which is what emits

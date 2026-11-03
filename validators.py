@@ -32,9 +32,16 @@ def run_verapdf(pdf_path: Path) -> Tuple[bool, Dict]:
         }
     if not pdf_path.exists():
         return False, {"error": "PDF not found", "passed": False}
+    # Invoked by the path `shutil.which` resolved, not by the bare name. On
+    # Windows the launcher is `verapdf.BAT`, which `which` finds through
+    # PATHEXT and `CreateProcess` will not run from the name alone: the call
+    # raises FileNotFoundError while the availability probe says yes, which
+    # is the worst of the three outcomes. `run_pa11y` below already resolves
+    # for the same reason.
+    binary = shutil.which("verapdf")
     try:
         result = subprocess.run(
-            ["verapdf", "--flavour", "ua1", "--format", "json", str(pdf_path)],
+            [binary, "--flavour", "ua1", "--format", "json", str(pdf_path)],
             capture_output=True, text=True, timeout=120,
         )
     except subprocess.TimeoutExpired:
