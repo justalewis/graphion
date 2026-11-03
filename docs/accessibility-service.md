@@ -512,11 +512,15 @@ Persist every check with a timestamp and a content hash, and roll it up.
   Tables are still not counted: `assess.py` can count them in a PDF, and
   nothing counts them in an article.
 - ~~verapdf and pa11y have never run against this archive, so two of the~~
-  ~~four columns read 0 of 118.~~ Half done: `validate_galleys.py` runs both
-  over a journal and records each through `register`, with `--skip-current`
-  so a second pass is cheap and an interrupted one resumes. Neither tool is
-  installed here yet, so the columns are still empty; the runner refuses to
-  start without them rather than writing a row that answers nothing.
+  ~~four columns read 0 of 118.~~ Done: `validate_galleys.py` runs both over
+  a journal and records each through `register`, with `--skip-current` so a
+  second pass is cheap and an interrupted one resumes. Both tools are
+  installed and the runner has been over the series, so the two columns
+  read 115 clean of the 115 articles that have a rendered galley. The
+  runner refuses to start where a tool is missing rather than writing a row
+  that answers nothing. verapdf lives at `C:/Users/jlewis2/verapdf` and is
+  not on the system PATH, so the shell that runs the pass has to put it
+  there.
 - ~~An issue is a heading on the journal page rather than a route of its~~
   ~~own.~~ Done: `/accessibility/<slug>/issues/<id>`, with its own rollup,
   work table and article list. The heading on the journal page links to it.
@@ -543,12 +547,32 @@ the size of the job before commissioning it.
 - ~~A per-item statement and an aggregate~~ Done, denominated in the units
   that cost time, with what cannot be read off the page named rather than
   left out of the total.
-- Still to do: a journal's HTML, which this does not touch at all.
-- Still to do: run `verapdf` over their existing PDFs and `pa11y` over their
-  existing HTML, and report what is already there rather than assuming
-  nothing is. `validators.py` wraps both; neither is wired into this pass,
-  so what it reports about conformance is what the file declares rather than
-  what a checker confirms, and it says so.
+- ~~Run `verapdf` over their existing PDFs and `pa11y` over their existing~~
+  ~~HTML, and report what is already there rather than assuming nothing~~
+  ~~is.~~ Done, behind `--validate`. What a file declares and what a checker
+  makes of that declaration are now two registers rather than one, and
+  `contradicted` is the case worth reading first: a file that states
+  PDF/UA-1 and does not pass it has already been through somebody's
+  pipeline, so what it is short of is usually narrow and nobody has been
+  told. Off by default because verapdf is a JVM at about 13 seconds a file,
+  so a folder of 118 chapters is half an hour.
+
+  A verdict carries its failed rules, and not the instances behind them.
+  One plain typeset chapter here fails 1,462 checks across 11 rules, of
+  which 727 are runs of text with no language and 678 are content neither
+  tagged nor marked as an artifact: both are answered by tagging the
+  document once. Reporting 1,462 of anything would be the inflation this
+  pass exists to avoid, in the one place a number arrives already looking
+  like work.
+
+  pa11y answers for the HTML the same way, and the thinness of that answer
+  is said on the page rather than left to be assumed: it is the checker's
+  verdict and not a reading of what the page holds.
+- Still to do: a journal's HTML as content, which this still does not read.
+  pa11y now runs over it, so a page with no alt text is reported; how many
+  figures the page carries, how many are described and how many set their
+  words as a picture is not, and that is the number that decides whether an
+  archive is finished.
 - Still to do: symbol-font pages, and articles whose structure had to be
   inferred rather than read. Both are knowable and neither is counted yet.
 

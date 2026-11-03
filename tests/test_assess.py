@@ -148,6 +148,232 @@ def test_a_file_that_will_not_open_is_reported_by_name(tmp_path):
     assert "will not open" in assess.report([result])
 
 
+# ---------- what a checker confirms, which is a second fact ----------
+
+def _verapdf_report(rules=(), compliant=None, results=None):
+    """A report shaped the way verapdf writes one.
+
+    Built here rather than captured from a run, so the suite says what it
+    depends on: `validationResult[0].compliant` and the rule summaries
+    under `details`. A canned report is also the only way to test the
+    cases a working installation never produces.
+    """
+    summaries = [
+        {"ruleStatus": "FAILED", "specification": "ISO 14289-1:2014",
+         "clause": clause, "testNumber": number, "status": "failed",
+         "failedChecks": instances, "tags": ["syntax"],
+         "description": description}
+        for clause, number, instances, description in rules
+    ]
+    if compliant is None:
+        compliant = not summaries
+    if results is None:
+        results = [{
+            "details": {"passedRules": 106 - len(summaries),
+                        "failedRules": len(summaries),
+                        "passedChecks": 57886,
+                        "failedChecks": sum(s["failedChecks"] for s in summaries),
+                        "ruleSummaries": summaries},
+            "jobEndStatus": "normal",
+            "profileName": "PDF/UA-1 validation profile",
+            "compliant": compliant}]
+    return {"report": {"jobs": [{"itemDetails": {"name": "x.pdf", "size": 1},
+                                 "validationResult": results}]}}
+
+
+def _verapdf_says(monkeypatch, report, passed=True):
+    monkeypatch.setattr(assess.validators, "verapdf_available", lambda: True)
+    monkeypatch.setattr(assess.validators, "run_verapdf",
+                        lambda path: (passed, report))
+
+
+# The eleven rules a plain typeset chapter of this archive breaks, with the
+# instance counts verapdf actually reported for it. The two largest are the
+# point: 727 runs of text with no language and 678 pieces of content neither
+# tagged nor marked as an artifact, both of which one remediation answers.
+UNTAGGED_RULES = (
+    ("7.2", 34, 727, "Natural language for text in page content shall be determined"),
+    ("7.1", 3, 678, "Content shall be marked as Artifact or tagged as real content"),
+    ("7.2", 30, 31, "Natural language for text in ActualText shall be determined"),
+    ("7.1", 6, 13, "A circular mapping shall not exist"),
+    ("7.18.5", 2, 4, "Links shall contain an alternate description"),
+    ("7.18.1", 2, 4, "An annotation shall have either Contents or an Alt entry"),
+    ("6.2", 1, 1, "MarkInfo shall contain Marked, whose value shall be true"),
+    ("7.1", 10, 1, "ViewerPreferences shall contain DisplayDocTitle, true"),
+    ("7.1", 8, 1, "The document catalog shall include a Lang entry"),
+    ("7.1", 2, 1, "The document catalog shall include a MarkInfo dictionary"),
+    ("7.1", 12, 1, "Metadata shall contain a dc:title"),
+)
+
+
+def test_a_declaration_that_holds_up_is_confirmed(described, monkeypatch):
+    _verapdf_says(monkeypatch, _verapdf_report())
+
+    result = assess.assess_pdf(described, validate=True)
+
+    assert result.conformant
+    assert result.verapdf is True
+    assert result.checked
+    assert not result.contradicted
+
+
+def test_a_declaration_that_does_not_hold_up_is_the_case_to_read_first(
+        described, monkeypatch):
+    """Six volumes of this archive bound galleys that each declared
+    PDF/UA-1 into issues that were not tagged at all. A file that states
+    conformance has already been through somebody's pipeline, so what it is
+    short of is usually narrow and nobody has been told."""
+    _verapdf_says(monkeypatch, _verapdf_report(UNTAGGED_RULES[:2]),
+                  passed=False)
+
+    result = assess.assess_pdf(described, validate=True)
+
+    assert result.conformant
+    assert result.verapdf is False
+    assert result.contradicted
+    assert any("declares PDF/UA-1 and does not pass it" in note
+               for note in result.notes)
+
+
+def test_a_checker_that_is_not_installed_reaches_no_verdict(
+        described, monkeypatch):
+    """The failure this whole register exists to avoid. A missing tool
+    reading as a pass would report an archive as checked when nothing ran,
+    and reading as a failure would blame the document for the laptop."""
+    monkeypatch.setattr(assess.validators, "verapdf_available", lambda: False)
+
+    result = assess.assess_pdf(described, validate=True)
+
+    assert result.verapdf is None
+    assert not result.checked
+    assert not result.contradicted
+    assert any("not on PATH" in note for note in result.notes)
+
+
+def test_a_tool_that_could_not_process_the_file_is_not_a_failing_file(
+        described, monkeypatch):
+    """verapdf exits non-zero both for a file that does not comply and for
+    one it could not read, so the verdict comes off the report and not off
+    the exit code."""
+    _verapdf_says(monkeypatch, _verapdf_report(results=[]), passed=False)
+
+    result = assess.assess_pdf(described, validate=True)
+
+    assert result.verapdf is None
+    assert any("has not been checked" in note for note in result.notes)
+
+
+def test_failed_rules_are_ordered_by_size_and_capped(described, monkeypatch):
+    _verapdf_says(monkeypatch, _verapdf_report(UNTAGGED_RULES), passed=False)
+
+    result = assess.assess_pdf(described, validate=True)
+
+    assert result.failed_clause_count == len(UNTAGGED_RULES)
+    assert len(result.failed_clauses) <= assess.MAX_FAILED_CLAUSES
+    assert result.failed_clauses[0].instances == 727
+    assert result.failed_clauses[0].label == "7.2-34"
+
+
+def test_an_instance_count_is_not_a_quantity_of_work(described, monkeypatch):
+    """1,462 failed checks across 11 rules is one untagged chapter, and 678
+    of those are content neither tagged nor marked as an artifact, which
+    tagging the document answers at once. None of it may reach a work
+    total, which is the number a journal is quoted from."""
+    _verapdf_says(monkeypatch, _verapdf_report(UNTAGGED_RULES), passed=False)
+
+    plain = assess.assess_pdf(described)
+    checked = assess.assess_pdf(described, validate=True)
+
+    assert checked.undescribed_figures == plain.undescribed_figures
+    assert checked.figures_found == plain.figures_found
+    assert any("not a quantity of work" in note for note in checked.notes)
+
+
+def test_nothing_is_checked_unless_it_is_asked_for(described, monkeypatch):
+    def _refuse():
+        raise AssertionError("verapdf ran without --validate")
+
+    monkeypatch.setattr(assess.validators, "verapdf_available", _refuse)
+
+    result = assess.assess_pdf(described)
+
+    assert result.verapdf is None
+    assert any("pass --validate" in note for note in result.notes)
+
+
+# ---------- the second checker, over HTML ----------
+
+def _page(tmp_path, name="page.html"):
+    target = tmp_path / name
+    target.write_text(
+        "<!doctype html><html lang='en'><head><title>A page</title></head>"
+        "<body><h1>A page</h1></body></html>", encoding="utf-8")
+    return target
+
+
+def test_a_page_nobody_checked_does_not_read_as_a_clean_page(tmp_path):
+    result = assess.assess_html(_page(tmp_path), validate=False)
+
+    assert result.clean is None
+    assert not result.checked
+    assert "--validate" in result.note
+
+
+def test_a_checker_that_is_not_installed_does_not_make_a_page_clean(
+        tmp_path, monkeypatch):
+    monkeypatch.setattr(assess.validators, "pa11y_available", lambda: False)
+
+    result = assess.assess_html(_page(tmp_path))
+
+    assert result.clean is None
+    assert not result.checked
+    assert "not on PATH" in result.note
+
+
+def test_findings_are_counted_by_kind_and_grouped_by_code(
+        tmp_path, monkeypatch):
+    issues = [
+        {"type": "error", "code": "WCAG2AA.1_1_1.H37",
+         "message": "Img element missing an alt attribute"},
+        {"type": "error", "code": "WCAG2AA.1_1_1.H37",
+         "message": "Img element missing an alt attribute"},
+        {"type": "warning", "code": "WCAG2AA.1_3_1.H42", "message": "Heading"},
+        {"type": "notice", "code": "WCAG2AA.4_1_2.H91", "message": "Label"},
+    ]
+    monkeypatch.setattr(assess.validators, "pa11y_available", lambda: True)
+    monkeypatch.setattr(assess.validators, "run_pa11y",
+                        lambda path: (False, issues))
+
+    result = assess.assess_html(_page(tmp_path))
+
+    assert result.clean is False
+    assert (result.errors, result.warnings, result.notices) == (2, 1, 1)
+    assert result.codes[0] == ("WCAG2AA.1_1_1.H37", 2)
+
+
+def test_the_html_pass_says_what_it_did_not_read(tmp_path, monkeypatch):
+    """A clean pa11y run is not a read of the page. What it holds, how many
+    figures it carries and how many of those set words as a picture, is
+    still owed, and a report that stopped at the checker would read as an
+    archive assessed."""
+    monkeypatch.setattr(assess.validators, "pa11y_available", lambda: True)
+    monkeypatch.setattr(assess.validators, "run_pa11y", lambda path: (True, []))
+
+    text = assess.report([], (assess.assess_html(_page(tmp_path)),))
+
+    assert "not read here" in text
+
+
+def test_html_is_listed_even_where_nothing_checked_it(tmp_path):
+    _page(tmp_path, "one.html")
+    _page(tmp_path, "two.htm")
+
+    pages = assess.assess_html_folder(tmp_path)
+
+    assert [p.path.name for p in pages] == ["one.html", "two.htm"]
+    assert not any(p.checked for p in pages)
+
+
 # ---------- work already done against work still owed ----------
 
 def test_a_described_figure_is_not_counted_as_work_owed(described):
@@ -250,20 +476,34 @@ Inline #[#set math.equation(alt: "x squared"); $x^2$] in a sentence.
 
 # ---------- it writes nothing ----------
 
-def test_assessing_a_folder_leaves_it_exactly_as_it_was(tmp_path):
+@pytest.mark.parametrize("validate", [False, True])
+def test_assessing_a_folder_leaves_it_exactly_as_it_was(tmp_path, validate):
     """The pass is pointed at a stranger's archive before any agreement
-    exists. Ingest is the destructive path; this one must not be."""
+    exists. Ingest is the destructive path; this one must not be.
+
+    Run with the validators as well, because they are subprocesses and a
+    subprocess is where a file would appear beside the one it read. Both
+    write their reports to stdout; `validate_galleys.py` is what puts one
+    on disk, and it writes into Graphion's own content rather than into a
+    folder somebody sent. Where neither tool is installed this still
+    passes, saying less, which is the same shape as the rest of the suite.
+    """
     folder = tmp_path / "sent"
     folder.mkdir()
     _png(tmp_path / "fig.png")
     shutil.copy2(_typst(tmp_path, "described", DESCRIBED), folder / "a.pdf")
     shutil.copy2(_typst(tmp_path, "plain", PLAIN), folder / "b.pdf")
+    (folder / "page.html").write_text(
+        "<!doctype html><html lang='en'><head><title>A page</title></head>"
+        "<body><h1>A page</h1></body></html>", encoding="utf-8")
 
     before = {p.name: p.read_bytes() for p in folder.iterdir()}
-    results = assess.assess_folder(folder)
+    results = assess.assess_folder(folder, validate=validate)
+    pages = assess.assess_html_folder(folder, validate=validate)
     after = {p.name: p.read_bytes() for p in folder.iterdir()}
 
     assert len(results) == 2
+    assert len(pages) == 1
     assert after == before
 
 
@@ -297,6 +537,28 @@ def test_the_summary_separates_what_is_owed_from_what_was_found(tmp_path):
 
     assert "1 figure(s) needing a description, of 2 found." in text
     assert "text as a picture" in text
+
+
+def test_the_report_does_not_call_a_file_conformant_on_its_own_say_so(
+        described):
+    """One word covering both the statement and the verdict is how an
+    archive comes to be described as conformant because it says it is."""
+    text = assess.report([assess.assess_pdf(described)])
+
+    assert "declares conformance" in text
+    assert "pass --validate" in text
+
+
+def test_the_summary_says_when_nothing_checked_the_declarations(tmp_path):
+    folder = tmp_path / "sent"
+    folder.mkdir()
+    _png(tmp_path / "fig.png")
+    shutil.copy2(_typst(tmp_path, "described", DESCRIBED), folder / "a.pdf")
+    shutil.copy2(_typst(tmp_path, "plain", PLAIN), folder / "b.pdf")
+
+    text = assess.report(assess.assess_folder(folder))
+
+    assert "Nothing was checked" in text
 
 
 def test_the_report_says_what_it_cannot_know(described):

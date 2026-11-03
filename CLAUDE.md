@@ -27,12 +27,13 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (618 functions, 660 cases once the parametrized ones expand: 142 in
+Tests (632 functions, 675 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 43 in
 `test_ingest_volume.py`, 42 in `test_lint.py`, 38 in `test_describe.py`,
-36 in `test_register.py`, 29 in `test_teacher_resources.py`,
+36 in `test_register.py`, 35 in `test_assess.py`,
+29 in `test_teacher_resources.py`,
 29 in `test_metadata_roundtrip.py`, 26 in `test_pdf_tags.py`,
-24 in `test_math_alt.py`, 21 in `test_assess.py`,
+24 in `test_math_alt.py`,
 18 in `test_acr.py`, 14 in `test_epub_a11y.py`,
 13 in `test_template_bundles.py`, 12 in `test_validate_galleys.py`,
 9 in `test_pdf_ua.py`, 8 in `test_accessibility_routes.py`,
@@ -40,7 +41,9 @@ Tests (618 functions, 660 cases once the parametrized ones expand: 142 in
 4 in `test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
 runs without Pandoc; `test_journal_filter.py` needs it, and
 `test_math_alt.py` needs it for the filter round trip alone. Both skip
-where it is absent:
+where it is absent. `test_assess.py` runs verapdf and pa11y where they are
+on PATH and says less where they are not, which is how the no-write
+contract gets tested against a real subprocess:
 
 ```bash
 python -m pytest tests/ -q
@@ -266,13 +269,42 @@ article directory, no database row, no file beside the PDF. A run over a
 folder someone sent leaves the folder as it was, and
 `test_assessing_a_folder_leaves_it_exactly_as_it_was` is what holds that.
 
-It reports in two registers on purpose. The conformance a PDF arrives with
-is a fact the file states, read off the catalog and the XMP. What
-remediation would have to produce is a count of work, reported with the
-reasoning attached so the number can be checked. What it cannot know is
-reported too, because nothing can tell a photograph of a document from a
-photograph of anything else, and `images-of-text` is the number that
-decides whether an archive is finished.
+It reports in three registers on purpose. The conformance a PDF arrives
+with is a fact the file states, read off the catalog and the XMP. What a
+checker makes of that statement is a second fact and not the same one, so
+`--validate` runs verapdf over the PDFs and pa11y over any HTML beside
+them, and `Assessment.contradicted` is the case to read first: a file that
+declares PDF/UA-1 and does not pass it has already been through somebody's
+pipeline, so what it is short of is usually narrow and nobody has been
+told. And what remediation would have to produce is a count of work,
+reported with the reasoning attached so the number can be checked. What it
+cannot know is reported too, because nothing can tell a photograph of a
+document from a photograph of anything else, and `images-of-text` is the
+number that decides whether an archive is finished.
+
+Three things keep the checker register from saying more than it found.
+A verdict is read off `validationResult[0].compliant` and not off the exit
+code, because verapdf exits non-zero both for a file that does not comply
+and for one it could not process, and only the first of those is about the
+document. A tool that is not on PATH leaves the verdict None, which is
+never counted either way; `validate_galleys.py` refuses to start in that
+case rather than recording it, because a register row is the newest answer
+for its kind and a non-answer there would bury a real one, and nothing here
+is stored so there is nothing to bury. And a failed-check count is a size,
+not a quantity of work: one plain typeset chapter of this archive fails
+1,462 checks across 11 rules, of which 727 are runs of text with no
+language and 678 are content neither tagged nor marked as an artifact, and
+tagging the document answers both at once. The rules are carried, capped at
+`MAX_FAILED_CLAUSES`, and the instances stay beside each one rather than
+being summed anywhere.
+
+Both tools write their report to stdout, which is what lets them be called
+from a pass that leaves the folder alone;
+`test_assessing_a_folder_leaves_it_exactly_as_it_was` runs with them on as
+well as off, because a subprocess is where a file would appear beside the
+one it read. `assess_html` is deliberately thin and says so on the page:
+it is pa11y's verdict and not a reading of what the page holds, and a
+clean run is not an assessed archive.
 
 **Where a structure tree exists, it decides, and the obvious subtraction is
 wrong for exactly the files that have one.** A tagged PDF states how many

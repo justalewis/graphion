@@ -34,9 +34,12 @@ Graphion/
                         ingesting it. Reads only; no article directory,
                         no database row, no file beside the PDF. Point it
                         at a folder a journal sent and it reports the
-                        conformance each file arrives with, the work
+                        conformance each file arrives with, what a checker
+                        makes of that claim under --validate, the work
                         remediation would have to produce, and what no
-                        reading of a page can settle.
+                        reading of a page can settle. verapdf and pa11y
+                        both write to stdout, which is what lets them be
+                        called from a pass that leaves the folder alone.
   math_alt.py         ← What an equation says aloud. Reads a vocabulary it
                         can read one way and declines everything else, so
                         a formula is never half read; the placeholder it
@@ -300,7 +303,12 @@ Currently 614 passing. Unit-tested:
 - `assess.py` — the two readings of a figure count and which one wins, and
   that a folder comes out of an assessment byte for byte as it went in. The
   second is the contract: this pass is pointed at an archive before any
-  agreement exists, so it must not leave anything behind.
+  agreement exists, so it must not leave anything behind, and the contract
+  test runs with the validators on as well, because a subprocess is where
+  a file would appear beside the one it read. Then the three ways a checker
+  could say something it did not find: a tool that is not installed reading
+  as a verdict, an exit code standing in for one, and a failed-check count
+  reaching a work total.
 - `describe.py` — that the queue offers exactly the figures lint counts as
   owed, that a description reaches the slot that figure keeps one in, and
   that prose typed into a web form cannot break the Markdown it lands in. A
