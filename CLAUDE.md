@@ -27,12 +27,13 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (540 functions, 563 cases once the parametrized ones expand: 142 in
+Tests (553 functions, 588 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 43 in
 `test_ingest_volume.py`, 42 in `test_lint.py`, 36 in `test_register.py`,
 29 in `test_teacher_resources.py`, 28 in `test_metadata_roundtrip.py`,
 26 in `test_pdf_tags.py`, 24 in `test_math_alt.py`, 21 in `test_assess.py`,
-14 in `test_epub_a11y.py`, 12 in `test_validate_galleys.py`,
+14 in `test_epub_a11y.py`, 13 in `test_template_bundles.py`,
+12 in `test_validate_galleys.py`,
 9 in `test_pdf_ua.py`, 5 in `test_validators.py`,
 6 in `test_standalone_html.py`, 4 in `test_journal_filter.py`,
 3 in `test_preprocessors.py`). Most of the suite
@@ -528,6 +529,39 @@ to 229 KB and five. Nothing had noticed because the EPUB renders on demand
 and none had ever been rendered in this archive, and because the HTML
 galley sits in the article directory, where a browser resolves the same
 path correctly.
+
+**The accessible markup belongs to the bundles, not to the journal that
+got remediated.** Writing Spaces had a skip link, a `<main>` landmark,
+`aria-labelledby` pointing at real headings and a licence statement; LiCS
+had none of them, named its sections with `aria-label`, and had no
+`:focus-visible` rule at all, so tabbing a galley showed nothing.
+`new_journal.py` clones LiCS, so every journal added would have started
+from the worse of the two and the remediation would have stayed where
+nothing copies it.
+
+The fix raised LiCS rather than switching which bundle is cloned, because
+that also fixes the galleys LiCS is already publishing.
+`tests/test_template_bundles.py` reads whatever is under
+`content/journals/*/template/` and checks each one, so the contract covers
+a journal added tomorrow without anybody remembering to add it. Seven of
+its eight checks would have failed on the LiCS bundle as it stood.
+
+Two of those checks pair the markup with the stylesheet, and that pairing
+is the point of them: markup without the CSS puts a visible "Skip to the
+article" link above every title, and CSS that takes it off screen with no
+`:focus` rule hides it from the one reader it exists for. `aria-label` on a
+section that has a visible heading is the other half: it replaces the
+heading text with a second copy that can drift from the first, so a section
+with a heading names itself by that heading and a footer without one keeps
+`aria-label`.
+
+Adding the licence to the LiCS template made a dormant bug live, which is
+this whole item in miniature. The LiCS journal filter still walked the
+whole document with the URL filter, and that filter inserts soft break
+points into long URLs, so `<wbr>` went through the licence href and the
+link pointed nowhere. Writing Spaces had been fixed for exactly this and
+LiCS had not. Both now walk `doc.blocks`, and a Pandoc-gated test renders
+each bundle and reads the hrefs back.
 
 **A bound issue is tagged by merging, not by re-rendering.** Adding a page to
 a pypdf writer copies the page. The structure tree, the `/ParentTree` that

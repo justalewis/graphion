@@ -224,7 +224,7 @@ Run all tests:
 python -m pytest tests/ -q
 ```
 
-Currently 563 passing. Unit-tested:
+Currently 588 passing. Unit-tested:
 
 - `cleanups.py` — every cleanup pass with input/output pairs + idempotence checks.
 - `conversion.py` metadata round-trip — YAML read/write with sanitization and field ordering.
@@ -252,6 +252,11 @@ Currently 563 passing. Unit-tested:
   the one failure here with no symptom. The declaration cases compile a real
   galley both ways, because a fallback that goes unrecorded is the shortfall
   this kind exists to count.
+- the journal template bundles — the accessibility contract every galley
+  owes, read off whatever bundles are on disk rather than a list, so a
+  journal added later is covered by it. Pairs the markup with the
+  stylesheet, since a skip link in one and not the other is worse than
+  neither.
 - `epub_a11y.py` — mostly what must not be claimed: alternative text for a
   figure nobody described, sufficiency for a page of words set as a picture,
   and conformance for either. Plus the container rule a rewrite has to keep,

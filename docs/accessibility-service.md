@@ -220,12 +220,29 @@ block.
 accessible of the two, and the remediation knowledge sits in a template that
 nothing propagates.
 
-Fixing it is a day's work and it reaches every journal added from here on.
-A skip link and a landmark are WCAG 2.4.1; `aria-label` on a section that has
-a visible heading is a worse construction than `aria-labelledby` pointing at
-it, because it replaces the heading text with a duplicate string that can
-drift. Whatever the accessible markup is, it belongs in whichever bundle
-`new_journal.py` copies, and the divergence between bundles belongs in a test.
+**Fixed, by raising the other bundle rather than changing which one is
+copied.** LiCS now carries the skip link, the `<main>` landmark,
+`aria-labelledby` pointing at its own headings, a `:focus-visible` outline
+it had never had at all, and the licence in both the metadata and the
+document. A journal added from here starts accessible whichever bundle it
+starts from, and LiCS's own galleys stopped being the less accessible ones.
+
+`tests/test_template_bundles.py` holds it, and holds it for bundles that do
+not exist yet: it reads whatever is on disk under
+`content/journals/*/template/` and checks each one, so a journal added
+tomorrow is covered without anybody remembering to add it. Of the eight
+things it checks, seven would have failed on the LiCS bundle as it stood.
+Two of them pair the markup with the stylesheet, which is the half easiest
+to get wrong in isolation: markup without the CSS puts a visible "Skip to
+the article" link above every title, and CSS that hides it with no `:focus`
+rule hides it from the keyboard reader it exists for.
+
+Adding the licence to the template also made a dormant bug live. The LiCS
+journal filter still walked the whole document with the URL filter, which
+inserts soft break points so a long citation cannot run off the measure, so
+`<wbr>` went straight through the licence href and the link pointed
+nowhere. Writing Spaces had been fixed; LiCS had not, which is this
+section's own point in miniature. Both filters now walk `doc.blocks`.
 
 ### 3.3 There was no corpus view, and no check was persisted (fixed)
 
