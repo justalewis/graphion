@@ -27,8 +27,8 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (657 functions, 709 cases once the parametrized ones expand: 142 in
-`test_pdf_ingest.py`, 96 in `test_cleanups.py`, 53 in `test_assess.py`,
+Tests (666 functions, 718 cases once the parametrized ones expand: 142 in
+`test_pdf_ingest.py`, 96 in `test_cleanups.py`, 62 in `test_assess.py`,
 43 in `test_ingest_volume.py`, 42 in `test_lint.py`, 38 in
 `test_describe.py`, 36 in `test_register.py`,
 29 in `test_teacher_resources.py`,
@@ -383,6 +383,36 @@ for. The label is what separates the two, since a caption names a figure
 and carries its number, and `lint.looks_like_a_caption` is the one place
 that test lives, as `lint.alt_is_caption` is the one place the window for
 comparing an alt with a caption lives.
+
+**A symbol font is counted in fonts, not in characters.**
+`assess._page_symbol_fonts` finds them two ways and both are needed. A
+family `pdf_ingest.symbol_family` knows catches a run that lands on
+ordinary punctuation, which no codepoint test can see: a Wingdings open
+circle extracts as an opening brace. A character in the private use area
+catches a font nobody here has seen, since that codepoint is unreadable
+whatever set it. The reading is asked of `symbol_family` rather than of
+`_SYMBOL_FAMILIES` behind it, for the reason `_carried_description` is one
+function, and `page.chars` hands back more than one character for a
+ligature, so a codepoint test written for one raises on the first `fi` it
+meets.
+
+What is reported is the font, because only the font knows which picture
+sits at which code and the font name is gone by Stage 2, so an unmapped
+family is one reading somebody does off the page and writes into
+`SYMBOL_FONT_CHARS` once, whether it sets nine characters or nine hundred.
+Reporting the characters as work would be the inflation a failed-check
+count already threatened above. Over this series 13 of 118 chapters set
+symbol type on 21 pages in two families, both already translated, and 28
+of those characters landed in the private use area.
+
+**A structure tree is what a reconstruction could be checked against, and
+nothing checks it.** All 118 originals here carry one, and `pdf_ingest`
+infers anyway, for a tagged file and an untagged one alike, so an
+assessment that said a tagged file would be read rather than inferred
+would be promising a path nobody wrote. `_add_notes` says that where a
+tree exists and says the harder thing where none does, which is the case a
+typeset back catalogue is full of and this archive never shows; the
+untagged branch is held by a test rather than by a run.
 
 **Where a structure tree exists, it decides, and the obvious subtraction is
 wrong for exactly the files that have one.** A tagged PDF states how many

@@ -97,6 +97,16 @@ PROSE_CELL = 300
 
 
 @dataclass
+class SymbolFont:
+    """One font that sets pictures where a reader expects text."""
+
+    family: str
+    characters: int = 0
+    pages: int = 0
+    known: bool = False
+
+
+@dataclass
 class FailedClause:
     """One rule of ISO 14289-1 that a checker says the file breaks."""
 
@@ -150,6 +160,8 @@ class Assessment:
     link_annotations: int = 0
     untagged_links: int = 0
     unreadable_characters: int = 0
+    symbol_pages: int = 0
+    symbol_fonts: list = field(default_factory=list)
 
     notes: list = field(default_factory=list)
 
@@ -934,6 +946,43 @@ def _read_images(assessment: Assessment, reader) -> None:
             assessment.figures += 1
 
 
+def _page_symbol_fonts(page) -> dict:
+    """Which fonts set pictures on this page, and how many characters each.
+
+    Two signals, and the second is what makes this readable for a source
+    nobody here has seen. A family `pdf_ingest.symbol_family` knows is one
+    ingest can already translate, which is work this pipeline has done. A
+    character in the private use area is unreadable whatever set it: a
+    private use codepoint means nothing to a screen reader, and Typst
+    validates PDF/UA rather than declaring it, so one of them aborts the
+    compile and costs the chapter its conformance. The font that produced
+    it is the thing a mapping has to be written against.
+
+    A Wingdings run that lands on ordinary punctuation rather than in the
+    private use area is caught by the first signal and missed by the
+    second, which is why both are here: an open circle arriving as `{` is
+    readable text as far as any codepoint test can tell.
+    """
+    import collections
+
+    found: collections.Counter = collections.Counter()
+    try:
+        chars = page.chars
+    except Exception:
+        return found
+    for char in chars:
+        font = char.get("fontname") or ""
+        text = char.get("text") or ""
+        if not text:
+            continue
+        family = font.split("+")[-1].strip().lower()
+        if pdf_ingest.symbol_family(font) is not None:
+            found[family] += 1
+        elif any(0xE000 <= ord(c) <= 0xF8FF for c in text):
+            found[family] += 1
+    return found
+
+
 def _read_text(assessment: Assessment, pdf, deep: bool) -> None:
     """Text, and what its absence costs.
 
@@ -942,14 +991,25 @@ def _read_text(assessment: Assessment, pdf, deep: bool) -> None:
     writing a description, so the two are counted apart rather than summed
     into one number that would mean nothing.
     """
+    import collections
     import lint
 
     body = []
+    # Accumulated across the pages and folded into `symbol_fonts` below, so
+    # a family is reported once with its totals rather than once a page.
+    symbols: collections.Counter = collections.Counter()
+    symbol_pages: collections.Counter = collections.Counter()
     for index, page in enumerate(pdf.pages):
         try:
             text = page.extract_text() or ""
         except Exception:
             text = ""
+        here = _page_symbol_fonts(page)
+        if here:
+            assessment.symbol_pages += 1
+            for family, count in here.items():
+                symbols[family] += count
+                symbol_pages[family] += 1
         if text.strip():
             body.append(text)
         else:
@@ -994,6 +1054,16 @@ def _read_text(assessment: Assessment, pdf, deep: bool) -> None:
     result = lint.check_unreadable_characters({}, {}, "\n".join(body))
     assessment.unreadable_characters = result.units.get(
         "unreadable-characters", 0)
+
+    assessment.symbol_fonts = [
+        # Asked of `symbol_family` rather than of the table behind it, which
+        # is the public way in and the one place that knows how a font name
+        # is matched; it is idempotent on a family already normalised.
+        SymbolFont(family=family, characters=count,
+                   pages=symbol_pages[family],
+                   known=pdf_ingest.symbol_family(family) is not None)
+        for family, count in symbols.most_common()
+    ]
 
 
 def _open(assessment: Assessment, path):
@@ -1148,6 +1218,29 @@ def _add_notes(assessment: Assessment) -> None:
             f"{assessment.unreadable_characters} character(s) in the text "
             f"are private use or control codepoints, which usually means a "
             f"symbol font. They read as nothing to a screen reader.")
+    if assessment.symbol_fonts:
+        known = [f for f in assessment.symbol_fonts if f.known]
+        unknown = [f for f in assessment.symbol_fonts if not f.known]
+        assessment.notes.append(
+            f"{assessment.symbol_pages} page(s) set type in a symbol font, "
+            f"which stores pictures at ordinary character codes: a Wingdings "
+            f"open circle extracts as an opening brace and a smiling face as "
+            f"a J, and neither reads as what the page shows.")
+        if known:
+            assessment.notes.append(
+                "Already handled: " + ", ".join(
+                    f"{f.family} ({f.characters} character(s) on {f.pages} "
+                    f"page(s))" for f in known[:6])
+                + ". Ingest translates these.")
+        if unknown:
+            assessment.notes.append(
+                "Not yet handled: " + ", ".join(
+                    f"{f.family} ({f.characters} character(s) on {f.pages} "
+                    f"page(s))" for f in unknown[:6])
+                + f". Each font is one reading somebody does off the page "
+                f"and writes down once, not a count of characters: only the "
+                f"font knows which picture sits at which code, and the font "
+                f"name is gone by the time the text reaches the cleanups.")
     if assessment.verapdf is True:
         assessment.notes.append(
             "verapdf confirms PDF/UA-1, so what the file declares holds up.")
@@ -1175,6 +1268,26 @@ def _add_notes(assessment: Assessment) -> None:
         assessment.notes.append(
             "Nothing checked the declaration above; pass --validate to run "
             "verapdf over it.")
+
+    # What the reconstruction would be built from, which is the same answer
+    # either way and has a different consequence. `pdf_ingest` infers for a
+    # tagged file and an untagged one alike, so a tree is not something it
+    # reads; it is something the result could be checked against. All 118
+    # originals in this series carry one, so the second branch is the case
+    # this archive never exercises and a typeset back catalogue is full of.
+    if assessment.tagged:
+        assessment.notes.append(
+            "Ingest would reconstruct this from the geometry of the page "
+            "rather than from the structure tree the file carries: "
+            "paragraphs from the first-line indent, heads from type size "
+            "and centring, emphasis from font names. The tree is what that "
+            "could be checked against, and nothing checks it yet.")
+    else:
+        assessment.notes.append(
+            "There is no structure tree, so the reconstruction is inferred "
+            "and the file holds nothing to check it against. Every one of "
+            "those readings is a judgement that can be wrong, so the pages "
+            "are read afterwards by somebody.")
 
     if assessment.tables is None:
         assessment.notes.append(
@@ -1303,6 +1416,37 @@ def report(assessments: list, html: tuple = ()) -> str:
         ocr = sum(a.pages_needing_ocr for a in readable)
         if ocr:
             lines.append(f"  {ocr} page(s) needing OCR before any of that.")
+        untagged = [a for a in readable if not a.tagged]
+        if untagged:
+            lines.append(
+                f"  {len(untagged)} of {len(readable)} carry no structure "
+                f"tree, so for those the reconstruction is inferred rather "
+                f"than read: paragraphs from the first-line indent, heads "
+                f"from type size and centring, emphasis from font names. "
+                f"Every one of those is a judgement that can be wrong, so "
+                f"the pages are read afterwards by somebody.")
+        symbol_pages = sum(a.symbol_pages for a in readable)
+        if symbol_pages:
+            # Folded across the folder, because a font is one reading
+            # whether it sets one page or forty, and the number a journal is
+            # quoted from is how many fonts nobody has mapped yet.
+            families: dict = {}
+            for assessment in readable:
+                for font in assessment.symbol_fonts:
+                    carried = families.setdefault(
+                        font.family, SymbolFont(font.family, known=font.known))
+                    carried.characters += font.characters
+                    carried.pages += font.pages
+            unmapped = sorted((f for f in families.values() if not f.known),
+                              key=lambda f: -f.characters)
+            lines.append(
+                f"  {symbol_pages} page(s) set type in a symbol font, across "
+                f"{len(families)} font(s), of which {len(unmapped)} are not "
+                f"mapped yet"
+                + (": " + ", ".join(f.family for f in unmapped[:6])
+                   if unmapped else "")
+                + ". A font is one reading somebody does off the page and "
+                  "writes down once, however many characters it sets.")
         lines.append(
             "  How many figures carry text as a picture is not in this "
             "total, and cannot be read off the page.")
@@ -1351,6 +1495,11 @@ def _as_dict(assessment: Assessment) -> dict:
          "description": c.description, "instances": c.instances,
          "tags": list(c.tags)}
         for c in assessment.failed_clauses
+    ]
+    out["symbol_fonts"] = [
+        {"family": f.family, "characters": f.characters, "pages": f.pages,
+         "known": f.known}
+        for f in assessment.symbol_fonts
     ]
     return out
 

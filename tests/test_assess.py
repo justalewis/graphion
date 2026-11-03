@@ -722,6 +722,127 @@ Inline #[#set math.equation(alt: "x squared"); $x^2$] in a sentence.
     assert result.described_figures == 0
 
 
+# ---------- type that is not text ----------
+
+class _Page:
+    """The least of a pdfplumber page that `_page_symbol_fonts` reads."""
+
+    def __init__(self, chars):
+        self.chars = [{"fontname": font, "text": text} for font, text in chars]
+
+
+def test_a_symbol_font_is_caught_by_its_name(tmp_path):
+    """A Wingdings open circle extracts as an opening brace and a smiling
+    face as a J. Both are ordinary punctuation, so no codepoint test sees
+    them and only the font name does."""
+    found = assess._page_symbol_fonts(
+        _Page([("ABCDEF+Wingdings-Regular", "{"),
+               ("ABCDEF+Wingdings-Regular", "J"),
+               ("GHIJKL+Minion-Regular", "a")]))
+
+    assert found == {"wingdings-regular": 2}
+
+
+def test_a_private_use_character_is_caught_whatever_set_it(tmp_path):
+    """A private use codepoint means nothing to a screen reader, and Typst
+    validates PDF/UA rather than declaring it, so one of them aborts the
+    compile. The font that produced it is what a mapping is written
+    against, known or not."""
+    found = assess._page_symbol_fonts(
+        _Page([("MNOPQR+SomeDingbats", ""),
+               ("GHIJKL+Minion-Regular", "a")]))
+
+    assert found == {"somedingbats": 1}
+
+
+def test_a_text_font_setting_text_is_not_counted(tmp_path):
+    """`SymbolMT` and `OpenSymbol` decode their bullet correctly already,
+    and remapping them would break text that is not broken."""
+    found = assess._page_symbol_fonts(
+        _Page([("ABCDEF+SymbolMT", "•"),
+               ("GHIJKL+OpenSymbol", "•"),
+               ("MNOPQR+Minion-Regular", "a")]))
+
+    assert found == {}
+
+
+def test_a_ligature_does_not_break_the_reading(tmp_path):
+    """pdfplumber hands back more than one character for a ligature, so a
+    codepoint test written for one raises on the first `fi` it meets."""
+    found = assess._page_symbol_fonts(
+        _Page([("GHIJKL+Minion-Regular", "fi")]))
+
+    assert found == {}
+
+
+def test_a_font_nobody_has_mapped_is_the_number_that_counts():
+    """Only the font knows which picture sits at which code, and the font
+    name is gone by the time the text reaches the cleanups, so each font is
+    one reading somebody does off the page and writes down once. The
+    character count is a size."""
+    assessment = assess.Assessment(
+        path=Path("x.pdf"), pages=4, symbol_pages=3,
+        symbol_fonts=[
+            assess.SymbolFont("wingdings", characters=40, pages=2, known=True),
+            assess.SymbolFont("acmedingbats", characters=900, pages=1),
+        ])
+    assess._add_notes(assessment)
+
+    notes = " ".join(assessment.notes)
+    assert "Already handled: wingdings" in notes
+    assert "Not yet handled: acmedingbats" in notes
+    assert "not a count of characters" in notes
+
+
+def test_the_summary_counts_the_fonts_and_not_the_characters():
+    """A font is one reading whether it sets one page or forty, so the
+    folder total is folded by family rather than summed per file."""
+    files = []
+    for name in ("a.pdf", "b.pdf"):
+        files.append(assess.Assessment(
+            path=Path(name), pages=4, tagged=True, symbol_pages=2,
+            symbol_fonts=[assess.SymbolFont("acmedingbats", characters=500,
+                                            pages=2)]))
+
+    text = assess.report(files)
+
+    assert "4 page(s) set type in a symbol font" in text
+    assert "1 font(s), of which 1 are not mapped yet: acmedingbats" in text
+
+
+def test_a_tree_is_something_the_result_could_be_checked_against():
+    """`pdf_ingest` infers for a tagged file and an untagged one alike, so
+    a structure tree is not something it reads. Saying it is would promise
+    a reconstruction nobody wrote."""
+    assessment = assess.Assessment(path=Path("a.pdf"), pages=4, tagged=True)
+    assess._add_notes(assessment)
+
+    notes = " ".join(assessment.notes)
+    assert "rather than from the structure tree" in notes
+    assert "nothing checks it yet" in notes
+
+
+def test_a_file_with_no_tree_has_nothing_to_check_against():
+    assessment = assess.Assessment(path=Path("a.pdf"), pages=4, tagged=False)
+    assess._add_notes(assessment)
+
+    notes = " ".join(assessment.notes)
+    assert "holds nothing to check it against" in notes
+
+
+def test_the_summary_says_what_had_to_be_inferred():
+    """A file with no structure tree is one where ingest reconstructs the
+    paragraphs, the heads and the emphasis from the geometry of the page,
+    and every one of those is a judgement that can be wrong."""
+    files = [assess.Assessment(path=Path("a.pdf"), pages=4, tagged=True),
+             assess.Assessment(path=Path("b.pdf"), pages=4, tagged=False)]
+
+    text = assess.report(files)
+
+    assert "1 of 2 carry no structure tree" in text
+    assert "inferred rather than read" in text
+
+
 # ---------- it writes nothing ----------
 
 @pytest.mark.parametrize("validate", [False, True])

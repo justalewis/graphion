@@ -608,8 +608,38 @@ the size of the job before commissioning it.
   pa11y run and markup that serves a reader. The third way is to stop
   emitting a table for these, which changes `article.md` for three chapters
   and loses the two-column arrangement the book prints.
-- Still to do: symbol-font pages, and articles whose structure had to be
-  inferred rather than read. Both are knowable and neither is counted yet.
+- ~~Symbol-font pages, and articles whose structure had to be inferred~~
+  ~~rather than read.~~ Done. `assess_pdf` counts the pages that set type in
+  a symbol font and names the fonts, and it says what the reconstruction
+  would be built from.
+
+  A symbol font stores pictures at ordinary character codes, so a Wingdings
+  open circle extracts as an opening brace and a smiling face as a J. Two
+  signals find them and both are needed: a family `pdf_ingest.symbol_family`
+  knows, which catches a run that lands on ordinary punctuation, and a
+  character in the private use area, which catches a font nobody here has
+  seen. Over this series, 13 of 118 chapters set symbol type on 21 pages,
+  in two families, both of which ingest already translates; 28 of those
+  characters landed in the private use area, where a screen reader reads
+  nothing and Typst aborts the compile.
+
+  The number a journal is quoted from is fonts, not characters. Only the
+  font knows which picture sits at which code, so each unmapped family is
+  one reading somebody does off the page and writes into
+  `SYMBOL_FONT_CHARS` once, whether it sets nine characters or nine
+  hundred. This archive has none outstanding, which is the right answer and
+  a thin demonstration; a prospect's folder is where the count earns its
+  keep.
+
+  On the second half, the honest answer turned out to be the other way
+  round. All 118 originals here carry a structure tree, and `pdf_ingest`
+  infers anyway, for a tagged file and an untagged one alike. So a tree is
+  not something ingest reads; it is something the reconstruction could be
+  checked against, and nothing checks it. The assessment says that where a
+  tree exists and says the harder thing where none does, which is the case
+  a typeset back catalogue is full of and this archive never shows.
+- Still to do, and larger than this stage: reading a structure tree where
+  one is there, instead of inferring past it.
 
 ### Stage 4: the description queue (done)
 

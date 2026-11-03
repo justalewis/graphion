@@ -316,7 +316,10 @@ Currently 614 passing. Unit-tested:
   a file would appear beside the one it read. Then the three ways a checker
   could say something it did not find: a tool that is not installed reading
   as a verdict, an exit code standing in for one, and a failed-check count
-  reaching a work total. On the HTML side, the six states an image can be
+  reaching a work total. Then the two signals that find a symbol font, and
+  that what is counted is the font rather than its characters, since only
+  the font knows which picture sits at which code. On the HTML side, the
+  six states an image can be
   in, and the two of them that are claims rather than omissions: an empty
   alt, and an alt that is word for word the caption beside it, which can
   have got there either way round. Then a table that is a page laid out in
