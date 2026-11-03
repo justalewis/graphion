@@ -27,13 +27,14 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (507 functions, 530 cases once the parametrized ones expand: 142 in
+Tests (521 functions, 544 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 43 in
-`test_ingest_volume.py`, 42 in `test_lint.py`, 34 in `test_register.py`,
+`test_ingest_volume.py`, 42 in `test_lint.py`, 36 in `test_register.py`,
 29 in `test_teacher_resources.py`, 28 in `test_metadata_roundtrip.py`,
 26 in `test_pdf_tags.py`, 24 in `test_math_alt.py`, 21 in `test_assess.py`,
-9 in `test_pdf_ua.py`, 6 in `test_standalone_html.py`,
-4 in `test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
+12 in `test_validate_galleys.py`, 9 in `test_pdf_ua.py`,
+6 in `test_standalone_html.py`, 4 in `test_journal_filter.py`,
+3 in `test_preprocessors.py`). Most of the suite
 runs without Pandoc; `test_journal_filter.py` needs it, and
 `test_math_alt.py` needs it for the filter round trip alone. Both skip
 where it is absent:
@@ -267,9 +268,14 @@ would go on reporting a finding nothing is looking for. `absent` is not
 `fail`, because an article with no `article.pdf` owes a render rather than a
 conformance failure, and folding the two would overstate remediation and
 understate what already conforms; 3 of Writing Spaces' 118 articles are in
-that state. And a validator that could not run records `warn`, since verapdf
-missing from PATH is not the galley failing, and putting either verdict on
-record would be a claim nothing checked.
+that state. And a validator that could not run records `unrun`, which is not
+an answer at all: `Standing.settled` reads the level as well as the state and
+`KindRollup` counts it among the unanswered. It recorded `warn` until a
+corpus pass was written, and writing one made the flaw plain. On a machine
+with neither tool installed, a pass over 118 articles would have reported
+every one as checked, warnings and all, with nothing having executed; the
+page would have read 118 of 118 answered. That is the failure this module
+exists to prevent, in the one place it was not looking for it.
 
 **The fourth kind reads the galley instead of being handed a verdict.**
 Lint, verapdf and pa11y pass their results to `register`;
@@ -361,6 +367,33 @@ The counts were always worked out and then written into a sentence, which is
 why `assess.py` read one back with a regex over `lint`'s own prose. It takes
 the number off `units` now, and that was the last place in this codebase
 reading a number out of its own output.
+
+**A tool that is not installed is not a result.** `validate_galleys.py`
+runs verapdf and pa11y over a journal and records each through `register`.
+It is a script rather than a route because each is a subprocess with a 120
+second timeout, so a pass over 118 articles is an hour at best; the corpus
+route runs only the two in-process checks for the same reason.
+
+It refuses to start where a tool is missing, and the reason is what makes
+refusing cheap. A recorded run is the newest run for its kind, so a pass
+with verapdf uninstalled would write "not checked" over every verdict a
+real pass had left, and `register.latest_run` would hand that back as the
+current answer: results that cost an hour to get, replaced by rows that
+answer nothing. The two validator routes in `app.py` call `available()`
+first for the same reason, since the button has the same exposure one
+article at a time.
+
+A tool that is installed and then cannot answer is a different fact and is
+recorded. A galley verapdf times out on has told you something about the
+galley; a laptop without verapdf has told you something about the laptop,
+and only the first belongs in a register about content.
+
+`--skip-current` leaves out an article whose run is already current, which
+is what makes a second pass cheap and an interrupted one resumable. A stale
+run and an `unrun` one are both back in the plan, since neither is an
+answer. The report JSON lands beside the galley exactly where the
+per-article button writes it, so the article page shows what the pass
+found.
 
 **Galleys are PDF/UA-1.** `conversion._compile_typst()` compiles every PDF
 with `pdf_standards` set from `config.PDF_UA_STANDARD`, which is what emits

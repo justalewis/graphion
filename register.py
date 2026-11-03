@@ -106,8 +106,19 @@ ABSENT = "absent"
 STALE = "stale"
 CURRENT = "current"
 
-# Worst first, which is the order a page should read them in.
-_SEVERITY = {"fail": 0, "warn": 1, "pass": 2}
+# A level a check reports when it could not run at all, as against the three
+# it reports when it did. verapdf missing from PATH is not the galley
+# failing and it is not the galley passing, and recording it as a warning
+# put it among the answers: `Standing.settled` was true, the rollup counted
+# it, and a page could read "115 of 118 answered" for a tool that had never
+# executed. That is this module's own failure, in the one place it was not
+# looking.
+UNRUN = "unrun"
+
+# Worst first, which is the order a page should read them in. `unrun` sits
+# last so that a run holding one alongside a real verdict reports the
+# verdict: it is not worse than a failure, it is not a finding at all.
+_SEVERITY = {"fail": 0, "warn": 1, "pass": 2, UNRUN: 3}
 
 
 def _worst(levels: Iterable[str]) -> Optional[str]:
@@ -288,10 +299,12 @@ def record_verapdf(article_id: int, project_path, passed: bool,
         return None
     error = (report or {}).get("error")
     if error:
-        # The tool could not speak, which is not the galley failing. Recording
-        # it as a fail would put a conformance verdict on record that nothing
-        # checked.
-        finding = Finding("verapdf", "warn", f"Not checked: {error}")
+        # The tool could not speak, which is not the galley failing and is
+        # not the galley passing either. Recorded as `unrun` so it stays out
+        # of the answered count: as a warning it read as an answer, and a
+        # pass over an archive with verapdf uninstalled would have reported
+        # every article as checked.
+        finding = Finding("verapdf", UNRUN, f"Not checked: {error}")
     elif passed:
         finding = Finding("verapdf", "pass", "Declared PDF/UA-1 and verapdf agrees.")
     else:
@@ -308,7 +321,7 @@ def record_pa11y(article_id: int, project_path, passed: bool,
     issues = list(issues or [])
     first_error = issues[0].get("error") if issues and isinstance(issues[0], dict) else None
     if first_error:
-        finding = Finding("pa11y", "warn", f"Not checked: {first_error}")
+        finding = Finding("pa11y", UNRUN, f"Not checked: {first_error}")
     elif passed:
         finding = Finding("pa11y", "pass", "pa11y found no issues.")
     else:
@@ -382,9 +395,12 @@ class Standing:
 
     @property
     def settled(self) -> bool:
-        """True only where a run is on record against the bytes on disk. Every
-        count that claims to say how an archive stands is built on this."""
-        return self.state == CURRENT
+        """True only where a run is on record against the bytes on disk and
+        it reached a verdict. Every count that claims to say how an archive
+        stands is built on this, which is why it reads both: a run whose
+        tool could not start is current and answers nothing.
+        """
+        return self.state == CURRENT and self.level != UNRUN
 
     @property
     def clean(self) -> bool:
@@ -411,8 +427,8 @@ class Standing:
             # others. What it means is spelled out in `Rollup.note()`,
             # which the page carries under the totals.
             return "older version"
-        return {"pass": "clean", "warn": "warnings", "fail": "failing"}.get(
-            self.level or "", "checked")
+        return {"pass": "clean", "warn": "warnings", "fail": "failing",
+                UNRUN: "tool not run"}.get(self.level or "", "checked")
 
 
 def standing(article_id: int, project_path, kinds: Sequence[str] = KINDS
@@ -463,6 +479,7 @@ class KindRollup:
     stale: int = 0
     never: int = 0
     absent: int = 0
+    unrun: int = 0
 
     @property
     def settled(self) -> int:
@@ -470,14 +487,17 @@ class KindRollup:
 
     @property
     def total(self) -> int:
-        return self.settled + self.stale + self.never + self.absent
+        return self.settled + self.unanswered
 
     @property
     def unanswered(self) -> int:
         """Articles this register cannot speak for. Kept separate from the
         failures on purpose: the two are both work, and only one of them is
-        work anybody has looked at."""
-        return self.stale + self.never + self.absent
+        work anybody has looked at. `unrun` belongs here and not beside the
+        warnings, which is where it sat until a corpus pass with neither
+        validator installed would have reported the whole archive as
+        answered."""
+        return self.stale + self.never + self.absent + self.unrun
 
 
 @dataclass
@@ -599,6 +619,9 @@ class Rollup:
             "A result counts here only where a run is on record against the "
             "bytes now on disk. One taken against an older version is listed "
             "as such and not as a pass, since the content has moved under it. "
+            "A check whose tool could not start is listed under Tool not run "
+            "and counts as unanswered, since it reached no verdict either "
+            "way. "
             "How many figures carry text as a picture is in neither column; "
             "that is kept by hand in each article's images-of-text field, and "
             "nothing but looking settles it. A bound issue.pdf is not an "
@@ -620,7 +643,9 @@ def rollup(articles: Iterable[dict], kinds: Sequence[str] = KINDS) -> Rollup:
             s = st[kind]
             bucket = out.kinds[kind]
             if s.state == CURRENT:
-                if s.level == "fail":
+                if s.level == UNRUN:
+                    bucket.unrun += 1
+                elif s.level == "fail":
                     bucket.fail += 1
                 elif s.level == "warn":
                     bucket.warn += 1
@@ -648,7 +673,7 @@ def rollup(articles: Iterable[dict], kinds: Sequence[str] = KINDS) -> Rollup:
 
 __all__ = [
     "CHECKED_FILE", "KINDS", "KIND_LABELS",
-    "NEVER", "ABSENT", "STALE", "CURRENT",
+    "NEVER", "ABSENT", "STALE", "CURRENT", "UNRUN",
     "Finding", "Recorded", "Standing", "KindRollup", "Rollup",
     "WorkRow", "WORK_ROWS", "Work",
     "hash_bytes", "hash_file", "hash_for",

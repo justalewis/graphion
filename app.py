@@ -1734,6 +1734,15 @@ def register_routes(app: Flask):
         if not pdf.exists():
             flash("No article.pdf to validate. Render first.", "error")
             return redirect(url_for("article_home", article_id=article_id))
+        if not validators.verapdf_available():
+            # Nothing recorded. A run is the newest run for its kind, so a
+            # row saying the tool could not start would bury whatever a real
+            # run had left and `register.latest_run` would hand that back as
+            # the current answer. A missing tool is a fact about this
+            # machine; the register is about the content.
+            flash("verapdf is not on PATH; install it from https://verapdf.org/ "
+                  "and try again. Nothing was recorded.", "warning")
+            return redirect(url_for("article_home", article_id=article_id))
         # Hashed before the run, so the register dates the verdict to the
         # bytes verapdf read rather than to whatever is there afterwards.
         content_hash = register.hash_for(article["project_path"], "verapdf")
@@ -1772,6 +1781,10 @@ def register_routes(app: Flask):
         html = Path(article["project_path"]) / "article.html"
         if not html.exists():
             flash("No article.html to audit. Render first.", "error")
+            return redirect(url_for("article_home", article_id=article_id))
+        if not validators.pa11y_available():
+            flash("pa11y is not installed; run `npm install -g pa11y` and try "
+                  "again. Nothing was recorded.", "warning")
             return redirect(url_for("article_home", article_id=article_id))
         content_hash = register.hash_for(article["project_path"], "pa11y")
         passed, issues = validators.run_pa11y(html)

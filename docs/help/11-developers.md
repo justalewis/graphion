@@ -62,6 +62,14 @@ Graphion/
   change_password.py  ← Rotate a user's password; prompts via getpass so the
                         value stays out of shell history. The DB hash is the
                         source of truth, not GRAPHION_ADMIN_PASSWORD.
+  validate_galleys.py ← Runs verapdf and pa11y over a journal's galleys and
+                        records each in the register. A script rather than a
+                        route because each tool is a subprocess with a 120s
+                        timeout, so a pass over 118 articles is an hour at
+                        best. A tool that is not installed stops the run
+                        before anything is written: a recorded run is the
+                        newest run for its kind, so writing "not checked"
+                        would bury whatever a real run had left.
   smoketest.py        ← End-to-end pipeline runner for development.
   render_pages.py     ← Rasterize a PDF to PNG (for previews).
   filters/            ← Pandoc Lua filters that belong to the app rather
@@ -210,7 +218,7 @@ Run all tests:
 python -m pytest tests/ -q
 ```
 
-Currently 530 passing. Unit-tested:
+Currently 544 passing. Unit-tested:
 
 - `cleanups.py` — every cleanup pass with input/output pairs + idempotence checks.
 - `conversion.py` metadata round-trip — YAML read/write with sanitization and field ordering.
@@ -238,6 +246,10 @@ Currently 530 passing. Unit-tested:
   the one failure here with no symptom. The declaration cases compile a real
   galley both ways, because a fallback that goes unrecorded is the shortfall
   this kind exists to count.
+- `validate_galleys.py` — the two ways a corpus pass could do damage rather
+  than nothing: writing a "tool not installed" row over a real verdict, and
+  dating a verdict to the file as it stands after the subprocess returns
+  rather than to the bytes it read.
 - `assess.py` — the two readings of a figure count and which one wins, and
   that a folder comes out of an assessment byte for byte as it went in. The
   second is the contract: this pass is pointed at an archive before any

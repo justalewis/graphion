@@ -248,17 +248,60 @@ def test_an_unknown_kind_is_refused(article):
 
 # ---------- a tool that could not speak has not passed or failed ----------
 
-def test_a_missing_validator_records_a_warning_not_a_verdict(article):
-    """verapdf absent from PATH is not the galley failing. Recording it as a
-    fail would put a conformance verdict on record that nothing checked, and
-    recording it as a pass would be worse."""
+def test_a_validator_that_could_not_run_is_not_an_answer(article):
+    """verapdf absent from PATH is not the galley failing, and it is not the
+    galley passing either.
+
+    Recording it as a warning put it among the answers: the standing read as
+    settled, the rollup counted it beside the real warnings, and a pass over
+    an archive with neither validator installed would have reported every
+    article as checked while nothing had run. That is this module's own
+    failure mode in the one place it was not watching for it, so an unrun
+    check is counted as unanswered, beside the runs that never happened.
+    """
     register.record_verapdf(article["id"], article["project_path"], False,
                             {"error": "verapdf CLI not on PATH", "passed": False})
 
     st = register.standing(article["id"], article["project_path"])["verapdf"]
 
-    assert st.level == "warn"
+    assert st.level == register.UNRUN
+    assert st.settled is False
+    assert st.clean is False
+    assert st.tone == "unknown"
+    assert st.label == "tool not run"
     assert "Not checked" in st.findings[0].summary
+
+    k = register.rollup([article]).kinds["verapdf"]
+    assert (k.clean, k.warn, k.fail) == (0, 0, 0)
+    assert k.unrun == 1
+    assert k.settled == 0
+    assert k.unanswered == 1
+    assert k.total == 1
+
+
+def test_pa11y_that_could_not_run_is_not_an_answer_either(article):
+    register.record_pa11y(article["id"], article["project_path"], False,
+                          [{"error": "pa11y not installed"}])
+
+    st = register.standing(article["id"], article["project_path"])["pa11y"]
+
+    assert st.level == register.UNRUN
+    assert st.settled is False
+
+
+def test_a_real_verdict_wins_over_an_unrun_finding_in_the_same_run(article):
+    """`unrun` sits last in the severity order on purpose: it is not worse
+    than a failure, it is not a finding at all, so a run that reached any
+    verdict reports that verdict."""
+    register.record(article["id"], "lint", [
+        register.Finding("a", register.UNRUN, "Could not run."),
+        register.Finding("b", "warn", "Something to look at."),
+    ], register.hash_for(article["project_path"], "lint"))
+
+    st = register.standing(article["id"], article["project_path"])["lint"]
+
+    assert st.level == "warn"
+    assert st.settled is True
 
 
 def test_a_real_verapdf_failure_is_recorded_as_one(article):

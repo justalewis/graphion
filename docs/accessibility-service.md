@@ -466,6 +466,12 @@ Persist every check with a timestamp and a content hash, and roll it up.
   re-runs anything, and `Work.note()` carries the coverage beside it.
   Tables are still not counted: `assess.py` can count them in a PDF, and
   nothing counts them in an article.
+- ~~verapdf and pa11y have never run against this archive, so two of the~~
+  ~~four columns read 0 of 118.~~ Half done: `validate_galleys.py` runs both
+  over a journal and records each through `register`, with `--skip-current`
+  so a second pass is cheap and an interrupted one resumes. Neither tool is
+  installed here yet, so the columns are still empty; the runner refuses to
+  start without them rather than writing a row that answers nothing.
 - Still to do: an issue is a heading on the journal page rather than a route
   of its own, so there is no per-issue permalink to hand anyone.
 

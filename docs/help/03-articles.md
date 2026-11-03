@@ -106,6 +106,14 @@ time, and it carries a button that checks every article in a journal in one
 pass. The two validators, **Validate PDF/UA** and **Audit HTML**, are
 recorded the same way when you run them per article.
 
+Those two call external tools, verapdf and pa11y, and neither is bundled.
+With the tool missing, the button tells you so and records nothing, because
+a row saying it could not run would be the newest run for that check and
+would hide whatever a real run had found. To check a whole journal at once,
+run `python validate_galleys.py <journal-slug>` from a terminal; it is a
+script rather than a button because each tool can take a couple of minutes
+an article.
+
 The PDF galley answers for itself. Every render reads the finished
 `article.pdf` back and records what it declares about its own conformance:
 whether it is tagged, whether it carries the PDF/UA-1 identifier, whether its

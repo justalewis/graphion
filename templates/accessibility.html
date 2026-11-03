@@ -57,6 +57,7 @@
         <th class="num">Failing</th>
         <th class="num">Older version</th>
         <th class="num">Not checked</th>
+        <th class="num">Tool not run</th>
         <th class="num">No file</th>
       </tr>
     </thead>
@@ -70,6 +71,7 @@
         <td class="num"><span class="tally bad">{{ k.fail }}</span></td>
         <td class="num"><span class="tally unknown">{{ k.stale }}</span></td>
         <td class="num"><span class="tally unknown">{{ k.never }}</span></td>
+        <td class="num"><span class="tally unknown">{{ k.unrun }}</span></td>
         <td class="num"><span class="tally unknown">{{ k.absent }}</span></td>
       </tr>
       {% endfor %}
