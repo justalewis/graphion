@@ -91,6 +91,9 @@ MAX_FAILED_CLAUSES = 12
 NAMED_IN_NOTES = 6
 # Likewise for pa11y, whose issues repeat one code down a page.
 MAX_NAMED_CODES = 10
+# How long a table cell has to run before it is prose rather than a value.
+# See `_is_layout_table` for what this was measured against.
+PROSE_CELL = 300
 
 
 @dataclass
@@ -263,6 +266,7 @@ class HtmlAssessment:
     media_without_captions: int = 0
     tables: int = 0
     tables_without_headers: int = 0
+    tables_laid_out: int = 0
     equations: int = 0
     links: int = 0
     links_without_text: int = 0
@@ -455,6 +459,37 @@ def _is_placeholder_alt(alt: str, src: str) -> bool:
         name, stem, _flatten(name), _flatten(stem))
 
 
+def _is_layout_table(table) -> bool:
+    """Whether this table is a page laid out in columns rather than data.
+
+    A declaration first and an inference second, the way `_is_decorative`
+    reads an image. `role="presentation"` is the markup saying so, and a
+    page that says it is taken at its word.
+
+    Graphion's own galleys do not say it, and that is a finding rather than
+    an oversight. A filter emitting the role on exactly these tables makes
+    pa11y fail them on WCAG F92, "role is presentation but contains child
+    elements with semantic meaning", and it goes on failing with the
+    `<colgroup>` suppressed, because `<tbody>`, `<tr>` and `<td>` are the
+    children it means. ARIA says the role propagates to a table's required
+    owned elements and the screen readers honour it, so the checker is
+    stricter than the spec, and `docs/accessibility-service.md` carries the
+    choice that leaves.
+
+    Where nothing is declared the cells answer, because a cell holding
+    running prose is not a value. Measured over this archive's 65 rendered
+    tables, the 41 with a header cell have a longest cell of 124 characters
+    at the median and 1,419 at the most, and the 24 with none have a
+    longest cell of 673 at the least; `PROSE_CELL` sits in that gap with
+    room on both sides. The inference is only reached for a table that has
+    no header cell at all, which is already unusual for data.
+    """
+    if (table.get("role") or "").lower() in ("presentation", "none"):
+        return True
+    return any(len(" ".join(cell.text_content().split())) >= PROSE_CELL
+               for cell in table.xpath(".//td"))
+
+
 def _named(element) -> bool:
     """Whether this element carries an accessible name of any kind."""
     if (element.get("aria-label") or "").strip():
@@ -556,8 +591,14 @@ def _read_html_elements(page: HtmlAssessment, tree) -> None:
         page.tables += 1
         # The header row is what lets a screen reader name the column a
         # cell is in, which is the same reason ingest writes a pipe table
-        # rather than loose lines.
-        if table.find(".//th") is None:
+        # rather than loose lines. A table that is a page layout owes no
+        # headers and is counted apart: reporting it as a shortfall would
+        # quote a journal for naming columns that are not columns.
+        if table.find(".//th") is not None:
+            continue
+        if _is_layout_table(table):
+            page.tables_laid_out += 1
+        else:
             page.tables_without_headers += 1
 
     # MathML is read aloud by a screen reader, so an equation marked up
@@ -749,6 +790,13 @@ def _add_html_notes(page: HtmlAssessment) -> None:
         page.notes.append(
             f"{page.tables_without_headers} of {page.tables} table(s) carry "
             f"no header cell, so nothing names the column a cell is in.")
+    if page.tables_laid_out:
+        page.notes.append(
+            f"{page.tables_laid_out} of {page.tables} table(s) hold running "
+            f"prose rather than values and are read as a page laid out in "
+            f"columns, which owes no headers. One that says so with "
+            f"role=\"presentation\" is read out of the way; one that does "
+            f"not is a table a reader is told they have entered.")
     if page.iframes_untitled:
         page.notes.append(
             f"{page.iframes_untitled} iframe(s) carry no title, so a reader "

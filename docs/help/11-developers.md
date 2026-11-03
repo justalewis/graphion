@@ -319,7 +319,11 @@ Currently 614 passing. Unit-tested:
   reaching a work total. On the HTML side, the six states an image can be
   in, and the two of them that are claims rather than omissions: an empty
   alt, and an alt that is word for word the caption beside it, which can
-  have got there either way round.
+  have got there either way round. Then a table that is a page laid out in
+  columns, which owes no headers, against one that holds data and does:
+  both the declaration and the inference, and that a long cell under a
+  header is still a data table, because length alone would take real ones
+  with it.
 - `filters/fig-alt.lua` — that a figure's description reaches the alt text
   of every writer, and that the caption stays the caption. Only running
   Pandoc shows it, so the file skips where Pandoc is absent.

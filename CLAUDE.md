@@ -27,8 +27,8 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (654 functions, 706 cases once the parametrized ones expand: 142 in
-`test_pdf_ingest.py`, 96 in `test_cleanups.py`, 50 in `test_assess.py`,
+Tests (657 functions, 709 cases once the parametrized ones expand: 142 in
+`test_pdf_ingest.py`, 96 in `test_cleanups.py`, 53 in `test_assess.py`,
 43 in `test_ingest_volume.py`, 42 in `test_lint.py`, 38 in
 `test_describe.py`, 36 in `test_register.py`,
 29 in `test_teacher_resources.py`,
@@ -340,6 +340,35 @@ uncertainty moves rather than going away. A figure set as a CSS background
 is not in the markup at all, so an archive that sets its figures that way
 reads here as one with no figures, and whether the words in a picture are
 words is as unreadable here as it is there.
+
+**A table that is a page layout owes no headers.** Three chapters here
+reproduce an annotated draft, the essay in one column and a reviewer's
+margin balloons in the other, drawn as ruled boxes of live type.
+`find_page_tables` reads those boxes as tables on purpose, because that is
+what stops the draft and the comments interleaving into each other line by
+line, and `is_bare_table_label` exists because volume 1 chapter 6 prints a
+bare "Fig 2" over each box. So 24 of the archive's 65 rendered tables carry
+no header cell, and reporting them as a 1.3.1 shortfall quotes a journal
+for naming columns that are not columns. `assess._is_layout_table` reads a
+declaration first and the cells second, the way `_is_decorative` reads an
+image: measured over those 65, the 41 with a header cell have a longest
+cell of 124 characters at the median and 1,419 at the most, and the 24 with
+none have a longest cell of 673 at the least, so `PROSE_CELL` sits at 300
+in the gap. The inference is only reached where there is no header at all.
+
+The remedy an audit would name is not available here, and that is worth
+knowing before somebody tries it again. `role="presentation"` on the table
+is what drops the semantics a screen reader announces, and a Lua filter
+emits it cleanly, but pa11y then fails all three chapters on WCAG F92,
+"role is presentation but contains child elements with semantic meaning",
+and it goes on failing with the `<colgroup>` suppressed, because `<tbody>`,
+`<tr>` and `<td>` are the remaining children. ARIA says the role propagates
+to a table's required owned elements and the screen readers honour it, so
+this is the checker being stricter than the spec; the point is that the
+galleys cannot carry the fix and keep a clean pa11y run, and which of those
+to serve is an editor's call. The alternative is to stop emitting a table
+for these at all, which changes `article.md` for three chapters and loses
+the two-column arrangement the book prints.
 
 Six states, and two of them are claims rather than omissions, so neither
 counts as work. `alt=""` says the image carries nothing a reader needs,

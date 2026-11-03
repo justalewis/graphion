@@ -592,6 +592,22 @@ the size of the job before commissioning it.
   descriptions appear twice on the page. The label is what separates them,
   since a caption names a figure and carries its number, and
   `lint.looks_like_a_caption` is the one place that test lives.
+- Open, and an editor's call rather than an engineering one: 24 of this
+  archive's 65 rendered tables are not data tables. Three chapters
+  reproduce an annotated draft, the essay in one column and a reviewer's
+  margin balloons in the other, drawn as ruled boxes of live type that
+  `find_page_tables` reads as tables so the two do not interleave. The
+  assessment counts them apart now and owes nothing for them. What the
+  galley says about them is the open part: a `<table>` with no header is
+  one a screen reader enters as data, and the remedy an audit would name,
+  `role="presentation"`, makes pa11y fail all three chapters on WCAG F92,
+  because `<tbody>`, `<tr>` and `<td>` are semantic children and it goes on
+  failing with the `<colgroup>` suppressed. ARIA says the role propagates
+  to a table's required owned elements and the screen readers honour it, so
+  the checker is stricter than the spec, and the choice is between a clean
+  pa11y run and markup that serves a reader. The third way is to stop
+  emitting a table for these, which changes `article.md` for three chapters
+  and loses the two-column arrangement the book prints.
 - Still to do: symbol-font pages, and articles whose structure had to be
   inferred rather than read. Both are knowable and neither is counted yet.
 

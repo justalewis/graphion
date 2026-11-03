@@ -514,6 +514,49 @@ def test_a_table_with_no_header_cell_names_no_column(tmp_path):
 
     assert page.tables == 2
     assert page.tables_without_headers == 1
+    assert page.tables_laid_out == 0
+
+
+def test_a_page_laid_out_in_columns_owes_no_headers(tmp_path):
+    """Three chapters here reproduce an annotated draft as ruled boxes of
+    live type, which ingest reads as tables so the draft and the margin
+    comments do not interleave. Reporting those as headerless data tables
+    would quote a journal for naming columns that are not columns."""
+    prose = "The Exploitation of Multiple Birth Children. " * 12
+    page = assess.read_html(_html(
+        tmp_path, "<table><tr><td>%s</td><td>A comment.</td></tr></table>"
+        % prose))
+
+    assert page.tables_laid_out == 1
+    assert page.tables_without_headers == 0
+
+
+def test_a_table_that_says_it_is_a_layout_is_taken_at_its_word(tmp_path):
+    """A declaration first and an inference second, the way an image's
+    `alt=""` is read. Nothing in this archive declares it, because a galley
+    that does fails pa11y on WCAG F92; a stranger's page may well, and a
+    page that says what it is should not have to be guessed at."""
+    page = assess.read_html(_html(
+        tmp_path,
+        "<table role='presentation'><tr><td>a</td><td>b</td></tr></table>"))
+
+    assert page.tables_laid_out == 1
+    assert page.tables_without_headers == 0
+
+
+def test_a_long_cell_under_a_header_is_still_a_data_table(tmp_path):
+    """Measured over this archive, a headed table's longest cell runs to
+    1,419 characters, so length alone would take real tables with it. The
+    inference is only reached where there is no header at all."""
+    prose = "A long explanation of what this row means. " * 12
+    page = assess.read_html(_html(
+        tmp_path,
+        "<table><tr><th>Stage</th><th>What it asks</th></tr>"
+        "<tr><td>Invention</td><td>%s</td></tr></table>" % prose))
+
+    assert page.tables == 1
+    assert page.tables_laid_out == 0
+    assert page.tables_without_headers == 0
 
 
 def test_media_without_a_captions_track_is_counted(tmp_path):
