@@ -50,9 +50,13 @@ class LintResult:
     units: dict = field(default_factory=dict)   # what it counted, by name
 
 
-def _ok(name: str, summary: str, units: Optional[dict] = None) -> LintResult:
-    return LintResult(name=name, level="pass", summary=summary, details=[],
-                      units=units or {})
+def _ok(name: str, summary: str, units: Optional[dict] = None,
+        details: Optional[list] = None) -> LintResult:
+    # `units` stays third, where every caller already passes it. A pass can
+    # carry details too: a zero that means nobody has looked is worth saying
+    # beside the zero.
+    return LintResult(name=name, level="pass", summary=summary,
+                      details=details or [], units=units or {})
 
 
 def _warn(name: str, summary: str, details: Optional[list] = None,
@@ -345,12 +349,102 @@ def check_unstripped_artifacts(article: dict, fm: dict, body: str) -> LintResult
     return _ok("cleanup-artifacts", "No leftover cleanup-pass artifacts.")
 
 
-_IMAGE_RE = re.compile(r"!\[(?P<alt>.*?)\]\([^)]+\)(?:\{(?P<attrs>[^}]*)\})?")
+# `src` is captured so one pattern serves the counting here and the queue in
+# `describe.py`, which needs the asset path to address a figure by and to
+# write a description back to. The alt is lazy for the reason
+# `conversion._BODY_IMAGE_RE` spells it that way: a description may carry a
+# bracket of its own.
+_IMAGE_RE = re.compile(
+    r"!\[(?P<alt>.*?)\]\((?P<src>[^)]+)\)(?:\{(?P<attrs>[^}]*)\})?")
 _ALT_ATTR_RE = re.compile(r"\balt\s*=")
 # The attribute slot `pair_figure_captions` writes a description into,
 # as against a plain `alt=`, which Pandoc passes through and which
 # `_ALT_ATTR_RE` also matches.
 _FIG_ALT_ATTR_RE = re.compile(r"\bfig-alt\s*=")
+
+# What a figure is owed, as `check_alt_text` reads it. The four are
+# exhaustive and disjoint: `figure_state` returns exactly one of them.
+MISSING = "missing"
+UNDESCRIBED = "undescribed"
+FROM_CAPTION = "caption"
+DESCRIBED = "described"
+OWED = (MISSING, UNDESCRIBED, FROM_CAPTION)
+
+# A figure and the caption printed under it are one paragraph joined by a
+# hard line break, so the caption is the line after the backslash.
+_FOLLOWING_LINE_RE = re.compile(r"\\?\s*(?P<line>[^\n]*)")
+
+
+def printed_caption(match, body: str) -> str:
+    """The caption the page printed under this figure, if it printed one.
+
+    Told from prose by the label it opens with, through
+    `conversion._CAPTION_START_RE`, which is the pattern that already knows
+    the three ways this series abbreviates one. Matching only "Figure 1"
+    reads volume 2 as a book that captions nothing, since it prints "Fig. 1."
+    over all seventeen of its captions, and volume 6 prints "Fig 1.0". That
+    cost 13 of this archive's 167 captions, twice over: the draft count
+    below could not see that the alt text was the caption, and the queue in
+    `describe.py` had nothing to put beside the field, which is the one thing
+    on that screen somebody writing a description would want.
+
+    The label alone decides it here, without `pdf_ingest.is_figure_caption`'s
+    further test that a capital follows, because the line this reads is the
+    line a hard break joined to the figure and that is the caption by
+    construction. Run over the archive, all 167 of the lines it reads
+    continue with a capital or a quotation mark and none is prose referring
+    to a figure, so the looser test costs nothing; the capital does the work
+    where the question is which lines on a page are captions at all.
+    """
+    following = body[match.end():match.end() + 2000]
+    line = _FOLLOWING_LINE_RE.match(following)
+    text = line.group("line").strip() if line else ""
+    return text if conversion._CAPTION_START_RE.match(text) else ""
+
+
+def figure_state(match, body: str) -> str:
+    """Which of the four states this figure is in.
+
+    One function, because `check_alt_text` counts these and `describe.py`
+    queues them. Two readings of one figure is the failure with no symptom:
+    the register would report a description as owed while the queue never
+    showed the figure, so nobody would write it, and where that surfaces is
+    a reader hearing nothing.
+
+    A description can sit in either slot and `conversion._carried_description`
+    knows which. A figure through `pair_figure_captions` keeps the printed
+    caption in the bracket and the description in `fig-alt`, so a reader that
+    looks only at the bracket sees a caption there and reports a description
+    as still owed that somebody has already written. Reading the bracket
+    alone is the mistake this codebase has made three times;
+    `test_both_slots_are_read_the_same_way` pins it.
+    """
+    alt = match.group("alt").strip()
+    elsewhere = conversion._carried_description(match)
+    attrs = match.group("attrs") or ""
+    if elsewhere and elsewhere != alt:
+        return DESCRIBED
+    if not elsewhere and _FIG_ALT_ATTR_RE.search(attrs):
+        # The description slot is `fig-alt` and it holds no description, so
+        # whatever the bracket carries is this figure's caption.
+        return UNDESCRIBED
+    if not alt and not _ALT_ATTR_RE.search(attrs):
+        return MISSING
+    if _UNDESCRIBED_ALT_RE.match(alt):
+        return UNDESCRIBED
+    # PDF ingest puts a figure above the caption printed under it and takes
+    # the alt text from that caption. The two are not the same thing: a
+    # caption says what a figure is called, alt text says what is in it.
+    # Counted so the editing still owed is countable.
+    # Compared on a prefix, not whole. These captions run to several hundred
+    # characters, so testing whether the alt text sits inside the caption
+    # meant testing a long string against a window that cut it off, and
+    # every long caption came back as a real description.
+    caption = printed_caption(match, body)
+    probe = alt[:80].lower()
+    if caption and probe and probe in caption.lower():
+        return FROM_CAPTION
+    return DESCRIBED
 
 
 def check_alt_text(article: dict, fm: dict, body: str) -> LintResult:
@@ -362,55 +456,22 @@ def check_alt_text(article: dict, fm: dict, body: str) -> LintResult:
     `conversion._compile_typst` instead. An explicit `{alt="..."}` attribute
     counts, since Pandoc passes that straight through to Typst.
     """
-    total = missing = undescribed = from_caption = 0
+    counts = {MISSING: 0, UNDESCRIBED: 0, FROM_CAPTION: 0, DESCRIBED: 0}
+    total = 0
     for match in _IMAGE_RE.finditer(body):
         total += 1
-        alt = match.group("alt").strip()
-        # A description can sit in either slot and one function knows which.
-        # A figure through `pair_figure_captions` keeps the printed caption
-        # in the bracket and the description in `fig-alt`, so a reader that
-        # looks only at the bracket sees a caption there and reports a
-        # description as still owed that somebody has already written.
-        # Reading the bracket alone is the mistake this codebase has made
-        # three times; `test_both_slots_are_read_the_same_way` pins it.
-        elsewhere = conversion._carried_description(match)
-        attrs = match.group("attrs") or ""
-        if elsewhere and elsewhere != alt:
-            continue
-        if not elsewhere and _FIG_ALT_ATTR_RE.search(attrs):
-            # The description slot is `fig-alt` and it holds no description,
-            # so whatever the bracket carries is this figure's caption.
-            undescribed += 1
-            continue
-        if not alt and not _ALT_ATTR_RE.search(attrs):
-            missing += 1
-            continue
-        if _UNDESCRIBED_ALT_RE.match(alt):
-            undescribed += 1
-            continue
-        # PDF ingest puts a figure above the caption printed under it and
-        # takes the alt text from that caption. The two are not the same
-        # thing: a caption says what a figure is called, alt text says what
-        # is in it. Counted so the editing still owed is countable.
-        # Compared on a prefix, not whole. These captions run to several
-        # hundred characters, so testing whether the alt text sits inside the
-        # caption meant testing a long string against a window that cut it
-        # off, and every long caption came back as a real description.
-        following = body[match.end():match.end() + 2000]
-        caption = re.match(r"\\?\s*\n?(Figure [\d.]+[^\n]*)", following)
-        probe = alt[:80].lower()
-        if caption and probe and probe in caption.group(1).lower():
-            from_caption += 1
+        counts[figure_state(match, body)] += 1
     if not total:
         return _ok("alt-text", "No images in the article.", {"figures": 0})
-    # The four are disjoint: an image is counted once and the branches above
-    # return or continue, so what is left over is described by hand.
+    missing = counts[MISSING]
+    undescribed = counts[UNDESCRIBED]
+    from_caption = counts[FROM_CAPTION]
     units = {
         "figures": total,
         "figures-no-alt": missing,
         "figures-undescribed": undescribed,
         "figures-caption-as-alt": from_caption,
-        "figures-described": total - missing - undescribed - from_caption,
+        "figures-described": counts[DESCRIBED],
     }
     if missing:
         return _fail(
@@ -597,16 +658,40 @@ def check_images_of_text(article: dict, fm: dict, body: str) -> LintResult:
     A warning rather than a failure. The galley is conformant and the
     figure is described; what is wanted is that the shortfall stays
     countable instead of being closed over by the alt text.
+
+    The field being there at all is a second record, and it is read here
+    because an empty list and no list are different answers. Absent means
+    nobody has looked; empty means somebody looked at the figures and found
+    none carrying text, which is why `conversion.write_article_metadata`
+    keeps an empty one where it drops every other empty field. Collapsing
+    the two leaves a zero nobody can read, and it leaves the lane in
+    `describe.py` unfinishable for a chapter whose honest answer is none.
+    `register.UNRUN` exists to keep the same hole out of the register: no is
+    a finding and nobody asked is not. The level does not turn on it, since
+    an unjudged chapter owes somebody's attention rather than a fix, and
+    `figures-judged-for-text` is what counts the attention already paid.
     """
+    judged = "images-of-text" in fm
     listed = fm.get("images-of-text") or []
     if isinstance(listed, str):
         listed = [listed]
     images = len(_IMAGE_RE.findall(body))
-    if not listed:
-        return _ok("images-of-text", "No figure is recorded as text.",
-                   {"images-of-text": 0})
     # The figure count belongs to `check_alt_text`, which reads the same
     # images; reporting it here too would double every figure in the rollup.
+    units = {"images-of-text": len(listed),
+             "figures-judged-for-text": images if judged else 0}
+    if not listed:
+        if not images:
+            return _ok("images-of-text", "No images in the article.", units)
+        if judged:
+            return _ok(
+                "images-of-text",
+                f"None of the {images} figure(s) carries text as a picture.",
+                units)
+        return _ok("images-of-text", "No figure is recorded as text.", units,
+                   [f"Nobody has judged these {images} figure(s) for text as "
+                    f"a picture, so the zero is an open question and not a "
+                    f"finding."])
     return _warn(
         "images-of-text",
         f"{len(listed)} of {images} figure(s) carry text as a picture.",
@@ -615,7 +700,7 @@ def check_images_of_text(article: dict, fm: dict, body: str) -> LintResult:
             "(WCAG 1.4.5); transcribing them into the chapter is the fix.",
             "Figures: " + ", ".join(str(x) for x in listed[:12]),
         ],
-        {"images-of-text": len(listed)},
+        units,
     )
 
 

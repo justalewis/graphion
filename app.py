@@ -21,6 +21,7 @@ import citation_styles
 import conversion
 import crossref
 import db
+import describe
 import jats
 import lint
 import ojs_client
@@ -1431,9 +1432,24 @@ def register_routes(app: Flask):
 
     # ---------- figures ----------
 
-    # A standalone image paragraph, which is what a DOCX drawing becomes.
+    # An image on a line of its own, which is what a DOCX drawing becomes and
+    # also what PDF ingest writes.
+    #
+    # The two differ in one character and it cost this page every figure in
+    # the archive. A reconstructed figure is the image, a hard line break, and
+    # the caption printed under it, all one paragraph, so the image line ends
+    # in a backslash; an end-of-line anchor that does not allow for it matched
+    # 34 of the 204 images here and left 38 of the 51 articles holding figures
+    # showing an empty page. `_rewrite` has to put the break back, or the
+    # caption parts from the figure it belongs to.
+    #
+    # The caption is lazy rather than a class excluding `]`, for the reason
+    # `conversion._BODY_IMAGE_RE` is: a description may carry a bracket of its
+    # own, and a class that stops at the first one does not match such a
+    # figure at all.
     _FIGURE_RE = re.compile(
-        r"^!\[(?P<caption>[^\]]*)\]\((?P<path>[^)]+)\)(?P<attrs>\{[^}]*\})?[ \t]*$",
+        r"^!\[(?P<alt>.*?)\]\((?P<path>[^)]+)\)(?P<attrs>\{[^}]*\})?"
+        r"(?P<break>\\)?[ \t]*$",
         re.MULTILINE,
     )
 
@@ -1449,9 +1465,16 @@ def register_routes(app: Flask):
         but it can only act on paragraphs that look like captions. Anything it
         cannot reach, and anything it guessed wrongly, gets corrected here.
 
-        Note that in Pandoc markdown an image's caption text is also its alt
-        text, so one field serves both; write it to describe the image, not
-        merely to label it.
+        What this page edits is the bracket and the `#fig:` label, and the
+        bracket is not always the same thing. A figure through
+        `pair_figure_captions` keeps the printed caption there and its
+        description in `fig-alt`, where Pandoc reads it; a figure that has not
+        been through it keeps one string doing both jobs. So the description
+        is shown here and written in the queue, through
+        `conversion.with_description`, which is the function that knows which
+        slot a given figure keeps it in. One writer for a description and one
+        for a caption, rather than this page overwriting a caption with a
+        description and leaving the real one in place to go on winning.
         """
         article = db.query_one(
             "SELECT a.*, j.slug AS journal_slug, j.name AS journal_name "
@@ -1472,7 +1495,7 @@ def register_routes(app: Flask):
                 i = counter["i"]
                 counter["i"] += 1
                 caption = (
-                    captions[i] if i < len(captions) else m.group("caption")
+                    captions[i] if i < len(captions) else m.group("alt")
                 ).strip()
                 label = (labels[i] if i < len(labels) else "").strip()
                 attrs = _figure_attrs_without_label((m.group("attrs") or "")[1:-1])
@@ -1481,13 +1504,16 @@ def register_routes(app: Flask):
                         label = f"#fig:{label}"
                     attrs = f"{label} {attrs}".strip()
                 suffix = f"{{{attrs}}}" if attrs else ""
-                return f"![{caption}]({m.group('path')}){suffix}"
+                # The hard break goes back on. It is what joins the figure to
+                # the caption printed under it, and dropping it leaves the
+                # caption standing as a paragraph of its own.
+                return (f"![{caption}]({m.group('path')}){suffix}"
+                        f"{m.group('break') or ''}")
 
             new_body = _FIGURE_RE.sub(_rewrite, body)
             if new_body == body:
                 flash("No figure changes to save.", "info")
             else:
-                conversion._snapshot_version(apath)
                 conversion.write_article_metadata(apath, fm, new_body)
                 flash(
                     "Figures updated and snapshotted. Render to apply.", "success"
@@ -1503,15 +1529,28 @@ def register_routes(app: Flask):
             relative = path[len("assets/"):] if path.startswith("assets/") else None
             figures.append({
                 "n": n,
-                "caption": m.group("caption"),
+                "caption": m.group("alt"),
                 "path": path,
+                "name": path.rsplit("/", 1)[-1],
                 "asset_path": relative,
                 "label": label_match.group(1) if label_match else "",
                 "other_attrs": _figure_attrs_without_label(attrs),
                 "exists": (apath / path).exists(),
+                # Read from whichever slot holds it, which is the one function
+                # that knows; shown rather than edited here.
+                "description": conversion._carried_description(m),
+                "state": lint.figure_state(m, body),
+                # A hard break means the figure and its caption are one
+                # paragraph, so Pandoc does not make it a Figure and the
+                # figures filter does not number it: the printed numbering in
+                # the caption is the numbering, and the prose refers to it.
+                "joined": bool(m.group("break")),
             })
 
-        return render_template("figures.html", article=article, figures=figures)
+        return render_template("figures.html", article=article,
+                               figures=figures,
+                               state_labels=describe.STATE_LABELS,
+                               state_tones=describe.STATE_TONE)
 
     @app.route("/articles/<int:article_id>/assets/<path:filename>")
     @login_required
@@ -2711,6 +2750,180 @@ def register_routes(app: Flask):
             template_dir=conversion.template_dir(slug),
         )
         return render_template("acr.html", journal=journal, report=report)
+
+    # ---------- the description queue ----------
+
+    # 201 of the Writing Spaces archive's 203 descriptions were written by
+    # hand in a text editor, because the page meant for the job could not see
+    # the figures: `article_figures` matches a standalone image paragraph, and
+    # a reconstructed figure carries a hard line break into its caption, so 38
+    # of the 51 articles that hold figures showed an empty page. These routes
+    # are that work with the image on the screen and the count in front of it.
+
+    def _describe_queue(journal):
+        """This journal's figures, in the order the register lists them.
+
+        One ORDER BY, shared with `accessibility_journal`, so the queue walks
+        the archive in the order its standings are read and "7 of 22" on one
+        page means the same figures as on the other.
+
+        Rebuilt on every request rather than carried in the session. The file
+        on disk is the only thing that knows what is still owed, and an editor
+        may well have `article.md` open in another window; over 118 articles
+        and 203 figures the build is half a second, which is the same trade
+        the standings already make by hashing rather than caching.
+        """
+        rows = db.query_all(
+            "SELECT a.*, i.volume, i.issue_number, i.year, i.title AS issue_title "
+            "FROM articles a LEFT JOIN issues i ON a.issue_id = i.id "
+            "WHERE a.journal_id = ? "
+            "ORDER BY i.year, i.volume, i.issue_number, a.order_in_issue, a.slug",
+            (journal["id"],),
+        )
+        articles = []
+        for row in rows:
+            article = dict(row)
+            article["issue_label"] = _issue_label(article)
+            articles.append(article)
+        return describe.build(articles)
+
+    @app.route("/accessibility/<slug>/describe")
+    @login_required
+    def describe_queue(slug):
+        """Where the descriptions stand, volume by volume, and where to start."""
+        journal = db.query_one("SELECT * FROM journals WHERE slug = ?", (slug,))
+        if not journal:
+            abort(404)
+        queue = _describe_queue(journal)
+        return render_template(
+            "describe_queue.html", journal=journal, queue=queue,
+            totals=queue.totals(),
+        )
+
+    @app.route("/accessibility/<slug>/describe/next")
+    @login_required
+    def describe_next(slug):
+        journal = db.query_one("SELECT * FROM journals WHERE slug = ?", (slug,))
+        if not journal:
+            abort(404)
+        figure = _describe_queue(journal).next_owed()
+        if figure is None:
+            flash("Every figure in this journal carries a description.", "success")
+            return redirect(url_for("describe_queue", slug=slug))
+        return redirect(url_for("describe_figure", slug=slug,
+                                article_id=figure.article_id, name=figure.name))
+
+    @app.route("/accessibility/<slug>/describe/<int:article_id>/<name>",
+               methods=["GET", "POST"])
+    @login_required
+    def describe_figure(slug, article_id, name):
+        """One figure: the image, what the page printed under it, and a field.
+
+        A figure already described opens here too. Described is not the same
+        as well described, and the 201 that were written by hand are the ones
+        most worth being able to go back to.
+        """
+        journal = db.query_one("SELECT * FROM journals WHERE slug = ?", (slug,))
+        if not journal:
+            abort(404)
+        queue = _describe_queue(journal)
+        figure = queue.find(article_id, name)
+        if figure is None:
+            abort(404)
+        following = queue.next_owed(figure)
+
+        if request.method == "POST":
+            description = request.form.get("description", "").strip()
+            if not description:
+                flash("A description cannot be empty; an image with no alt "
+                      "text costs the galley its conformance. The figure "
+                      "keeps what it had.", "error")
+                return redirect(url_for("describe_figure", slug=slug,
+                                        article_id=article_id, name=name))
+            changed = describe.write_description(
+                Path(figure.project_path), name, description)
+            if changed:
+                flash(f"Described {name}. The version before it is in "
+                      f".versions/; re-render to put it in the galleys.",
+                      "success")
+            else:
+                flash(f"{name} already said that; nothing written.", "info")
+            if request.form.get("stay"):
+                return redirect(url_for("describe_figure", slug=slug,
+                                        article_id=article_id, name=name))
+            # `following` was read before the write, which is right: this
+            # figure is the only one the write could have changed, and the
+            # queue deliberately does not hand it back.
+            if following is None:
+                flash("That was the last figure owed a description in this "
+                      "journal.", "success")
+                return redirect(url_for("describe_queue", slug=slug))
+            return redirect(url_for("describe_figure", slug=slug,
+                                    article_id=following.article_id,
+                                    name=following.name))
+
+        group = next((g for g in queue.groups
+                      if g.issue_id == figure.issue_id), None)
+        return render_template(
+            "describe_figure.html", journal=journal, figure=figure,
+            group=group, queue=queue, following=following,
+            chapter_total=sum(1 for f in queue.items
+                              if f.article_id == article_id),
+        )
+
+    @app.route("/accessibility/<slug>/images-of-text/<int:article_id>",
+               methods=["GET", "POST"])
+    @login_required
+    def images_of_text(slug, article_id):
+        """Which of one chapter's figures carry text as a picture.
+
+        The second lane, and a chapter at a time, because that is how the
+        question is answerable: what separates a photograph of a document
+        from a photograph of anything else is what the chapter is doing with
+        it, and a technical writing volume teaching a genre by showing one is
+        a chapter where the answer is most of them. Writing a description
+        satisfies WCAG 1.1.1 and leaves 1.4.5 exactly where it was.
+
+        Saving records the answer even when the answer is none. An empty list
+        and a missing field are different findings, and only the first of them
+        is an answer.
+        """
+        journal = db.query_one("SELECT * FROM journals WHERE slug = ?", (slug,))
+        if not journal:
+            abort(404)
+        article = db.query_one(
+            "SELECT * FROM articles WHERE id = ? AND journal_id = ?",
+            (article_id, journal["id"]),
+        )
+        if not article:
+            abort(404)
+        row = dict(article)
+        pair = describe.read(row)
+        if pair is None:
+            flash("That article has no article.md to read.", "error")
+            return redirect(url_for("describe_queue", slug=slug))
+        fm, body = pair
+        figures = describe.figures_in(row, fm, body)
+
+        if request.method == "POST":
+            kept = describe.record_images_of_text(
+                Path(row["project_path"]), request.form.getlist("of-text"))
+            if kept:
+                flash(f"Recorded {len(kept)} of {len(figures)} figure(s) as "
+                      f"carrying text as a picture.", "success")
+            else:
+                flash("Recorded that none of these figures carries text as a "
+                      "picture.", "success")
+            following = _describe_queue(journal).next_unjudged(article_id)
+            if following is None:
+                return redirect(url_for("describe_queue", slug=slug))
+            return redirect(url_for("images_of_text", slug=slug,
+                                    article_id=following["id"]))
+
+        return render_template(
+            "images_of_text.html", journal=journal, article=row,
+            figures=figures, judged=describe.judged(fm),
+        )
 
     @app.route("/accessibility/<slug>/run-checks", methods=["POST"])
     @login_required

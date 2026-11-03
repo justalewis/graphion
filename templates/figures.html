@@ -71,8 +71,16 @@
 <p class="fig-intro">
   Every image in this article, in the order it appears. Captions are attached
   automatically at ingest where Word left one nearby; correct anything that was
-  missed or mispaired here. The caption is also the image's alt text, so write
-  it to describe the image rather than just to number it.
+  missed or mispaired here.
+</p>
+<p class="fig-intro">
+  The field below is the bracket, which Pandoc reads as the caption. On a
+  figure that keeps a separate description it is only the caption, and the
+  description is shown beside it and written in the
+  <a href="{{ url_for('describe_queue', slug=article['journal_slug']) }}">description queue</a>,
+  which writes to whichever slot that figure keeps it in. Where a figure has
+  no separate description the one string does both jobs, so write it to
+  describe the image rather than just to number it.
 </p>
 
 {% if not figures %}
@@ -98,12 +106,28 @@
 
     <div>
       <p class="fig-n">Figure {{ fig.n }}</p>
+      <p>
+        <span class="state {{ state_tones[fig.state] }}">{{ state_labels[fig.state] }}</span>
+        <a href="{{ url_for('describe_figure', slug=article['journal_slug'],
+                            article_id=article['id'], name=fig.name) }}">Write the description</a>
+      </p>
+      {% if fig.description %}
+      <p class="help-text" style="margin-bottom: var(--space-3);">
+        Described as: {{ fig.description }}
+      </p>
+      {% endif %}
       <div class="fig-fields">
-        <label>Caption and alt text
+        <label>{% if fig.joined %}Caption{% else %}Caption and alt text{% endif %}
           <textarea name="caption" rows="3">{{ fig.caption }}</textarea>
           <span class="help-text">
+            {% if fig.joined %}
+            This figure and its caption are one paragraph, so the renderer
+            numbers nothing: the label printed in the caption is the
+            numbering the prose refers to, and it stays here.
+            {% else %}
             Do not type "Figure {{ fig.n }}." here; the renderer numbers figures
             in document order and adds that label itself.
+            {% endif %}
           </span>
         </label>
         <label>Cross-reference label

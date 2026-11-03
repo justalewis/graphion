@@ -477,10 +477,26 @@ def test_unreadable_front_matter_carries_nothing_rather_than_raising():
     assert carried == ()
 
 
-def test_an_empty_list_is_not_carried_over_nothing():
-    """An editor who emptied the list meant it to be empty, and an empty
-    list and a missing one read the same to `check_images_of_text`."""
+def test_an_empty_images_of_text_list_is_carried_because_it_is_an_answer():
+    """An editor who looked at the figures and found none carrying text as a
+    picture has answered the question, and the empty list is the answer.
+
+    Dropping it puts the chapter back among the ones nobody has opened,
+    which is where `check_images_of_text` reads a missing field, and the
+    lane in `describe.py` would then offer that chapter again for ever.
+    """
     fm, carried = conversion.carry_editor_fields(
         {}, "---\ntitle: T\nimages-of-text: []\n---\n\nProse.\n")
-    assert "images-of-text" not in fm
+    assert fm["images-of-text"] == []
+    assert carried == ("images-of-text",)
+
+
+def test_an_empty_list_is_not_carried_for_a_field_that_cannot_answer():
+    """The exception is `images-of-text` and only it. For the other carried
+    fields an empty value says nothing a missing one does not, so it is
+    dropped as every other empty field is."""
+    fm, carried = conversion.carry_editor_fields(
+        {}, "---\ntitle: T\nmath-alt: {}\nteacher-resources: ''\n---\n\nP.\n")
+    assert "math-alt" not in fm
+    assert "teacher-resources" not in fm
     assert carried == ()

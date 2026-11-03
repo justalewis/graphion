@@ -536,6 +536,8 @@ WORK_ROWS = (
     WorkRow("unreadable-characters", "Characters no reader can read"),
     WorkRow("figures-described", "Figures described by hand", "figures",
             owed=False),
+    WorkRow("figures-judged-for-text",
+            "Figures judged for text as a picture", "figures", owed=False),
     WorkRow("equations-author-described",
             "Equations an author read aloud", "equations", owed=False),
     WorkRow("equations-generated",
@@ -601,8 +603,10 @@ class Work:
             " A figure counts as carrying text as a picture only where "
             "somebody has put it on the article's images-of-text list by "
             "hand, since nothing can tell a photograph of a document from a "
-            "photograph of anything else; a zero on that line can mean that "
-            "nobody has looked yet."
+            "photograph of anything else. Read that line against the one "
+            "below counting the figures the judgement has been made about: "
+            "where the second is short of the total, a zero on the first is "
+            "partly an open question."
         )
 
 

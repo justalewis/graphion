@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Describe {{ figure.name }} | {{ figure.article_title }}{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>{{ figure.article_title }}</h1>
+  <p class="dim">
+    {{ figure.issue_label }}
+    &middot; <code>{{ figure.name }}</code>
+    &middot; figure {{ figure.position }} of {{ chapter_total }} in this chapter
+    &middot; <a href="{{ url_for('article_lint', article_id=figure.article_id) }}">Checks</a>
+    &middot; <a href="{{ url_for('describe_queue', slug=journal['slug']) }}">Queue</a>
+  </p>
+
+  <div class="desc-progress">
+    <span class="state {{ figure.tone }}">{{ figure.label }}</span>
+    {% if group %}
+    <span>{{ group.label }}: {{ group.described }} of {{ group.figures }} described</span>
+    {% endif %}
+    <span class="tally {{ 'warn' if figure.of_text else 'good' }}">
+      {% if figure.of_text %}listed as text as a picture{% else %}not listed as text as a picture{% endif %}</span>
+    <span><a href="{{ url_for('images_of_text', slug=journal['slug'], article_id=figure.article_id) }}">Judge this chapter for 1.4.5</a></span>
+  </div>
+
+  <div class="desc-split">
+    <div class="desc-image">
+      {% if figure.exists %}
+      <a href="{{ url_for('serve_asset', article_id=figure.article_id, filename=figure.served) }}" target="_blank" rel="noopener">
+        <img src="{{ url_for('serve_asset', article_id=figure.article_id, filename=figure.served) }}"
+             alt="The figure being described, as it appears in the chapter." />
+      </a>
+      <p class="dim" style="font-size: var(--text-xs); margin-bottom: 0;">
+        Opens full size in a new tab.
+      </p>
+      {% else %}
+      <p class="dim">
+        The chapter places <code>{{ figure.src }}</code> and that file is not
+        on disk, so there is nothing here to look at. A description written
+        blind would be a guess; re-ingest the chapter first.
+      </p>
+      {% endif %}
+    </div>
+
+    <div class="desc-form">
+      {% if figure.caption %}
+      {# "Caption" rather than "printed under the figure", because on a figure
+         through `pair_figure_captions` it is held in the bracket and there is
+         no caption line on the page at all. #}
+      <p class="desc-caption">
+        <strong>Caption:</strong><br />
+        {{ figure.caption }}
+      </p>
+      {% else %}
+      <p class="desc-caption dim">
+        The page printed no caption over this figure, so there is nothing to
+        start from. What it is called and what is in it are different
+        questions and only the first is ever on the page.
+      </p>
+      {% endif %}
+
+      <form method="post">
+        <label for="description"><strong>What is in the figure</strong></label>
+        <p class="dim" style="font-size: var(--text-sm); margin: var(--space-2) 0;">
+          Written for somebody who cannot see it. A caption names a figure;
+          this has to describe it. Where the figure carries words as a
+          picture, the words belong in the chapter as well: that is WCAG
+          1.4.5 and no description closes it.
+        </p>
+        <textarea class="desc-field" id="description" name="description"
+                  autofocus>{{ figure.description }}</textarea>
+        <p style="margin-top: var(--space-3);">
+          <button type="submit" class="button">
+            {% if following %}Save and next{% else %}Save{% endif %}
+          </button>
+          <button type="submit" name="stay" value="1" class="button ghost">Save and stay</button>
+          {% if following %}
+          <a class="button ghost"
+             href="{{ url_for('describe_figure', slug=journal['slug'],
+                              article_id=following.article_id, name=following.name) }}">Skip</a>
+          {% endif %}
+        </p>
+        <p class="desc-keys">
+          Ctrl+Enter saves and moves on. Saving snapshots the previous
+          <code>article.md</code> to <code>.versions/</code>; the galleys
+          carry the new text at the next render.
+        </p>
+      </form>
+    </div>
+  </div>
+</section>
+<script>
+  // Ctrl+Enter (Cmd+Enter on a Mac) submits, so a figure can be described
+  // without leaving the field. Nothing else is bound: a bare Enter has to
+  // stay a line break in a textarea.
+  document.getElementById("description").addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      this.form.requestSubmit();
+    }
+  });
+</script>
+{% endblock %}

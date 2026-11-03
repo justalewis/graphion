@@ -67,6 +67,12 @@ Graphion/
                         and AA criteria, each level backed by a named check
                         and a date. A criterion with nothing behind it
                         reads Not Evaluated, never Supports.
+  describe.py         ← The figures still owed a description, in the order
+                        somebody would write them, and the two lanes an
+                        editor works in. Reads each figure's state through
+                        lint and writes through conversion, so the queue
+                        and the register cannot disagree about what is
+                        owed. Behind /accessibility/<slug>/describe.
   epub_a11y.py        ← What the EPUB declares about what a reader can do
                         with it, worked out from the article rather than
                         asserted. Replaces Pandoc's own block, which claims
@@ -295,10 +301,15 @@ Currently 614 passing. Unit-tested:
   that a folder comes out of an assessment byte for byte as it went in. The
   second is the contract: this pass is pointed at an archive before any
   agreement exists, so it must not leave anything behind.
+- `describe.py` — that the queue offers exactly the figures lint counts as
+  owed, that a description reaches the slot that figure keeps one in, and
+  that prose typed into a web form cannot break the Markdown it lands in. A
+  newline closing an image is the shape to watch: the words are all there,
+  the galley renders, and half the description stands in the body as a
+  paragraph.
 
 Not yet unit-tested:
 
-- HTTP routes (would benefit from Flask test client + a temporary DB).
 - CrossRef / JATS XML output (could schema-validate against the official XSD).
 
 ## Deployment

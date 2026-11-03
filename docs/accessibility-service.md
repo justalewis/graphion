@@ -552,17 +552,46 @@ the size of the job before commissioning it.
 - Still to do: symbol-font pages, and articles whose structure had to be
   inferred rather than read. Both are knowable and neither is counted yet.
 
-### Stage 4: the description queue (about four days)
+### Stage 4: the description queue (done)
 
-- One figure at a time: the image, the printed caption, the current alt text,
-  the article it came from, a field.
-- Draft from the caption where there is one, which is what ingest already
-  does, and mark it as a draft so `check_alt_text` keeps counting it.
-- Keyboard-driven, with a progress count per volume.
-- Write through the existing front matter path so `carry_alt_text` protects
-  the result from the next re-ingest.
-- A second lane for `images-of-text`, which is a different judgement and
-  currently a hand-maintained list.
+~~One figure at a time, keyboard-driven, with a second lane for
+`images-of-text`.~~ `describe.py` and `/accessibility/<slug>/describe`. One
+figure at a time: the image, the caption, the current description, a field,
+and Ctrl+Enter to save and move on. Progress per volume, and a second lane
+asking the 1.4.5 question a chapter at a time.
+
+What this turned up first is why 201 of the archive's 203 descriptions were
+written in a text editor rather than in the app. The figures page matches an
+image on a line of its own, and PDF ingest writes a figure and the caption
+printed under it as one paragraph joined by a hard line break, so the
+trailing backslash put every reconstructed figure outside the pattern: 34 of
+204 images matched, and 38 of the 51 articles holding figures showed an
+empty page.
+
+The queue reads each figure's state through `lint.figure_state` and writes
+through `conversion.with_description`, rather than keeping readings of its
+own. Two readings of one figure is the failure with no symptom: the register
+reports a description as owed, the queue never shows the figure, nobody
+writes it, and where that surfaces is a reader hearing nothing. The writer
+matters for the same reason, because which slot holds a description depends
+on whether the figure has been through `pair_figure_captions`.
+
+Drafting from the caption needed nothing new: ingest already puts the
+printed caption in the alt text, and `check_alt_text` counts a figure whose
+alt text is its own caption separately, so the draft stays owed until
+somebody writes over it. That comparison only saw "Figure 1", though, and
+this series abbreviates the label three ways, so 13 of the archive's 167
+captions were invisible both to the draft count and to the field an editor
+writes beside.
+
+The second lane needed one thing: somewhere to record that a chapter was
+looked at and found clear. An absent `images-of-text` means nobody has
+looked and an empty one means somebody looked and found none, so
+`write_article_metadata` keeps that one empty field where it drops every
+other, and `carry_editor_fields` carries it. Without the distinction a
+chapter whose honest answer is none can never be finished, and its zero
+cannot be told from the zero of a chapter nobody has opened. It is the same
+hole `register.UNRUN` exists to keep out of the register.
 
 ### Then: the evidence pack (done)
 
@@ -591,9 +620,16 @@ how many it could not reach.
 article run, through the same predicates `tests/test_template_bundles.py`
 uses, so the report cannot claim a criterion that test would fail on.
 
-Roughly five to six weeks of focused work for all of it. Stages 1 and 2 come
-first because a report generated before them would be describing output that
-cannot yet back it up.
+Roughly five to six weeks of focused work for all of it. Stages 1 and 2 came
+first because a report generated before them would have been describing
+output that could not yet back it up.
+
+All four stages and the evidence pack are built. What is left is the part
+§5 is about, which is labour rather than engineering: 115 figures carrying
+text as a picture, and the transcription each one needs. Of Stage 3, three
+things are still owed and are named above: a journal's HTML, running the two
+validators over a prospect's own files rather than reading what the files
+declare, and counting symbol-font pages and inferred structure.
 
 ---
 

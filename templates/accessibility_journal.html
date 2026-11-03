@@ -9,6 +9,7 @@
     &middot; <a href="{{ url_for('accessibility_home') }}">All journals</a>
     &middot; <a href="{{ url_for('journal_home', slug=journal['slug']) }}">Journal</a>
     &middot; <a href="{{ url_for('accessibility_acr', slug=journal['slug']) }}">Conformance report</a>
+    &middot; <a href="{{ url_for('describe_queue', slug=journal['slug']) }}">Descriptions</a>
   </p>
 
   {{ reg.kind_table(rollup, kinds, kind_labels) }}

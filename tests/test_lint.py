@@ -386,7 +386,7 @@ def test_an_images_of_text_list_is_counted_without_recounting_the_figures():
     result = lint.check_images_of_text(
         {}, {"images-of-text": ["Figure 1.1", "Figure 1.2"]}, BODY_WITH_WORK)
 
-    assert result.units == {"images-of-text": 2}
+    assert result.units["images-of-text"] == 2
     assert "figures" not in result.units
 
 

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Text as a picture | {{ article['title'] }}{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>Text as a picture: {{ article['title'] }}</h1>
+  <p class="dim">
+    <code>{{ article['slug'] }}</code>
+    &middot; <a href="{{ url_for('describe_queue', slug=journal['slug']) }}">Queue</a>
+    &middot; <a href="{{ url_for('article_lint', article_id=article['id']) }}">Checks</a>
+    &middot; WCAG 1.4.5
+  </p>
+
+  <p style="max-width: 62ch;">
+    Tick every figure whose content is words set as a picture: a screenshot of
+    a document, a reproduced essay, a slide, a form. Writing a description
+    satisfies WCAG 1.1.1 and leaves this exactly where it was, because the
+    words still cannot be searched, selected, translated or reflowed, and they
+    do not answer to a reader's own type size. The fix is transcribing them
+    into the chapter, which is why the shortfall is counted rather than closed
+    over by the alt text.
+  </p>
+  <p class="dim" style="max-width: 62ch; font-size: var(--text-sm);">
+    {% if judged %}
+    This chapter has an answer on record. Saving replaces it.
+    {% else %}
+    Nobody has answered for this chapter yet. Saving with nothing ticked
+    records that none of these figures carries text, which is a finding;
+    leaving the page records nothing.
+    {% endif %}
+  </p>
+
+  {% if figures %}
+  <form method="post">
+    <div class="of-text-grid">
+      {% for f in figures %}
+      <div class="of-text-item">
+        {% if f.exists %}
+        <a href="{{ url_for('serve_asset', article_id=f.article_id, filename=f.served) }}" target="_blank" rel="noopener">
+          <img src="{{ url_for('serve_asset', article_id=f.article_id, filename=f.served) }}"
+               alt="{{ f.caption or f.name }}" />
+        </a>
+        {% else %}
+        <p class="dim">File not on disk.</p>
+        {% endif %}
+        <label>
+          <input type="checkbox" name="of-text" value="{{ f.name }}"
+                 {% if f.of_text %}checked{% endif %} />
+          Carries text as a picture
+        </label>
+        <p class="dim" style="margin: var(--space-2) 0 0;">
+          <code>{{ f.name }}</code><br />
+          {{ f.caption or "No caption printed." }}
+        </p>
+        <p style="margin: var(--space-2) 0 0;">
+          <a href="{{ url_for('describe_figure', slug=journal['slug'],
+                              article_id=f.article_id, name=f.name) }}">Description</a>
+          <span class="state {{ f.tone }}">{{ f.label }}</span>
+        </p>
+      </div>
+      {% endfor %}
+    </div>
+    <p style="margin-top: var(--space-4);">
+      <button type="submit" class="button">Save this chapter's answer</button>
+    </p>
+  </form>
+  {% else %}
+  <p class="dim">This chapter places no figures, so there is nothing to judge.</p>
+  {% endif %}
+</section>
+{% endblock %}

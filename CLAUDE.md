@@ -27,11 +27,12 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (579 functions, 614 cases once the parametrized ones expand: 142 in
+Tests (618 functions, 660 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 43 in
-`test_ingest_volume.py`, 42 in `test_lint.py`, 36 in `test_register.py`,
-29 in `test_teacher_resources.py`, 28 in `test_metadata_roundtrip.py`,
-26 in `test_pdf_tags.py`, 24 in `test_math_alt.py`, 21 in `test_assess.py`,
+`test_ingest_volume.py`, 42 in `test_lint.py`, 38 in `test_describe.py`,
+36 in `test_register.py`, 29 in `test_teacher_resources.py`,
+29 in `test_metadata_roundtrip.py`, 26 in `test_pdf_tags.py`,
+24 in `test_math_alt.py`, 21 in `test_assess.py`,
 18 in `test_acr.py`, 14 in `test_epub_a11y.py`,
 13 in `test_template_bundles.py`, 12 in `test_validate_galleys.py`,
 9 in `test_pdf_ua.py`, 8 in `test_accessibility_routes.py`,
@@ -174,6 +175,62 @@ of them described by hand and 2 still carrying a placeholder.
 `_carried_description` is what that was counted with, and the number now
 comes off `register`'s work table rather than out of a one-off script, so it
 is a reading anybody can repeat.
+
+**A figure is read one way and written one way, and `describe.py` is the
+reason that now matters.** The queue takes a figure's state from
+`lint.figure_state` and writes a description with
+`conversion.with_description`, keeping no reading of its own. Two readings of
+one figure is the failure with no symptom: the register reports a description
+as owed, the queue never shows the figure, nobody writes it, and where that
+surfaces is a reader hearing nothing. `figure_state` is `check_alt_text`'s own
+loop lifted out, so the two cannot drift; the four states are exhaustive and
+disjoint and `lint.OWED` names the three that are work.
+
+Why the queue had to exist is in the numbers. 201 of the archive's 203
+descriptions were written in a text editor, because `article_figures` could
+not see the figures: it matches an image on a line of its own, and PDF ingest
+writes a figure and the caption printed under it as one paragraph joined by a
+hard line break, so the trailing backslash put every reconstructed figure
+outside the pattern. 34 of 204 images matched and 38 of the 51 articles
+holding figures showed an empty page. The caption group was also a class
+excluding `]`, which drops a description carrying a bracket, for the reason
+`_BODY_IMAGE_RE` is lazy. `_rewrite` has to put the hard break back, or the
+caption parts from the figure it belongs to. The two pages write different
+slots on purpose now: `article_figures` owns the bracket and the `#fig:`
+label, the queue owns the description, and only the queue knows which slot a
+given figure keeps one in.
+
+`lint.printed_caption` is the caption an editor sees beside the field, and it
+reads the label through `conversion._CAPTION_START_RE`, which knows all three
+of this series' abbreviations. Matching only "Figure 1" lost 13 of the
+archive's 167 captions, twice over: `check_alt_text` could not see that the
+alt text was still the printed caption, and the queue had nothing to put on
+the screen. `describe.caption_of` adds the one case that is not a line on the
+page at all, a figure through `pair_figure_captions`, where Pandoc reads the
+bracket as the caption; saying the page printed none there hides the caption
+in the one slot the editor is not writing in. 168 of 203 figures have a
+caption to show.
+
+**A description is prose typed into a web form and it lands in Markdown.** A
+newline closes the image and leaves the rest standing in the body as a
+paragraph, and `](` closes the link early. Neither fails a check: the words
+are all there and the galley renders. `conversion._single_line` collapses the
+whitespace and spaces the `](` apart. Both substitutions read the same aloud,
+which is the test any of them has to pass; the attribute slot also turns a
+quotation mark and a closing brace into something that cannot end it.
+
+**An empty `images-of-text` is a record and a missing one is not.** Absent
+means nobody has looked at the chapter's figures; empty means somebody looked
+and found none carrying text as a picture. `conversion._KEEP_WHEN_EMPTY` is
+why `write_article_metadata` keeps that one empty field where it drops every
+other, `carry_editor_fields` carries it through a re-ingest, and
+`check_images_of_text` reads the difference and counts
+`figures-judged-for-text` beside it so the rollup can say how much of the zero
+is an open question. Collapsing the two leaves a number nobody can read, and
+it leaves the lane unfinishable for a chapter whose honest answer is none: it
+is the same hole `register.UNRUN` exists to keep out of the register, where no
+is a finding and nobody asked is not. 37 of the 50 chapters holding figures
+have an answer on record.
 
 Three fields in the front matter have that exposure too, and
 `conversion.carry_editor_fields()` carries them for the same reason, from
@@ -1187,8 +1244,13 @@ Anything touching Claude (`stylize.py`, `llm_cleanup.py`) requires
 
 ## Layout notes
 
-- `app.py` (2821 lines) is the whole HTTP surface. `conversion.py` (2593) is the
+- `app.py` (3152 lines) is the whole HTTP surface. `conversion.py` (2687) is the
   pipeline. Those two hold most of the complexity.
+- `describe.py` (422) is the description queue behind
+  `/accessibility/<slug>/describe`. It owns no judgement of its own: a
+  figure's state comes from `lint.figure_state` and a description is
+  written by `conversion.with_description`, so what it holds is the order
+  the work is done in and the counts an editor works to.
 - `epub_a11y.py` is the only module that touches EPUB package structure,
   for the same reason `pdf_tags.py` is the only one that touches PDF
   object structure: rewriting a container is a thing to do in one place.

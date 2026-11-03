@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Descriptions | {{ journal['name'] }}{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>Descriptions: {{ journal['name'] }}</h1>
+  <p class="dim">
+    <a href="{{ url_for('accessibility_journal', slug=journal['slug']) }}">Register</a>
+    &middot; <a href="{{ url_for('accessibility_acr', slug=journal['slug']) }}">Conformance report</a>
+    &middot; WCAG 1.1.1 and 1.4.5
+  </p>
+
+  <div class="desc-progress">
+    <span>{{ totals.figures }} figure(s)</span>
+    <span class="tally {{ 'warn' if totals.owed else 'good' }}">{{ totals.owed }} owed a description</span>
+    <span class="tally good">{{ totals.described }} described</span>
+    <span class="tally {{ 'warn' if totals.of_text else 'good' }}">{{ totals.of_text }} carrying text as a picture</span>
+    <span>in {{ totals.articles }} article(s) across {{ queue.groups|length }} issue(s)</span>
+  </div>
+
+  {% if totals.owed %}
+  <p style="margin-top: var(--space-4);">
+    <a class="button" href="{{ url_for('describe_next', slug=journal['slug']) }}">Describe the next figure</a>
+  </p>
+  {% else %}
+  <p class="dim" style="margin-top: var(--space-4);">
+    Every figure in this journal carries a description. A figure can still be
+    opened from the table below: described is not the same as well described.
+  </p>
+  {% endif %}
+
+  <h2 class="group-head">By issue</h2>
+  <table class="reg-table">
+    <thead>
+      <tr>
+        <th>Issue</th>
+        <th class="num">Figures</th>
+        <th class="num">Owed</th>
+        <th class="num">Described</th>
+        <th class="num">Text as a picture</th>
+        <th class="num">Chapters judged</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for g in queue.groups %}
+      <tr>
+        <td class="reg-kind">
+          {% if g.issue_id %}
+          <a href="{{ url_for('accessibility_issue', slug=journal['slug'], issue_id=g.issue_id) }}">{{ g.label }}</a>
+          {% else %}{{ g.label }}{% endif %}
+        </td>
+        <td class="num">{{ g.figures }}</td>
+        <td class="num"><span class="tally {{ 'warn' if g.owed else 'good' }}">{{ g.owed }}</span></td>
+        <td class="num"><span class="tally good">{{ g.described }}</span></td>
+        <td class="num"><span class="tally {{ 'warn' if g.of_text else 'good' }}">{{ g.of_text }}</span></td>
+        <td class="num">{{ g.judged }} of {{ g.articles }}</td>
+        <td>
+          {% if g.first_owed %}
+          <a href="{{ url_for('describe_figure', slug=journal['slug'],
+                              article_id=g.first_owed.article_id,
+                              name=g.first_owed.name) }}">Start here</a>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h2 class="group-head">Text as a picture: chapters with no answer on record</h2>
+  <p class="dim" style="font-size: var(--text-sm);">
+    A different question from whether a figure is described, and a chapter at
+    a time, because what separates a photograph of a document from a
+    photograph of anything else is what the chapter is doing with it. Saving a
+    chapter records the answer even where the answer is none; until somebody
+    saves, its zero is an open question and not a finding.
+  </p>
+  {% if totals.unjudged %}
+  <table class="reg-table">
+    <thead>
+      <tr><th>Chapter</th><th class="num">Figures</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for a in totals.unjudged %}
+      <tr>
+        <td>
+          <a href="{{ url_for('images_of_text', slug=journal['slug'], article_id=a['id']) }}">{{ a['title'] }}</a>
+          <br /><code class="dim" style="font-size: var(--text-xs);">{{ a['slug'] }}</code>
+        </td>
+        <td class="num">{{ a['figures'] }}</td>
+        <td><a href="{{ url_for('images_of_text', slug=journal['slug'], article_id=a['id']) }}">Judge these</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="dim">Every chapter holding figures has an answer on record.</p>
+  {% endif %}
+
+  <div class="reg-note">{{ queue.note() }}</div>
+</section>
+{% endblock %}

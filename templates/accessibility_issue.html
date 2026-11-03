@@ -8,6 +8,7 @@
     {{ journal['name'] }}
     &middot; <a href="{{ url_for('accessibility_journal', slug=journal['slug']) }}">All issues</a>
     &middot; <a href="{{ url_for('accessibility_acr', slug=journal['slug']) }}">Conformance report</a>
+    &middot; <a href="{{ url_for('describe_queue', slug=journal['slug']) }}">Descriptions</a>
     {% if issue['title'] %}&middot; {{ issue['title'] }}{% endif %}
   </p>
 

@@ -322,31 +322,22 @@ def carry_alt_text(body: str, previous: str) -> tuple:
         described = kept.get(match.group("src"))
         if described is None:
             return match.group(0)
-        attrs = match.group("attrs") or ""
-        bracket = match.group("alt")
-        existing = _FIG_ALT_RE.search(attrs)
-        quoted = described.replace('"', "'")
-        if existing:
-            if existing.group("text").strip() == quoted.strip():
-                return match.group(0)
-            attrs = (attrs[:existing.start()] + f'fig-alt="{quoted}"'
-                     + attrs[existing.end():])
-        elif attrs and _CAPTION_START_RE.match(bracket.strip()):
-            # The bracket is this figure's caption, so the description has
-            # nowhere to go but an attribute of its own.
-            attrs = attrs[:-1].rstrip() + f' fig-alt="{quoted}"' + "}"
-        else:
-            if bracket == described:
-                return match.group(0)
-            bracket = described
-        carried += 1
-        return f"![{bracket}]({match.group('src')}){attrs}"
+        rebuilt = with_description(match.group("alt"), match.group("src"),
+                                   match.group("attrs") or "", described)
+        if rebuilt != match.group(0):
+            carried += 1
+        return rebuilt
 
     return _BODY_IMAGE_RE.sub(swap, body), carried
 
 
 def _carried_description(match) -> str:
-    """The description this image keeps, from whichever slot holds it."""
+    """The description this image keeps, from whichever slot holds it.
+
+    Takes a match from either `_BODY_IMAGE_RE` or `lint._IMAGE_RE`, which
+    disagree about whether `attrs` includes its braces and agree about
+    everything this reads.
+    """
     attrs = match.group("attrs") or ""
     attr = _FIG_ALT_RE.search(attrs)
     if attr and _is_described(attr.group("text")):
@@ -359,12 +350,83 @@ def _carried_description(match) -> str:
     return bracket if _is_described(bracket) else ""
 
 
+def _single_line(text: str) -> str:
+    """A description reduced to what Markdown image syntax can hold.
+
+    Whitespace is collapsed because the alt text is one line inside a
+    paragraph: a newline in it closes the image and leaves the rest of the
+    description standing in the body as prose. `](` is spaced apart because
+    it would close the link early. Both read the same aloud, which is the
+    test any substitution here has to pass.
+    """
+    return " ".join((text or "").split()).replace("](", "] (")
+
+
+def with_description(alt: str, src: str, attrs: str, description: str) -> str:
+    """One image's Markdown, carrying `description` in the slot that holds one.
+
+    `attrs` is the attribute block with its braces, or empty. Returns the
+    image unchanged where it already says this.
+
+    One writer, for the reason `_carried_description` is one reader. Which
+    slot it is depends on the figure: `pair_figure_captions` leaves the
+    printed caption in the bracket and moves the description to `fig-alt`,
+    where Pandoc reads it, so writing to the bracket on such a figure
+    overwrites the caption and leaves the stale description in place to go on
+    winning. `16-vankooten` published "Undescribed figure from page 7 of the
+    source" over a figure an editor had described in full, with the
+    description standing where its caption should have been, which is what
+    one slot-blind writer costs.
+
+    `carry_alt_text` puts a description back after a re-ingest and
+    `describe.py` writes one an editor has just typed. Both come here.
+    """
+    bracket = alt
+    description = _single_line(description)
+    existing = _FIG_ALT_RE.search(attrs)
+    # The attribute is quoted and brace-delimited, so a quotation mark or a
+    # closing brace in the description would end it early; the bracket slot
+    # below holds both safely.
+    quoted = description.replace('"', "'").replace("}", ")")
+    if existing:
+        if existing.group("text").strip() == quoted.strip():
+            return f"![{bracket}]({src}){attrs}"
+        attrs = (attrs[:existing.start()] + f'fig-alt="{quoted}"'
+                 + attrs[existing.end():])
+    elif attrs and _CAPTION_START_RE.match(bracket.strip()):
+        # The bracket is this figure's caption, so the description has
+        # nowhere to go but an attribute of its own.
+        attrs = attrs[:-1].rstrip() + f' fig-alt="{quoted}"' + "}"
+    else:
+        bracket = description
+    return f"![{bracket}]({src}){attrs}"
+
+
 # Front matter an editor wrote that ingest cannot read off the page and that
 # no later stage puts back. The volume facts are deliberately not here:
 # `ingest_volume.py` stamps those, and it stamps them after cleaning for
 # exactly this reason, so carrying them here would make a stale value look
 # like a recovered one.
 CARRIED_FIELDS = ("images-of-text", "teacher-resources", "math-alt")
+
+# A field whose emptiness is a record rather than nothing. An absent
+# `images-of-text` means nobody has looked at the figures; an empty one means
+# somebody looked and found none carrying text as a picture, and those are
+# different answers. Every other empty field is dropped, because for those
+# the two are the same thing. `lint.check_images_of_text` reads the
+# difference and the lane in `describe.py` is what writes it; without it a
+# chapter whose honest answer is none can never be finished, and its zero
+# cannot be told from the zero of a chapter nobody has opened.
+_KEEP_WHEN_EMPTY = ("images-of-text",)
+
+
+def _worth_keeping(name: str, value) -> bool:
+    """Whether this front matter value is worth writing down."""
+    if value is None or value == "":
+        return False
+    if value == [] or value == {}:
+        return name in _KEEP_WHEN_EMPTY
+    return True
 
 
 def carry_editor_fields(front_matter: dict, previous: str) -> tuple:
@@ -417,11 +479,12 @@ def carry_editor_fields(front_matter: dict, previous: str) -> tuple:
     carried = []
     for field_name in CARRIED_FIELDS:
         value = before.get(field_name)
-        if value in (None, "", [], {}):
+        if not _worth_keeping(field_name, value):
             continue
-        if front_matter.get(field_name) in (None, "", [], {}):
-            front_matter[field_name] = value
-            carried.append(field_name)
+        if _worth_keeping(field_name, front_matter.get(field_name)):
+            continue
+        front_matter[field_name] = value
+        carried.append(field_name)
     return front_matter, tuple(carried)
 
 
@@ -649,6 +712,10 @@ def write_article_metadata(article_path: Path, fm: dict, body: str | None = None
     (title first, then authors, etc.) so files diff cleanly between saves.
     Single-line scalar fields are sanitized (interior whitespace collapsed)
     to avoid round-trip corruption.
+
+    A field with nothing in it is left out, with the one exception
+    `_KEEP_WHEN_EMPTY` names: `images-of-text` empty is an editor's answer
+    and `images-of-text` absent is nobody having looked.
     """
     import yaml
     if body is None:
@@ -656,13 +723,13 @@ def write_article_metadata(article_path: Path, fm: dict, body: str | None = None
 
     ordered: dict = {}
     for k in _FIELD_ORDER:
-        if k in fm and fm[k] not in (None, "", []):
+        if k in fm and _worth_keeping(k, fm[k]):
             v = fm[k]
             if k in _SINGLE_LINE_FIELDS:
                 v = _sanitize_scalar(v)
             ordered[k] = v
     for k, v in fm.items():
-        if k not in ordered and v not in (None, "", []):
+        if k not in ordered and _worth_keeping(k, v):
             if k in _SINGLE_LINE_FIELDS:
                 v = _sanitize_scalar(v)
             ordered[k] = v
