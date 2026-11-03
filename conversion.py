@@ -1310,6 +1310,7 @@ def render_html(article_path: Path, journal_slug: str, part: str = "chapter") ->
         extra.append(f"--lua-filter={fig_filter}")
     if lua_filter.exists():
         extra.append(f"--lua-filter={lua_filter}")
+    extra.extend(_fig_alt_filter_args())
     extra.extend(_citation_args(article_path, journal_slug))
 
     if css.exists():
@@ -1440,6 +1441,30 @@ def _fill_typst_authors(typ_text: str, fm: dict) -> str:
         typ_text = typ_text.replace(sentinel, f'"{_typst_escape_string(value)}"')
 
     return typ_text
+
+
+FIG_ALT_FILTER = BASE_DIR / "filters" / "fig-alt.lua"
+
+
+def _fig_alt_filter_args() -> list:
+    """The Pandoc arguments that put a figure's description in its alt text.
+
+    A figure through `pair_figure_captions` keeps the caption in the bracket
+    and the description in `fig-alt`, and nothing downstream read that.
+    Pandoc 3.11 writes it to HTML as `data-fig-alt`, which no assistive
+    technology looks at, and its Typst writer drops it, so the caption stood
+    as the alt text in every galley and the description reached nobody. The
+    archive holds one article in that shape and the description queue writes
+    the slot for every paired figure, so it would have been general rather
+    than rare.
+
+    App level for the reason `math-alt.lua` is, and every path that renders
+    Markdown through Pandoc needs it: HTML, EPUB, the Typst galley, and the
+    issue front matter.
+    """
+    if not FIG_ALT_FILTER.exists():
+        return []
+    return [f"--lua-filter={FIG_ALT_FILTER}"]
 
 
 MATH_ALT_FILTER = BASE_DIR / "filters" / "math-alt.lua"
@@ -1641,6 +1666,7 @@ def render_pdf(article_path: Path, journal_slug: str, part: str = "chapter") -> 
         extra.append(f"--lua-filter={fig_filter}")
     if lua_filter.exists():
         extra.append(f"--lua-filter={lua_filter}")
+    extra.extend(_fig_alt_filter_args())
     extra.extend(_math_alt_filter_args())
     extra.extend(_citation_args(article_path, journal_slug))
     pypandoc.convert_file(
@@ -1835,6 +1861,7 @@ def render_epub(article_path: Path, journal_slug: str) -> Path:
     fig_filter = tpl / "figures-filter.lua"
     if fig_filter.exists():
         extra.extend(["--lua-filter", str(fig_filter)])
+    extra.extend(_fig_alt_filter_args())
     if css.exists():
         extra.extend(["--css", str(css)])
     # Per-article CSS override: additive after the journal CSS
@@ -2193,7 +2220,8 @@ def _md_to_typst_fragment(md_text: Optional[str]) -> str:
         return ""
     fragment = pypandoc.convert_text(
         md_text, to="typst", format="markdown",
-        extra_args=["--wrap=preserve"] + _math_alt_filter_args(),
+        extra_args=(["--wrap=preserve"] + _fig_alt_filter_args()
+                    + _math_alt_filter_args()),
     )
     return _fill_math_alt(fragment)
 

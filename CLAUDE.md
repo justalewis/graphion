@@ -27,22 +27,23 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (632 functions, 675 cases once the parametrized ones expand: 142 in
-`test_pdf_ingest.py`, 96 in `test_cleanups.py`, 43 in
-`test_ingest_volume.py`, 42 in `test_lint.py`, 38 in `test_describe.py`,
-36 in `test_register.py`, 35 in `test_assess.py`,
+Tests (654 functions, 706 cases once the parametrized ones expand: 142 in
+`test_pdf_ingest.py`, 96 in `test_cleanups.py`, 50 in `test_assess.py`,
+43 in `test_ingest_volume.py`, 42 in `test_lint.py`, 38 in
+`test_describe.py`, 36 in `test_register.py`,
 29 in `test_teacher_resources.py`,
 29 in `test_metadata_roundtrip.py`, 26 in `test_pdf_tags.py`,
 24 in `test_math_alt.py`,
 18 in `test_acr.py`, 14 in `test_epub_a11y.py`,
 13 in `test_template_bundles.py`, 12 in `test_validate_galleys.py`,
 9 in `test_pdf_ua.py`, 8 in `test_accessibility_routes.py`,
-6 in `test_standalone_html.py`, 5 in `test_validators.py`,
+7 in `test_fig_alt.py`, 6 in `test_standalone_html.py`,
+5 in `test_validators.py`,
 4 in `test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
-runs without Pandoc; `test_journal_filter.py` needs it, and
-`test_math_alt.py` needs it for the filter round trip alone. Both skip
-where it is absent. `test_assess.py` runs verapdf and pa11y where they are
-on PATH and says less where they are not, which is how the no-write
+runs without Pandoc; `test_journal_filter.py` and `test_fig_alt.py` need
+it, and `test_math_alt.py` needs it for the filter round trip alone. All
+skip where it is absent. `test_assess.py` runs verapdf and pa11y where they
+are on PATH and says less where they are not, which is how the no-write
 contract gets tested against a real subprocess:
 
 ```bash
@@ -214,6 +215,32 @@ bracket as the caption; saying the page printed none there hides the caption
 in the one slot the editor is not writing in. 168 of 203 figures have a
 caption to show.
 
+**And until `filters/fig-alt.lua` existed, the description in that slot
+reached no galley at all.** Pandoc 3.11 writes a `fig-alt` attribute into
+HTML as `data-fig-alt`, which no assistive technology reads, and its Typst
+writer drops it, so every writer took the alt text from the bracket. On a
+figure through `pair_figure_captions` the bracket is the printed caption,
+so the HTML, EPUB and PDF galleys all published the caption as the alt
+text, with `<figcaption aria-hidden="true">` hiding the visible caption
+because it duplicated it: a reader heard what the figure was called, once,
+and never what was in it. `an-introduction-to-and-strategies-for-multimodal-composing`
+is the one article in the archive in that shape, and its `article.pdf`
+carries the caption in the `/Alt` of its eighth figure to this day. It was
+about to stop being rare, because the description queue writes `fig-alt`
+for every paired figure.
+
+The filter moves the attribute's value into the image's own inlines, which
+is what every writer turns into alt text, and leaves the Figure's caption
+alone, which is what becomes the `<figcaption>` or the printed caption.
+Pandoc then drops the `aria-hidden` by itself, since the two no longer say
+the same thing. It is app level beside `math-alt.lua` by the same test: how
+a caption is set is a journal's design and whether a figure can be read
+aloud is not. Every path that renders Markdown through Pandoc needs it, so
+`_fig_alt_filter_args()` is called from `render_html`, `render_pdf`,
+`render_epub` and `_md_to_typst_fragment`. An empty attribute is dropped
+and declines rather than writing an empty alt, which would cost the galley
+its conformance.
+
 **A description is prose typed into a web form and it lands in Markdown.** A
 newline closes the image and leaves the rest standing in the body as a
 paragraph, and `](` closes the link early. Neither fails a check: the words
@@ -302,9 +329,31 @@ Both tools write their report to stdout, which is what lets them be called
 from a pass that leaves the folder alone;
 `test_assessing_a_folder_leaves_it_exactly_as_it_was` runs with them on as
 well as off, because a subprocess is where a file would appear beside the
-one it read. `assess_html` is deliberately thin and says so on the page:
-it is pa11y's verdict and not a reading of what the page holds, and a
-clean run is not an assessed archive.
+one it read.
+
+**`assess.read_html` reads a page the way `assess_pdf` reads a PDF**, and
+reading is not behind `--validate`, because it costs what reading a file
+costs. HTML states itself more plainly: an `<img>` either carries an `alt`
+or it does not, so there is no structure tree to disagree with a raster
+count and these numbers are exact where the PDF's are a reading. The
+uncertainty moves rather than going away. A figure set as a CSS background
+is not in the markup at all, so an archive that sets its figures that way
+reads here as one with no figures, and whether the words in a picture are
+words is as unreadable here as it is there.
+
+Six states, and two of them are claims rather than omissions, so neither
+counts as work. `alt=""` says the image carries nothing a reader needs,
+which is right for a rule and wrong for a figure, and an archive that
+emptied every alt to quiet a checker looks identical to a described one on
+a count of failures alone. And an alt that is word for word the caption
+beside it can have got there either way round: Pandoc makes a `<figure>`
+of a lone image and uses its alt as the `<figcaption>`, which is how 31 of
+this archive's own hand-written descriptions appear twice on the page.
+Counting those as owed would quote a journal for work it has already paid
+for. The label is what separates the two, since a caption names a figure
+and carries its number, and `lint.looks_like_a_caption` is the one place
+that test lives, as `lint.alt_is_caption` is the one place the window for
+comparing an alt with a caption lives.
 
 **Where a structure tree exists, it decides, and the obvious subtraction is
 wrong for exactly the files that have one.** A tagged PDF states how many
@@ -1305,10 +1354,12 @@ Anything touching Claude (`stylize.py`, `llm_cleanup.py`) requires
   wordmark, and the Claude `style-guide.md`. The LiCS bundle is the worked
   example; `new_journal.py <slug> "Name"` clones it.
 - `filters/` holds the Pandoc Lua filters that belong to the app rather than
-  to a journal, which at present is `math-alt.lua` alone. The test for
-  whether a filter goes here or in a bundle is whether a new journal should
-  be able to start without it: `new_journal.py` clones a bundle, so anything
-  it clones is something a journal can also drop.
+  to a journal: `math-alt.lua`, which puts alt text on every equation, and
+  `fig-alt.lua`, which puts a figure's description where a writer will turn
+  it into alt text. The test for whether a filter goes here or in a bundle
+  is whether a new journal should be able to start without it:
+  `new_journal.py` clones a bundle, so anything it clones is something a
+  journal can also drop.
 - Typst compiles with `root=CONTENT_DIR` so templates can reference image assets
   under `content/`.
 - Pandoc 3 emits Figure blocks rather than `Para[Image]`; the figures filter

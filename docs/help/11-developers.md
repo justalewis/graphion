@@ -40,6 +40,10 @@ Graphion/
                         reading of a page can settle. verapdf and pa11y
                         both write to stdout, which is what lets them be
                         called from a pass that leaves the folder alone.
+                        HTML beside the PDFs is read the same way and more
+                        plainly, since an img either carries an alt or it
+                        does not; what it cannot see is a figure set as a
+                        CSS background.
   math_alt.py         ← What an equation says aloud. Reads a vocabulary it
                         can read one way and declines everything else, so
                         a formula is never half read; the placeholder it
@@ -94,7 +98,11 @@ Graphion/
   render_pages.py     ← Rasterize a PDF to PNG (for previews).
   filters/            ← Pandoc Lua filters that belong to the app rather
                         than to a journal. math-alt.lua puts alt text on
-                        every equation. A journal's own filters live in
+                        every equation; fig-alt.lua moves a figure's
+                        description into the slot each writer turns into
+                        alt text, which Pandoc otherwise drops, leaving
+                        the printed caption standing as the alt text in
+                        every galley. A journal's own filters live in
                         its template bundle; this is for the things a
                         new journal must not be able to start without.
   templates/          ← Jinja2 admin UI templates
@@ -308,7 +316,13 @@ Currently 614 passing. Unit-tested:
   a file would appear beside the one it read. Then the three ways a checker
   could say something it did not find: a tool that is not installed reading
   as a verdict, an exit code standing in for one, and a failed-check count
-  reaching a work total.
+  reaching a work total. On the HTML side, the six states an image can be
+  in, and the two of them that are claims rather than omissions: an empty
+  alt, and an alt that is word for word the caption beside it, which can
+  have got there either way round.
+- `filters/fig-alt.lua` — that a figure's description reaches the alt text
+  of every writer, and that the caption stays the caption. Only running
+  Pandoc shows it, so the file skips where Pandoc is absent.
 - `describe.py` — that the queue offers exactly the figures lint counts as
   owed, that a description reaches the slot that figure keeps one in, and
   that prose typed into a web form cannot break the Markdown it lands in. A

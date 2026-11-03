@@ -316,18 +316,18 @@ def test_a_page_nobody_checked_does_not_read_as_a_clean_page(tmp_path):
 
     assert result.clean is None
     assert not result.checked
-    assert "--validate" in result.note
+    assert "--validate" in result.pa11y_note
 
 
 def test_a_checker_that_is_not_installed_does_not_make_a_page_clean(
         tmp_path, monkeypatch):
     monkeypatch.setattr(assess.validators, "pa11y_available", lambda: False)
 
-    result = assess.assess_html(_page(tmp_path))
+    result = assess.assess_html(_page(tmp_path), validate=True)
 
     assert result.clean is None
     assert not result.checked
-    assert "not on PATH" in result.note
+    assert "not on PATH" in result.pa11y_note
 
 
 def test_findings_are_counted_by_kind_and_grouped_by_code(
@@ -344,24 +344,229 @@ def test_findings_are_counted_by_kind_and_grouped_by_code(
     monkeypatch.setattr(assess.validators, "run_pa11y",
                         lambda path: (False, issues))
 
-    result = assess.assess_html(_page(tmp_path))
+    result = assess.assess_html(_page(tmp_path), validate=True)
 
     assert result.clean is False
     assert (result.errors, result.warnings, result.notices) == (2, 1, 1)
     assert result.codes[0] == ("WCAG2AA.1_1_1.H37", 2)
 
 
-def test_the_html_pass_says_what_it_did_not_read(tmp_path, monkeypatch):
-    """A clean pa11y run is not a read of the page. What it holds, how many
-    figures it carries and how many of those set words as a picture, is
-    still owed, and a report that stopped at the checker would read as an
-    archive assessed."""
+def test_the_page_is_read_whether_or_not_a_checker_runs(tmp_path):
+    """Reading costs what reading a file costs, so it is not behind the
+    flag that starts a headless browser."""
+    target = tmp_path / "page.html"
+    target.write_text(
+        "<!doctype html><html lang='en'><head><title>A page</title></head>"
+        "<body><main><h1>A page</h1>"
+        "<p><img src='fig.png' /></p></main></body></html>",
+        encoding="utf-8")
+
+    result = assess.assess_html(target)
+
+    assert not result.checked
+    assert result.images == 1
+    assert result.images_no_alt == 1
+
+
+def test_the_html_pass_says_what_it_still_cannot_know(tmp_path, monkeypatch):
+    """The page is read now, which makes it matter more that two things in
+    it are not readable: whether the words in a picture are words, and a
+    figure set as a CSS background, which is not in the markup at all."""
     monkeypatch.setattr(assess.validators, "pa11y_available", lambda: True)
     monkeypatch.setattr(assess.validators, "run_pa11y", lambda path: (True, []))
 
-    text = assess.report([], (assess.assess_html(_page(tmp_path)),))
+    text = assess.report(
+        [], (assess.assess_html(_page(tmp_path), validate=True),))
 
-    assert "not read here" in text
+    assert "words as a picture" in text
+    assert "CSS background" in text
+
+
+def _html(tmp_path, body, head="<title>A page</title>", lang="en",
+          name="page.html"):
+    target = tmp_path / name
+    target.write_text(
+        "<!doctype html><html%s><head>%s</head><body>%s</body></html>"
+        % ((" lang='%s'" % lang) if lang else "", head, body),
+        encoding="utf-8")
+    return target
+
+
+# The six states an image can be in, which are `lint.figure_state`'s four
+# plus the two the markup adds: a claim that the image carries nothing, and
+# a caption that is word for word the alt text.
+IMAGE_CASES = [
+    ("<img src='fig.png' />", "images_no_alt"),
+    ("<img src='fig.png' alt='' />", "images_decorative"),
+    ("<img src='fig.png' role='presentation' alt='Something' />",
+     "images_decorative"),
+    ("<img src='fig.png' aria-hidden='true' alt='Something' />",
+     "images_decorative"),
+    ("<img src='figure-p013-1.png' alt='figure-p013-1.png' />",
+     "images_placeholder_alt"),
+    ("<img src='figure-p013-1.png' alt='Figure p013 1' />",
+     "images_placeholder_alt"),
+    ("<img src='fig.png' alt='image' />", "images_placeholder_alt"),
+    ("<figure><img src='fig.png' alt='Figure 1. A whiteboard.' />"
+     "<figcaption>Figure 1. A whiteboard.</figcaption></figure>",
+     "images_caption_as_alt"),
+    ("<figure><img src='fig.png' alt='A whiteboard of sticky notes.' />"
+     "<figcaption>A whiteboard of sticky notes.</figcaption></figure>",
+     "images_alt_doubles_as_caption"),
+    ("<p><img src='fig.png' alt='A whiteboard covered in sticky notes.' />"
+     "<br />Figure 1. The planning wall.</p>", "images_described"),
+]
+
+
+@pytest.mark.parametrize("markup, state", IMAGE_CASES)
+def test_an_image_is_read_into_one_state(tmp_path, markup, state):
+    page = assess.read_html(_html(tmp_path, markup))
+
+    assert page.images == 1
+    assert getattr(page, state) == 1
+    counted = sum(getattr(page, name) for name in (
+        "images_no_alt", "images_placeholder_alt", "images_caption_as_alt",
+        "images_alt_doubles_as_caption", "images_decorative",
+        "images_described"))
+    assert counted == 1
+
+
+def test_a_decorative_image_is_not_work_and_is_still_counted(tmp_path):
+    """`alt=""` says the image carries nothing a reader needs, which is the
+    right answer for a rule and the wrong one for a figure. An archive that
+    emptied every alt to quiet a checker looks identical to a described one
+    on a count of failures alone."""
+    page = assess.read_html(_html(tmp_path, "<img src='rule.png' alt='' />"))
+
+    assert page.images_owed == 0
+    assert page.images_decorative == 1
+
+
+def test_a_caption_a_renderer_printed_is_not_counted_as_work(tmp_path):
+    """Pandoc makes a `<figure>` of a lone image and uses its alt as the
+    `<figcaption>`, which is how 31 of this archive's own hand-written
+    descriptions appear twice on the page. The markup states that case and a
+    caption copied into the alt slot identically, so neither total may claim
+    it."""
+    page = assess.read_html(_html(
+        tmp_path,
+        "<figure><img src='fig.png' alt='A whiteboard of sticky notes.' />"
+        "<figcaption>A whiteboard of sticky notes.</figcaption></figure>"))
+
+    assert page.images_alt_doubles_as_caption == 1
+    assert page.images_owed == 0
+    assert page.images_described == 0
+
+
+def test_a_label_is_what_separates_the_two(tmp_path):
+    """A caption names a figure and carries its number; a description does
+    not. It is the only thing in the markup that tells which way the copy
+    went."""
+    page = assess.read_html(_html(
+        tmp_path,
+        "<figure><img src='fig.png' alt='Figure 3. A whiteboard.' />"
+        "<figcaption>Figure 3. A whiteboard.</figcaption></figure>"))
+
+    assert page.images_caption_as_alt == 1
+    assert page.images_owed == 1
+
+
+def test_what_the_page_states_about_itself_is_read(tmp_path):
+    page = assess.read_html(_html(
+        tmp_path, "<main><h1>A page</h1><h2>A section</h2></main>"))
+
+    assert page.lang == "en"
+    assert page.title == "A page"
+    assert page.has_main
+    assert (page.h1s, page.headings, page.skipped_heading_levels) == (1, 2, 0)
+
+
+def test_a_page_that_states_none_of_it_says_so(tmp_path):
+    page = assess.assess_html(_html(tmp_path, "<p>Prose.</p>", head="",
+                                    lang=""))
+
+    assert not page.lang and not page.title and not page.has_main
+    assert any("no language" in note for note in page.notes)
+
+
+def test_a_skipped_heading_level_is_counted_and_not_failed(tmp_path):
+    """A page may well open at h2 inside a site that sets the h1
+    elsewhere."""
+    page = assess.read_html(_html(tmp_path, "<h1>A</h1><h3>B</h3>"))
+
+    assert page.skipped_heading_levels == 1
+
+
+def test_an_unnamed_svg_reaches_a_reader_as_nothing(tmp_path):
+    page = assess.read_html(_html(tmp_path, (
+        "<svg><circle /></svg>"
+        "<svg><title>A pie chart</title><circle /></svg>"
+        "<svg aria-hidden='true'><circle /></svg>")))
+
+    assert page.svgs == 3
+    assert page.svgs_unnamed == 1
+
+
+def test_a_table_with_no_header_cell_names_no_column(tmp_path):
+    page = assess.read_html(_html(tmp_path, (
+        "<table><tr><td>a</td></tr></table>"
+        "<table><tr><th>Name</th></tr><tr><td>a</td></tr></table>")))
+
+    assert page.tables == 2
+    assert page.tables_without_headers == 1
+
+
+def test_media_without_a_captions_track_is_counted(tmp_path):
+    page = assess.read_html(_html(tmp_path, (
+        "<video src='a.mp4'></video>"
+        "<video src='b.mp4'><track kind='captions' src='b.vtt' /></video>")))
+
+    assert page.media == 2
+    assert page.media_without_captions == 1
+
+
+def test_a_link_a_reader_cannot_hear_is_counted(tmp_path):
+    page = assess.read_html(_html(tmp_path, (
+        "<a href='/a'></a>"
+        "<a href='/b'>Read the chapter</a>"
+        "<a href='/c'><img src='i.png' alt='A chapter cover' /></a>"
+        "<a href='/d' aria-label='The chapter'><img src='i.png' alt='' /></a>")))
+
+    assert page.links == 4
+    assert page.links_without_text == 1
+
+
+def test_a_form_control_is_labelled_any_of_the_ways_html_allows(tmp_path):
+    page = assess.read_html(_html(tmp_path, (
+        "<input type='text' />"
+        "<label for='a'>A</label><input type='text' id='a' />"
+        "<label>B <input type='text' /></label>"
+        "<input type='text' aria-label='C' />"
+        "<input type='hidden' />")))
+
+    assert page.controls_unlabelled == 1
+
+
+def test_mathml_owes_nothing_and_is_still_counted(tmp_path):
+    """A screen reader reads MathML, which is why the Typst filter is gated
+    on that writer and the HTML galley needs none of it. An equation set as
+    a picture is an image and is counted there."""
+    page = assess.assess_html(_html(tmp_path, "<math><mi>x</mi></math>"))
+
+    assert page.equations == 1
+    assert page.images_owed == 0
+    assert any("owe nothing" in note for note in page.notes)
+
+
+def test_a_file_that_is_not_html_is_reported_rather_than_counted(tmp_path):
+    target = tmp_path / "empty.html"
+    target.write_text("   \n", encoding="utf-8")
+
+    page = assess.assess_html(target)
+
+    assert not page.readable
+    assert "empty" in page.error
+    assert "will not open" in assess.report([], (page,))
 
 
 def test_html_is_listed_even_where_nothing_checked_it(tmp_path):

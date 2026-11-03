@@ -568,11 +568,30 @@ the size of the job before commissioning it.
   pa11y answers for the HTML the same way, and the thinness of that answer
   is said on the page rather than left to be assumed: it is the checker's
   verdict and not a reading of what the page holds.
-- Still to do: a journal's HTML as content, which this still does not read.
-  pa11y now runs over it, so a page with no alt text is reported; how many
-  figures the page carries, how many are described and how many set their
-  words as a picture is not, and that is the number that decides whether an
-  archive is finished.
+- ~~A journal's HTML, which this does not touch at all.~~ Done.
+  `assess.read_html` reads a page the way `assess_pdf` reads a PDF: what it
+  states about itself (language, title, main landmark, heading outline) and
+  what remediation would have to produce (images in each of six states,
+  unnamed inline SVGs, media with no captions track, tables with no header
+  cell, untitled iframes, links a reader cannot hear, unlabelled form
+  controls). Reading is not behind `--validate`, because it costs what
+  reading a file costs; pa11y still is.
+
+  HTML states itself more plainly than a PDF does, and the uncertainty
+  moves rather than going away. An `<img>` either carries an `alt` or it
+  does not, so there is no structure tree to disagree with a raster count;
+  but a figure set as a CSS background is not in the markup at all, and an
+  archive that sets its figures that way reads here as one with no figures.
+
+  Two of the six image states are claims rather than omissions and neither
+  is counted as work. `alt=""` says the image carries nothing a reader
+  needs, which is right for a rule and wrong for a figure. And an alt that
+  is word for word the caption beside it can have got there either way
+  round: Pandoc makes a `<figure>` of a lone image and uses its alt as the
+  `<figcaption>`, which is how 31 of this archive's own hand-written
+  descriptions appear twice on the page. The label is what separates them,
+  since a caption names a figure and carries its number, and
+  `lint.looks_like_a_caption` is the one place that test lives.
 - Still to do: symbol-font pages, and articles whose structure had to be
   inferred rather than read. Both are knowable and neither is counted yet.
 

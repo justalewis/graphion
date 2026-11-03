@@ -374,6 +374,25 @@ OWED = (MISSING, UNDESCRIBED, FROM_CAPTION)
 # hard line break, so the caption is the line after the backslash.
 _FOLLOWING_LINE_RE = re.compile(r"\\?\s*(?P<line>[^\n]*)")
 
+# How much of an alt text is tested against the caption beside it. Compared
+# on a prefix and not whole: these captions run to several hundred
+# characters, so testing whether the alt text sits inside the caption meant
+# testing a long string against a window that cut it off, and every long
+# caption came back as a real description.
+CAPTION_PROBE = 80
+
+
+def alt_is_caption(alt: str, caption: str) -> bool:
+    """Whether this alt text is the caption standing in for a description.
+
+    One predicate, because the same judgement is made about a figure in
+    Markdown here and about an `<img>` in a stranger's HTML in `assess.py`,
+    and a window that differed between the two would report the same figure
+    as a draft in one place and as described in the other.
+    """
+    probe = (alt or "").strip()[:CAPTION_PROBE].lower()
+    return bool(probe and caption and probe in caption.lower())
+
 
 def printed_caption(match, body: str) -> str:
     """The caption the page printed under this figure, if it printed one.
@@ -399,7 +418,19 @@ def printed_caption(match, body: str) -> str:
     following = body[match.end():match.end() + 2000]
     line = _FOLLOWING_LINE_RE.match(following)
     text = line.group("line").strip() if line else ""
-    return text if conversion._CAPTION_START_RE.match(text) else ""
+    return text if looks_like_a_caption(text) else ""
+
+
+def looks_like_a_caption(text: str) -> bool:
+    """Whether this line opens with a figure label the way a caption does.
+
+    A caption names a figure and so carries its number; a description does
+    not. `assess.py` leans on the same test to tell two things apart that
+    the markup states identically: a caption a converter copied into the
+    alt text, which is work still owed, and a description a renderer also
+    printed as the caption, which is work already done.
+    """
+    return bool(conversion._CAPTION_START_RE.match((text or "").strip()))
 
 
 def figure_state(match, body: str) -> str:
@@ -436,13 +467,7 @@ def figure_state(match, body: str) -> str:
     # the alt text from that caption. The two are not the same thing: a
     # caption says what a figure is called, alt text says what is in it.
     # Counted so the editing still owed is countable.
-    # Compared on a prefix, not whole. These captions run to several hundred
-    # characters, so testing whether the alt text sits inside the caption
-    # meant testing a long string against a window that cut it off, and
-    # every long caption came back as a real description.
-    caption = printed_caption(match, body)
-    probe = alt[:80].lower()
-    if caption and probe and probe in caption.lower():
+    if alt_is_caption(alt, printed_caption(match, body)):
         return FROM_CAPTION
     return DESCRIBED
 

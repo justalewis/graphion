@@ -1,4 +1,5 @@
-"""What remediating a PDF would take, read without ingesting it.
+"""What remediating a journal's back catalogue would take, read without
+ingesting it.
 
 Every accessibility check in this codebase takes an article row and reads
 `article.md`, so all of them run on content Graphion already holds. Taking
@@ -44,6 +45,15 @@ The readers are the pipeline's own, deliberately. pypdf resolves the
 stream filters and the catalog; pdfplumber reads the text. An assessment
 that read the page some other way would be predicting a pipeline other
 than the one that would do the work.
+
+HTML beside the PDFs is read the same way, and it is read more plainly.
+An `<img>` either carries an `alt` or it does not, and there is no
+structure tree to disagree with a raster count, so these numbers are exact
+where the PDF's are a reading. The uncertainty moves instead: a figure set
+as a CSS background is not in the markup at all, so an archive that sets
+its figures that way reads here as one with no figures. `lint` owns the
+judgements the two share, because the same figure must not be a draft in
+one and described in the other.
 """
 from __future__ import annotations
 
@@ -194,29 +204,98 @@ class Assessment:
         return self.tagged_figures or self.figures
 
 
+# An alt text that is a label rather than a description. The filename of
+# the image itself is the commonest, and is caught by comparison rather
+# than by this list; these are the words a converter writes when it has
+# nothing to say. Matched whole and lowercased, so a description opening
+# "Photograph of a whiteboard" is not caught by "photograph".
+PLACEHOLDER_ALTS = frozenset({
+    "image", "images", "img", "picture", "photo", "photograph", "graphic",
+    "figure", "fig", "illustration", "untitled", "screenshot", "diagram",
+    "chart", "graph", "logo", "icon", "alt", "alt text", "description",
+    "placeholder", "no description", "image description",
+})
+
+
 @dataclass
 class HtmlAssessment:
-    """One HTML file, as a checker reads it.
+    """One HTML page, read, and then checked if asked.
 
-    Thinner than `Assessment` on purpose, and the thinness is the honest
-    part. This is pa11y's verdict and nothing else: what the page holds,
-    how many figures it carries, how many of those are described and how
-    many set their words as a picture, is not read here. A journal's HTML
-    still has to be assessed the way its PDFs are, and saying so beats a
-    clean pa11y run reading as a clean archive.
+    The same two registers the PDF side keeps, and a third thing worth
+    knowing about the first: HTML states what it is far more plainly than a
+    PDF does. An `<img>` either carries an `alt` or it does not, and there
+    is no structure tree to disagree with a raster count. So these numbers
+    are exact where the PDF's are a reading, and the uncertainty moves
+    somewhere else: a figure set as a CSS background is not in the markup at
+    all, and an archive that sets its figures that way reads here as one
+    with no figures.
+
+    What no reading settles is the same thing it is for a PDF: whether the
+    words in a picture are words. That is WCAG 1.4.5, it is the number that
+    decides whether an archive is finished, and nothing but looking answers
+    it.
     """
 
     path: Path
+    readable: bool = True
+    error: str = ""
+
+    # What the page states about itself.
+    lang: str = ""
+    title: str = ""
+    has_main: bool = False
+    headings: int = 0
+    h1s: int = 0
+    skipped_heading_levels: int = 0
+
+    # Work remediation would have to produce.
+    images: int = 0
+    images_no_alt: int = 0
+    images_placeholder_alt: int = 0
+    images_caption_as_alt: int = 0
+    images_alt_doubles_as_caption: int = 0
+    images_decorative: int = 0
+    images_described: int = 0
+    svgs: int = 0
+    svgs_unnamed: int = 0
+    iframes_untitled: int = 0
+    media: int = 0
+    media_without_captions: int = 0
+    tables: int = 0
+    tables_without_headers: int = 0
+    equations: int = 0
+    links: int = 0
+    links_without_text: int = 0
+    controls_unlabelled: int = 0
+
+    # What a checker makes of it.
     clean: Optional[bool] = None
-    note: str = ""
+    pa11y_note: str = ""
     errors: int = 0
     warnings: int = 0
     notices: int = 0
     codes: list = field(default_factory=list)
 
+    notes: list = field(default_factory=list)
+
     @property
     def checked(self) -> bool:
+        """Whether pa11y reached a verdict on this page."""
         return self.clean is not None
+
+    @property
+    def images_owed(self) -> int:
+        """Images that still need somebody to write something.
+
+        `alt=""` is not here. It is a claim that the image carries nothing
+        a reader needs, which is the right answer for a rule or an
+        ornament, and counting it as work would quote a journal for its own
+        decoration. It is counted on its own line instead, because an
+        archive that emptied every alt to quiet a checker looks identical
+        to a described one on a count of failures alone.
+        """
+        return (self.images_no_alt + self.images_placeholder_alt
+                + self.images_caption_as_alt)
 
 
 def _verdict(report: dict) -> Optional[bool]:
@@ -308,41 +387,387 @@ def _run_verapdf(assessment: Assessment, path: Path) -> None:
     assessment.failed_clauses = clauses[:MAX_FAILED_CLAUSES]
 
 
-def assess_html(path: Path, validate: bool = True) -> HtmlAssessment:
-    """Run pa11y over one HTML file. Writes nothing.
+def _text_after(element) -> str:
+    """Whatever the page prints after this element, inside its parent.
 
-    `validate` false records that the file is there and was not checked,
-    which is worth saying: a journal that sent its HTML should not have to
-    wonder whether this pass noticed it.
+    A figure and its caption are commonly one paragraph: the image, a line
+    break, and the caption under it. That is how Graphion's own galleys set
+    one, because it is how the reconstruction writes it, and `<figcaption>`
+    is the other way a page says the same thing. Both are read, and the
+    first that answers wins.
     """
+    parts = [element.tail or ""]
+    for sibling in element.itersiblings():
+        parts.append(sibling.text_content())
+        parts.append(sibling.tail or "")
+    return " ".join(" ".join(parts).split())[:400]
+
+
+def _caption_near(image) -> str:
+    """The caption this image is set under, from wherever the page keeps it."""
+    figure = next(image.iterancestors("figure"), None)
+    if figure is not None:
+        caption = figure.find(".//figcaption")
+        if caption is not None:
+            return " ".join(caption.text_content().split())[:400]
+    return _text_after(image)
+
+
+def _is_decorative(element) -> bool:
+    """Whether the markup says this image carries nothing a reader needs.
+
+    Three ways of saying one thing, and all three are claims rather than
+    omissions: an empty alt, a presentational role, and `aria-hidden`. A
+    reader skips the image either way, so an archive that reached for one
+    of these to quiet a checker reads the same as one whose rules really
+    are rules, and that is what the separate count is for.
+    """
+    if element.get("aria-hidden") == "true":
+        return True
+    if (element.get("role") or "").lower() in ("presentation", "none"):
+        return True
+    return element.get("alt") == ""
+
+
+def _is_placeholder_alt(alt: str, src: str) -> bool:
+    """Whether this alt text names the image rather than describing it.
+
+    The filename is the commonest, and it is what a converter writes when
+    the source had nothing: `alt="image001.jpg"` tells a reader the number
+    of a file they cannot see. Compared with separators flattened, because
+    a converter that tidies the stem into words has still said nothing.
+    """
+    def _flatten(text: str) -> str:
+        return " ".join(text.replace("_", " ").replace("-", " ").split())
+
+    raw = " ".join(alt.lower().split())
+    flat = _flatten(raw)
+    if raw in PLACEHOLDER_ALTS or flat in PLACEHOLDER_ALTS:
+        return True
+    name = (src or "").rsplit("/", 1)[-1].lower()
+    if not name:
+        return False
+    stem = name.rsplit(".", 1)[0]
+    # Both spellings of both, because a converter writes the filename as it
+    # found it and a tidier one writes the stem as words, and neither has
+    # said anything about the picture.
+    return raw in (name, stem, _flatten(name), _flatten(stem)) or flat in (
+        name, stem, _flatten(name), _flatten(stem))
+
+
+def _named(element) -> bool:
+    """Whether this element carries an accessible name of any kind."""
+    if (element.get("aria-label") or "").strip():
+        return True
+    if (element.get("aria-labelledby") or "").strip():
+        return True
+    if (element.get("title") or "").strip():
+        return True
+    child = element.find(".//title")
+    return child is not None and bool((child.text or "").strip())
+
+
+def _read_html_shell(assessment: HtmlAssessment, tree) -> None:
+    """What the page states about itself: language, title, landmark, heads."""
+    root = tree.getroottree().getroot()
+    assessment.lang = str(root.get("lang") or root.get("xml:lang") or "").strip()
+    title = tree.find(".//title")
+    if title is not None:
+        assessment.title = " ".join((title.text or "").split())
+    assessment.has_main = (tree.find(".//main") is not None
+                           or tree.xpath("//*[@role='main']") != [])
+
+    levels = []
+    for heading in tree.xpath("//h1|//h2|//h3|//h4|//h5|//h6"):
+        levels.append(int(heading.tag[1]))
+    assessment.headings = len(levels)
+    assessment.h1s = levels.count(1)
+    # A level skipped is a reader stepping from a section head into a
+    # sub-sub-head with nothing between, which is what a heading outline is
+    # for. Counted rather than judged: a page may well open at h2 inside a
+    # site that sets the h1 elsewhere.
+    for before, after in zip(levels, levels[1:]):
+        if after > before + 1:
+            assessment.skipped_heading_levels += 1
+
+
+def _read_html_images(page: HtmlAssessment, tree) -> None:
+    """Every image, in the five states an alt text can be in.
+
+    The same five `lint.figure_state` keeps for a figure in Markdown, and
+    the caption test is `lint.alt_is_caption` rather than a second copy of
+    it: a window that differed between the two would report one figure as a
+    draft here and as described there.
+    """
+    import lint
+
+    for image in tree.xpath("//img"):
+        page.images += 1
+        alt = image.get("alt")
+        if alt is None:
+            page.images_no_alt += 1
+            continue
+        if _is_decorative(image):
+            page.images_decorative += 1
+            continue
+        alt = " ".join(alt.split())
+        if _is_placeholder_alt(alt, image.get("src") or ""):
+            page.images_placeholder_alt += 1
+            continue
+        caption = _caption_near(image)
+        if lint.alt_is_caption(alt, caption):
+            # The markup states these two cases identically and the label is
+            # what separates them. A caption names a figure and carries its
+            # number, so an alt that matches a labelled caption is the
+            # caption copied into the alt slot, which is work. An alt that
+            # matches an unlabelled one is as likely to be a description the
+            # renderer also printed: Pandoc makes a `<figure>` of a lone
+            # image and uses its alt as the `<figcaption>`, which is how 32
+            # of this archive's own hand-written descriptions appear twice
+            # on the page. Counting those as owed would quote a journal for
+            # work it has already paid for.
+            if lint.looks_like_a_caption(caption):
+                page.images_caption_as_alt += 1
+            else:
+                page.images_alt_doubles_as_caption += 1
+            continue
+        page.images_described += 1
+
+    for svg in tree.xpath("//svg"):
+        page.svgs += 1
+        if not _is_decorative(svg) and not _named(svg):
+            page.svgs_unnamed += 1
+
+
+def _read_html_elements(page: HtmlAssessment, tree) -> None:
+    """The rest of what the markup states plainly."""
+    for frame in tree.xpath("//iframe"):
+        if not (frame.get("title") or "").strip():
+            page.iframes_untitled += 1
+
+    for player in tree.xpath("//video|//audio"):
+        page.media += 1
+        tracks = [t for t in player.findall(".//track")
+                  if (t.get("kind") or "").lower() in ("captions", "subtitles")]
+        if not tracks:
+            page.media_without_captions += 1
+
+    for table in tree.xpath("//table"):
+        page.tables += 1
+        # The header row is what lets a screen reader name the column a
+        # cell is in, which is the same reason ingest writes a pipe table
+        # rather than loose lines.
+        if table.find(".//th") is None:
+            page.tables_without_headers += 1
+
+    # MathML is read aloud by a screen reader, so an equation marked up
+    # this way owes nothing. Counted as a fact rather than as work, for the
+    # reason `filters/math-alt.lua` is gated on the Typst writer: the HTML
+    # and EPUB galleys need none of it. An equation set as a picture is
+    # already among the images above, where it belongs.
+    page.equations = len(tree.xpath("//math"))
+
+    for link in tree.xpath("//a[@href]"):
+        page.links += 1
+        if " ".join(link.text_content().split()):
+            continue
+        if _named(link):
+            continue
+        if any((img.get("alt") or "").strip() for img in link.xpath(".//img")):
+            continue
+        page.links_without_text += 1
+
+    labelled_ids = {
+        (label.get("for") or "").strip()
+        for label in tree.xpath("//label[@for]")
+    }
+    for control in tree.xpath("//input|//select|//textarea"):
+        kind = (control.get("type") or "").lower()
+        if kind in ("hidden", "submit", "button", "reset", "image"):
+            continue
+        if _named(control):
+            continue
+        if (control.get("id") or "").strip() in labelled_ids:
+            continue
+        if next(control.iterancestors("label"), None) is not None:
+            continue
+        page.controls_unlabelled += 1
+
+
+def read_html(path: Path) -> HtmlAssessment:
+    """Read one HTML page. Writes nothing.
+
+    Parsed with lxml's HTML parser, which is already a dependency and is
+    what `jats.py` and `crossref.py` use. Tolerant on purpose: this is
+    pointed at pages somebody else produced, and a page that will not parse
+    strictly is a page a browser still renders.
+    """
+    from lxml import html as lxml_html
+
+    page = HtmlAssessment(path=Path(path))
+    try:
+        text = Path(path).read_text(encoding="utf-8", errors="replace")
+    except OSError as exc:
+        page.readable = False
+        page.error = f"{type(exc).__name__}: {exc}"
+        return page
+    if not text.strip():
+        page.readable = False
+        page.error = "the file is empty"
+        return page
+    try:
+        tree = lxml_html.document_fromstring(text)
+    except Exception as exc:
+        page.readable = False
+        page.error = f"{type(exc).__name__}: {exc}"
+        return page
+
+    _read_html_shell(page, tree)
+    _read_html_images(page, tree)
+    _read_html_elements(page, tree)
+    return page
+
+
+def _run_pa11y(page: HtmlAssessment, validate: bool) -> None:
+    """What a checker makes of the page, where one was asked to look."""
     import collections
 
-    out = HtmlAssessment(path=Path(path))
     if not validate:
-        out.note = "Not checked; pass --validate to run pa11y over it."
-        return out
+        page.pa11y_note = "Not checked; pass --validate to run pa11y over it."
+        return
     if not validators.pa11y_available():
-        out.note = "pa11y is not on PATH, so this page was not checked."
-        return out
-    clean, issues = validators.run_pa11y(Path(path))
+        page.pa11y_note = "pa11y is not on PATH, so this page was not checked."
+        return
+    clean, issues = validators.run_pa11y(page.path)
     if issues and isinstance(issues[0], dict) and issues[0].get("error"):
-        out.note = str(issues[0]["error"])
-        return out
-    out.clean = bool(clean)
+        page.pa11y_note = str(issues[0]["error"])
+        return
+    page.clean = bool(clean)
     counts: collections.Counter = collections.Counter()
     for issue in issues:
         if not isinstance(issue, dict):
             continue
         kind = str(issue.get("type") or "")
         if kind == "error":
-            out.errors += 1
+            page.errors += 1
         elif kind == "warning":
-            out.warnings += 1
+            page.warnings += 1
         elif kind == "notice":
-            out.notices += 1
+            page.notices += 1
         counts[str(issue.get("code") or "")] += 1
-    out.codes = counts.most_common(MAX_NAMED_CODES)
-    return out
+    page.codes = counts.most_common(MAX_NAMED_CODES)
+
+
+def assess_html(path: Path, validate: bool = False) -> HtmlAssessment:
+    """Read one HTML page, and check it where asked. Writes nothing.
+
+    Reading is always done, because it costs what reading a file costs.
+    `validate` is what starts pa11y, which launches a headless browser, and
+    it is the same flag that starts verapdf over the PDFs beside it.
+    """
+    page = read_html(path)
+    if page.readable:
+        _run_pa11y(page, validate)
+    _add_html_notes(page)
+    return page
+
+
+def _add_html_notes(page: HtmlAssessment) -> None:
+    """What the counts mean, and what no reading of a page can settle."""
+    if not page.readable:
+        return
+
+    missing = []
+    if not page.lang:
+        missing.append("no language on the html element")
+    if not page.title:
+        missing.append("no title")
+    if not page.has_main:
+        missing.append("no main landmark")
+    if page.headings and not page.h1s:
+        missing.append("no h1")
+    if missing:
+        page.notes.append("Arrives with " + "; ".join(missing) + ".")
+    if page.skipped_heading_levels:
+        page.notes.append(
+            f"{page.skipped_heading_levels} place(s) where the heading "
+            f"outline skips a level. A page may open at h2 inside a site "
+            f"that sets the h1 elsewhere, so this is counted and not "
+            f"failed.")
+
+    if page.images:
+        if page.images_described:
+            page.notes.append(
+                f"{page.images_described} of {page.images} image(s) already "
+                f"carry a description, so that much is not work still owed.")
+        if page.images_no_alt:
+            page.notes.append(
+                f"{page.images_no_alt} image(s) carry no alt attribute at "
+                f"all, so a reader is told the file name or nothing.")
+        if page.images_placeholder_alt:
+            page.notes.append(
+                f"{page.images_placeholder_alt} image(s) have alt text that "
+                f"names the image rather than describing it, which is what a "
+                f"converter writes when the source said nothing.")
+        if page.images_caption_as_alt:
+            page.notes.append(
+                f"{page.images_caption_as_alt} image(s) carry their own "
+                f"caption as alt text. That is a reasonable starting point "
+                f"and it is not a description: a caption says what a figure "
+                f"is called.")
+        if page.images_alt_doubles_as_caption:
+            page.notes.append(
+                f"{page.images_alt_doubles_as_caption} image(s) carry the "
+                f"same text as alt text and as the caption printed with "
+                f"them, and the markup cannot say which way round it went. "
+                f"A caption copied into the alt slot is work still owed; a "
+                f"description the renderer also printed as the caption is "
+                f"work already done. They are counted here and in neither "
+                f"total.")
+        if page.images_decorative:
+            page.notes.append(
+                f"{page.images_decorative} image(s) are marked as carrying "
+                f"nothing a reader needs. That is the right answer for a "
+                f"rule or an ornament and the wrong one for a figure, and "
+                f"only looking tells the two apart.")
+        page.notes.append(
+            "How many of these set their words as a picture is not in any "
+            "count here and cannot be read off the markup (WCAG 1.4.5). Nor "
+            "is a figure set as a CSS background image, which is not in the "
+            "markup at all.")
+    if page.svgs_unnamed:
+        page.notes.append(
+            f"{page.svgs_unnamed} of {page.svgs} inline SVG(s) carry no "
+            f"accessible name and are not marked decorative, so they reach a "
+            f"reader as nothing.")
+    if page.media_without_captions:
+        page.notes.append(
+            f"{page.media_without_captions} of {page.media} media element(s) "
+            f"carry no captions track. Captioning is transcription and then "
+            f"timing, which is a different order of work from the rest.")
+    if page.tables_without_headers:
+        page.notes.append(
+            f"{page.tables_without_headers} of {page.tables} table(s) carry "
+            f"no header cell, so nothing names the column a cell is in.")
+    if page.iframes_untitled:
+        page.notes.append(
+            f"{page.iframes_untitled} iframe(s) carry no title, so a reader "
+            f"moving between frames is told nothing about what is in one.")
+    if page.links_without_text:
+        page.notes.append(
+            f"{page.links_without_text} of {page.links} link(s) carry no "
+            f"text a reader can hear.")
+    if page.controls_unlabelled:
+        page.notes.append(
+            f"{page.controls_unlabelled} form control(s) carry no label.")
+    if page.equations:
+        page.notes.append(
+            f"{page.equations} equation(s) are marked up as MathML, which a "
+            f"screen reader reads, so they owe nothing. An equation set as a "
+            f"picture is among the images above.")
+
+    if not page.checked and page.pa11y_note:
+        page.notes.append(page.pa11y_note)
 
 
 def _read_catalog(assessment: Assessment, reader) -> None:
@@ -776,20 +1201,30 @@ def report(assessments: list, html: tuple = ()) -> str:
 
     for page in html:
         lines.append(page.path.name)
-        if not page.checked:
-            lines.append(f"  not checked: {page.note}")
+        if not page.readable:
+            lines.append(f"  will not open: {page.error}")
             lines.append("")
             continue
-        verdict = ("pa11y finds nothing" if page.clean
-                   else f"pa11y finds {page.errors} error(s), "
-                        f"{page.warnings} warning(s), "
-                        f"{page.notices} notice(s)")
-        lines.append("  " + verdict)
+        counts = [f"{page.headings} heading(s)"]
+        if page.images:
+            counts.append(f"{page.images} image(s)")
+        if page.images_owed:
+            counts.append(f"{page.images_owed} needing a description")
+        if page.tables:
+            counts.append(f"{page.tables} table(s)")
+        if page.links:
+            counts.append(f"{page.links} link(s)")
+        if page.clean is True:
+            counts.append("pa11y finds nothing")
+        elif page.clean is False:
+            counts.append(f"pa11y finds {page.errors} error(s), "
+                          f"{page.warnings} warning(s), "
+                          f"{page.notices} notice(s)")
+        lines.append("  " + ", ".join(counts))
+        for note in page.notes:
+            lines.append(f"  - {note}")
         for code, count in page.codes:
             lines.append(f"  - {code} ({count})")
-        lines.append(
-            "  - What the page holds is not read here; only a checker ran "
-            "over it.")
         lines.append("")
 
     if len(readable) > 1:
@@ -825,13 +1260,35 @@ def report(assessments: list, html: tuple = ()) -> str:
             "total, and cannot be read off the page.")
 
     if html:
-        checked_pages = [p for p in html if p.checked]
-        lines.append(f"  {len(html)} HTML page(s) in the folder, "
-                     f"{len(checked_pages)} checked.")
+        pages = [p for p in html if p.readable]
+        lines.append(f"{len(pages)} HTML page(s) read, "
+                     f"{len(html) - len(pages)} unreadable.")
+        lines.append(
+            f"  {sum(1 for p in pages if p.lang)} carry a language, "
+            f"{sum(1 for p in pages if p.title)} a title, "
+            f"{sum(1 for p in pages if p.has_main)} a main landmark.")
+        lines.append(
+            f"  {sum(p.images_owed for p in pages)} image(s) needing a "
+            f"description, of {sum(p.images for p in pages)} found.")
+        decorative = sum(p.images_decorative for p in pages)
+        if decorative:
+            lines.append(
+                f"  {decorative} further image(s) are marked as carrying "
+                f"nothing a reader needs, which only looking confirms.")
+        checked_pages = [p for p in pages if p.checked]
         if checked_pages:
             lines.append(
                 f"  {sum(1 for p in checked_pages if p.clean)} of "
-                f"{len(checked_pages)} carry no pa11y finding.")
+                f"{len(checked_pages)} checked page(s) carry no pa11y "
+                f"finding.")
+        else:
+            lines.append(
+                "  No page was checked; pass --validate to run pa11y over "
+                "them.")
+        lines.append(
+            "  How many of these images set their words as a picture is not "
+            "in this total either, and a figure set as a CSS background is "
+            "not in the markup to be counted at all.")
     return "\n".join(lines)
 
 
@@ -854,6 +1311,7 @@ def _html_as_dict(page: HtmlAssessment) -> dict:
     out = page.__dict__.copy()
     out["path"] = str(page.path)
     out["checked"] = page.checked
+    out["images_owed"] = page.images_owed
     out["codes"] = [{"code": code, "count": count} for code, count in page.codes]
     return out
 
