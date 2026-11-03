@@ -124,6 +124,15 @@ falls back so you still get a galley, and this is the line that tells you
 afterwards that it did. The reason Typst gave is in the article's **Logs**
 tab. An article that renders a separate teacher galley has that one read too.
 
+The journal page links to a **conformance report**: all 50 WCAG 2.1 Level
+A and AA criteria with a support level against each, the checks that back
+it named on the row, and the date. It is generated from the register rather
+than typed, so it cannot say anything the checks did not find, and it is
+the document an institution asks for before adopting a journal. Roughly a
+third of the criteria read "Not Evaluated", because no machine can check
+them; that is the honest shape of a generated report rather than a gap in
+it. Print the page to hand it to somebody.
+
 A recorded result counts only while the file it read is unchanged. Edit the
 article and its last lint shows as *older version*, not as a pass; the page
 would otherwise look better the longer nobody re-ran anything.

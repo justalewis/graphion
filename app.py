@@ -24,6 +24,7 @@ import db
 import jats
 import lint
 import ojs_client
+import acr
 import register
 import standalone_html
 from auth import User, login_manager
@@ -2653,6 +2654,30 @@ def register_routes(app: Flask):
             kinds=register.KINDS,
             kind_labels=register.KIND_LABELS,
         )
+
+    @app.route("/accessibility/<slug>/acr")
+    @login_required
+    def accessibility_acr(slug):
+        """The conformance report, derived rather than typed.
+
+        An ACR written by hand is a snapshot of somebody's belief on the
+        afternoon they wrote it. Generated here it cannot say anything the
+        checks did not find, and it goes stale visibly: a run taken against
+        content that has since changed stops counting, so the coverage line
+        drops rather than the levels quietly staying good.
+        """
+        journal = db.query_one("SELECT * FROM journals WHERE slug = ?", (slug,))
+        if not journal:
+            abort(404)
+        articles = db.query_all(
+            "SELECT id, project_path FROM articles WHERE journal_id = ?",
+            (journal["id"],),
+        )
+        report = acr.report(
+            journal["name"], [dict(a) for a in articles],
+            template_dir=conversion.template_dir(slug),
+        )
+        return render_template("acr.html", journal=journal, report=report)
 
     @app.route("/accessibility/<slug>/run-checks", methods=["POST"])
     @login_required

@@ -27,12 +27,13 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (553 functions, 588 cases once the parametrized ones expand: 142 in
+Tests (571 functions, 606 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 43 in
 `test_ingest_volume.py`, 42 in `test_lint.py`, 36 in `test_register.py`,
 29 in `test_teacher_resources.py`, 28 in `test_metadata_roundtrip.py`,
 26 in `test_pdf_tags.py`, 24 in `test_math_alt.py`, 21 in `test_assess.py`,
-14 in `test_epub_a11y.py`, 13 in `test_template_bundles.py`,
+18 in `test_acr.py`, 14 in `test_epub_a11y.py`,
+13 in `test_template_bundles.py`,
 12 in `test_validate_galleys.py`,
 9 in `test_pdf_ua.py`, 5 in `test_validators.py`,
 6 in `test_standalone_html.py`, 4 in `test_journal_filter.py`,
@@ -482,6 +483,46 @@ The HTML, EPUB and JATS galleys need none of this. Pandoc's writers emit real
 MathML with an `application/x-tex` annotation, so the filter is gated on
 `FORMAT == "typst"` and a raw Typst inline in the HTML would be a
 regression.
+
+**The conformance report is derived, so it cannot say more than the checks
+found.** `acr.py` and `/accessibility/<slug>/acr` put all 50 WCAG 2.1 Level
+A and AA criteria on a page with a support level against each, the checks
+that back it named on the row, and the date stamped. An ACR typed by hand
+is a snapshot of somebody's belief on the afternoon they wrote it and
+starts drifting immediately; this one goes stale visibly, because a run
+taken against content that has since changed stops counting and the
+coverage drops rather than the levels quietly staying good.
+
+Three rules decide every row and each is there because the opposite is the
+easy mistake.
+
+A criterion with no check behind it reads `Not Evaluated` and never
+`Supports`. That is 14 of the 50, which is the honest shape of a generated
+report rather than a shortfall in it: most of WCAG cannot be checked by a
+machine, and a report that quietly filled those in would be harder to catch
+than a hand-typed one because it would look systematic. The rows that do
+carry a level carry a named check with them.
+
+`Not Applicable` is a claim too, so it is made from evidence. The criteria
+about captions, pointer gestures and form errors do not engage a
+publication with no media, no forms and no scripts, but that is a fact
+about the content, so `acr.survey()` reads it off every article's source
+and a journal whose articles could not be read makes no applicability
+claims at all. 2.1.1, 2.1.2 and 2.4.3 are deliberately not in that set: a
+galley with no scripts still has links, and a link is functionality, so the
+honest answer is that nobody has tabbed through one.
+
+And a level is derived only from the articles the register can currently
+speak for, with the count said on the row. "115 of 115 pass" under a
+journal of 118 would otherwise leave a reader working out where the other
+three went.
+
+2.4.1 and 2.4.7 are backed by the template bundle rather than by a per
+article run, and `tests/test_template_bundles.py` reads them through the
+same predicates in `acr.py`, so the report cannot claim a criterion that
+test would fail on. Over Writing Spaces the report comes out 11 Supports,
+2 Partially Supports, 23 Not Applicable, 14 Not Evaluated, the two
+shortfalls being 1.1.1 at 117 of 118 and 1.4.5 at 81 of 118.
 
 **The EPUB declares what a reader can do with it, and Pandoc's version of
 that is two claims it has not checked.** Pandoc 3 writes an accessibility

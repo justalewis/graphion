@@ -62,6 +62,11 @@ Graphion/
   change_password.py  ← Rotate a user's password; prompts via getpass so the
                         value stays out of shell history. The DB hash is the
                         source of truth, not GRAPHION_ADMIN_PASSWORD.
+  acr.py              ← The accessibility conformance report, derived from
+                        the register rather than typed. All 50 WCAG 2.1 A
+                        and AA criteria, each level backed by a named check
+                        and a date. A criterion with nothing behind it
+                        reads Not Evaluated, never Supports.
   epub_a11y.py        ← What the EPUB declares about what a reader can do
                         with it, worked out from the article rather than
                         asserted. Replaces Pandoc's own block, which claims
@@ -133,6 +138,11 @@ app.py:article_lint         — GET  /articles/<id>/lint
   → register.hash_for             hash article.md BEFORE the checks read it
   → lint.run                      Stage 5
   → register.record_lint          one run, dated to those bytes
+
+app.py:accessibility_acr    — GET /accessibility/<slug>/acr
+  → acr.report                    a level per criterion, from the register
+    → register.standing           only runs current against the file on disk
+    → acr.bundle_facts            the template, where that is the evidence
 
 app.py:accessibility_journal — GET /accessibility/<slug>
   → register.rollup               per article, per check, current or not
@@ -224,7 +234,7 @@ Run all tests:
 python -m pytest tests/ -q
 ```
 
-Currently 588 passing. Unit-tested:
+Currently 606 passing. Unit-tested:
 
 - `cleanups.py` — every cleanup pass with input/output pairs + idempotence checks.
 - `conversion.py` metadata round-trip — YAML read/write with sanitization and field ordering.
@@ -252,6 +262,10 @@ Currently 588 passing. Unit-tested:
   the one failure here with no symptom. The declaration cases compile a real
   galley both ways, because a fallback that goes unrecorded is the shortfall
   this kind exists to count.
+- `acr.py` — the four ways a generated report could flatter the archive:
+  filling in a criterion nothing checks, calling one Not Applicable without
+  establishing it, counting an article whose run has gone stale, and
+  reporting a level without saying how many articles it could not reach.
 - the journal template bundles — the accessibility contract every galley
   owes, read off whatever bundles are on disk rather than a list, so a
   journal added later is covered by it. Pairs the markup with the

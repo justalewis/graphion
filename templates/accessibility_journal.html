@@ -58,6 +58,7 @@
     <code>{{ journal['slug'] }}</code>
     &middot; <a href="{{ url_for('accessibility_home') }}">All journals</a>
     &middot; <a href="{{ url_for('journal_home', slug=journal['slug']) }}">Journal</a>
+    &middot; <a href="{{ url_for('accessibility_acr', slug=journal['slug']) }}">Conformance report</a>
   </p>
 
   <table class="reg-table">

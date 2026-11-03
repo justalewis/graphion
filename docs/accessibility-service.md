@@ -558,12 +558,32 @@ the size of the job before commissioning it.
 - A second lane for `images-of-text`, which is a different judgement and
   currently a hand-maintained list.
 
-### Then: the evidence pack (two or three days)
+### Then: the evidence pack (done)
 
-Generate the ACR from the register rather than typing it. A VPAT 2.5Rev with
-each criterion's support level backed by a named check and a date, the
-shortfalls listed as shortfalls, and the evaluation date stamped. The point of
-generating it is that it cannot drift from what the checks actually found.
+~~Generate the ACR from the register rather than typing it.~~ `acr.py` and
+`/accessibility/<slug>/acr`. All 50 WCAG 2.1 Level A and AA criteria, each
+with a support level derived from the register, the checks that back it
+named on the row, and the date stamped.
+
+Over Writing Spaces it comes out 11 Supports, 2 Partially Supports, 23 Not
+Applicable and 14 Not Evaluated. The two shortfalls are the two this
+document has been about: 1.1.1 at 117 of 118 and 1.4.5 at 81 of 118, which
+is the images-of-text list.
+
+Three rules decide every row, and each is there because the opposite is the
+easy mistake. A criterion with no check behind it reads Not Evaluated and
+never Supports, which is 14 of the 50 and is the honest shape of a generated
+report; the rows that do carry a level carry a named check with them. Not
+Applicable is a claim too, so it is read off the content (no media, no
+forms, no scripts in any article) rather than assumed, and a journal whose
+articles could not be read makes no applicability claims at all. And a level
+is derived only from articles the register can currently speak for, so a run
+taken against content that has since moved stops counting and the row says
+how many it could not reach.
+
+2.4.1 and 2.4.7 are backed by the template bundle rather than by a per
+article run, through the same predicates `tests/test_template_bundles.py`
+uses, so the report cannot claim a criterion that test would fail on.
 
 Roughly five to six weeks of focused work for all of it. Stages 1 and 2 come
 first because a report generated before them would be describing output that

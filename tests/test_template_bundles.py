@@ -25,6 +25,8 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+import acr
+
 BUNDLES = sorted(
     p for p in Path("content/journals").glob("*/template")
     if (p / "article.html.j2").exists()
@@ -67,13 +69,13 @@ def test_there_is_a_main_landmark(bundle):
 def test_the_skip_link_lands_somewhere_in_the_same_document(bundle):
     """WCAG 2.4.1. A skip link pointing at an id nothing defines sends a
     keyboard reader to the top of the page, which is where they already
-    were."""
-    html = _template(bundle)
-    link = re.search(r'class="skip-link"[^>]*href="#([^"]+)"', html)
-    assert link, "no skip link"
-    target = link.group(1)
-    assert re.search(r'id="%s"' % re.escape(target), html), (
-        "the skip link points at #%s and nothing has that id" % target)
+    were.
+
+    Read through `acr`, which cites the same fact in the conformance
+    report. One reader, so the report cannot claim a criterion this test
+    would fail on.
+    """
+    assert acr.skip_link_target(_template(bundle)) is not None
 
 
 def test_every_aria_labelledby_points_at_a_heading_that_exists(bundle):
@@ -120,9 +122,8 @@ def test_the_skip_link_is_out_of_the_way_until_it_is_needed(bundle):
     above the title, on every article, for every reader."""
     css = _css(bundle)
     assert ".skip-link" in css, "the markup has a skip link and the CSS does not"
-    rule = re.search(r"\.skip-link\s*\{[^}]*\}", css, re.S)
-    assert rule and re.search(r"(left|top)\s*:\s*-", rule.group(0)), (
-        "the skip link is not taken off screen")
+    assert acr.skip_link_is_hidden_until_focused(css), (
+        "the skip link is not taken off screen, or never comes back")
 
 
 def test_the_skip_link_comes_back_on_focus(bundle):
@@ -134,11 +135,7 @@ def test_the_skip_link_comes_back_on_focus(bundle):
 def test_focus_is_visible(bundle):
     """WCAG 2.4.7. Tabbing through a document with no focus ring is
     navigating it blind."""
-    css = _css(bundle)
-    rule = re.search(r":focus-visible\s*\{[^}]*\}", css, re.S)
-    assert rule, "no :focus-visible rule"
-    assert "outline" in rule.group(0)
-    assert "outline: none" not in rule.group(0)
+    assert acr.focus_is_visible(_css(bundle))
 
 
 # ---------- and what the bundle actually renders ----------

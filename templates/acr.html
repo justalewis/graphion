@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}Accessibility conformance report | {{ journal['name'] }}{% endblock %}
+{% block head %}
+<style>
+  .acr-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: var(--space-4);
+    table-layout: fixed;
+  }
+  /* The remarks carry the report. Fixed widths so a long criterion name
+     cannot squeeze the column somebody is actually reading. */
+  .acr-table col.c-criterion   { width: 19%; }
+  .acr-table col.c-level       { width: 6%; }
+  .acr-table col.c-conformance { width: 15%; }
+  .acr-table col.c-remarks     { width: 60%; }
+  .acr-table th, .acr-table td {
+    text-align: left;
+    vertical-align: top;
+    padding: var(--space-3);
+    border-bottom: 1px solid var(--rule);
+    font-size: var(--text-sm);
+  }
+  .acr-table th {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .acr-table td.num { white-space: nowrap; font-family: var(--font-mono); }
+  .acr-level { white-space: nowrap; font-weight: 600; }
+  .acr-level.good    { color: var(--status-good-fg); }
+  .acr-level.warn    { color: var(--status-warn-fg); }
+  .acr-level.bad     { color: var(--status-error-fg); }
+  .acr-level.unknown { color: var(--muted); }
+  .acr-evidence {
+    display: block;
+    margin-top: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--muted);
+  }
+  .acr-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-top: var(--space-4);
+    font-size: var(--text-sm);
+  }
+  .acr-summary span { font-family: var(--font-mono); }
+  .reg-note {
+    margin-top: var(--space-5);
+    padding: var(--space-4) var(--space-5);
+    border-left: 3px solid var(--rule);
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+  .group-head {
+    margin-top: var(--space-6);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  @media print {
+    .acr-table { font-size: 9pt; }
+    nav, form, .no-print { display: none; }
+  }
+</style>
+{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>Accessibility conformance report</h1>
+  <p class="dim">
+    {{ journal['name'] }}
+    &middot; <a href="{{ url_for('accessibility_journal', slug=journal['slug']) }}">Register</a>
+    &middot; WCAG 2.1 Level A and AA
+    &middot; {{ report.generated_at }}
+  </p>
+
+  <div class="acr-summary">
+    {% for level, n in report.counts().items() %}
+    <span>{{ level }}: {{ n }}</span>
+    {% endfor %}
+    <span>Criteria: {{ report.rows|length }}</span>
+    <span>Articles: {{ report.content.articles }}</span>
+  </div>
+
+  <table class="acr-table">
+    <colgroup>
+      <col class="c-criterion" /><col class="c-level" />
+      <col class="c-conformance" /><col class="c-remarks" />
+    </colgroup>
+    <thead>
+      <tr>
+        <th>Criterion</th>
+        <th>Level</th>
+        <th>Conformance</th>
+        <th>Remarks and explanations</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in report.rows %}
+      <tr>
+        <td class="num">
+          {{ row.criterion.number }}<br />
+          <span class="dim">{{ row.criterion.name }}</span>
+        </td>
+        <td class="num">{{ row.criterion.level }}</td>
+        <td><span class="acr-level {{ row.tone }}">{{ row.level }}</span></td>
+        <td>
+          {{ row.remark }}
+          {% if row.evidence %}
+          <span class="acr-evidence">Checked by: {{ row.evidence|join(', ') }}</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="reg-note">{{ report.note() }}</div>
+</section>
+{% endblock %}
