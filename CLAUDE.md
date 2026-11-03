@@ -33,11 +33,10 @@ Tests (579 functions, 614 cases once the parametrized ones expand: 142 in
 29 in `test_teacher_resources.py`, 28 in `test_metadata_roundtrip.py`,
 26 in `test_pdf_tags.py`, 24 in `test_math_alt.py`, 21 in `test_assess.py`,
 18 in `test_acr.py`, 14 in `test_epub_a11y.py`,
-13 in `test_template_bundles.py`, 8 in `test_accessibility_routes.py`,
-12 in `test_validate_galleys.py`,
-9 in `test_pdf_ua.py`, 5 in `test_validators.py`,
-6 in `test_standalone_html.py`, 4 in `test_journal_filter.py`,
-3 in `test_preprocessors.py`). Most of the suite
+13 in `test_template_bundles.py`, 12 in `test_validate_galleys.py`,
+9 in `test_pdf_ua.py`, 8 in `test_accessibility_routes.py`,
+6 in `test_standalone_html.py`, 5 in `test_validators.py`,
+4 in `test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
 runs without Pandoc; `test_journal_filter.py` needs it, and
 `test_math_alt.py` needs it for the filter round trip alone. Both skip
 where it is absent:
