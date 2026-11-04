@@ -123,6 +123,14 @@ class Line:
     # character's size says that the "A" was ever separate.
     lead_size: float = 0.0
     dropcap: bool = False
+    # The marked content ids this line's characters sit inside, which is
+    # the only thing that joins a line to what a structure tree says about
+    # it. Empty for a file with no tree, which is every file this module
+    # read before `structure.py` existed.
+    mcids: set = field(default_factory=set)
+    # The level the file states for this line, where it states one. Set
+    # from the tree and never inferred; `classify` lets it win.
+    heading_level: Optional[int] = None
 
     @property
     def centre(self) -> float:
@@ -551,6 +559,7 @@ def _page_lines(page, page_no: int) -> list:
         sizes = [c["size"] for c in chars]
         lines.append(Line(
             text=text,
+            mcids={c["mcid"] for c in chars if c.get("mcid") is not None},
             size=round(statistics.median(sizes), 1),
             x0=round(raw["x0"], 1),
             x1=round(raw["x1"], 1),
@@ -727,7 +736,18 @@ def join_lines(lines: list, vocab: set, compounds: set) -> str:
 
 
 def classify(line: Line, layout: Layout) -> str:
-    """What kind of line this is, by size and position."""
+    """What kind of line this is, by size and position.
+
+    A level the file states wins over all of it, because size and position
+    are what miss the heads that matter. `Header_B` and `Header_C` are set
+    at body size and read as prose; across this series' own trees, 262 of
+    784 stated headings are absent from the Markdown, and H5, which is
+    body size in italic, is absent 90 times out of 92. Where no tree
+    reaches the text nothing is stated and the geometry is all there is,
+    which is what every file read here before.
+    """
+    if line.heading_level:
+        return "head"
     if line.size >= layout.body_size * DROPCAP_SIZE_FACTOR:
         return "dropcap"
     if line.size > layout.body_size + HEAD_SIZE_DELTA:
@@ -738,6 +758,32 @@ def classify(line: Line, layout: Layout) -> str:
     if line.x0 > layout.body_left + QUOTE_INSET_MIN:
         return "quote"
     return "body"
+
+
+def apply_stated_headings(lines: list, heads: dict) -> int:
+    """Mark the lines a file's own structure tree calls headings.
+
+    Joined on the marked content id, which is the only thing that ties a
+    structure element to the ink on the page: nothing here is read off how
+    the line is set, which is the point, since how it is set is exactly
+    what misses it. Returns how many lines were marked, for the note the
+    caller leaves.
+
+    `line.page` counts from one, as every page number in this module does,
+    and a structure tree indexes its pages from zero.
+
+    A line that claims two levels is a head something was joined to, and
+    the shallower is the one the outline hangs from.
+    """
+    marked = 0
+    for line in lines:
+        levels = [heads[(line.page - 1, mcid)] for mcid in line.mcids
+                  if (line.page - 1, mcid) in heads]
+        if not levels:
+            continue
+        line.heading_level = min(levels)
+        marked += 1
+    return marked
 
 
 _LIST_RE = re.compile(r"^(\d{1,2})[.)]\s+")
@@ -832,7 +878,22 @@ def assemble(lines: list, layout: Layout, vocab: set, compounds: set) -> list:
         if had_dropcap:
             text = split_dropcap(text, vocab)
             had_dropcap = False
-        blocks.append((kind or "body", text))
+        out_kind = kind or "body"
+        # A level deeper than one is only ever stated by the file's own
+        # tree, so it rides in the kind rather than in a third field on
+        # every block: the pair is what this has always returned and what
+        # every test builds. `head` stays `head`, so a file with no tree
+        # comes out exactly as it did.
+        if out_kind == "head" and buffer[0].heading_level:
+            # Emphasis wrapping the whole of a head is how the page sets
+            # that level, not something a reader is meant to hear: volume
+            # 6 names its fourth level `Header_D_Italics`. `unemphasize`
+            # is the same function the captions use, and it takes off
+            # wrapping that covers the line and only that.
+            text = unemphasize(text)
+            if buffer[0].heading_level > 1:
+                out_kind = "head%d" % min(buffer[0].heading_level, 6)
+        blocks.append((out_kind, text))
         buffer = []
         kind = None
 
@@ -924,8 +985,16 @@ def assemble(lines: list, layout: Layout, vocab: set, compounds: set) -> list:
         )
         prev_line = line
 
+        # Two heads in a row merge into one block, which is older than any
+        # of this and loses a chapter a heading. Where the file states the
+        # levels they are separable, and only there: with nothing stated
+        # both sides are None and this is the behaviour it always had.
+        level_changed = (
+            this == "head" and kind == "head" and buffer
+            and (buffer[0].heading_level or 0) != (line.heading_level or 0)
+        )
         if kind is not None and (this != kind or starts_para or is_note_start
-                                 or is_caption or gap_break):
+                                 or is_caption or gap_break or level_changed):
             flush()
         if kind is None:
             kind = this
@@ -936,6 +1005,22 @@ def assemble(lines: list, layout: Layout, vocab: set, compounds: set) -> list:
             dropcap_run = True
     flush()
     return blocks
+
+
+# A block kind that is a head, with the level it carries. `head` and
+# `title` are level one, which is what every head was before a structure
+# tree could say otherwise.
+_HEAD_KIND_RE = re.compile(r"^head(?P<level>\d*)$")
+
+
+def head_level(kind: str) -> Optional[int]:
+    """The heading level this block kind carries, or None for anything else."""
+    if kind == "title":
+        return 1
+    match = _HEAD_KIND_RE.match(kind or "")
+    if not match:
+        return None
+    return int(match.group("level") or 1)
 
 
 def blocks_to_markdown(blocks: list, abstract: str = "") -> str:
@@ -966,16 +1051,29 @@ def blocks_to_markdown(blocks: list, abstract: str = "") -> str:
     for _, text in blocks:
         referenced.update(_FOOTNOTE_KEY_RE.findall(text))
 
+    # A level stated by the file is the book's, where the chapter title is
+    # the top and the galley prints it from the front matter instead. So
+    # the shallowest level left in the body becomes one, which keeps the
+    # depths the file states and starts them where the body starts.
+    # Volume 6 calls its section heads H2 under an H1 chapter title, and
+    # without this every one of them renders a level below the title with
+    # nothing in between. With nothing stated every head is level one, the
+    # shift is zero, and this does not move.
+    levels = [head_level(kind) for kind, _ in blocks if head_level(kind)]
+    shift = min(levels) - 1 if levels else 0
+
     out, notes = [], []
     for kind, text in blocks:
         if kind in ("figure", "table"):
             # Already Markdown: an image and the caption that names it, or a
             # pipe table.
             out.append(text)
-        elif kind in ("head", "title"):
+        elif head_level(kind):
             # "title" is a head the series sets off-centre, such as the
-            # "Teacher Resources for ..." page. It is still a head.
-            out.append("# " + text)
+            # "Teacher Resources for ..." page. It is still a head, and it
+            # is level one like a plain head; anything deeper came off the
+            # file's own structure tree.
+            out.append("#" * max(1, head_level(kind) - shift) + " " + text)
         elif kind == "quote":
             out.append("> " + text)
         elif kind == "note" and (is_figure_caption(text) or is_table_caption(text)
@@ -2231,14 +2329,66 @@ def _split_authors(byline: str) -> list:
 # ---------- entry point ----------
 
 
+def _take_stated_headings(pdf_path: Path, lines: list,
+                          chars_seen: int, chars_marked: int) -> list:
+    """Use the file's own headings where its tree reaches the text.
+
+    Gated on coverage rather than on a tree existing, because every one of
+    this series' 118 originals carries a tree and 17 of them tag the
+    publisher's cover page and nothing else. Reading those would hand a
+    chapter the structure of its boilerplate.
+
+    Each ending says which of the four happened, because "the headings are
+    inferred" covers a file with no tree and a file whose tree was read and
+    found wanting, and those are different things to be told.
+    """
+    import structure
+
+    try:
+        outline = structure.read(pdf_path, text=False,
+                                 chars=(chars_seen, chars_marked))
+    except Exception as exc:
+        return [f"The structure tree could not be read "
+                f"({type(exc).__name__}); the headings are inferred from "
+                f"type size and centring."]
+
+    if not outline.tagged:
+        return ["No structure tree, so the headings are inferred from type "
+                "size and centring."]
+
+    reach = outline.coverage
+    if not outline.usable:
+        return [f"The structure tree reaches {reach:.0f}% of the text, which "
+                f"is a cover page or a fragment rather than the chapter, so "
+                f"the headings are inferred from type size and centring."]
+
+    heads = outline.heading_map()
+    if not heads:
+        return [f"The structure tree reaches {reach:.0f}% of the text and "
+                f"names no heading, so the headings are inferred from type "
+                f"size and centring."]
+
+    marked = apply_stated_headings(lines, heads)
+    return [f"Took {marked} heading(s) from the structure tree, which "
+            f"reaches {reach:.0f}% of the text, rather than inferring them "
+            f"from type size and centring."]
+
+
 def extract(pdf_path: Path, genre_heads: Optional[tuple] = None,
             assets_dir: Optional[Path] = None,
-            skip_image_digests=frozenset()) -> IngestResult:
+            skip_image_digests=frozenset(),
+            read_structure: bool = True) -> IngestResult:
     """Read a PDF chapter into front matter plus Markdown body.
 
     With `assets_dir`, the figures are written there and placed in the body.
     Without it the text comes through alone, which is what it did before
     figures were extracted at all, and what the tests rely on.
+
+    `read_structure` takes the headings from the file's own structure tree
+    where the tree reaches the text, instead of inferring them from type
+    size and centring. It is on because the inference loses a third of
+    them, and it can be turned off to read a file the way this module read
+    every file before: that is what the comparison was run with.
     """
     import pdfplumber
 
@@ -2249,6 +2399,7 @@ def extract(pdf_path: Path, genre_heads: Optional[tuple] = None,
     tables_by_page: dict = {}
     table_anchors: dict = {}
     clipped_ink = 0
+    chars_seen = chars_marked = 0
     with pdfplumber.open(str(pdf_path)) as pdf:
         if not pdf.pages:
             raise ValueError(f"{pdf_path.name} has no pages.")
@@ -2256,6 +2407,16 @@ def extract(pdf_path: Path, genre_heads: Optional[tuple] = None,
         for page_no, page in enumerate(pdf.pages, 1):
             page, clipped = drop_clipped_ink(page)
             clipped_ink += clipped
+            # Counted here because the chars are already in hand, and
+            # `structure.read` would otherwise walk the whole file again to
+            # work out how far the tree reaches.
+            try:
+                for char in page.chars:
+                    chars_seen += 1
+                    if char.get("mcid") is not None:
+                        chars_marked += 1
+            except Exception:
+                pass
             all_lines.extend(_page_lines(page, page_no))
             found = find_page_tables(page)
             if found:
@@ -2286,6 +2447,14 @@ def extract(pdf_path: Path, genre_heads: Optional[tuple] = None,
     layout = learn_layout(all_lines, page_width)
     kept, dropped = strip_furniture(all_lines, layout)
     notes.append(f"Dropped {len(dropped)} line(s) of page furniture.")
+
+    # After the furniture is gone, because a file can call its running
+    # heads a heading level and mean it: volume 2's chapters map
+    # `Running_Headers` to H5, so the author's name and the folio are
+    # stated headings. The furniture rule still decides what is furniture.
+    if read_structure:
+        notes.extend(_take_stated_headings(pdf_path, kept,
+                                           chars_seen, chars_marked))
 
     # Before the vocabulary is built, so that cells shredded across columns
     # do not teach it their fragments as words.

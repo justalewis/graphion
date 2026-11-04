@@ -30,7 +30,9 @@ Graphion/
                         current one; one taken against content that has
                         since changed counts as unanswered, not as done.
                         Feeds the journal rollup at /accessibility.
-  structure.py        ← What a PDF states about its own structure. Walks
+  structure.py        ← What a PDF states about its own structure, which
+                        `pdf_ingest` takes its headings from where the
+                        tree reaches the text. Walks
                         the tree, joins it to the page on the
                         marked-content id, and reads a heading level back
                         off the file's own RoleMap where the map flattened
@@ -338,6 +340,13 @@ Currently 614 passing. Unit-tested:
   tree that covers the cover page and nothing else, and a RoleMap that
   flattens every heading to a paragraph. Plus the joins and the loops,
   since this is pointed at files nobody here produced.
+- the headings ingest takes from a tree — that the join is the marked
+  content id and not how the line looks, that a file stating nothing comes
+  out exactly as it did, and the three things a stated level needs before
+  it reaches the Markdown: the furniture rule still decides what is
+  furniture, the body starts at level one however the book numbered it,
+  and emphasis wrapping a whole head is a typographic level rather than
+  something to read aloud.
 - `filters/fig-alt.lua` — that a figure's description reaches the alt text
   of every writer, and that the caption stays the caption. Only running
   Pandoc shows it, so the file skips where Pandoc is absent.

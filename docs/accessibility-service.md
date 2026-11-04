@@ -683,11 +683,36 @@ the size of the job before commissioning it.
   for itself rather than this codebase knowing what a publisher calls a
   head.
 
-  What is left is the work itself: a reconstruction path that reads the
-  tree where it reaches the text and infers where it does not, and a
-  re-ingest of the chapters that would gain by it. That is destructive, so
-  it is an editor's decision and not a refactor; see the carrying rules in
-  CLAUDE.md for what a re-ingest costs.
+  **Ingest reads the tree now.** `pdf_ingest.apply_stated_headings` marks
+  a line from the file's own heading elements, joined on the marked
+  content id and nothing else, and `classify` lets that level win: size
+  and position are exactly what miss `Header_B`.
+  `extract(read_structure=False)` reads a file the way it always did,
+  which is what the comparison above was run with, and a file whose tree
+  does not reach the text takes that path anyway.
+
+  Over fifteen sampled chapters the heading count goes from 136 to 267
+  against 337 the files state. `introduction-to-primary-research` goes
+  from 13 to 42, with its second and third levels back.
+  `backpacks-vs-briefcases`, whose tree covers a cover page, is untouched
+  at 4. What is still short is the chapter title and the byline, which
+  belong in the front matter and not in the body, and anything a dropped
+  cover page carried.
+
+  The levels come out as the book states them, shifted so the shallowest
+  left in the body is one: volume 6 calls its section heads H2 under an H1
+  chapter title, and the galley prints that title from the front matter,
+  so without the shift every section head would render a level below it
+  with nothing in between.
+
+  **None of this has touched the archive.** The change applies to an
+  ingest, and nothing re-ingests on its own; the 115 published chapters
+  still carry the headings they were given. Re-ingesting them is what
+  would put the missing ones in the galleys, and a re-ingest is
+  destructive, so it is an editor's decision rather than a refactor. See
+  the carrying rules in CLAUDE.md for what one costs, and note that
+  `carry_alt_text` and `carry_editor_fields` now cover most of what used
+  to be lost.
 
 ### Stage 4: the description queue (done)
 

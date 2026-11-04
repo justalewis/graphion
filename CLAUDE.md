@@ -27,10 +27,11 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (682 functions, 734 cases once the parametrized ones expand: 142 in
+Tests (696 functions, 748 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 64 in `test_assess.py`,
 43 in `test_ingest_volume.py`, 42 in `test_lint.py`, 38 in
 `test_describe.py`, 36 in `test_register.py`, 14 in `test_structure.py`,
+14 in `test_stated_headings.py`,
 29 in `test_teacher_resources.py`,
 29 in `test_metadata_roundtrip.py`, 26 in `test_pdf_tags.py`,
 24 in `test_math_alt.py`,
@@ -428,14 +429,54 @@ hardcoded.
 
 What that measured is the reason to read a tree at all. Over the 39
 chapters whose tree reaches the text and names headings, **262 of 784
-stated headings are missing from `article.md`**, and H5 is gone almost
+stated headings were missing from `article.md`**, and H5 was gone almost
 entirely, 90 of 92, because that level is set at body size in italic and
-`classify` reads it as emphasis inside a paragraph. Ingest invents
-nothing; it loses depth. `introduction-to-primary-research` states 48
-headings and publishes 13. Every galley involved is PDF/UA-1 and
+`classify` read it as emphasis inside a paragraph. Ingest invented
+nothing; it lost depth. `introduction-to-primary-research` states 48
+headings and published 13. Every galley involved is PDF/UA-1 and
 pa11y-clean, because conformance asks that a heading be marked up
 correctly and not that a document keep its headings, which is why nothing
 had reported it.
+
+**So ingest reads the tree where it reaches the text.**
+`pdf_ingest.apply_stated_headings` marks a line from the file's own
+heading elements and `classify` lets that level win, which is the point:
+size and position are exactly what miss `Header_B`. The join is the
+marked content id and nothing else, so `Line` carries the ids its
+characters sit in; matching on how a line looks would be the same guess
+again. `extract(read_structure=False)` reads a file the way this module
+read every file before, which is what the comparison was run with.
+
+Four things that had to be got right, each of which is a test.
+
+The marking happens **after** `strip_furniture`, because a file can call
+its running heads a heading level and mean it: 21 of these originals map a
+`Running_Headers` style to a heading, so the author's name and the folio
+are stated headings. The furniture rule still decides what is furniture.
+
+A level is the **book's**, where the chapter title is the top and the
+galley prints that from the front matter, so `blocks_to_markdown` shifts
+the shallowest level left in the body down to one. Volume 6 calls its
+section heads H2; without the shift every one of them renders a level
+below the title with nothing in between, and the galley's own template
+already puts a body `#` at `<h2>`.
+
+Emphasis wrapping the whole of a stated head comes off, through the
+`unemphasize` the captions already use, because volume 6 names its fourth
+level `Header_D_Italics` and that is how the page sets a level rather
+than something a reader is meant to hear.
+
+And two heads in a row no longer merge where the levels differ. That
+merge is older than all of this and loses a chapter a heading; with
+nothing stated both sides are None and it behaves as it always did.
+
+The level rides in the block kind (`head`, `head2`, `head3`) rather than
+in a third field, so the pair `assemble` has always returned is the pair
+it still returns and every test that builds blocks still builds them.
+`head_level()` is the one reader of that. Over fifteen sampled chapters
+the heading count goes from 136 to 267 against 337 stated; what is still
+short is the chapter title and the byline, which belong in the front
+matter, and anything a cover page carried.
 
 One walker, in `structure.walk`. `assess._read_structure` counts figures
 and headings off its elements rather than walking the tree a second time,
@@ -1420,10 +1461,11 @@ Anything touching Claude (`stylize.py`, `llm_cleanup.py`) requires
   figure's state comes from `lint.figure_state` and a description is
   written by `conversion.with_description`, so what it holds is the order
   the work is done in and the counts an editor works to.
-- `structure.py` (339) is what reads a PDF's own structure tree: the walk,
+- `structure.py` (371) is what reads a PDF's own structure tree: the walk,
   the join to the page on the marked-content id, and the heading level a
   RoleMap flattened. It is the only tree walker now; `assess` counts
-  figures and headings off its elements.
+  figures and headings off its elements, and `pdf_ingest` takes its
+  headings from `heading_map()` where the tree reaches the text.
 - `epub_a11y.py` is the only module that touches EPUB package structure,
   for the same reason `pdf_tags.py` is the only one that touches PDF
   object structure: rewriting a container is a thing to do in one place.

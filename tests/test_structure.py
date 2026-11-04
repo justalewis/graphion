@@ -101,7 +101,7 @@ def test_the_level_the_file_states_wins_over_the_map():
     levels = structure.heading_levels(rolemap)
     tree = {"/S": "/Document", "/K": [{"/S": "/Header_A", "/K": 0}]}
 
-    elements, _claims, _styles = structure.walk(tree, {}, rolemap, levels)
+    elements, _styles = structure.walk(tree, {}, rolemap, levels)
 
     assert [(e.role, e.style) for e in elements] == [
         ("/Document", "/Document"), ("/H2", "/Header_A")]
@@ -192,7 +192,7 @@ def test_a_loop_in_the_tree_terminates():
     outer = {"/S": "/Document", "/K": [inner]}
     inner["/K"] = [outer]
 
-    elements, _claims, _styles = structure.walk(outer, {}, {}, {})
+    elements, _styles = structure.walk(outer, {}, {}, {})
 
     assert [e.style for e in elements] == ["/Document", "/P"]
 
@@ -204,7 +204,7 @@ def test_an_annotation_contributes_no_text():
     tree = {"/S": "/Link",
             "/K": [{"/Type": "/OBJR", "/Obj": {"/Subtype": "/Link"}}, 7]}
 
-    elements, claims, _styles = structure.walk(tree, {}, {}, {})
+    elements, _styles = structure.walk(tree, {}, {}, {})
 
     assert [e.style for e in elements] == ["/Link"]
-    assert claims == [[(None, 7)]]
+    assert elements[0].mcids == [(None, 7)]

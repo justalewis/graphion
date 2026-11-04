@@ -822,8 +822,8 @@ def test_a_tree_that_reaches_the_text_is_reported_as_reachable():
     assert assessment.tree_usable
     notes = " ".join(assessment.notes)
     assert "98% of the text" in notes
-    assert "names 18 heading(s)" in notes
-    assert "the one this pipeline passes over" in notes
+    assert "names 18 heading element(s)" in notes
+    assert "calls its running heads one" in notes
 
 
 def test_a_tree_that_reaches_a_cover_page_says_so():

@@ -1301,12 +1301,14 @@ def _add_notes(assessment: Assessment) -> None:
         assessment.notes.append(
             f"The structure tree reaches "
             f"{assessment.tree_coverage:.0f}% of the text and names "
-            f"{assessment.tree_headings} heading(s) across "
-            f"{assessment.tree_elements} element(s). Ingest does not read "
-            f"it: paragraphs come from the first-line indent, heads from "
-            f"type size and centring, emphasis from font names. What the "
-            f"file states is the better source and the one this pipeline "
-            f"passes over.")
+            f"{assessment.tree_headings} heading element(s) across "
+            f"{assessment.tree_elements}. Ingest takes the headings from "
+            f"it rather than from type size and centring; the paragraphs, "
+            f"the quotations and the emphasis are still read off the "
+            f"geometry of the page. A file calls what it likes a heading, "
+            f"and volume 2 of this series calls its running heads one, so "
+            f"the count is of elements and the furniture rule still "
+            f"decides what reaches the text.")
     elif assessment.tagged and assessment.tree_coverage is None:
         assessment.notes.append(
             "The file carries a structure tree and no text was read, so "

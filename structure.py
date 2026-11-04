@@ -71,6 +71,11 @@ class Element:
     page: Optional[int] = None
     text: str = ""
     alt: str = ""
+    # The marked content this element claims, as `(page index, id)` pairs.
+    # It is what joins the tree to the page, and it is kept rather than
+    # consumed because a caller matching the tree against lines of its own
+    # needs the same join and must not have to repeat it on the text.
+    mcids: List[tuple] = field(default_factory=list)
 
     @property
     def is_heading(self) -> bool:
@@ -125,6 +130,29 @@ class Outline:
 
     def headings(self) -> List[Element]:
         return [e for e in self.elements if e.is_heading and e.text.strip()]
+
+    def heading_map(self) -> Dict[tuple, int]:
+        """Every marked id the file calls a heading, with its level.
+
+        `(page index, marked id) -> level`, which is what a reconstruction
+        joins its own lines on. Empty where the tree does not reach the
+        text, so a caller gets the file's answer or nothing and never a
+        reading of the cover page applied to a chapter.
+        """
+        if not self.usable:
+            return {}
+        out: Dict[tuple, int] = {}
+        for element in self.elements:
+            if not element.is_heading:
+                continue
+            level = HEADING_ROLES[element.role]
+            for page, mcid in element.mcids:
+                # A claim with no page or no id cannot be joined to a line
+                # on one, so it is left out rather than carried as a key
+                # nothing will ever match.
+                if page is not None and mcid is not None:
+                    out[(page, mcid)] = level
+        return out
 
 
 def heading_levels(rolemap: Dict[str, str]) -> Dict[str, int]:
@@ -182,13 +210,11 @@ def walk(tree, pages: Dict[tuple, int], rolemap: Dict[str, str],
          levels: Dict[str, int]) -> tuple:
     """Every element of the tree in document order, with its marked ids.
 
-    Returns `(elements, mcids, styles)`, where `mcids` is a list parallel
-    to `elements` holding each one's `(page, id)` pairs. They are kept
-    apart so a caller that only wants the roles need not open the file a
-    second time to join the text.
+    Returns `(elements, styles)`. Each element carries the `(page, id)`
+    pairs it claims, which is the only thing that joins a role to the text
+    on the page.
     """
     elements: List[Element] = []
-    claims: List[list] = []
     styles: Dict[str, int] = {}
     seen: set = set()
 
@@ -252,29 +278,34 @@ def walk(tree, pages: Dict[tuple, int], rolemap: Dict[str, str],
             element = Element(role=role, style=style, page=here,
                               alt=str(obj.get("/Alt") or "").strip())
             elements.append(element)
-            mine: list = []
-            claims.append(mine)
+            mine = element.mcids
         else:
-            element = None
             mine = []
 
         if "/K" in obj:
             collect(obj["/K"], here, mine)
 
     descend(tree, None)
-    return elements, claims, styles
+    return elements, styles
 
 
-def read(path, text: bool = True) -> Outline:
+def read(path, text: bool = True, chars: Optional[tuple] = None) -> Outline:
     """Read one PDF's structure tree. Writes nothing.
 
     `text` false skips the pdfplumber pass that joins the elements to the
     page, which is most of the cost: a caller counting roles does not need
     it, and `coverage` is then unknown rather than wrong.
+
+    `chars` is `(total, marked)` from a caller that has already walked the
+    pages, which `pdf_ingest` has by the time it asks. It buys the coverage
+    gate without a second pass over the file, and it is passed in rather
+    than assigned afterwards so that a count nobody made stays None.
     """
     from pypdf import PdfReader
 
     outline = Outline(path=Path(path))
+    if chars:
+        outline.chars, outline.marked_chars = chars
     try:
         reader = PdfReader(str(path))
         root = reader.trailer["/Root"]
@@ -295,24 +326,25 @@ def read(path, text: bool = True) -> Outline:
 
     outline.rolemap = _read_rolemap(tree)
     levels = heading_levels(outline.rolemap)
-    elements, claims, styles = walk(
+    outline.elements, outline.styles = walk(
         tree, _page_numbers(reader), outline.rolemap, levels)
-    outline.elements = elements
-    outline.styles = styles
 
     if not text:
         return outline
 
-    _join_text(outline, claims)
+    _join_text(outline)
     return outline
 
 
-def _join_text(outline: Outline, claims: List[list]) -> None:
+def _join_text(outline: Outline) -> None:
     """Hand each element the text of the marked content it claims."""
     import collections
 
     import pdfplumber
 
+    # Reset rather than add to, so a caller that passed its own counts and
+    # then asked for the text does not get them twice.
+    outline.chars = outline.marked_chars = 0
     by_id: dict = collections.defaultdict(list)
     try:
         with pdfplumber.open(str(outline.path)) as pdf:
@@ -332,8 +364,8 @@ def _join_text(outline: Outline, claims: List[list]) -> None:
         outline.error = f"{type(exc).__name__}: {exc}"
         return
 
-    for element, mine in zip(outline.elements, claims):
+    for element in outline.elements:
         parts = []
-        for key in mine:
+        for key in element.mcids:
             parts.extend(by_id.get(key, ()))
         element.text = " ".join("".join(parts).split())
