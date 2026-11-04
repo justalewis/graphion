@@ -27,9 +27,9 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (716 functions, 768 cases once the parametrized ones expand: 142 in
+Tests (745 functions, 797 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 64 in `test_assess.py`,
-46 in `test_ingest_volume.py`, 42 in `test_lint.py`, 38 in
+50 in `test_lint.py`, 46 in `test_ingest_volume.py`, 38 in
 `test_describe.py`, 36 in `test_register.py`, 23 in
 `test_stated_headings.py`, 14 in `test_structure.py`,
 29 in `test_teacher_resources.py`,
@@ -38,6 +38,7 @@ Tests (716 functions, 768 cases once the parametrized ones expand: 142 in
 18 in `test_acr.py`, 14 in `test_epub_a11y.py`,
 13 in `test_template_bundles.py`, 12 in `test_validate_galleys.py`,
 9 in `test_pdf_ua.py`, 8 in `test_accessibility_routes.py`,
+21 in `test_reading_order.py`,
 8 in `test_heading_levels.py`, 7 in `test_fig_alt.py`,
 6 in `test_standalone_html.py`,
 5 in `test_validators.py`,
@@ -1496,6 +1497,101 @@ this; the same lines were in the same order before, as paragraphs rather
 than heads, which is where reading the tree made a pre-existing defect
 legible rather than causing one. Separating a marginal column from the
 text block is the fix and it is not written.
+
+**Nothing checked the order until `structure.reading_order` did, and the
+order is where this module's worst defects live.** Every check in `lint.py`
+reads what the reconstruction produced and asks whether it is well formed.
+None of them could ask whether it is in the right order, because the words
+are all present either way: the galley renders, lint passes, verapdf
+passes, pa11y passes, and a reader meets a pull quote spliced through a
+heading. That is the whole history above. Two texts merged character by
+character inside a clipped figure. A two-column table read across its
+columns as "detailing as being the most import- lab procedures ant while".
+Seven figures closing a document after the Works Cited. Every one of them
+was found by a person reading a galley and noticing.
+
+A tagged PDF states the order, and that is the only thing a reconstruction
+can be checked against. Any other reading of what order a page should come
+out in is the same inference that produced the reconstruction, so it would
+agree with itself and prove nothing.
+
+**Descents, not an agreement figure.** `order_descents` counts the places
+where consecutive output text runs backwards through the file's order, and
+does not score the chapter as a whole. The defect is local and a
+whole-chapter figure buries it: the interleaved pull quote in
+`annoying-ways-people-use-sources` is sixteen lines out of five hundred, so
+as a share of the pairs that could be out of order it is 0.02%, which no
+threshold separates from a clean chapter, and as a count of places where
+the text jumps backwards it is sixteen against zero. `Descent` carries the
+gap and the words either side, because the number says there is a problem
+and only the words say what it is.
+
+**The tree decides what is body flow, and the answer is inherited.** The
+first version asked `pdf_ingest` to guess from how a line read, and it was
+wrong three ways over the archive, each one a chapter reporting a fault
+that was not there. A caption sits in its own branch, so
+`introduction-to-primary-research` jumped back 734 marked ids after
+"Fig. 2: A sample timeline for Jared's research project" with nothing
+wrong. `is_figure_caption` then missed "Figs. 2-6." for want of a plural.
+And every one of `7-welhausen`'s ten descents was a footnote, which this
+series prints with no stop after the number, so `_NOTE_RE` could not see
+them either.
+
+`NOT_BODY_FLOW` and `carries_body_flow` read it off the file instead, and
+both the role and the style are tested, because the RoleMap flattens:
+`why-blog-searching-for-writing-on-the-web` holds its caption as role `/P`
+with style `/Caption`, the same export trick that hides the heading levels.
+The flag is inherited and `walk` works it out as it goes, because an
+element on its own cannot answer: a `/P` inside a `/Note` is still a note,
+and the text usually sits in a `/Span` below that again. Testing the
+element alone left all ten of those footnote descents standing. A line the
+file places nowhere in the body flow is reported unplaced, never as text in
+the wrong place, and `share_placed` is the evidence behind the count.
+
+**Measured at ingest, reported by lint, and that split is deliberate.**
+`pdf_ingest.measure_reading_order` runs over the lines on their way into
+`assemble`, where both orders are already in memory and the comparison
+costs nothing. Those lines are past `strip_furniture` and past the front
+matter, and `assemble` only groups lines already adjacent, so their order
+going in is their order coming out; what moves afterwards moves on purpose,
+since `blocks_to_markdown` collects the notes to the end because Markdown
+requires it there and the figures and tables are placed by anchor.
+Comparing the finished Markdown would report every one of those as a fault.
+
+`lint.check_reading_order` then reads the number off the front matter and
+works none of it out again. Reading a structure tree in a lint check would
+cost a pdfplumber pass over the source on every corpus run, and the route
+that runs these checks over a whole journal exists because lint and the
+declaration are cheap enough for a request. A note would have been the
+other option and it reaches nobody: `conversion.py:561` writes the ingest
+notes into `conversion.log`, no route serves that file and no template
+shows them, so every note this module leaves is already unread.
+
+A chapter with no record has not been checked, which is not the same as a
+chapter with nothing wrong, so it passes with the gap said out loud and
+counts nothing: `chapters-order-checked` is what separates the two, by the
+rule `register.UNRUN` exists for and the one `check_images_of_text` draws
+beside its own zero. The units are recorded and deliberately kept out of
+`WORK_ROWS`, because a descent is a place for somebody to look and not an
+hour of editorial labour, and summing it with the figures still to be
+described would make the one number a journal asks for mean two things at
+once.
+
+**What it found, and what it cannot see.** `8-diab` reports 18 descents at
+a worst of 349, and reading them shows two columns interleaving and
+merging mid-word: "The author divided the parts of the rhe-" then "target
+students and teachers". That is the same defect
+`drop_lines_inside_tables` was written for, live and undetected in a
+chapter nobody had looked at.
+
+The limitation is the files with no usable tree. 18 of the 115 state no
+order at all, and volume 1's chapter 6, which is the worst reconstruction
+in this archive by a distance, is one of them: its tree covers the
+publisher's cover page. So the check is blind in exactly the place the
+reconstruction is weakest, and a chapter reporting no descents may simply
+be a chapter nothing could be asked about. That is why the count of
+chapters checked is reported next to the count of descents rather than
+underneath it.
 
 **An article can render as two galleys.** `teacher-resources: separate` in
 the front matter splits a chapter at its `Teacher Resources` heading, so the

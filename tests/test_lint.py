@@ -435,3 +435,79 @@ def test_a_caption_standing_in_for_a_description_is_still_owed():
 
     assert units["figures-caption-as-alt"] == 1
     assert units["figures-described"] == 0
+
+
+# ---------- reading order ----------
+
+def _order(recorded):
+    return lint.check_reading_order({}, {"reading-order": recorded}, "Prose.\n")
+
+
+def test_reading_order_is_registered():
+    assert lint.check_reading_order in lint.DEFAULT_CHECKS
+
+
+def test_a_chapter_in_its_source_s_order_passes():
+    result = _order({"descents": 0, "worst": 0, "placed": 540, "unplaced": 0})
+
+    assert result.level == "pass"
+    assert "540" in result.summary
+    assert result.units == {"order-descents": 0, "chapters-order-checked": 1}
+
+
+def test_a_chapter_that_runs_backwards_is_a_warning():
+    """`annoying-ways-people-use-sources` reads 16 descents with a worst of
+    637, against a median of 0 across the archive."""
+    result = _order({"descents": 16, "worst": 637, "placed": 543,
+                     "unplaced": 0})
+
+    assert result.level == "warn"
+    assert "16" in result.summary
+    assert "637" in result.summary
+    assert result.units["order-descents"] == 16
+    assert result.units["chapters-order-checked"] == 1
+
+
+def test_no_record_is_not_a_pass_about_nothing():
+    """A chapter nobody has checked and a chapter with nothing wrong look
+    identical on a level alone, which is the hole `register.UNRUN` exists
+    to keep out of the register. The count of chapters checked is what
+    separates them."""
+    result = lint.check_reading_order({}, {}, "Prose.\n")
+
+    assert result.level == "pass"
+    assert result.units["chapters-order-checked"] == 0
+    assert result.details, "the gap has to be said out loud beside the zero"
+
+
+def test_a_record_that_placed_nothing_counts_as_unchecked():
+    """A source whose tree does not reach the text states no order, so
+    there was nothing to compare and no reading was made."""
+    result = _order({"descents": 0, "worst": 0, "placed": 0, "unplaced": 310})
+
+    assert result.units["chapters-order-checked"] == 0
+
+
+def test_a_malformed_record_does_not_raise():
+    """The field is in the front matter, where an editor can reach it."""
+    for bad in ("", [], "two", {"descents": "x"}, {"placed": 5}):
+        assert lint.check_reading_order({}, {"reading-order": bad},
+                                        "Prose.\n").level == "pass"
+
+
+def test_descents_are_not_counted_as_editorial_work():
+    """`Rollup.work` sums `WORK_ROWS`, and a place to look is not an hour
+    of writing. Folding them together would make the one number a journal
+    asks for mean two things at once."""
+    import register
+
+    work_units = {row.unit for row in register.WORK_ROWS}
+    assert "order-descents" not in work_units
+
+
+def test_the_threshold_sits_where_the_archive_put_it():
+    """81 of the archive's 97 checked chapters report no descent, the next
+    three report 1, 2 and 4, and the two real defects report 16 and 18. A
+    chapter at the top of that noise is not worth an editor's afternoon."""
+    assert _order({"descents": 4, "worst": 7, "placed": 500}).level == "pass"
+    assert _order({"descents": 5, "worst": 7, "placed": 500}).level == "warn"

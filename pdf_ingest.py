@@ -2423,8 +2423,52 @@ def _split_authors(byline: str) -> list:
 # ---------- entry point ----------
 
 
+def measure_reading_order(outline, lines: list):
+    """How far the body's order agrees with the one the file states.
+
+    Compared over the lines on their way into `assemble`, which is the
+    right place for two reasons. They are past `strip_furniture` and past
+    the front matter, so a running head or a byline lifted out of the body
+    is not read as text in the wrong place. And `assemble` only groups
+    lines that are already adjacent, so their order going in is their order
+    coming out: what moves afterwards moves on purpose, since
+    `blocks_to_markdown` collects the notes to the end because Markdown
+    requires it there, and the figures and tables are placed by anchor.
+    Comparing the finished Markdown would report every one of those as a
+    fault and give a number nobody could read.
+
+    So what this catches is interleaving, which is the defect with no
+    symptom: the words are all present, the galley renders, and every
+    checker passes. The clipped overflow merged character by character into
+    the prose beside it, a two-column table read across its columns, a
+    marginal pull quote running through a heading.
+
+    What is not compared is decided by the tree, in
+    `structure.carries_body_flow`, and not by a pattern here. A caption, a
+    note and a table cell are each text the reconstruction places by a rule
+    of its own, so where they come out is a decision rather than a reading;
+    the tree holds them in its own branches and `reading_order` leaves them
+    out, which makes a line holding one of them unplaced rather than text in
+    the wrong place. Guessing from how a line reads was tried first and was
+    wrong twice over the archive: it missed "Figs. 2-6." for want of a
+    plural in the pattern, and every footnote in this series, which prints
+    its number with no stop after it.
+
+    `Line.mcids` holds bare ids and `line.page` counts from one, so the
+    pairing happens here; the tree indexes its pages from zero.
+    """
+    import structure
+
+    order = structure.reading_order(outline) if outline is not None else {}
+    if not order:
+        return structure.OrderCheck()
+    items = [([(line.page - 1, mcid) for mcid in sorted(line.mcids)],
+              line.text) for line in lines]
+    return structure.order_descents(order, items)
+
+
 def _take_stated_headings(pdf_path: Path, lines: list,
-                          chars_seen: int, chars_marked: int) -> list:
+                          chars_seen: int, chars_marked: int) -> tuple:
     """Use the file's own headings where its tree reaches the text.
 
     Gated on coverage rather than on a tree existing, because every one of
@@ -2435,6 +2479,12 @@ def _take_stated_headings(pdf_path: Path, lines: list,
     Each ending says which of the four happened, because "the headings are
     inferred" covers a file with no tree and a file whose tree was read and
     found wanting, and those are different things to be told.
+
+    Returns `(notes, outline)`. The outline is handed back rather than
+    dropped because the tree states reading order as well as heading
+    levels, and `measure_reading_order` is the only thing a reconstruction's
+    order can be checked against. Reading the file twice for the two
+    questions would be the second walk `structure.walk` exists to avoid.
     """
     import structure
 
@@ -2444,28 +2494,28 @@ def _take_stated_headings(pdf_path: Path, lines: list,
     except Exception as exc:
         return [f"The structure tree could not be read "
                 f"({type(exc).__name__}); the headings are inferred from "
-                f"type size and centring."]
+                f"type size and centring."], None
 
     if not outline.tagged:
         return ["No structure tree, so the headings are inferred from type "
-                "size and centring."]
+                "size and centring."], outline
 
     reach = outline.coverage
     if not outline.usable:
         return [f"The structure tree reaches {reach:.0f}% of the text, which "
                 f"is a cover page or a fragment rather than the chapter, so "
-                f"the headings are inferred from type size and centring."]
+                f"the headings are inferred from type size and centring."], outline
 
     heads = outline.heading_map()
     if not heads:
         return [f"The structure tree reaches {reach:.0f}% of the text and "
                 f"names no heading, so the headings are inferred from type "
-                f"size and centring."]
+                f"size and centring."], outline
 
     marked = apply_stated_headings(lines, heads)
     return [f"Took {marked} heading(s) from the structure tree, which "
             f"reaches {reach:.0f}% of the text, rather than inferring them "
-            f"from type size and centring."]
+            f"from type size and centring."], outline
 
 
 def extract(pdf_path: Path, genre_heads: Optional[tuple] = None,
@@ -2546,9 +2596,11 @@ def extract(pdf_path: Path, genre_heads: Optional[tuple] = None,
     # heads a heading level and mean it: volume 2's chapters map
     # `Running_Headers` to H5, so the author's name and the folio are
     # stated headings. The furniture rule still decides what is furniture.
+    outline = None
     if read_structure:
-        notes.extend(_take_stated_headings(pdf_path, kept,
-                                           chars_seen, chars_marked))
+        head_notes, outline = _take_stated_headings(pdf_path, kept,
+                                                    chars_seen, chars_marked)
+        notes.extend(head_notes)
 
     # Before the vocabulary is built, so that cells shredded across columns
     # do not teach it their fragments as words.
@@ -2576,6 +2628,24 @@ def extract(pdf_path: Path, genre_heads: Optional[tuple] = None,
         layout, bool(overview_lines),
     )
     body_lines.extend(rest)
+
+    # Before `assemble`, because this reads the lines' own order and that is
+    # what `assemble` groups rather than rearranges.
+    order_check = measure_reading_order(outline, body_lines)
+    if order_check.read:
+        fm["reading-order"] = {
+            "descents": len(order_check.descents),
+            "worst": order_check.worst,
+            "placed": order_check.placed,
+            "unplaced": order_check.unplaced,
+        }
+        if order_check.descents:
+            worst = max(order_check.descents, key=lambda d: d.gap)
+            notes.append(
+                f"The body runs backwards through the file's own reading "
+                f"order in {len(order_check.descents)} place(s), the worst "
+                f"by {worst.gap} marked id(s): "
+                f"{worst.before[:48]!r} then {worst.after[:48]!r}.")
 
     assembly: dict = {}
     blocks = assemble(body_lines, layout, vocab, compounds, report=assembly)

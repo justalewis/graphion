@@ -76,6 +76,10 @@ class Element:
     # consumed because a caller matching the tree against lines of its own
     # needs the same join and must not have to repeat it on the text.
     mcids: List[tuple] = field(default_factory=list)
+    # Whether this element's text is part of the running body, inherited
+    # from its ancestors by `walk`. False inside a caption, a note, a
+    # figure or a table. See `carries_body_flow`.
+    in_flow: bool = True
 
     @property
     def is_heading(self) -> bool:
@@ -155,6 +159,196 @@ class Outline:
         return out
 
 
+@dataclass
+class Descent:
+    """One place a reconstruction runs backwards through the file's order.
+
+    `gap` is how far back it jumps, counted in marked ids, so a step back of
+    one is two lines swapped and a step back of two hundred is a block that
+    came to rest somewhere else entirely. The texts either side are carried
+    because the number says there is a problem and only the words say what
+    it is.
+    """
+
+    index: int
+    gap: int
+    before: str
+    after: str
+
+
+@dataclass
+class OrderCheck:
+    """How far a reconstruction's order agrees with the file's own.
+
+    `placed` and `unplaced` are the evidence behind the descents: a chapter
+    whose lines mostly carry no marked id has not been checked, however few
+    descents it reports, which is the same distinction `coverage` draws and
+    the same one `register.UNRUN` exists for.
+    """
+
+    descents: List["Descent"] = field(default_factory=list)
+    placed: int = 0
+    # Lines the file states no body-flow position for: a caption, a note, a
+    # table cell, or a line carrying no marked id at all. Counted rather
+    # than dropped quietly, because a reading made over half the lines is a
+    # different reading and `share_placed` is what says so.
+    unplaced: int = 0
+
+    @property
+    def read(self) -> int:
+        return self.placed + self.unplaced
+
+    @property
+    def share_placed(self) -> Optional[float]:
+        """What share of the text could be placed in the file's order.
+
+        None where nothing was read, never zero, because a zero there is a
+        number reported for a reading that did not happen.
+        """
+        if not self.read:
+            return None
+        return self.placed / self.read * 100.0
+
+    @property
+    def worst(self) -> int:
+        return max((d.gap for d in self.descents), default=0)
+
+
+# What a tree calls text the body flow does not carry, or that the pipeline
+# repositions on purpose, so its place in the file says nothing about the
+# reconstruction's order. Read off the file rather than guessed from the
+# line, for the reason the heading levels are.
+#
+# Each entry is here because a chapter reported a descent for it. A caption
+# is kept in its own branch, so `introduction-to-primary-research` jumped
+# back 734 marked ids after "Fig. 2: A sample timeline" with nothing wrong.
+# A footnote is kept where the page printed it while the tree collects the
+# note elements elsewhere, which is all ten of `7-welhausen`'s descents. And
+# a table's cells come out of the prose into a pipe table, so their place in
+# the running text is not a reading of anything.
+#
+# Both the role and the style are tested, because the RoleMap flattens:
+# `why-blog-searching-for-writing-on-the-web` holds its caption as role
+# `/P` with style `/Caption`, which is the same export trick that hides the
+# heading levels.
+NOT_BODY_FLOW = frozenset({
+    "/Caption", "/Note", "/Footnotes", "/Footnote",
+    "/Figure", "/Formula",
+    "/Table", "/TR", "/TD", "/TH", "/THead", "/TBody",
+    "/TOC", "/TOCI", "/Artifact", "/Index",
+})
+
+
+def carries_body_flow(element: "Element") -> bool:
+    """Whether this element's text is part of the running body.
+
+    False for a caption, a note, a figure or a table cell: text the
+    reconstruction places by a rule of its own, or that the tree keeps in
+    its own branch, so comparing where it came out against where the file
+    holds it measures a decision rather than a reading.
+
+    `walk` works this out as it goes, because the answer is inherited and
+    an element on its own cannot give it: a `/P` inside a `/Note` is still
+    a note, and the text usually sits in a `/Span` below that again. One
+    reader, so a caller cannot ask the question a second way and get a
+    second answer.
+    """
+    return element.in_flow
+
+
+def reading_order(outline: "Outline") -> Dict[tuple, int]:
+    """Each marked id's place in the order the file states.
+
+    Numbered over the body-flow elements in document order, so a marked id's
+    position is where the tree puts the text it holds. This is the one thing
+    a reconstruction's order can be checked against: every other reading of
+    what order a page should come out in is the same inference that produced
+    the reconstruction, so it would agree with itself and prove nothing.
+
+    A caption, a note and a table cell are left out, by `carries_body_flow`,
+    so a line holding one of them is reported unplaced rather than as text
+    in the wrong place. The alternative was a pattern in `pdf_ingest`
+    guessing which lines those were from how they read, which missed
+    "Figs. 2-6." for want of a plural and every footnote this series prints
+    without a stop after its number.
+
+    Empty where the tree does not reach the text, by the rule `heading_map`
+    follows, so a caller gets the file's answer or none of it.
+    """
+    if not outline.usable:
+        return {}
+    out: Dict[tuple, int] = {}
+    position = 0
+    for element in outline.elements:
+        if not carries_body_flow(element):
+            continue
+        for key in element.mcids:
+            page, mcid = key
+            if page is None or mcid is None:
+                continue
+            # A tree can claim one id from two elements; the first is where
+            # the text is read.
+            if key in out:
+                continue
+            out[key] = position
+            position += 1
+    return out
+
+
+def order_descents(order: Dict[tuple, int], items) -> OrderCheck:
+    """Where a reconstruction runs backwards through the file's own order.
+
+    `items` is `(mcids, text)` in the order the reconstruction puts them.
+    A line's position is the earliest of the ids it sits in, since that is
+    where it starts.
+
+    Counted as descents between consecutive lines rather than as an
+    agreement over the whole chapter, because the defect is local and a
+    whole-chapter figure hides it. The pull quote interleaved with a heading
+    in `annoying-ways-people-use-sources` is six lines out of some three
+    hundred: as a share of all the pairs that could be out of order it is
+    0.02%, which no threshold could separate from a clean chapter, and as a
+    count of places where the text jumps backwards it is a handful against
+    zero. One is reportable and the other is not.
+    """
+    check = OrderCheck()
+    positions: List[int] = []
+    texts: List[str] = []
+    for mcids, text in items:
+        here = [order[key] for key in _keys_of(mcids) if key in order]
+        if not here:
+            check.unplaced += 1
+            continue
+        check.placed += 1
+        positions.append(min(here))
+        texts.append(text or "")
+
+    for i in range(len(positions) - 1):
+        if positions[i + 1] < positions[i]:
+            check.descents.append(Descent(
+                index=i,
+                gap=positions[i] - positions[i + 1],
+                before=texts[i][:120],
+                after=texts[i + 1][:120],
+            ))
+    return check
+
+
+def _keys_of(mcids) -> List[tuple]:
+    """A line's `(page, id)` keys, however the caller holds them.
+
+    `pdf_ingest.Line` carries a set of bare ids and the page separately,
+    so the caller pairs them up before calling; anything already paired is
+    passed through. Written once because getting it wrong gives a reading
+    with every line unplaced, which looks like a file with no tree.
+    """
+    out = []
+    for item in mcids or ():
+        if isinstance(item, tuple) and len(item) == 2:
+            out.append(item)
+    return out
+
+
 def heading_levels(rolemap: Dict[str, str]) -> Dict[str, int]:
     """The heading level each style means, read off the file's own RoleMap.
 
@@ -218,7 +412,8 @@ def walk(tree, pages: Dict[tuple, int], rolemap: Dict[str, str],
     styles: Dict[str, int] = {}
     seen: set = set()
 
-    def collect(node, page: Optional[int], into: list) -> None:
+    def collect(node, page: Optional[int], into: list,
+                in_flow: bool = True) -> None:
         try:
             obj = node.get_object() if hasattr(node, "get_object") else node
         except Exception:
@@ -227,7 +422,7 @@ def walk(tree, pages: Dict[tuple, int], rolemap: Dict[str, str],
             into.append((page, obj))
         elif isinstance(obj, list):
             for kid in obj:
-                collect(kid, page, into)
+                collect(kid, page, into, in_flow)
         elif isinstance(obj, dict):
             kind = str(obj.get("/Type") or "")
             if kind == "/MCR":
@@ -239,9 +434,10 @@ def walk(tree, pages: Dict[tuple, int], rolemap: Dict[str, str],
                 # An annotation, which carries no text of its own.
                 return
             else:
-                descend(obj, page)
+                descend(obj, page, in_flow=in_flow)
 
-    def descend(node, page: Optional[int], depth: int = 0) -> None:
+    def descend(node, page: Optional[int], depth: int = 0,
+                in_flow: bool = True) -> None:
         if depth > MAX_DEPTH:
             return
         try:
@@ -250,7 +446,7 @@ def walk(tree, pages: Dict[tuple, int], rolemap: Dict[str, str],
             return
         if isinstance(obj, list):
             for kid in obj:
-                descend(kid, page, depth + 1)
+                descend(kid, page, depth + 1, in_flow)
             return
         if not isinstance(obj, dict):
             return
@@ -275,15 +471,23 @@ def walk(tree, pages: Dict[tuple, int], rolemap: Dict[str, str],
                 role = "/H%d" % levels[style]
             else:
                 role = rolemap.get(style, style)
+            # Whether this element's text is part of the running body, and
+            # it is inherited: a `/P` inside a `/Note` is still a note, and
+            # the text usually sits in a `/Span` below that again. Testing
+            # the element alone left all ten of `7-welhausen`'s footnote
+            # descents standing, because the ids belong to the spans.
+            in_flow = in_flow and not (role in NOT_BODY_FLOW
+                                       or style in NOT_BODY_FLOW)
             element = Element(role=role, style=style, page=here,
-                              alt=str(obj.get("/Alt") or "").strip())
+                              alt=str(obj.get("/Alt") or "").strip(),
+                              in_flow=in_flow)
             elements.append(element)
             mine = element.mcids
         else:
             mine = []
 
         if "/K" in obj:
-            collect(obj["/K"], here, mine)
+            collect(obj["/K"], here, mine, in_flow)
 
     descend(tree, None)
     return elements, styles

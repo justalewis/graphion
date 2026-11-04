@@ -1,0 +1,314 @@
+"""Checking a reconstruction's order against the one the file states.
+
+`pdf_ingest` infers reading order from where ink sits, and nothing has ever
+checked the result. The defects that follows are the worst kind this
+codebase produces, because they are present and wrong rather than missing:
+two texts merged character by character inside a clipped figure, a
+two-column table shredded into prose as "detailing as being the most
+import- lab procedures ant while", seven figures closing a document after
+the Works Cited, a marginal pull quote interleaved with a heading. Every
+one was found by a person reading a galley. None fails a conformance check,
+because the words are all present.
+
+A tagged PDF states the order, which is the only thing a reconstruction can
+be checked against: any other reading of what order a page should come out
+in is the same inference that produced the reconstruction, so it would
+agree with itself and prove nothing.
+"""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+import structure
+
+
+def _outline(*elements, chars=(100, 99)):
+    """An outline holding the given elements, with enough coverage to be read."""
+    out = structure.Outline(path=Path("x.pdf"))
+    out.chars, out.marked_chars = chars
+    out.styles = {"/P": len(elements)}
+    out.elements = list(elements)
+    return out
+
+
+def _element(role, *keys):
+    return structure.Element(role=role, style="P", page=0, mcids=list(keys))
+
+
+def _items(*rows):
+    """`(mcids, text)` in the order a reconstruction puts them."""
+    return [(list(keys), text) for text, *keys in rows]
+
+
+# ---------- the order the file states ----------
+
+def test_reading_order_numbers_the_ids_in_document_order():
+    outline = _outline(
+        _element("/P", (0, 5), (0, 6)),
+        _element("/P", (0, 7)),
+        _element("/P", (1, 1)),
+    )
+
+    assert structure.reading_order(outline) == {
+        (0, 5): 0, (0, 6): 1, (0, 7): 2, (1, 1): 3}
+
+
+def test_a_tree_that_does_not_reach_the_text_states_no_order():
+    """The rule `heading_map` follows: a caller gets the file's answer or
+    none of it, never a reading of the cover page applied to a chapter."""
+    outline = _outline(_element("/P", (0, 1)), chars=(100, 2))
+
+    assert not outline.usable
+    assert structure.reading_order(outline) == {}
+
+
+def test_an_id_claimed_twice_keeps_its_first_place():
+    outline = _outline(
+        _element("/P", (0, 1)),
+        _element("/P", (0, 2)),
+        _element("/Span", (0, 1)),
+    )
+
+    assert structure.reading_order(outline) == {(0, 1): 0, (0, 2): 1}
+
+
+def test_a_claim_with_no_page_or_no_id_is_left_out():
+    outline = _outline(_element("/P", (0, 1), (None, 2), (0, None)))
+
+    assert structure.reading_order(outline) == {(0, 1): 0}
+
+
+# ---------- where a reconstruction runs backwards ----------
+
+ORDER = {(0, n): n for n in range(10)}
+
+
+def test_text_in_the_file_s_order_has_no_descents():
+    check = structure.order_descents(ORDER, _items(
+        ("First.", (0, 0)), ("Second.", (0, 1)), ("Third.", (0, 2))))
+
+    assert check.descents == []
+    assert (check.placed, check.unplaced) == (3, 0)
+
+
+def test_a_line_out_of_order_is_one_descent_carrying_its_words():
+    check = structure.order_descents(ORDER, _items(
+        ("First.", (0, 0)), ("Fourth.", (0, 3)), ("Second.", (0, 1))))
+
+    assert len(check.descents) == 1
+    d = check.descents[0]
+    assert d.gap == 2
+    assert d.before == "Fourth."
+    assert d.after == "Second."
+
+
+def test_a_marginal_note_interleaved_with_a_heading_reads_as_descents():
+    """`annoying-ways-people-use-sources` sets a pull quote down the side of
+    the page, and its lines interleave in reading order with the two lines
+    of a wrapping head. That is the shape this exists to find."""
+    check = structure.order_descents(ORDER, _items(
+        ("Uncle Barry and his", (0, 6)),
+        ("Uncle Barry and His Encyclopedia of Use-", (0, 1)),
+        ("Encyclopedia of Useless", (0, 7)),
+        ("less Information", (0, 2)),
+        ("Information: using too", (0, 8)),
+    ))
+
+    assert len(check.descents) == 2
+    assert [d.gap for d in check.descents] == [5, 5]
+
+
+def test_a_line_with_no_marked_id_is_unplaced_not_misordered():
+    """A line the tree says nothing about cannot be out of order, and
+    counting it as in order would be a reading nobody made."""
+    check = structure.order_descents(ORDER, _items(
+        ("First.", (0, 0)), ("No id.",), ("Second.", (0, 1))))
+
+    assert check.descents == []
+    assert (check.placed, check.unplaced) == (2, 1)
+
+
+def test_the_share_placed_is_the_evidence_behind_the_count():
+    check = structure.order_descents(ORDER, _items(
+        ("First.", (0, 0)), ("No id.",), ("No id either.",)))
+
+    assert check.placed == 1
+    assert check.unplaced == 2
+    assert round(check.share_placed) == 33
+
+
+def test_nothing_read_leaves_the_share_unknown_rather_than_zero():
+    check = structure.order_descents(ORDER, [])
+
+    assert check.share_placed is None
+    assert check.read == 0
+
+
+def test_a_line_takes_the_earliest_id_it_sits_in():
+    """A line that has been joined to another spans several ids, and where
+    it starts is where it belongs."""
+    check = structure.order_descents(ORDER, _items(
+        ("Joined.", (0, 4), (0, 2)), ("Next.", (0, 5))))
+
+    assert check.descents == []
+
+
+def test_the_worst_descent_tells_a_swap_from_a_stranded_block():
+    check = structure.order_descents({(0, n): n for n in range(400)}, _items(
+        ("A.", (0, 1)), ("B.", (0, 0)), ("C.", (0, 300)), ("D.", (0, 10))))
+
+    assert [d.gap for d in check.descents] == [1, 290]
+    assert check.worst == 290
+
+
+# ---------- the join, on the ingest side ----------
+
+import pdf_ingest  # noqa: E402
+
+
+def _line(text, page=1, mcids=()):
+    return pdf_ingest.Line(
+        text=text, size=10.0, x0=72.0, x1=272.0, top=100.0, page=page,
+        italic=False, mcids=set(mcids))
+
+
+def _usable(*elements):
+    out = structure.Outline(path=Path("x.pdf"))
+    out.chars, out.marked_chars = 100, 99
+    out.styles = {"/P": len(elements)}
+    out.elements = list(elements)
+    return out
+
+
+def test_the_page_numbers_line_up_on_this_side_too():
+    """`line.page` counts from one, as every page number in `pdf_ingest`
+    does, and a structure tree indexes its pages from zero. Getting this
+    wrong places no line at all, which reads exactly like a file with no
+    tree."""
+    outline = _usable(_element("/P", (2, 9), (2, 10)))
+    lines = [_line("On page three", page=3, mcids=[9]),
+             _line("Still there", page=3, mcids=[10])]
+
+    check = pdf_ingest.measure_reading_order(outline, lines)
+
+    assert (check.placed, check.unplaced) == (2, 0)
+    assert check.descents == []
+
+
+def test_lines_out_of_the_file_s_order_are_found_through_the_join():
+    outline = _usable(_element("/P", (0, 1), (0, 2), (0, 3)))
+    lines = [_line("First", mcids=[1]),
+             _line("Third", mcids=[3]),
+             _line("Second", mcids=[2])]
+
+    check = pdf_ingest.measure_reading_order(outline, lines)
+
+    assert len(check.descents) == 1
+    assert check.descents[0].before == "Third"
+    assert check.descents[0].after == "Second"
+
+
+def test_no_outline_reads_nothing_rather_than_reading_zero():
+    lines = [_line("Prose", mcids=[1])]
+
+    check = pdf_ingest.measure_reading_order(None, lines)
+
+    assert check.read == 0
+    assert check.share_placed is None
+
+
+def test_a_tree_that_states_no_order_reads_nothing():
+    """A cover-page tree gives `reading_order` nothing, and a caller must
+    not take that as a chapter in perfect order."""
+    thin = structure.Outline(path=Path("x.pdf"))
+    thin.chars, thin.marked_chars = 100, 2
+    thin.styles = {"/P": 1}
+    thin.elements = [_element("/P", (0, 1))]
+
+    check = pdf_ingest.measure_reading_order(thin, [_line("Prose", mcids=[1])])
+
+    assert check.read == 0
+
+
+# ---------- what the comparison withholds, and why ----------
+
+def test_a_caption_is_not_placed_in_the_body_flow():
+    """A tree keeps an anchored object's content in its own branch, so a
+    caption's place in the file is nowhere near the prose printed around
+    it. Measured over the archive, `introduction-to-primary-research`
+    reported three descents and every one was a caption, the worst jumping
+    back 734 marked ids after "Fig. 2: A sample timeline for Jared's
+    research project." Nothing was wrong with that chapter.
+    """
+    body = _element("/P", (0, 1), (0, 2))
+    caption = structure.Element(role="/P", style="/Caption", page=0,
+                                mcids=[(0, 900)], in_flow=False)
+    outline = _usable(body, caption)
+
+    order = structure.reading_order(outline)
+
+    assert (0, 900) not in order
+    assert order == {(0, 1): 0, (0, 2): 1}
+
+
+def test_the_exclusion_is_inherited_down_the_subtree():
+    """A `/P` inside a `/Note` is still a note, and the text usually sits
+    in a `/Span` below that again. Testing the element alone left all ten
+    of `7-welhausen`'s footnote descents standing, because the marked ids
+    belong to the spans rather than to the `/Note`.
+    """
+    tree = {"/S": "/Document", "/K": [
+        {"/S": "/P", "/K": 1},
+        {"/S": "/Note", "/K": [
+            {"/S": "/P", "/K": [{"/S": "/Span", "/K": 900}]}]},
+        {"/S": "/P", "/K": 2},
+    ]}
+
+    elements, _styles = structure.walk(tree, {}, {}, {})
+    by_style = {e.style: e for e in elements}
+
+    assert by_style["/Note"].in_flow is False
+    # The span three levels down carries the text and must inherit it.
+    span = next(e for e in elements if e.style == "/Span")
+    assert span.in_flow is False
+    assert all(e.in_flow for e in elements if e.style == "/Document")
+
+
+def test_a_caption_style_under_a_flattened_role_is_caught():
+    """`why-blog-searching-for-writing-on-the-web` holds its caption as
+    role `/P` with style `/Caption`, which is the same RoleMap flattening
+    that hides the heading levels, so the style has to be read too."""
+    tree = {"/S": "/Caption", "/K": 900}
+
+    elements, _styles = structure.walk(tree, {}, {"/Caption": "/P"}, {})
+
+    assert elements[0].role == "/P"
+    assert elements[0].style == "/Caption"
+    assert elements[0].in_flow is False
+
+
+def test_a_marginal_gloss_in_body_copy_is_still_compared():
+    """The pull quote in `annoying-ways-people-use-sources` is italic
+    fragments set in `/Body_Copy_Flush_Left`, which the tree calls ordinary
+    body. Withholding captions and notes must leave all sixteen of its
+    descents standing, or the measure has silenced the one defect it was
+    built to find."""
+    tree = {"/S": "/Document", "/K": [
+        {"/S": "/Body_Copy_Flush_Left", "/K": 500},
+        {"/S": "/Body_Copy", "/K": 1},
+    ]}
+
+    elements, _styles = structure.walk(tree, {}, {}, {})
+
+    assert all(e.in_flow for e in elements)
+
+
+def test_carries_body_flow_is_the_one_reader_of_that_flag():
+    """`walk` works the answer out as it goes, because it is inherited and
+    an element on its own cannot give it."""
+    inside = structure.Element(role="/P", style="/P", in_flow=False)
+    outside = structure.Element(role="/P", style="/P", in_flow=True)
+
+    assert not structure.carries_body_flow(inside)
+    assert structure.carries_body_flow(outside)

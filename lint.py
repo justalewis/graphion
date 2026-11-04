@@ -796,6 +796,93 @@ def check_math_alt_text(article: dict, fm: dict, body: str) -> LintResult:
     )
 
 
+# How many places a chapter may run backwards through its source's own
+# reading order before it is worth an editor looking.
+#
+# Measured, not chosen. Over the 97 chapters of this archive whose source
+# states an order, 81 report none at all, the median is 0 and the 90th
+# percentile is 1. The next three are 1, 2 and 4, and then the two real
+# defects: `annoying-ways-people-use-sources` at 16, whose marginal pull
+# quote interleaves with a heading, and `8-diab` at 18, which interleaves
+# two columns and merges them mid-word. So 4 sits at the top of the noise
+# with the faults four times above it.
+#
+# The worst gap is reported and is deliberately not a second trigger. It
+# separates just as sharply here, 349 and 637 against a maximum of 21, but
+# every chapter it would catch the count already catches, so a second
+# threshold would be tuned against no case at all. A later archive holding
+# one block badly out of place and nothing else is what would justify it.
+MAX_ORDER_DESCENTS = 4
+
+
+def check_reading_order(article: dict, fm: dict, body: str) -> LintResult:
+    """Flag a chapter whose text runs backwards through its source's order.
+
+    This is the defect with no symptom, and the only one in this module
+    that no other check can see. Every check here reads what the
+    reconstruction produced and asks whether it is well formed; none of
+    them can ask whether it is in the right order, because the words are
+    all present either way. The galley renders, lint passes, verapdf
+    passes, pa11y passes, and a reader meets a pull quote spliced through
+    a heading or a table read across its columns.
+
+    The number is read off the front matter and not worked out here.
+    `pdf_ingest.measure_reading_order` computes it where both orders are
+    already in memory, which costs nothing, and reading a structure tree
+    here would cost a pdfplumber pass over the source on every corpus run:
+    the route that runs these checks over a whole journal exists because
+    lint and the declaration are cheap enough for a request, and this would
+    end that.
+
+    A chapter with no record has not been checked, which is not the same as
+    a chapter with nothing wrong, so it passes with the gap said out loud
+    and counts nothing. That is the distinction `register.UNRUN` exists
+    for and the one `check_images_of_text` draws beside its own zero: no is
+    a finding and nobody asked is not. Only a chapter re-ingested since
+    this existed carries the field, so the coverage is the thing to read
+    first.
+
+    The units are recorded but deliberately not in `WORK_ROWS`. A descent
+    is a place for somebody to look, not an hour of editorial labour, and
+    summing it with the figures still to be described would make the one
+    number a journal asks for mean two different things at once.
+    """
+    recorded = fm.get("reading-order")
+    if not isinstance(recorded, dict) or not recorded.get("placed"):
+        return _ok(
+            "reading-order",
+            "Reading order has not been checked against the source.",
+            {"order-descents": 0, "chapters-order-checked": 0},
+            ["The source states a reading order only where it carries a "
+             "structure tree that reaches the text, and the comparison is "
+             "made at ingest. Re-ingesting records it."],
+        )
+
+    descents = int(recorded.get("descents") or 0)
+    worst = int(recorded.get("worst") or 0)
+    placed = int(recorded.get("placed") or 0)
+    units = {"order-descents": descents, "chapters-order-checked": 1}
+
+    if descents <= MAX_ORDER_DESCENTS:
+        return _ok(
+            "reading-order",
+            f"The body follows the source's own reading order over all "
+            f"{placed} line(s) it states.",
+            units,
+        )
+    return _warn(
+        "reading-order",
+        f"The body runs backwards through the source's own reading order "
+        f"in {descents} place(s), the worst by {worst} marked id(s).",
+        [f"Compared over {placed} line(s) the source places. A jump back "
+         f"of one or two is two lines swapped; a large one is text that "
+         f"came to rest somewhere else entirely. Marginal notes, pull "
+         f"quotes and ruled boxes are the usual cause, since their lines "
+         f"interleave with the body in reading order."],
+        units,
+    )
+
+
 DEFAULT_CHECKS: list[Callable] = [
     check_required_fields,
     check_orcid_format,
@@ -813,6 +900,7 @@ DEFAULT_CHECKS: list[Callable] = [
     check_images_of_text,
     check_figure_coverage,
     check_figure_references,
+    check_reading_order,
 ]
 
 

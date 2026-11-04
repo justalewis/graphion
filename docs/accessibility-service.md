@@ -437,14 +437,49 @@ a week and a month.
 - **The validators are optional and advisory.** `verapdf_available()` and
   `pa11y_available()` grey out the UI when the tools are absent. For a service
   they are not optional; they are the evidence.
-- **Reading order in the tagged PDF.** `pdf_ingest` reconstructs it and
-  `pdf_tags` verifies every page is reachable from the structure tree, which
-  is not the same as verifying the tagged order matches the printed order. The
-  figure-placement and table-anchor work in `pdf_ingest` is exactly about this,
-  and it degrades with a note rather than silently, which is right, but nothing
-  checks the result.
-- **Heading hierarchy.** No check for a skipped level, which the roadmap
-  flagged and which never got written.
+- **Reading order in the tagged PDF.** ~~Nothing checks the result.~~
+  `structure.reading_order` now states the order the source holds and
+  `lint.check_reading_order` reports where the reconstruction runs
+  backwards through it, which is the first check in this codebase that can
+  see a defect of placement rather than of markup.
+
+  **Measured over the archive: of 115 chapters, 97 state an order and 81 of
+  those report no descent at all.** The median is 0 and the 90th percentile
+  is 1. The next three chapters report 1, 2 and 4. Then the two real
+  defects: `annoying-ways-people-use-sources` at 16 descents, whose
+  marginal pull quote interleaves with a heading, and `8-diab` at 18, which
+  interleaves two columns and merges them mid-word ("The author divided the
+  parts of the rhe-" then "target students and teachers"). So
+  `MAX_ORDER_DESCENTS` sits at 4, at the top of the noise with the faults
+  four times above it. `8-diab` is the find: the same defect
+  `drop_lines_inside_tables` was written for, live in a chapter nobody had
+  looked at.
+
+  Getting there took three corrections, each from running over the archive
+  rather than over fixtures, and each a chapter reporting a fault that was
+  not there. A caption sits in the tree's own branch, so
+  `introduction-to-primary-research` jumped back 734 marked ids after
+  "Fig. 2: A sample timeline" with nothing wrong. A pattern written to
+  withhold captions then missed "Figs. 2-6." for want of a plural. And
+  every one of `7-welhausen`'s ten descents was a footnote, which this
+  series prints with no stop after the number. The fix was to stop guessing
+  from how a line reads and let the file say: `NOT_BODY_FLOW` and
+  `carries_body_flow` test both the role and the style, because the RoleMap
+  flattens a `/Caption` to `/P`, and the flag is inherited down the
+  subtree, because a `/P` inside a `/Note` is still a note and the text
+  sits in a `/Span` below that again.
+
+  What remains is the blind spot. 18 of the 115 state no order at all, and
+  volume 1's chapter 6, the worst reconstruction in this archive by a
+  distance, is one of them: its tree covers the publisher's cover page. So
+  the check is blind in exactly the place the reconstruction is weakest,
+  which is why the count of chapters checked is reported beside the count
+  of descents rather than underneath it. A second step is available on the
+  same machinery and is not written: the tree states where a `/Figure` or
+  `/Table` element sits, so anchor placement could be checked the same way.
+- **Heading hierarchy.** ~~No check for a skipped level.~~ Closed by
+  `filters/heading-levels.lua`, which makes it structurally impossible in
+  a galley rather than merely reported.
 - **Long descriptions.** A complex figure (a five-stage flowchart, a
   whiteboard collage) needs more than alt text, and there is no slot for one in
   the front matter or either template.
