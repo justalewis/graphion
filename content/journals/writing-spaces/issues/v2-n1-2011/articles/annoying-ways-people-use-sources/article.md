@@ -7,6 +7,11 @@ short-authors: Stedman
 volume: 2
 year: 2011
 start-page: 239
+reading-order:
+  descents: 25
+  worst: 637
+  placed: 542
+  unplaced: 10
 source-file: stedman--annoying-ways.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
@@ -46,7 +51,19 @@ Because I’m not here to tell you *rules, decrees,* or *laws,* it makes sense t
 
 > *Armadillo Roadkill:*
 
-Everyone in the car hears it: buh-BUMP. *dropping in a quotation* The driver insists to the passengers, “But *without introducing it* that armadillo---I didn’t see it! It just came *first* out of nowhere!”
+Everyone in the car hears it: buh-BUMP.
+
+> *dropping in a quotation*
+
+The driver insists to the passengers, “But
+
+> *without introducing it*
+
+that armadillo---I didn’t see it! It just came
+
+> *first*
+
+out of nowhere!”
 
 Sadly, a poorly introduced quotation can lead readers to a similar exclamation: “It just came out of nowhere!” And though readers probably won’t experience the same level of grief and regret when surprised by a quotation as opposed to an armadillo, I submit that there’s a kinship between the experiences: both involve a normal, pleasant activity (driving; reading) stopped suddenly short by an unexpected barrier (a sudden armadillo; a sudden quotation).
 
@@ -70,7 +87,19 @@ Alexsandra prepares us for the quotation, quotes, and then analyzes it. I love i
 
 ### Dating Spider-Man
 
-An annoyance that’s closely connected to *Dating Spider-Man:* Armadillo Roadkill is the tendency writ- *starting or ending a para*ers sometimes have of starting or ending *graph with a quotation* paragraphs with quotations. This isn’t technically *wrong,* and there are situations when the effect of surprise is what you’re going for. But often, a paragraph-beginning or paragraph-closing quotation feels rushed, unexplained, disjointed.
+An annoyance that’s closely connected to
+
+> *Dating Spider-Man:*
+
+Armadillo Roadkill is the tendency writ-
+
+> *starting or ending a para-*
+
+ers sometimes have of starting or ending
+
+> *graph with a quotation*
+
+paragraphs with quotations. This isn’t technically *wrong,* and there are situations when the effect of surprise is what you’re going for. But often, a paragraph-beginning or paragraph-closing quotation feels rushed, unexplained, disjointed.
 
 It’s like dating Spider-Man. You’re walking along with him and he says something remarkably interesting---but then he tilts his head, hearing something far away, and suddenly shoots a web onto the nearest building and *zooms* away through the air. As if you had just read an interesting quotation dangling at the end of a paragraph, you wanted to hear more of his opinion, but it’s too late---he’s already moved on. Later, he suddenly jumps off a balcony and is by your side again, and he starts talking about something you don’t understand. You’re confused because he just dropped in and expected you to understand the context of what was on his mind at that moment, much like when readers step into a paragraph that begins with a quotation. Here’s an example:
 
@@ -96,7 +125,11 @@ Instantly, her quotation hooks me. It doesn’t feel thoughtless, like it would 
 
 > *Information: using too*
 
-You probably know someone like this: a *many quotations in a row* person (for me, my Uncle Barry) who constantly tries to impress me with how much he knows about just about everything. I might casually bring up something in the news (“Wow, these health care debates are getting really heated, aren’t they?”) and then find myself barraged by all of Uncle Barry’s ideas on governmentsponsored health care---which *then* drifts into a story about how his cousin Maxine died in an underfunded hospice center, which had a parking lot that he could have designed better, which reminds him of how good he is at fixing things, just like the garage door at my parents’ house, which probably only needs a little. . . . You get the idea. I might even think to myself, “Wait, I want to know more about that topic, but you’re zooming on before you contextualize your information at all.”
+You probably know someone like this: a
+
+> *many quotations in a row*
+
+person (for me, my Uncle Barry) who constantly tries to impress me with how much he knows about just about everything. I might casually bring up something in the news (“Wow, these health care debates are getting really heated, aren’t they?”) and then find myself barraged by all of Uncle Barry’s ideas on governmentsponsored health care---which *then* drifts into a story about how his cousin Maxine died in an underfunded hospice center, which had a parking lot that he could have designed better, which reminds him of how good he is at fixing things, just like the garage door at my parents’ house, which probably only needs a little. . . . You get the idea. I might even think to myself, “Wait, I want to know more about that topic, but you’re zooming on before you contextualize your information at all.”
 
 This is something like reading an essay that relies too much on quotations. Readers get the feeling that they’re moving from one quotation to the next without ever quite getting to hear the *real* point of what the author wants to say, never getting any time to form an opinion about the claims. In fact, this often makes it sound as if the author has almost no authority at all. You may have been annoyed by paragraphs like this before:
 
@@ -118,7 +151,15 @@ Toner’s response to the Obama video is like a diving board that Jessica bounce
 
 > *failing to integrate a quota-*
 
-When reading drafts of my writing, *tion into the grammar of the* this is a common experience: I start to *preceding sentence* read a sentence that seems interesting and normal, with everything going just the way I expect it to. But then the unexpected happens: a quotation blurts itself into the sentence in a way that doesn’t fit with the grammar that built up to quotation. It feels like sitting in a movie theater, everything going as expected, when suddenly the opening credits start for a movie I didn’t plan to see. Here are two examples of what I’m talking about. Read them out loud, and you’ll see how suddenly wrong they feel.
+When reading drafts of my writing,
+
+> *tion into the grammar of the*
+
+this is a common experience: I start to
+
+> *preceding sentence*
+
+read a sentence that seems interesting and normal, with everything going just the way I expect it to. But then the unexpected happens: a quotation blurts itself into the sentence in a way that doesn’t fit with the grammar that built up to quotation. It feels like sitting in a movie theater, everything going as expected, when suddenly the opening credits start for a movie I didn’t plan to see. Here are two examples of what I’m talking about. Read them out loud, and you’ll see how suddenly wrong they feel.
 
 1. Therefore, the author warns that a zombie’s vision “are no different than those of a normal human” (Brooks 6).
 
@@ -255,5 +296,7 @@ Smith, Glenn Gordon, Ana T. Torres-Ayala, and Allen J. Heindel. “Disciplinary 
 Toner, Robin. “Feminist Pitch by a Democrat Named Obama.” *The New* *York Times.* The New York Times Company, 2 Dec. 2007. Web. 22 Oct. 2008.
 
 Wolpert, Lewis. “Is Cell Science Dangerous?” *Journal of Medical Ethics* 33.6 (2007): 345--48. *Academic Search Premier.* Web. 28 Jan. 2009.
+
+![Undescribed figure from page 1 of the source](assets/figure-p001-1.png)
 
 \* This work is licensed under the Creative Commons Attribution-Noncommercial-ShareAlike 3.0 United States License and is subject to the Writing Spaces’ Terms of Use. To view a copy of this license, visit http:// creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA. To view the Writing Spaces’ Terms of Use, visit http://writingspaces. org/terms-of-use.

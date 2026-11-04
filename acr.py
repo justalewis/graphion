@@ -172,7 +172,10 @@ CRITERIA: Tuple[Criterion, ...] = (
     Criterion("1.4.3", "Contrast (Minimum)", "AA",
               basis=(("pa11y", "pa11y"),),
               note="pa11y computes contrast where it can resolve both "
-                   "colours. Text inside a figure is a picture to it."),
+                   "colours. Text inside a figure is a picture to it, and a "
+                   "dark-mode palette is never rendered, so "
+                   "tests/test_template_bundles.py reads every palette each "
+                   "bundle declares and checks it against 4.5:1 as well."),
     Criterion("1.4.4", "Resize Text", "AA",
               note="Type is set in relative units; that it survives 200% in "
                    "a real reader is a thing to try, not to check."),
@@ -247,6 +250,145 @@ def skip_link_is_hidden_until_focused(css: str) -> bool:
     return bool(re.search(r"\.skip-link:focus\s*\{", css))
 
 
+# WCAG 2.1 asks 4.5:1 of normal body text (1.4.3). The galleys set no large
+# text below that, so the one threshold covers what the bundles declare.
+TEXT_CONTRAST_MIN = 4.5
+
+# The palette entries that carry text, against the one that is the page. A
+# rule or a frame edge is not here on purpose: 1.4.11 asks 3:1 of a
+# meaningful graphic and a decorative rule is neither, so asserting on it
+# would quote a journal for a hairline nobody has to see.
+_TEXT_TOKENS = ("--ink", "--ink-soft", "--link", "--link-visited")
+_PAGE_TOKEN = "--paper"
+
+
+def _blocks(css: str, selector: str) -> list:
+    """Each `{...}` body whose selector line contains `selector`.
+
+    Brace-matched rather than matched by pattern, because a palette block
+    holds no nested braces but an `@media` wrapper does, and a regex that
+    stops at the first `}` reads the wrapper as the block.
+    """
+    out = []
+    for hit in re.finditer(re.escape(selector), css):
+        open_at = css.find("{", hit.end())
+        if open_at < 0:
+            continue
+        depth = 0
+        for i in range(open_at, len(css)):
+            if css[i] == "{":
+                depth += 1
+            elif css[i] == "}":
+                depth -= 1
+                if depth == 0:
+                    out.append(css[open_at + 1:i])
+                    break
+    return out
+
+
+_VAR_RE = re.compile(r"(--[a-z0-9-]+)\s*:\s*([^;]+);")
+# Named for the stylesheet it reads, because `_MEDIA_RE` above is the
+# pattern that decides whether a journal publishes video or audio at all,
+# and a second definition of that name silently replaced it: every
+# applicability claim about media then turned on whether the stylesheet
+# held an `@media` block.
+_CSS_MEDIA_RE = re.compile(r"@media([^{]*)\{")
+
+
+def palettes(css: str) -> Dict[str, Dict[str, str]]:
+    """Every palette the stylesheet declares, resolved.
+
+    The bundles define their colours once as custom properties and then
+    override them under `prefers-color-scheme: dark` and under
+    `forced-colors`, so the variables are the palette and reading them needs
+    no cascade engine. Each override is returned merged over the base, which
+    is what a reader in that mode actually gets.
+
+    This is the half pa11y cannot reach: it renders a page with default
+    preferences, so whatever a bundle declares for dark mode is checked by
+    nothing. Writing Spaces carries two overrides and LiCS none.
+    """
+    base: Dict[str, str] = {}
+    for body in _blocks(css, ":root"):
+        for name, value in _VAR_RE.findall(body):
+            base.setdefault(name, value.strip())
+
+    out = {"base": dict(base)}
+    for hit in _CSS_MEDIA_RE.finditer(css):
+        condition = " ".join(hit.group(1).split())
+        open_at = css.find("{", hit.start())
+        depth = 0
+        end = len(css)
+        for i in range(open_at, len(css)):
+            if css[i] == "{":
+                depth += 1
+            elif css[i] == "}":
+                depth -= 1
+                if depth == 0:
+                    end = i
+                    break
+        inner = css[open_at:end]
+        overrides = {n: v.strip() for n, v in _VAR_RE.findall(inner)}
+        if overrides:
+            merged = dict(base)
+            merged.update(overrides)
+            out[condition] = merged
+    return out
+
+
+def relative_luminance(colour: str) -> Optional[float]:
+    """A colour's relative luminance, by the WCAG formula.
+
+    None for anything that is not a plain hex triple, because a palette
+    entry naming another variable or a keyword has not been resolved and a
+    number invented for it would be a contrast ratio nobody measured.
+    """
+    text = (colour or "").strip().lstrip("#")
+    if len(text) == 3:
+        text = "".join(c * 2 for c in text)
+    if len(text) != 6:
+        return None
+    try:
+        parts = [int(text[i:i + 2], 16) / 255.0 for i in (0, 2, 4)]
+    except ValueError:
+        return None
+    linear = [c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4
+              for c in parts]
+    return (0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2])
+
+
+def contrast_ratio(a: str, b: str) -> Optional[float]:
+    """The contrast between two colours, or None where either is unresolved."""
+    la, lb = relative_luminance(a), relative_luminance(b)
+    if la is None or lb is None:
+        return None
+    hi, lo = max(la, lb), min(la, lb)
+    return (hi + 0.05) / (lo + 0.05)
+
+
+def text_contrast_failures(css: str) -> list:
+    """Every text colour in every palette that does not clear 1.4.3.
+
+    Returned as `(palette, token, ratio)` so a failure says which mode and
+    which entry rather than only that something is wrong. A pair this
+    cannot resolve is left out rather than counted either way, by the rule
+    `register.UNRUN` follows: an unresolved variable is not a finding.
+    """
+    out = []
+    for name, palette in palettes(css).items():
+        page = palette.get(_PAGE_TOKEN)
+        if not page:
+            continue
+        for token in _TEXT_TOKENS:
+            colour = palette.get(token)
+            if not colour:
+                continue
+            ratio = contrast_ratio(colour, page)
+            if ratio is not None and ratio < TEXT_CONTRAST_MIN:
+                out.append((name, token, round(ratio, 2)))
+    return out
+
+
 def bundle_facts(template_dir: Path) -> Dict[str, bool]:
     template_dir = Path(template_dir)
     template = _read(template_dir / "article.html.j2")
@@ -255,6 +397,7 @@ def bundle_facts(template_dir: Path) -> Dict[str, bool]:
         "skip-link": bool(skip_link_target(template))
         and skip_link_is_hidden_until_focused(css),
         "focus-visible": focus_is_visible(css),
+        "text-contrast": not text_contrast_failures(css),
     }
 
 
@@ -471,4 +614,6 @@ __all__ = [
     "Criterion", "CRITERIA", "Content", "Row", "Report",
     "skip_link_target", "focus_is_visible", "skip_link_is_hidden_until_focused",
     "bundle_facts", "survey", "report",
+    "palettes", "relative_luminance", "contrast_ratio",
+    "text_contrast_failures", "TEXT_CONTRAST_MIN",
 ]

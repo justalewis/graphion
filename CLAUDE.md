@@ -27,7 +27,7 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (751 functions, 803 cases once the parametrized ones expand: 142 in
+Tests (757 functions, 812 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 64 in `test_assess.py`,
 50 in `test_lint.py`, 46 in `test_ingest_volume.py`, 38 in
 `test_describe.py`, 36 in `test_register.py`, 23 in
@@ -36,7 +36,7 @@ Tests (751 functions, 803 cases once the parametrized ones expand: 142 in
 29 in `test_metadata_roundtrip.py`, 26 in `test_pdf_tags.py`,
 24 in `test_math_alt.py`,
 18 in `test_acr.py`, 14 in `test_epub_a11y.py`,
-13 in `test_template_bundles.py`, 12 in `test_validate_galleys.py`,
+34 in `test_template_bundles.py`, 12 in `test_validate_galleys.py`,
 9 in `test_pdf_ua.py`, 8 in `test_accessibility_routes.py`,
 27 in `test_reading_order.py`,
 8 in `test_heading_levels.py`, 7 in `test_fig_alt.py`,
@@ -867,7 +867,38 @@ that also fixes the galleys LiCS is already publishing.
 `tests/test_template_bundles.py` reads whatever is under
 `content/journals/*/template/` and checks each one, so the contract covers
 a journal added tomorrow without anybody remembering to add it. Seven of
-its eight checks would have failed on the LiCS bundle as it stood.
+the eight checks it held at the time would have failed on the LiCS bundle
+as it stood.
+
+**Contrast is checked there too, because pa11y cannot reach it.** Both
+bundles declare their colours once as custom properties and override them
+per media query, so the variables are the palette and `acr.palettes` reads
+them without needing a cascade engine. pa11y does compute contrast and
+backs 1.4.3 in the report, but it renders a page with default preferences,
+so whatever a bundle declares for `prefers-color-scheme: dark` is exercised
+by nothing: Writing Spaces carries a dark palette and a print one, and LiCS
+carries neither. `text_contrast_failures` checks every palette's text
+entries against `--paper` at 4.5:1 and names the palette and the entry in a
+failure, so "the stylesheet is wrong" is not the whole of the report.
+Measured today, LiCS reads 9.3 to 16.8 and Writing Spaces 7.0 to 18.4
+light, 8.5 to 14.7 dark.
+
+Only text is asserted on. A rule or a frame edge is left alone because
+1.4.11 asks 3:1 of a meaningful graphic and a decorative hairline is
+neither: LiCS sets `--rule` at about 2:1 against its paper, and reporting
+that would quote a journal for a line nobody has to see. A palette entry
+naming another variable is left unresolved rather than scored, by the rule
+`register.UNRUN` follows.
+
+Writing an `_MEDIA_RE` for the stylesheet is what broke `survey()` while
+this was being added. `acr.py` already had one, the pattern that decides
+whether a journal publishes video or audio at all, and a second definition
+of that name silently replaced it, so every applicability claim about media
+turned on whether the stylesheet held an `@media` block. The pattern for
+the stylesheet is `_CSS_MEDIA_RE`, and
+`test_content_that_does_engage_a_criterion_is_not_waved_through` is what
+caught it, which is the third time a name collision has done real damage in
+this codebase after `_read_images` and the one-line description reader.
 
 Two of those checks pair the markup with the stylesheet, and that pairing
 is the point of them: markup without the CSS puts a visible "Skip to the

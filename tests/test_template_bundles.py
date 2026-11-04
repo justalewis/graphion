@@ -204,3 +204,59 @@ def test_the_rendered_galley_has_somewhere_to_skip_to(bundle, tmp_path):
     assert link
     assert re.search(r'id="%s"' % re.escape(link.group(1)), html)
     assert "<main" in html
+
+
+# ---------- contrast, including the palette pa11y never renders ----------
+
+def test_the_contrast_formula_is_the_one_wcag_states():
+    """Black on white is 21:1 and a colour on itself is 1:1. Worth pinning,
+    because the formula has a linearisation step that is easy to leave out
+    and leaving it out still produces plausible-looking numbers."""
+    assert round(acr.contrast_ratio("#000000", "#ffffff"), 1) == 21.0
+    assert round(acr.contrast_ratio("#ffffff", "#ffffff"), 1) == 1.0
+    assert round(acr.contrast_ratio("#777777", "#ffffff"), 1) == 4.5
+
+
+def test_a_colour_that_is_not_a_hex_triple_is_not_guessed_at():
+    """A palette entry naming another variable has not been resolved, and a
+    ratio invented for it would be a measurement nobody made."""
+    assert acr.relative_luminance("var(--ink)") is None
+    assert acr.relative_luminance("") is None
+    assert acr.contrast_ratio("var(--ink)", "#ffffff") is None
+
+
+def test_shorthand_hex_is_read():
+    assert round(acr.contrast_ratio("#000", "#fff"), 1) == 21.0
+
+
+def test_every_palette_the_bundle_declares_is_read(bundle):
+    """The colours are declared once as custom properties and overridden
+    per media query, so the variables are the palette."""
+    found = acr.palettes(_css(bundle))
+
+    assert "base" in found
+    assert found["base"].get("--paper"), "no page colour in the base palette"
+    assert found["base"].get("--ink"), "no text colour in the base palette"
+
+
+def test_text_clears_the_contrast_minimum_in_every_palette(bundle):
+    """1.4.3 asks 4.5:1 of body text. pa11y checks this on a rendered page
+    and so only ever checks the light palette; a bundle's dark mode is
+    whatever it declares and nothing exercises it. Measured today: LiCS
+    reads 9.3 to 16.8 and Writing Spaces 7.0 to 18.4 light, 8.5 to 14.7
+    dark.
+    """
+    failures = acr.text_contrast_failures(_css(bundle))
+
+    assert not failures, "\n".join(
+        f"{palette}: {token} is {ratio}:1, below "
+        f"{acr.TEXT_CONTRAST_MIN}:1" for palette, token, ratio in failures)
+
+
+def test_the_bundle_reports_its_contrast_as_a_fact(bundle):
+    """So the report cannot claim a criterion this test would fail on,
+    which is the arrangement 2.4.1 and 2.4.7 already use."""
+    facts = acr.bundle_facts(bundle)
+
+    assert "text-contrast" in facts
+    assert facts["text-contrast"] is True

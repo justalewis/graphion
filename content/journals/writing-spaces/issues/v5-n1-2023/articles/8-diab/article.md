@@ -9,13 +9,18 @@ volume: 5
 year: 2023
 start-page: 118
 chapter-number: 8
+reading-order:
+  descents: 29
+  worst: 349
+  placed: 613
+  unplaced: 21
+images-of-text:
+- figure-p005-1.png
+teacher-resources: separate
 source-file: 8Diab.pdf
 volume-title: Writing Spaces 5
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
-teacher-resources: separate
-images-of-text:
-- figure-p005-1.png
 ---
 
 # Introduction
@@ -188,7 +193,15 @@ target students and teachers
 
 in undergraduate education
 
-the struggle of international appropriately.
+in the US who might un-
+
+intentionally contribute to
+
+the struggle of international
+
+students in the US.
+
+I hope that after reading my
 
 essay, the targeted audience
 
@@ -204,15 +217,23 @@ Implemented Revisions
 
 After I received feedback
 
+from my peers on the first
+
 draft, I cut parts from the
 
 essay that made it unfo-
 
 cused, such as the part
 
-country to the U.S., and thor’s purpose.
+about my travel from my
 
-country. The cut parts vised parts.
+country to the U.S., and
+
+the extended details about
+
+my high school in my own
+
+country. The cut parts
 
 happened in paragraphs 1,
 
@@ -240,9 +261,15 @@ Specific Revisions to Implement in the Future
 
 I already spent 6 hours
 
+revising draft#1 into
+
 draft#2. However, I
 
 still feel that my story
+
+doesn’t flow well as I
+
+feel I jump from one
 
 topic to another in some
 
@@ -264,9 +291,13 @@ What I would appreciate your help with at this time are:
 
 > 1. How to make better connections between the various incidents that I show in my essay so that they don’t sound like a list of incidents but rather a cohesive essay.
 
-> 2. I am struggling with the conclusion and am not sure what to do there. It seems to me that repeating the main points in my essay might be boring. How could I highlight the main purpose of my essay without saying, “this is
+> 2. I am struggling with the conclusion and am not sure what to do there. It seems to me that repeating the main points in my essay might be boring. How could I highlight the main purpose of my essay without saying, “this is the purpose of my essay”?
 
 > 3. Any other suggestions you
+
+> might have would be great
+
+> because I am sure I couldn’t
 
 > capture all the weaknesses in my essay.
 
@@ -378,25 +409,45 @@ The author divided the parts of the rhe-
 
 torical situation (exigency, readers, and
 
-purpose) into three separate paragraphs in the US who might un- which helps the reader locate each easily, intentionally contribute to thus read, comprehend, and use the text
+purpose) into three separate paragraphs
 
-students in the US. Another thing that the author could have done is including these in a bulleted point I hope that after reading my list or under subheadings.
+which helps the reader locate each easily,
 
-from my peers on the first The author indicates what they done specifically, which helps the reviewers locate the
+thus read, comprehend, and use the text
+
+appropriately.
+
+Another thing that the author could have done is including these in a bulleted point
+
+list or under subheadings.
+
+The author indicates what they done specifically, which helps the reviewers locate the
 
 differences between draft #1 and draft#2.
 
 They also explain why they’ve done their
 
-revisions, which helps the reviewers provide about my travel from my feedback that takes in consideration the au-
+revisions, which helps the reviewers provide
 
-the extended details about By explaining where the revisions happened, my high school in my own the author helps the reviewers locate the re-
+feedback that takes in consideration the au-
 
-revising draft#1 into Often authors know what needs to be revised but because of time constraint they
+thor’s purpose.
+
+By explaining where the revisions happened,
+
+the author helps the reviewers locate the re-
+
+vised parts.
+
+Often authors know what needs to be revised but because of time constraint they
 
 can’t do all the desired revisions at once. By
 
-acknowledging what the author already is doesn’t flow well as I aware of, the reviewers can focus on giving feel I jump from one feedback about something else that the author needs help with. In that case, the au-
+acknowledging what the author already is
+
+aware of, the reviewers can focus on giving
+
+feedback about something else that the author needs help with. In that case, the au-
 
 thor’s text enables the reviewers to use the
 
@@ -404,9 +455,13 @@ text appropriately.
 
 The author specifically helps the reviewers understand what the author needs help with.
 
-the purpose of my essay”? The author allows the reviewers to provide feedback from their per-
+The author allows the reviewers to provide feedback from their per-
 
-spective and in that way the author might have would be great would receive a comprehensive because I am sure I couldn’t feedback that covers both the author and reviewers’ purposes.
+spective and in that way the author
+
+would receive a comprehensive
+
+feedback that covers both the author and reviewers’ purposes.
 
 [^1]: I use the pronouns “them”, “they”, and “theirs” intentionally when speaking of individual humans to disrupt the gender binary and account for humans who don’t abide by that binary in defining themselves.
 
