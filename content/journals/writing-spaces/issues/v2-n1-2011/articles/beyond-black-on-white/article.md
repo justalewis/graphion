@@ -8,14 +8,14 @@ short-title: Beyond Black on White
 short-authors: Klein and Shackelford
 volume: 2
 year: 2011
-start-page: 327
+start-page: 332
+images-of-text:
+- figure-p008-1.png
 source-file: klein-and-shackelford--beyond-black-on-white.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
 license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
 chapter-number: 21
-images-of-text:
-- figure-p008-1.png
 ---
 
 Most people think of design as the arrangement of images on the page. This is only half true: Graphics can convey concepts that you can’t express in writing. If you were writing an article about an oil spill and the damage it caused, one powerful photograph could make your point more persuasively than pages of writing. Good document design integrates the words on the page with appropriate imagery to fully illustrate your meaning. An image of the Deep Horizon oil spill won’t have the same impact if the image isn’t coupled with a sentence about the scope of the spill.
@@ -28,43 +28,51 @@ In a typical first year writing course, you’ll be focusing---of course---on wr
 
 You can talk about design in a multitude of ways. What some designers call white space, for example, others call negative space. In both cases, they are referring to areas of a page free from text or objects, such as the white space that makes up the margins around the text of this paragraph. A designer may talk about the use of alignment in a design, while someone else will describe how textual elements “line up” on a page. All theories and methods of design include the same basic ideas, just expressed in different terms. The names of elements on a page are much less important than their function. The definitions below will help you understand the way we use these terms.
 
-Text and Type
+## Text and Type
 
 Typeface refers to the look of your text. It typically includes the font family (e.g., Times New Roman), the type size (e.g., 12 point) and type emphasis (e.g., bold). Spacing is the amount of space around a line of text within a document. The amount of space between lines of text is called leading (pronounced *led*) or line spacing. Leading is typically the size of the font plus two points. For example, standard leading for 12-point type is 14 points, indicated as 12/14 point; this paragraph uses 11 point Adobe Garamond Pro with 13.2 point leading. Increasing the amount of leading, or size of line spacing, can increase readability. Large amounts of text are often set with a leading of twice the text (12/24 point), also called double-spacing.
 
-Images
+## Images
 
 The visual elements of a design range from simple boxes to the use of color photographs. Designers often use the term “images” to refer to the wide range of visual elements available---photographs, line drawings, technical illustrations, graphs, charts, and so on. Not all images are appropriate for all uses. A color photo of the beach, for instance, may have more persuasive power than a black-and-white drawing because the photograph evokes a more complete and personal reaction. A technical illustration that allows a reader to see the inside of a device can demonstrate the proper assembly of equipment in more detail than an actual photograph. In some cases, though, images can distract from the meaning of your text. You should not include random clip art of a tree, for example, to supplement a paper on the importance of environmental sustainability. In contrast, you may strengthen your position on environmental sustainability with a graph showing the cumulative effects of non-recycled materials.
 
-Design Elements
+## Design Elements
 
 Like the combination of text and images, the integration of four key design elements---Contrast, Repetition, Alignment and Proximity---gives a design power. You can remember these elements by the acronym CRAP. Don’t let the name influence you, though---following these principles is one of the best ways to ensure your document looks its best. It is sometimes difficult to differentiate among these concepts because they influence each other.
 
-Contrast Contrast refers to the visual differences in elements on a page. These differences highlight the significance of the individual items, as well as draw the reader’s attention to different areas of a page. In a magazine layout, for example, the largest photograph is more noticeable because of its larger size in comparison to others on a spread. Color in a design can also provide noticeable contrast.
+### Contrast
+
+Contrast refers to the visual differences in elements on a page. These differences highlight the significance of the individual items, as well as draw the reader’s attention to different areas of a page. In a magazine layout, for example, the largest photograph is more noticeable because of its larger size in comparison to others on a spread. Color in a design can also provide noticeable contrast.
 
 In text, you see contrast through different uses of formatting options. This might include choosing different typefaces to visually separate headings from your main text. Contrast may also be visible in the differing sizes or emphasis applied to a text. If you apply bold formatting to keywords in your document, they stand out from others and indicate that they are significant. If every other word in your document is bold, however, the effect of the contrast is lost. A similar effect occurs when you overuse a highlighter when marking a textbook: important information gets lost rather than being easier to find.
 
 Look at the first page of this chapter. You can immediately see the name “Document Design” and recognize that it is the title of the chapter. Your eye is immediately drawn to it because it is the biggest item on the page. Just below the title, the authors’ names are in smaller, italicized text. The contrast between the size and emphasis in the two lines of text quickly illustrates that they are providing different information.
 
-Repetition Repetition involves the use of consistency to visually group multiple items that express similar ideas or are somehow related. You can apply this design element to graphics, including the use of shapes and color. For example, many of your textbooks may include a section summarizing key ideas from the text. By placing all summaries in a similarly shaped box or highlighted by the same color, you can tell that these items have something in common. Once you realize that all summaries in your political science textbook are in green boxes, you can find them at glance.
+### Repetition
+
+Repetition involves the use of consistency to visually group multiple items that express similar ideas or are somehow related. You can apply this design element to graphics, including the use of shapes and color. For example, many of your textbooks may include a section summarizing key ideas from the text. By placing all summaries in a similarly shaped box or highlighted by the same color, you can tell that these items have something in common. Once you realize that all summaries in your political science textbook are in green boxes, you can find them at glance.
 
 You can apply repetition simply by formatting text in different ways. When you look at a restaurant menu, you’ll see that the larger categories---like “Appetizers” and “Desserts”---are presented in the same font and size as each other, which is different from the listing of the food items themselves. This repeated format shows that those categories are equivalent. It also indicates that a new section is beginning, as do the headings that divide sections of this chapter. In papers written for a class, you express repetition in text primarily through placement, such as always putting page numbers in the same place on the page. On a Works Cited page, the organization of citation materials (such as the author’s name and book title) makes information easier to locate. Repetition makes your intent more obvious to readers.
 
 Repetition lets you quickly glance through this book and find information, even in sections you haven’t already read. To find the first page of a chapter, you look for a large title with lots of white space above it. If you’re looking for a specific page in the book, you know to look at the outside corners to locate the page numbers.
 
-Alignment In design, alignment refers to the placement of elements on a page. While everything on a page is aligned in that it has been placed somewhere, some alignment strategies are better than others. You can think of it as asking a sick friend, “Do you have a temperature?” Of course, everyone has a temperature; what you’re asking is if your friend has an elevated or abnormal temperature. In the same way, when document designers talk about alignment, they typically mean consistent alignment. For example, text that is left justified or graphics that run along the edge of the page are considered properly aligned.
+### Alignment
+
+In design, alignment refers to the placement of elements on a page. While everything on a page is aligned in that it has been placed somewhere, some alignment strategies are better than others. You can think of it as asking a sick friend, “Do you have a temperature?” Of course, everyone has a temperature; what you’re asking is if your friend has an elevated or abnormal temperature. In the same way, when document designers talk about alignment, they typically mean consistent alignment. For example, text that is left justified or graphics that run along the edge of the page are considered properly aligned.
 
 Aligning elements creates a cleaner, more attractive design and emphasizes the consistency of information on a page. Alignment also helps readers access and process information in a publication. Appropriately aligned text clarifies for the reader where ideas begin and end. It also increases readability by allowing the reader’s eye to return to a consistent location on the page while reading. Breaking the alignment scheme is also a valuable design tool. When a block quote is indented, it is quickly apparent that the text has a slightly different meaning than the text above and below it.
 
 The text alignment throughout this chapter indicates when a topic is changing and how a large piece of text (the chapter) can be broken into smaller chunks (the sections). Main headings within the text are centered over justified body text. To find the idea you’re looking for, you can look for the centered text and know that a new idea is being introduced.
 
-Proximity Proximity is the grouping of elements that have something in common. Often a layout involves a single idea, and the designer uses the entire page to place thematically related text and graphics. When multiple ideas are included on a single page, the reader can tell which are related based on how close---or far---they are from each other. An obvious example is a box including a photo and its caption.
+### Proximity
+
+Proximity is the grouping of elements that have something in common. Often a layout involves a single idea, and the designer uses the entire page to place thematically related text and graphics. When multiple ideas are included on a single page, the reader can tell which are related based on how close---or far---they are from each other. An obvious example is a box including a photo and its caption.
 
 In academic writing and formatting, the placement of text often illustrates proximity. You place headings that identify the content of a section directly above that section, cuing the reader to a shift. This proximity also allows readers to quickly find related information based on the heading of a section.
 
 Look at the image labeled as Fig. 1. As soon as you see the graphic, you can look immediately below it, see what it is named and why it is included. What if that label was on the next page? Placing related elements together is an efficient way to make sure they are properly understood.
 
-For More Information
+## For More Information
 
 Design texts aren’t just for professional designers! You can find examples of the principles discussed here in a variety of design books. Look for a basic book that covers designing with images and text to learn more. A good one to start with is Robin Williams *Non-Designer’s* *Design Book;* many of the ideas in this chapter are based on ones presented in her book.
 
@@ -83,7 +91,7 @@ Repetition is shown through the consistent emphasis and text used in the various
 
 Fig. 2. A formatted resume.
 
-The Basics of Style Guides
+## The Basics of Style Guides
 
 Style guides are collections of conventions on everything from word choice to format gathered into one place and used in writing. Their primary purpose is to ensure that all documents in a given environment adhere to a certain look and consistent use of language, but they serve a much broader purpose.
 
@@ -115,7 +123,7 @@ MLA-formatted papers for a class rarely include graphic elements, like illustrat
 
 The primary use of repetition in MLA format is to indicate that text formatted in the same way throughout a paper signifies a similar use. Contrast is important in separating distinct sections of a paper from one another. Alignment in MLA increases readability by providing a common starting point for the reader. Proximity helps readers follow related ideas. For example, section headers are located directly over the text they introduce, allowing readers to quickly find information.
 
-Margins
+## Margins
 
 Margins are the distance from the edge of the paper to where the text starts. They define the amount of white space around the text on the page. They are important because they emphasize the text through contrast (black text on a white page) and increase readability through consistent alignment (headings and text line up to the left margin). Margins also contribute to readability by providing a place for the reader’s eyes to rest: they ensure appropriate white space to prevent a page from becoming too dense with text.
 
@@ -125,7 +133,7 @@ See section 4.1 of the *MLA Handbook* for information on margins.
 
 Fig. 4. The first page of a paper formatted according to MLA style.
 
-Typeface and Spacing
+## Typeface and Spacing
 
 Appropriate typeface usage involves all design elements. The repetition of a single font throughout a document shows the reader that each section of the paper is part of a single whole. The strong visual color contrast of black text on a white background increases readability. Black text, for example, is easier to read than gray text, a difference you may notice when your printer is low on ink. Alignment indicates a separation of ideas or the introduction of a new concept. The title of the paper centered over the left-aligned text shows the beginning of the paper’s content. The placement of section titles illustrates proximity. Each one is adjacent to its respective text directly above the first paragraph of a section.
 
@@ -135,7 +143,7 @@ All text, from the initial header through the reference page, must be double-spa
 
 See section 4.2 of the *MLA Handbook* for information on typeface and spacing.
 
-Title and Headings
+## Title and Headings
 
 A title and internal headings help to separate the body of the paper into smaller, more specific, sections. They break text into shorter, more readable sections, or chunk information in the paper into reasonable portions. In addition, headings allow the reader to quickly skim through a document in search of specific ideas. Headings are described in levels, meaning their hierarchal structure in the paper. A second level heading must follow a first level heading. For example, after reading this entire chapter, you can easily find information on a specific element by looking for the appropriate heading.
 
@@ -145,7 +153,7 @@ See section 4.3 of the *MLA Handbook* for information on titles and headings.
 
 Fig. 5. A page formatted in MLA style showing double-spacing and a section heading.
 
-Headers and Page Numbers
+## Headers and Page Numbers
 
 Headers are a user service, providing information to readers regarding their location in the text. The header includes the author’s last name and the page number (see Fig. 4). Because the header information is formatted consistently and placed in the exact location on each page, this use of repetition helps readers easily find and identify document information.
 
@@ -155,7 +163,7 @@ Subsequent pages of the paper require that the author’s last name and page num
 
 See section 4.4 of the *MLA Handbook* for information on page numbers.
 
-Illustrations
+## Illustrations
 
 Illustrations, including photographs, line drawings, maps, or graphs, help your readers better understand the information you are communicating. Sometimes illustrations support the function of the text. For example, we use the illustrations in this chapter to help you better understand the concepts we are writing about. Understanding the importance of graphics would be much harder with no illustrations as support. In other instances, the illustrations themselves are the primary pieces of information. For instance, a simple graph can be far more dramatic and comprehensible than a long paragraph full of numbers and percentages.
 

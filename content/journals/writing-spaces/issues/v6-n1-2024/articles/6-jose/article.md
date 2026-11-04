@@ -9,12 +9,12 @@ volume: 6
 year: 2024
 start-page: 111
 chapter-number: 6
+images-of-text:
+- figure-p014-1.jpg
 source-file: 6Jose.pdf
 volume-title: Technical Writing Spaces 6
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
-images-of-text:
-- figure-p014-1.jpg
 ---
 
 College classes often involve some level of collaborative work. Technical writing courses are no different. In fact, collaboration has long been identified as one of the key components of technical and professional writing courses (Allen and Benninghoff). Yet, many of us have experienced times of anxiety and even dread when we mark the days on the class calendar that precede the start of the group project. From communication issues to fear of unequal workload distribution or scheduling difficulties, let’s be honest, there are many reasons for being leery about group work.
@@ -29,7 +29,7 @@ The first step toward a successful collaborative writing experience is understan
 
 The main reasons for learning how to write collaboratively are twofold: first, it is a way to make the writing more authentic and reflective of what it does and is outside of the classroom; second, it is a way to develop tangible skills for your résumé.
 
-# Reason 1: Connecting Writing to its Realities Outside of the Classroom
+## Reason 1: Connecting Writing to its Realities Outside of the Classroom
 
 Most writing performed in the workplace involves more than one person. As noted by scholar Kristin Woolever, “collaboration is the way work gets done today” (141).
 
@@ -41,7 +41,7 @@ The prevalence of collaborative writing in the workplace also explains why it is
 
 For example, speaking of the technical writing/communication classroom, scholar Liz Lane describes it as “wildly collaborative, in that we prepare our students to collaborate and test project management skills for eventual implementation in their professional lives beyond the classroom” (32). In their 2021 book chapter on “The rhetoric, science, and technology of 21st century collaboration,” scholars Ann Hill Duin, Jason Tham, and Isabel Pedersen describe collaboration as an imperative for today’s technical communicators and emphasize its importance in the classroom as means to prepare students for the workplace. In other words, think of collaboration not only as one of the key topics of technical writing but also as an activity that emulates the kind of writing you will encounter in your future professional lives.
 
-# Understanding Collaboration Types
+## Understanding Collaboration Types
 
 Depending on the situation and the project, the collaboration will occur at different moments of the writing process and have different functions. It may also be more or less involved, ranging from punctual collaborative moments to projects that are entirely collaborative from the beginning to the end.
 
@@ -51,19 +51,19 @@ If you write a grant in a team environment (cf. previous example 2), you probabl
 
 Though it may be less evident to think of it as such, the writing of a correspondence document sent by a company to its clients also involves a form of collaboration (cf. earlier example 3). Even in this case, you are not writing alone and for yourself but with and for someone else. Your collaborator’s role may then be limited to being a gatekeeper (that is, the person approving and signing off the document to be sent/published) but the fact remains that they are part of the writing process. The document that you produce speaks for and reflects someone else’s purpose besides your own.
 
-# Making it Matter
+## Making it Matter
 
 The three previous examples are good reminders of the inherently collaborative aspect of writing in the workplace. In this regard, collaborating on writing projects prepares you for what writing is and does outside of the classroom. It makes your coursework more tangible and authentic by connecting it to your future professional life. Keeping in mind this bigger picture can also help you set your own learning goals. For instance, remembering how a project helps you to gain practice with the kind of communication you will encounter in your future career will make it easier to focus on what you want to take away from a project. This may also give you an extra source of motivation, besides earning a good grade.
 
-# Reason 2: Developing Tangible Skills for Your Résumé
+## Reason 2: Developing Tangible Skills for Your Résumé
 
 Beyond these immediate writing-specific learning outcomes, working on a collaborative project is also a great practice for developing the kinds of soft skills that employers value.
 
-# Developing Soft Skills
+## Developing Soft Skills
 
 Collaboration can be a catalyst for the development of soft skills such as being a good listener, showing empathy, learning to see situations from different perspectives, being able to negotiate different points of view, and being able to problem solve and resolve conflicts. For instance, a solo writing project can make it difficult to think about how a specific audience may interpret your text or react to your ideas. But when you develop content with a team, you must confront your ideas with others early in the process, and thus gain experience with editing as well as listening and negotiating. If such skills are sought after by employers, it is not always easy to provide evidence on your résumé for how and why you possess them. Listing a group project as evidence and example can do just that.
 
-# Working with Outside Audiences
+## Working with Outside Audiences
 
 Collaboration may also give you opportunities to work with communities and clients outside of the classroom. For example, if your technical writing course entails a service-learning component (that is, a project with an off-campus community partner), your team may be paired with a client such as a small nonprofit and be tasked with developing content for their website. Research has shown that class projects involving partners outside of the classroom are stronger motivation factors for collaboration than projects that remain inside of the classroom (Rebecca Pope-Ruark et al.). This relationship is yet another way of thinking about the WHY of collaboration in the technical writing classroom: besides giving you easy ways to get feedback on your work and to strengthen your communication and listening skills, it can also open up exciting possibilities for client projects that can be listed as experiences on your résumé.
 
@@ -73,7 +73,7 @@ So, when you are assigned this pesky group project, make it count and connect it
 
 Once the relevance of collaborative writing is clear to you, the next step is to understand HOW to do it successfully. In other words, the question becomes: what makes a team effective?
 
-# Project Completion and Technical Skills Matter but They are Not Enough
+## Project Completion and Technical Skills Matter but They are Not Enough
 
 It may be easy to equate team effectiveness with project completion. While submitting a project that is complete and on time is part of success, it is not all there is to it. Indeed, a project with one team member carrying out most of the work can hardly be considered a success or a model for future collaborations. Research has shown that communication and team cohesion are fundamental elements in a team’s success (Lam; Murphy et al.). Even more so, lack of group cohesion and dealing with non-contributing members are the elements students mention most often as reasons for disliking group projects (Hall & Buzwell; Lam; Williams, et al.).
 
@@ -89,7 +89,7 @@ Ultimately, what makes a team effective cannot be measured by the addition of sp
 
 If equitable work distribution and effective contributions from all team members are key factors in a team’s success, they are also the most difficult challenges to overcome. This also explains why the issue of non-contributing members, often referred to as social loafing, has become an area of research. For instance, scholar Chris Lam conducted a study that identified “communication quality and task cohesion” as key factors for reducing social loafing (454). Lam’s conclusions and his focus on communication quality and team cohesion are on par with what Google discovered in its study on collaboration.
 
-# Google’s Project Aristotle
+## Google’s Project Aristotle
 
 Because collaboration is a crucial aspect of today’s workplace, questions related to effective teamwork are of interest to many companies. The tech company Google, who is well known for its reliance and promotion of teamwork, launched a project in 2012 named Project Aristotle with the goal of determining what makes a team effective. The name Aristotle is a reference to the famous Greek philosopher and specifically to one of his famous quotes, “the whole is greater than the sum of its parts.” The quote can be read as an evocation of what makes collaboration complex and the fact that a team’s success is not simply determined by the individual skills of its members. Differently put, understanding collaboration requires understanding what makes the togetherness of a team successful. And this was precisely Google’s goal for launching Project Aristotle.
 
@@ -103,7 +103,7 @@ One of the main and, perhaps surprising, findings of this study is that a team�
 
 Teams often go through stages to find what works best for them (Tuckman). However, understanding the differences between an effective vs. ineffective team as discussed in the previous section can serve as a guide to develop steps for planning and deploying your collaborative process.
 
-# Step 1: Establishing Common Ground and Verbalizing Individual Expectations
+## Step 1: Establishing Common Ground and Verbalizing Individual Expectations
 
 Making time to get to know everyone and establishing common goals should be the first step of your collaboration. Whether or not this is required by your instructor, think of this step as an opportunity to establish common ground with your team members. This is also the time when team members should talk honestly and openly about their expectations and possible worries.
 
@@ -115,7 +115,7 @@ Scholar Joanna Wolfe describes the importance of these preliminary conversations
 
 Ideally, this conversation is held internally among team members, and not shared with your instructor.
 
-# Step 2: Assigning Roles and Choosing Your Collaboration Method
+## Step 2: Assigning Roles and Choosing Your Collaboration Method
 
 Depending on how your instructor sets up the team, this step may be completed prior to forming the teams. The goal is essentially to define how you will distribute the work. The method used, of course, should be appropriate to the project. In this regard, this step is also the opportunity to discuss and analyze together the main goals and requirements of the project. In other words, think of this step as the first close reading of the project’s guidelines as a group.
 
@@ -135,7 +135,7 @@ Dividing the work into different tasks with specific roles for each team member 
 
 Such an approach is sometimes called “a layered approach” because it involves team members taking turns in working on the final deliverable, adding their expertise at different stages of the process (Wolfe 6--8). “Norming” is another way to think about this approach, since each component of the project gets reviewed and worked on by all team members at different stages of the process (Richard Johnson-Sheenan 61--62). This is also a good reminder that the writing is never just done by one person; everyone does it at some point during the project. Assigning roles based on the project’s goals and individual expertise keeps your work also more consistent with the realities of writing in the workplace.
 
-# Step 3: Identifying the Right Tools
+## Step 3: Identifying the Right Tools
 
 Sometimes the biggest hurdle for a sound collaboration is to find the right tools. Fortunately, today’s technology offers many options to work together without having to share physical artifacts or having to be physically together all the time. Regardless of whether the project involves word-based writing, visual design, or web development content, here are a few key questions to consider before choosing a specific tool:
 
@@ -143,13 +143,13 @@ Sometimes the biggest hurdle for a sound collaboration is to find the right tool
 
 When you discuss tool options with your peers, remember that the tools will not only help you to accomplish the tasks required by the project, but they will also allow everyone to participate and stay connected. In other words, consider the tools as another element for establishing common ground, building trust, and keeping everyone involved.
 
-# Step 4: Establishing Communication and Meeting Protocols
+## Step 4: Establishing Communication and Meeting Protocols
 
 While it may be tempting to say, “we will decide on meetings as we go and as the project develops,” it is paramount to establish a clear communication and meeting schedule at the onset of your project. Think of this as your communication framework for deploying your actual collaboration once you selected a tool (cf. earlier step 3). The goal is not to create more work but to facilitate your collaboration with regular check-ins. Here are a few elements to consider:
 
 > • What is the team’s preferred communication method? Is it email, phone, text messages, instant messaging, social media messaging apps, or face-to-face meetings? You may also use a combination of methods. For instance, a team could use instant messaging for staying connected and reaching out when needed while also scheduling weekly face-to-face check-ins. • How often will you check in with each other? Depending on the course and its modality, your instructor may give you time at the beginning of each class period to check in with your team. Regardless of whether or not you are given time in class, it is always a good idea to set your own check-in schedule. For example, for a month-long project, you probably want to have weekly check-ins. These check-ins may be time to share project updates, make sure everyone is (still) on the same page, and discuss next steps. They may also be time for seeking input from your peers on your contributions, asking questions, and solving eventual issues as a group (ex. The information you were supposed to gather is not available; your schedule changed, and you did not contribute as much as you had hoped this particular week). Check-ins not only streamline the work, but they also keep the stress level low since each team member will always know where the project is at.
 
-# Step 5: Writing the Actual Group Contract/Charter
+## Step 5: Writing the Actual Group Contract/Charter
 
 This step is the outcome of steps 1--4. Think of this contract as the first collaborative content that your team will develop and share with your instructor. As such, it should reflect everyone’s input and vision. While the exact content may vary depending on the project, or how groups were formed, what follows are some basic elements that a contract should address:
 
@@ -171,11 +171,11 @@ Table 6.1. Examples of Post-Collaboration Reflections Based on Whether or Not Ea
 
 Figure 6.1 shows an example of what a collaborative writing project that uses the methods outlined previously looks like in action. Note that your team contract would be effectively written during the 3rd stage as the first content document after stage 1 and 2.
 
-# Common Problems and Possible Solutions
+## Common Problems and Possible Solutions
 
 The methods outlined earlier offer a framework to build sound collaborative practices. They are, however, not full proof shields against every issue. What follows are some potential issues and solutions to keep in mind.
 
-# Social Loafing/Freeloading
+### Social Loafing/Freeloading
 
 If you end up with a non-contributing member, start by addressing the issue during one of the check-in moments. Give the person a chance to explain the situation first. Incomplete or no work is not always a sign of a freeloader.
 
@@ -186,11 +186,11 @@ Sometimes, a person does not contribute because their schedule or other unexpect
 
 What started as a problem can then become a chance to build cohesion and trust. This may be enough to make a struggling team member a productive member. If these adjustments do not resolve the issue, consult your contract, which should have specific information regarding what constitutes a breach of contract and what procedure to follow. This may mean issuing a warning (with potential point deductions) and/or contacting your instructor. It may be helpful to organize a team meeting with your instructor as a facilitator. Remember to keep the focus on the problematic behavior and its consequences for the project, rather than on a particular individual. Make the outcome of the conversation what is needed to benefit the group and the project.
 
-# Unresponsive Team Members
+### Unresponsive Team Members
 
 To deal with members who go radio silent, apply the same steps as you would for non-contributing members. That is, start by giving a chance to the person to reconnect. Use the team’s preferred communication method and keep in mind that their silence may be due to circumstances outside of their control. Someone may also withdraw because they are struggling with the work and need encouragement. If the silence persists, consult your contract (and schedule) and reach out to your instructor.
 
-# Conflict Between Team Members
+### Conflict Between Team Members
 
 Sometime disagreements or domineering personalities can create conflicts. If this happens, use your check-ins to have a conversation as a group. Give everyone a chance to speak without interruption and respect each other’s ideas. Remember that the goal is not to be individually right or wrong; the goal is to be successful as a team. That is, understand that succeeding as a team may mean negotiating and compromising. Your project may include a peer assessment as one of the deliverables to be submitted at the end of the project. Such documents are helpful too for reflecting on collaboration issues and drawing lessons. However, if they are used as replacements for punctual assessments and check-ins during the project, group cohesion may suffer, and problems encountered during the project may become a major source of resentment and stress. In other words, do not delay and try to address issues as they arise.
 
@@ -274,7 +274,7 @@ Questions pertaining to specific collaborative strategies could include:
 
 importance of communication), the chapter gives students ways to plan a project and shows them that there are specific strategies for making collaboration effective.
 
-# Technology Activity/Discussion
+## Technology Activity/Discussion
 
 This activity can work as a complement to an introductory discussion on collaborative writing projects. It can also be assigned as an exercise requiring students to analyze specific writing technologies and identify their effectiveness in collaborative settings.
 
@@ -284,7 +284,7 @@ This activity can work as a complement to an introductory discussion on collabor
 
 3. What kind of software programs does the project require? List a few options. Test and rank them based on their collaborative options.
 
-# Responding to Collaboration Planning Exercise
+## Responding to Collaboration Planning Exercise
 
 Scenario-based exercises can also be used as application of this essay. Here is an example: a group of students was assigned a project requiring them to develop instructions for an online application of their choice. After reading the project guidelines individually, they were given time to plan their collaboration. Consider the following exchange:
 

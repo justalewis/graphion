@@ -72,6 +72,133 @@ def test_nothing_is_marked_where_the_tree_says_nothing():
     assert lines[0].heading_level is None
 
 
+# ---------- a sentence is not a heading, whatever the file says ----------
+
+def test_a_stated_head_that_is_a_sentence_is_left_to_the_type():
+    """Volume 2's `walk-talk-cook-eat` is written as a dialogue and sets its
+    stage directions in `Header_C`, the style the series uses for a third
+    level section head, so the file states that "Marvin types it in." is an
+    H3 while the chapter's own heads are H1s in the same series. Reading the
+    tree faithfully published twelve stage directions as headings, which is
+    what somebody navigating by heading would hear.
+    """
+    line = _line("*Marvin types it in.*")
+    line.heading_level = 3
+    report = {}
+
+    blocks = pdf_ingest.assemble([line], LAYOUT, set(), set(), report=report)
+
+    # Body, with its emphasis intact: the italic is the direction's own and
+    # a reader is meant to hear it.
+    assert blocks == [("body", "*Marvin types it in.*")]
+    assert report["declined_heads"] == ["Marvin types it in."]
+
+
+def test_a_stated_head_is_judged_on_the_whole_of_it_not_one_line():
+    """Five of the twelve got through when this was asked of a physical
+    line: a direction that wraps carries no full stop on its first line.
+    `flush` holds the joined text, which is the only place the whole
+    heading exists."""
+    first = _line("Marvin thinks for a minute, while chewing and", top=100.0)
+    second = _line("swallowing a mouthful of apple.", top=112.0)
+    first.heading_level = second.heading_level = 3
+    report = {}
+
+    blocks = pdf_ingest.assemble([first, second], LAYOUT, set(), set(),
+                                 report=report)
+
+    assert [k for k, _ in blocks] == ["body"]
+    assert len(report["declined_heads"]) == 1
+
+
+def test_a_head_that_asks_a_question_is_still_a_head():
+    """`writing-eyeball-to-eyeball` closes on one, so rejecting terminal
+    punctuation in general would cost a real heading."""
+    line = _line("What Difference Does a Mindful Collaboration Make?")
+    line.heading_level = 2
+    report = {}
+
+    blocks = pdf_ingest.assemble([line], LAYOUT, set(), set(), report=report)
+
+    assert blocks == [
+        ("head2", "What Difference Does a Mindful Collaboration Make?")]
+    assert report["declined_heads"] == []
+
+
+def test_a_wrapped_title_keeps_its_level_and_rejoins_its_word():
+    """`annoying-ways-people-use-sources` breaks "Useless" across the line,
+    and `join_lines` is what puts it back, which is another reason the
+    judgement belongs after the join rather than before it."""
+    first = _line("Uncle Barry and His Encyclopedia of Use-", top=100.0)
+    second = _line("less Information", top=112.0)
+    first.heading_level = second.heading_level = 3
+
+    blocks = pdf_ingest.assemble([first, second], LAYOUT, {"useless"}, set())
+
+    assert blocks == [("head3", "Uncle Barry and His Encyclopedia of "
+                                "Useless Information")]
+
+
+def test_a_title_that_ends_in_a_full_stop_is_still_a_title():
+    """`on-the-other-hand` heads five sections "Step 1:" to "Step 5:" and
+    ends each with a full stop, so the stop alone would have cost six real
+    headings to stop twelve false ones. The case is what separates them.
+    """
+    for text in ("Step 5: Imagine Hostile Audiences.",
+                 "Step 4: Examine Alternatives to Your Working Thesis.",
+                 "Step 2: Consider the Direct Opposite of Your Working "
+                 "Thesis."):
+        assert not pdf_ingest.states_a_sentence(text), text
+
+
+def test_a_head_that_trails_off_is_not_a_sentence():
+    """Two heads in this archive end in a spaced ellipsis, which is not a
+    full stop however it is set."""
+    assert not pdf_ingest.states_a_sentence(
+        "But You Still Can’t Convince Everyone . . .")
+    assert not pdf_ingest.states_a_sentence(
+        "If at First You Fall Asleep . . .")
+    assert not pdf_ingest.states_a_sentence("And So On...")
+
+
+def test_states_a_sentence_reads_the_line_with_its_emphasis_off():
+    """A stage direction is set in italic and arrives wrapped, which is the
+    same reason the captions call `unemphasize`."""
+    assert pdf_ingest.states_a_sentence("Marvin thinks for a moment.")
+    assert pdf_ingest.states_a_sentence("*Marvin thinks for a moment.*")
+    assert pdf_ingest.states_a_sentence("Marvin types it in.")
+    assert pdf_ingest.states_a_sentence(
+        "A bit confused, Marvin scratches his head.")
+    assert pdf_ingest.states_a_sentence(
+        "Marvin clicks back to the Wikipedia site.")
+    assert pdf_ingest.states_a_sentence(
+        "Marvin logs in, finds the database, and types in “bottled "
+        "water AND health.”")
+    assert not pdf_ingest.states_a_sentence("The Post-Mortem")
+    assert not pdf_ingest.states_a_sentence("*Avoid Leading Questions*")
+    assert not pdf_ingest.states_a_sentence("Works Cited")
+    assert not pdf_ingest.states_a_sentence(
+        "Structuring the Path Ahead: Setting Up Your Project")
+
+
+def test_a_line_with_no_long_word_to_read_is_not_called_sentence_case():
+    """A short head ending in a stop gives the case test nothing to go on,
+    and guessing there would turn down a heading on no evidence."""
+    assert pdf_ingest.reads_as_title_case("Etc.")
+    assert pdf_ingest.reads_as_title_case("No. 5.")
+
+
+def test_the_measured_gap_in_capitalisation():
+    """The threshold is where the archive put it: the stage directions
+    capitalise at most a quarter of their long words, the real heads all of
+    them."""
+    assert pdf_ingest.reads_as_title_case(
+        "Step 5: Imagine Hostile Audiences.")
+    assert not pdf_ingest.reads_as_title_case(
+        "Way ahead of the professor, Marvin’s already started reading "
+        "about the health risks and benefits of bottled water.")
+
+
 # ---------- a stated level wins over the type ----------
 
 def test_a_head_set_at_body_size_is_still_a_head():

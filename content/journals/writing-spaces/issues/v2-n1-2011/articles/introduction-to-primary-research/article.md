@@ -6,15 +6,15 @@ short-title: Introduction to Primary Research
 short-authors: Driscoll
 volume: 2
 year: 2011
-start-page: 150
+start-page: 153
+images-of-text:
+- figure-p006-2.jpg
+- figure-p011-1.png
 source-file: driscoll--introduction-to-primary-research.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
 license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
 chapter-number: 10
-images-of-text:
-- figure-p006-2.jpg
-- figure-p011-1.png
 ---
 
 # Primary Research: Definitions and Overview
@@ -25,7 +25,7 @@ research. Rather, individuals conducting research are *producing* the articles a
 
 Primary research is often based on principles of the scientific method, a theory of investigation first developed by John Stuart Mill in the nineteenth century in his book *Philosophy of the Scientific Method.* Although the application of the scientific method varies from field to field, the general principles of the scientific method allow researchers to learn more about the world and observable phenomena. Using the scientific method, researchers develop research questions or hypotheses and collect data on events, objects, or people that is measurable, observable, and replicable. The ultimate goal in conducting primary research is to learn about something new that can be confirmed by others and to eliminate our own biases in the process.
 
-Essay Overview and Student Examples
+## Essay Overview and Student Examples
 
 The essay begins by providing an overview of ethical considerations when conducting primary research, and then covers the stages that you will go through in your primary research: planning, collecting, analyzing, and writing. After the four stages comes an introduction to three common ways of conducting primary research in first year writing classes:
 
@@ -71,7 +71,7 @@ Now that we have considered the ethical implications of research, we will examin
 
 The primary research process is quite similar to the writing process, and you can draw upon your knowledge of the writing process to understand the steps involved in a primary research project. Just like in the writing process, a successful primary research project begins with careful planning and background research. This section first describes how to create a research timeline to help plan your research. It then walks you through the planning stages by examining when primary research is useful or appropriate for your first year composition course, narrowing down a topic, and developing research questions.
 
-The Research Timeline
+## The Research Timeline
 
 When you begin to conduct any kind of primary research, creating a timeline will help keep you on task. Because students conducting primary research usually focus on the collection of data itself, they often overlook the equally important areas of planning (invention), analyzing data, and writing. To help manage your time, you should create a research timeline, such as the sample timeline presented here.
 
@@ -81,17 +81,17 @@ Fig. 1: The Research Process
 ![A four-week timeline. Week one: background research on ABE, create research questions for interviews, email possible interviewees and set up interviews. Week two: set up interview times, interview an engineering professional and a student, transcribe the interviews. Week three: interview analysis, write a draft of the interview results with the background research. Week four: get feedback on the draft, revise it.](assets/figure-p006-2.jpg)\
 Fig. 2: A sample timeline for Jared’s research project.
 
-When Primary Research Is Useful or Appropriate
+## When Primary Research Is Useful or Appropriate
 
 In *Evaluating Scientific Research: Separating Fact from Fiction,* Fred Leavitt explains that primary research is useful for questions that can be answered through asking others and direct observation. For first year writing courses, primary research is particularly useful when you want to learn about a problem that does not have a wealth of published information. This may be because the problem is a recent event or it is something not commonly studied. For example, if you are writing a paper on a new political issue, such as changes in tax laws or healthcare, you might not be able to find a wealth of peer-reviewed research because the issue is only several weeks old. You may find it necessary to collect some of your own data on the issue to supplement what you found at the library. Primary research is also useful when you are studying a local problem or learning how a larger issue plays out at the local level. Although you might be able to find information on national statistics for healthy eating, whether or not those statistics are representative of your college campus is something that you can learn through primary research.
 
 However, not all research questions and topics are appropriate for primary research. As Fred Leavitt writes, questions of an ethical, philosophical, or metaphysical nature are not appropriate because these questions are not testable or observable. For example, the question “Does an afterlife exist?” is not a question that can be answered with primary research. However, the question “How many people in my community believe in an afterlife?” is something that primary research can answer.
 
-Narrowing Your Topic
+## Narrowing Your Topic
 
 Just like the writing process, you should start your primary research process with secondary (library) research to learn more about what is already known and what gaps you need to fill with your own data. As you learn more about the topic, you can narrow down your interest area and eventually develop a research question or hypothesis, just as you would with a secondary research paper.
 
-Developing Research Questions or Hypotheses
+## Developing Research Questions or Hypotheses
 
 As John Stuart Mill describes, primary research can use both *inductive* and *deductive* approaches, and the type approach is usually based on the field of inquiry. Some fields use *deductive reasoning,* where researchers start with a hypothesis or general conclusion and then collect specific data to support or refute their hypothesis. Other fields use *inductive reasoning,* where researchers start with a question and collect information that eventually leads to a conclusion.
 
@@ -109,7 +109,7 @@ The poor research question is unspecific as to what group of students the resear
 
 A final step in working with a research question or hypothesis is determining what key terms you are using and how you will define them. Before conducting his research, Derek had to define the terms “healthy” and “unhealthy”; for this, he used the USDA’s Food Pyramid as a guide. Similarly, part of what Jared focused on in his interviews was learning more about how agricultural and biological engineers defined terms like “writing” and “communication.” Derek and Jared thought carefully about the terms within their research questions and how these terms might be measured.
 
-Choosing a Data Collection Method
+## Choosing a Data Collection Method
 
 Once you have formulated a research question or hypothesis, you will need to make decisions about what kind of data you can collect that will best address your research topic. Derek chose to examine eating habits by observing both what students ate at lunch and surveying students about eating behavior. Jared decided that in-depth interviews with experienced individuals in his field would provide him with the best information.
 
@@ -125,7 +125,7 @@ If you are observing people, you can choose between two common ways to observe: 
 
 The second issue about participant consent in terms of unobtrusive observation is whether or not getting consent is feasible for the study. If you are observing people in a busy airport, bus station, or campus food court, getting participant consent may be next to impossible. In Derek’s study of student eating habits on campus, he went to the campus food courts during meal times and observed students purchasing food. Obtaining participant consent for his observations would have been next to impossible because hundreds of students were coming through the food court during meal times. Since Derek’s research was in a place that participants would perceive as public, it was not practical to get their consent, and since his data was anonymous, he did not violate their privacy.
 
-Eliminating Bias in Your Observation Notes
+## Eliminating Bias in Your Observation Notes
 
 The ethical concern of being unbiased is important in recording your observations. You need to be aware of the difference between an observation (recording exactly what you see) and an interpretation (making assumptions and judgments about what you see). When you observe, you should focus first on only the events that are directly observable. Consider the following two example entries in an observation log:
 
@@ -150,15 +150,17 @@ Sometimes it is very difficult for a researcher to gain all of the necessary inf
 
 Interviews and surveys are two ways that you can gather information about people’s beliefs or behaviors. With these methods, the information you collect is not first-hand (like an observation) but rather “self-reported” data, or data collected in an indirect manner. William Shadish, Thomas Cook, and Donald Campbell argued that people are inherently biased about how they see the world and may report their own actions in a more favorable way than they may actually behave. Despite the issues in self-reported data, surveys and interviews are an excellent way to gather data for your primary research project.
 
-Survey or Interview?
+## Survey or Interview?
 
 How do you choose between conducting a survey or an interview? It depends on what kind of information you are looking for. You should use surveys if you want to learn about a general trend in people’s opinions, experiences, and behavior. Surveys are particularly useful to find small amounts of information from a wider selection of people in the hopes of making a general claim. Interviews are best used when you want to learn detailed information from a few specific people. Interviews are also particularly useful if you want to interview experts about their opinions, as Jared did. In sum, use interviews to gain details from a few people, and surveys to learn general patterns from many people.
 
-Writing Good Questions
+## Writing Good Questions
 
 One of the greatest challenges in conducting surveys and interviews is writing good questions. As a researcher, you are always trying to eliminate bias, and the questions you ask need to be unbiased and clear. Here are some suggestions on writing good questions:
 
-Ask about One Thing at a Time A poorly written question can contain multiple questions, which can confuse participants or lead them to answer only part of the question you are asking. This is called a “double-barreled question” in journalism. The following questions are taken from Jared’s research:
+### Ask about One Thing at a Time
+
+A poorly written question can contain multiple questions, which can confuse participants or lead them to answer only part of the question you are asking. This is called a “double-barreled question” in journalism. The following questions are taken from Jared’s research:
 
 > Poor question: What kinds of problems are being faced in the field today and where do you see the search for solutions to these problems going?
 
@@ -166,13 +168,19 @@ Ask about One Thing at a Time A poorly written question can contain multiple que
 
 > Revised question #2: Where do you see the search for solutions to these problems going?
 
-*Avoid Leading Questions* A leading question is one where you prompt the participant to respond in a particular way, which can create bias in the answers given:
+### Avoid Leading Questions
+
+A leading question is one where you prompt the participant to respond in a particular way, which can create bias in the answers given:
 
 > Leading question: The economy is clearly in a crisis, wouldn’t you agree? Revised question: Do you believe the economy is currently in a crisis? Why or why not?
 
-Understand When to Use Open and Closed Questions Closed questions, or questions that have yes/no or other limited responses, should be used in surveys. However, avoid these kinds of questions in interviews because they discourage the interviewee from going into depth. The question sample above, “Do you believe the economy currently is in a crisis?” could be answered with a simple yes or no, which could keep a participant from talking more about the issue. The “why or why not?” portion of the question asks the participant to elaborate. On a survey, the question “Do you believe the economy currently is in a crisis?” is a useful question because you can easily count the number of yes and no answers and make a general claim about participant responses.
+### Understand When to Use Open and Closed Questions
 
-Write Clear Questions When you write questions, make sure they are clear, concise, and to the point. Questions that are too long, use unfamiliar vocabulary, or are unclear may confuse participants and you will not get quality responses.
+Closed questions, or questions that have yes/no or other limited responses, should be used in surveys. However, avoid these kinds of questions in interviews because they discourage the interviewee from going into depth. The question sample above, “Do you believe the economy currently is in a crisis?” could be answered with a simple yes or no, which could keep a participant from talking more about the issue. The “why or why not?” portion of the question asks the participant to elaborate. On a survey, the question “Do you believe the economy currently is in a crisis?” is a useful question because you can easily count the number of yes and no answers and make a general claim about participant responses.
+
+### Write Clear Questions
+
+When you write questions, make sure they are clear, concise, and to the point. Questions that are too long, use unfamiliar vocabulary, or are unclear may confuse participants and you will not get quality responses.
 
 Now that question creation has been addressed, we will next examine specific considerations for interviews and surveys.
 
@@ -180,23 +188,23 @@ Now that question creation has been addressed, we will next examine specific con
 
 Interviews, or question and answer sessions with one or more people, are an excellent way to learn in-depth information from a person for your primary research project. This section presents information on how to conduct a successful interview, including choosing the right person, ways of interviewing, recording your interview, interview locations, and transcribing your interview.
 
-Choosing the Right Person
+## Choosing the Right Person
 
 One of the keys to a successful interview is choosing the right person to interview. Think about whom you would like to interview and whom you might know. Do not be afraid to ask people you do not know for interviews. When asking, simply tell them what the interview will be about, what the interview is for, and how much time it will take. Jared used his Purdue University connection to locate both of the individuals that he ended up interviewing---an advanced Purdue student and a Purdue alum working in an Engineering firm.
 
-Face-to-Face and Virtual Interviews
+## Face-to-Face and Virtual Interviews
 
 When interviewing, you have a choice of conducting a traditional, face-to-face interview or an interview using technology over the Internet. Face-to-face interviews have the strength that you can ask follow-up questions and use non-verbal communication to your advantage. Individuals are able to say much more in a face-to-face interview than in an email, so you will get more information from a face-to-face interview. However, the Internet provides a host of new possibilities when it comes to interviewing people at a distance. You may choose to do an email interview, where you send questions and ask the person to respond. You may also choose to use a video or audio conferencing program to talk with the person virtually. If you are choosing any Internet-based option, make sure you have a way of recording the interview. You may also use a chat or instant messaging program to interview your participant---the benefit of this is that you can ask follow-up questions during the interview and the interview is already transcribed for you. Because one of his interviewees lived several hours away, Jared chose to interview the Purdue student face-to-face and the Purdue alum via email.
 
-Finding a Suitable Location
+## Finding a Suitable Location
 
 If you are conducting an in-person interview, it is essential that you find a quiet place for your interview. Many universities have quiet study rooms that can be reserved (often found in the university library). Do not try to interview someone in a coffee shop, dining hall, or other loud area, as it is difficult to focus and get a clear recording.
 
-Recording Interviews
+## Recording Interviews
 
 One way of eliminating bias in your research is to record your interviews rather than rely on your memory. Recording interviews allows you to directly quote the individual and re-read the interview when you are writing. It is recommended that you have two recording devices for the interview in case one recording device fails. Most computers, MP3 players, and even cell phones come with recording equipment built in. Many universities also offer equipment that students can check out and use, including computers and recorders. Before you record any interview, be sure that you have permission from your participant.
 
-Transcribing Your Interview
+## Transcribing Your Interview
 
 Once your interview is over, you will need to transcribe your interview to prepare it for analysis. The term transcribing means creating a written record that is exactly what was said---i.e. typing up your interviews. If you have conducted an email or chat interview, you already have a transcription and can move on to your analysis stage.
 
@@ -204,17 +212,17 @@ Once your interview is over, you will need to transcribe your interview to prepa
 
 Other than the fact that they both involve asking people questions, interviews and surveys are quite different data collection methods. Creating a survey may seem easy at first, but developing a quality survey can be quite challenging. When conducting a survey, you need to focus on the following areas: survey creation, survey testing, survey sampling, and distributing your survey.
 
-Survey Creation: Length and Types of Questions
+## Survey Creation: Length and Types of Questions
 
 One of the keys to creating a successful survey is to keep your survey short and focused. Participants are unlikely to fill out a survey that is lengthy, and you’ll have a more difficult time during your analysis if your survey contains too many questions. In most cases, you want your survey to be something that can be filled out within a few minutes. The target length of the survey also depends on how you will distribute the survey. If you are giving your survey to other students in your dorm or classes, they will have more time to complete the survey. Therefore, five to ten minutes to complete the survey is reasonable. If you are asking students as they are walking to class to fill out your survey, keep it limited to several questions that can be answered in thirty seconds or less. Derek’s survey took about ten minutes and asked students to describe what they ate for a day, along with some demographic information like class level and gender.
 
 Use closed questions to your advantage when creating your survey. A closed question is any set of questions that gives a limited amount of choices (yes/no, a 1--5 scale, choose the statement that best describes you). When creating closed questions, be sure that you are accounting for all reasonable answers in your question creation. For example, asking someone “Do you believe you eat healthy?” and providing them only “yes” and “no” options means that a “neutral” or “undecided” option does not exist, even though the survey respondent may not feel strongly either way. Therefore, on closed questions you may find it helpful to include an “other” category where participants can fill in an answer. It is also a good idea to have a few open-ended questions where participants can elaborate on certain points or earlier responses. However, open-ended questions take much longer to fill out than closed questions.
 
-Survey Creation: Testing Your Survey
+## Survey Creation: Testing Your Survey
 
 To make sure your survey is an appropriate length and that your questions are clear, you can “pilot test” your survey. Prior to administering your survey on a larger scale, ask several classmates or friends to fill it out and give you feedback on the survey. Keep track of how long the survey takes to complete. Ask them if the questions are clear and make sense. Look at their answers to see if the answers match what you wanted to learn. You can revise your survey questions and the length of your survey as necessary.
 
-Sampling and Access to Survey Populations
+## Sampling and Access to Survey Populations
 
 “Sampling” is a term used within survey research to describe the subset of people that are included in your study. Derek’s first research question was: “Are students’ eating habits at Purdue University healthy or unhealthy?” Because it was impossible for Derek to survey all 38,000 students on Purdue’s campus, he had to choose a representative sample of students. Derek chose to survey students who lived in the dorms because of the wide variety of student class levels and majors in the dorms and his easy access to this group. By making this choice, however, he did not account for commuter students, graduate students, or those who live off campus. As Derek’s case demonstrates, it is very challenging to get a truly representative sample.
 
@@ -228,15 +236,15 @@ When you are analyzing and presenting your findings, remember to work to elimina
 
 The following are suggestions for analyzing different types of data.
 
-Observations
+## Observations
 
 If you’ve counted anything you were observing, you can simply add up what you counted and report the results. If you’ve collected descriptions using a double-entry notebook, you might work to write thick descriptions of what you observed into your writing. This could include descriptions of the scene, behaviors you observed, and your overall conclusions about events. Be sure that your readers are clear on what were your actual observations versus your thoughts or interpretations of those observations.
 
-Interviews
+## Interviews
 
 If you’ve interviewed one or two people, then you can use your summary, paraphrasing, and quotation skills to help you accurately describe what was said in the interview. Just like in secondary research when working with sources, you should introduce your interviewees and choose clear and relevant quotes from the interviews to use in your writing. An easy way to find the important information in an interview is to print out your transcription and take a highlighter and mark the important parts that you might use in your paper. If you have conducted a large number of interviews, it will be helpful for you to create a spreadsheet of responses to each question and compare the responses, choosing representative answers for each area you want to describe.
 
-Surveys
+## Surveys
 
 Surveys can contain quantitative (numerical) and qualitative (written answers/descriptions) data. Quantitative data can be analyzed using a spreadsheet program like Microsoft Excel to calculate the mean (average) answer or to calculate the percentage of people who responded in a certain way. You can display this information in a chart or a graph and also describe it in writing in your paper. If you have qualitative responses, you might choose to group them into categories and/or you may choose to quote several representative responses.
 
@@ -244,7 +252,7 @@ Surveys can contain quantitative (numerical) and qualitative (written answers/de
 
 In formal research writing in a variety of fields, it is common for research to be presented in the following format: introduction/background; methods; results; discussions; conclusion. Not all first year writing classes will require such an organizational structure, although it is likely that you will be required to present many of these elements in your paper. Because of this, the next section examines each of these in depth.
 
-Introduction (Review of Literature)
+## Introduction (Review of Literature)
 
 The purpose of an introduction and review of literature in a research paper is to provide readers with information that helps them understand the context, purpose, and relevancy of your research. The introduction is where you provide most of your background (library) research that you did earlier in the process. You can include articles, statistics, research studies, and quotes that are pertinent to the issues at hand. A second purpose in an introduction is to establish your own credibility (ethos) as a writer by showing that you have researched your topic thoroughly. This kind of background discussion is required in nearly every field of inquiry when presenting research in oral or written formats.
 
@@ -252,7 +260,7 @@ Derek provided information from the Food and Drug Administration on healthy eati
 
 > Currently Americans are more overweight than ever. This is coming at a huge cost to the economy and government. If current trends in increasing rates of overweight and obesity continue it is likely that this generation will be the first one to live shorter lives than their parents did. Looking at the habits of university students is a good way to see how a new generation behaves when they are living out on their own for the first time.
 
-Describing What You Did (Methods)
+## Describing What You Did (Methods)
 
 When writing, you need to provide enough information to your readers about your primary research process for them to understand what you collected and how you collected it. In formal research papers, this is often called a methods section. Providing information on your study methods also adds to your credibility as a writer. For surveys, your methods would include describing who you surveyed, how many surveys you collected, decisions you made about your survey sample, and relevant demographic information about your participants (age, class level, major). For interviews, introduce whom you interviewed and any other relevant information about interviewees such as their career or expertise area. For observations, list the locations and times you observed and how you recorded your observations (i.e. double-entry notebook). For all data types, you should describe how you analyzed your data.
 
@@ -264,7 +272,7 @@ Here is a sample from Derek’s methods section:
 
 > I conducted a survey so that I could find out what students at Purdue actually eat on a typical day. I handed out surveys asking students to record what they ate for a day . . . I received 29 back and averaged the results based on average number of servings from each food group on the old food guide pyramid. The group included students from the freshman to the graduate level and had 8 women and 21 men respond.
 
-Describing Your Study Findings (Results)
+## Describing Your Study Findings (Results)
 
 In a formal research paper, the results section is where you describe what you found. The results section can include charts, graphs, lists, direct quotes, and overviews of findings. Readers find it helpful if you are able to provide the information in different formats. For example, if you have any kind of numbers or percentages, you can talk about them in your written description and then present a graph or chart showing them visually. You should provide specific details as supporting evidence to back up your findings. These details can be in the form of direct quotations, numbers, or observations.
 
@@ -275,7 +283,7 @@ Jared describes some of his interview results:
 
 > Alyson also mentioned the need for phone conversation. She stated, “The phone is a large part of my job. I am communicating with other NRCS offices daily to find out the status of our jobs.” She needs to be in constant contact in order to insure that everything is running smoothly. This is common with those overseeing projects. In these cases, the wait for a response to an email or a memo can be too long to be effective.
 
-Interpreting What You Learned (Discussion)
+## Interpreting What You Learned (Discussion)
 
 In formal research papers, the discussion section presents your own interpretation of your results. This may include what you think the results mean or how they are useful to your larger argument. If you are making a proposal for change or a call to action, this is where you make it. For example, in Derek’s project about healthy eating on campus, Derek used his primary research on students’ unhealthy eating and observations of the food courts to argue that the campus food courts needed serious changes. Derek writes, “Make healthy food options the most accessible in every dining hall while making unhealthy foods the least. Put nutrition facts for everything that is served in the dining halls near the food so that students can make more informed decisions on what to eat.”
 
@@ -283,7 +291,7 @@ Jared used the individuals he interviewed as informants that helped him learn mo
 
 > Writing takes so many forms, and it is important to know about all these forms in one way or another. The more forms of writing you can achieve, the more flexible you can be. This ability to be flexible can make all the difference in writing when you are dealing with a field as complex as engineering.
 
-Primary Research and Works Cited or References Pages
+## Primary Research and Works Cited or References Pages
 
 The last part of presenting your primary research project is a works cited or references page. In general, since you are working with data you collected yourself, there is no source to cite an external source. Your methods section should describe in detail to the readers how and where the data presented was obtained. However, if you are working with interviews, you can cite these as “personal communication.” The MLA and APA handbooks both provide clear listings of how to cite personal communication in a works cited/references page.
 

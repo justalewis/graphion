@@ -705,14 +705,86 @@ the size of the job before commissioning it.
   so without the shift every section head would render a level below it
   with nothing in between.
 
-  **None of this has touched the archive.** The change applies to an
-  ingest, and nothing re-ingests on its own; the 115 published chapters
-  still carry the headings they were given. Re-ingesting them is what
-  would put the missing ones in the galleys, and a re-ingest is
-  destructive, so it is an editor's decision rather than a refactor. See
-  the carrying rules in CLAUDE.md for what one costs, and note that
-  `carry_alt_text` and `carry_editor_fields` now cover most of what used
-  to be lost.
+  **The archive has now been re-ingested for these, and it is 118
+  headings better.** 25 chapters, chosen by what they would actually gain
+  rather than by which ones the tree names: the 21 of volume 2, which is
+  the InDesign volume the flattened RoleMap hides, and 4 of volume 6.
+  Volume 2 gained 111 real section heads and volume 6's `4-zhou` the 7 of
+  its "Extend by" series. Every heading, figure, hand-written description
+  and front matter field came through unchanged, compared by value against
+  a snapshot taken before the run.
+
+  The other 14 chapters of volume 6 were deliberately left alone. Each
+  states exactly one heading the body does not hold and in every case it
+  is the chapter's own title, which the galley already prints from the
+  front matter, so re-ingesting them would have been churn carrying risk
+  and no gain. Reading what the 39 candidates would gain, rather than
+  trusting the count, is what separated 25 chapters worth re-ingesting
+  from 14 that were not.
+
+  Three defects surfaced only once this was run over the real archive and
+  the galleys were rendered from it. None would have shown up against a
+  fixture.
+
+  `ingest_volume.py --replace` had never worked for a chapter already
+  filed into an issue. `ingest_one` found the existing article and then
+  called `article_dir(journal, None, slug)`, whose `None` names the
+  `_unfiled` directory, so the first pass reported 21 chapters replaced,
+  wrote 21 drafts under `_unfiled`, pointed all 21 database rows at those,
+  and never touched the published text or the galleys beside it. The run
+  said it had worked. `replace_dir` writes where the article lives.
+
+  And a file can be wrong about its own headings. `walk-talk-cook-eat` is
+  written as a dialogue and sets its stage directions in `Header_C`, the
+  style the series uses for a third-level section head, which its RoleMap
+  maps straight to `/H3`. Reading the tree faithfully published twelve
+  stage directions as headings, which is a worse galley than the sixteen
+  it was missing: somebody navigating by heading would hear "Marvin types
+  it in" announced as a section. `states_a_sentence` is the one place that
+  is overruled, and it took two tests rather than one, because
+  `on-the-other-hand` heads five sections "Step 1:" to "Step 5:" and ends
+  each with a full stop. A stop alone would have cost six real headings to
+  stop twelve false ones; the case is what separates a title from a
+  sentence. It is asked in `assemble`'s `flush`, where the joined text
+  lives, because a heading wraps and the first line of a wrapped sentence
+  carries no stop: asked of one physical line, five of the twelve got
+  through.
+
+  The third showed up only in the galleys. Stopping at `article.md` would
+  have left it in place, and the headings there were right. PDF/UA wants
+  an outline that starts at level 1 and skips nothing, and a book promises
+  neither. `on-the-other-hand` sets its sections in `Header_A` and its
+  five steps in `Header_C` with no `Header_B` between, so the chapter goes
+  from a first level to a third, and `the-complexity-of-simplicity` does
+  the same at "Study Guide". The teacher halves of `3-ilyasova` and
+  `4-zhou` fail the other clause: a split article renders two documents
+  from one body, and the teacher intermediate drops the `Teacher
+  Resources` heading its template prints as a title, so the galley opens
+  on the level that sat under it, which the recovery turned from a `#`
+  into a `##`. Typst validates rather than declares, so all four aborted
+  and shipped unconstrained; `register.record_pdfua` is what counts that
+  rather than leaving it in a log.
+
+  `filters/heading-levels.lua` normalises each galley on its way out, by
+  the stack of levels seen, so a heading deeper than the one before it
+  goes exactly one deeper and the nesting survives. A filter rather than a
+  change to `blocks_to_markdown`, because the constraint belongs to the
+  rendered document and `article.md` renders as two of them while keeping
+  the levels the book states. All 27 galleys across the 25 chapters now
+  declare all five of the clause 5 lines.
+
+  One pre-existing defect is now legible rather than fixed.
+  `annoying-ways-people-use-sources` sets a marginal pull quote down the
+  side of a page, and its lines interleave in reading order with the two
+  lines of a wrapping heading, so the galley carries "Uncle Barry and His
+  Encyclopedia of Use-" and "less Information" as two headings. The same
+  lines were in the same order before, as paragraphs; separating a
+  marginal column from the text block is the fix and it is not written.
+
+  See the carrying rules in CLAUDE.md for what a re-ingest costs.
+  `carry_alt_text` and `carry_editor_fields` are what made this one safe,
+  and the comparison against the snapshot is what confirmed it rather than
+  assumed it.
 
 ### Stage 4: the description queue (done)
 

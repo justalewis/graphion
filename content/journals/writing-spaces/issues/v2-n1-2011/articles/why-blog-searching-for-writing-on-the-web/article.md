@@ -7,15 +7,15 @@ short-title: Why Blog? Searching for Writing on the Web
 short-authors: Reid
 volume: 2
 year: 2011
-start-page: 296
+start-page: 301
+images-of-text:
+- figure-p016-1.jpg
+- figure-p016-2.jpg
 source-file: reid--why-blog.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
 license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
 chapter-number: 19
-images-of-text:
-- figure-p016-1.jpg
-- figure-p016-2.jpg
 ---
 
 nation, on the path of mastery. There are always new challenges; there is always room for improvement. As I will discuss here, blogging is one good way to develop as a writer.
@@ -30,7 +30,7 @@ As a student in a first year writing course, you may not envision yourself as a 
 
 Defining blogs is difficult. Typically the first answer one imagines for this question refers to the *content* of blogs. One might think of blogs as public diaries or perhaps as amateur journalism or political, op-ed websites or maybe as celebrity gossip sites. The term web log or weblog (shortened to blog) is generally attributed to Jorn Barger in 1997. Barger had been a long time contributor to early net communities like newsgroups and e-mail lists and decided to create his weblog *Robot* *Wisdom* at this time (Rhodes). The term could be applied retroactively to earlier sites, but 1997 is as good a starting point as any. However, at that time, one needed knowledge of HTML in order to maintain a blog. It wasn’t until 1999 that the first blogging application, Blogger, was created by Pyra Labs (Blogger is now owned by Google), which enabled a far larger group of people to begin blogging. Still, at this time, blogging was undertaken by a small number of mostly “techie” individuals, who wrote primarily to share information about the web. The events of September 11th, 2001 and the subsequent military actions led to an explosion of political blogging, mostly with conservative viewpoints (“Blog”). Today, political blogs on both sides of the aisle remain popular. However, many of the most popular blogs deal with specific interests from computers and automobiles to (allegedly) funny pictures of cats. The world of blogging has exploded this decade. Technorati.com, a site devoted to indexing blogs, has recorded 133 million blogs since 2002 representing an immense variety of interests and perspectives about what a blog can or should be.
 
-A Sampling of Popular Blogs
+## A Sampling of Popular Blogs
 
 According to Technorati.com, below are the top 25 blogs as of June 2010. As you will see, many deal with current events with either a liberal or conservative slant. Many others are focused on technology or entertainment. I am not suggesting that your blog needs to be or should be like any of these. However, they do represent some of the most successful blogging ventures and thus reveal something of how blogs can function. At Technorati, you can search for blogs in the specific subject areas that interest you.
 

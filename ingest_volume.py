@@ -341,6 +341,31 @@ def existing_sources(journal_id: int) -> dict:
     return index
 
 
+def replace_dir(journal_slug: str, slug: str, existing: Optional[dict]) -> Path:
+    """Where a chapter's content goes.
+
+    `conversion.article_dir` with no issue slug names the unfiled
+    directory, which is right for a chapter arriving for the first time and
+    wrong for one already filed into an issue. A replace that wrote there
+    left a second copy under `_unfiled`, repointed the row at it, and
+    orphaned the galleys beside the published text: the run reported every
+    chapter replaced while the published article was never touched, which
+    is the shape this whole module exists to avoid, since nothing downstream
+    can see it. An article that exists is replaced where it lives.
+
+    The two directories `article_dir` guarantees are made here too, because
+    a path out of the database has only been a directory, and `ingest_pdf`
+    writes into both.
+    """
+    if existing and existing.get("project_path"):
+        d = Path(existing["project_path"])
+        if d.is_dir():
+            (d / "assets").mkdir(exist_ok=True)
+            (d / ".versions").mkdir(exist_ok=True)
+            return d
+    return conversion.article_dir(journal_slug, None, slug)
+
+
 def ingest_one(chapter: Chapter, journal: dict, defaults: dict,
                replace: bool, by_source: dict,
                teacher_mode: str = "separate",
@@ -358,7 +383,7 @@ def ingest_one(chapter: Chapter, journal: dict, defaults: dict,
         return "skipped", (f"already ingested as article {existing['id']} "
                            f"({existing['slug']})")
 
-    apath = conversion.article_dir(journal["slug"], None, chapter.slug)
+    apath = replace_dir(journal["slug"], chapter.slug, existing)
     conversion.ingest_pdf(chapter.pdf, apath, skip_image_digests=furniture)
     conversion.run_cleanups(apath)
 

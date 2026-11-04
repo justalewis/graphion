@@ -91,7 +91,7 @@ Each assignment---be it a rhetorical analysis, an argumentative research paper, 
 
 # Essay I: Analyzing Arguments
 
-Overview of Essay
+## Overview of Essay
 
 We have read and analyzed essays pertaining to the university community (e.g. articles about the value of a university education, students as consumers, and the effects of binge drinking). We have examined these written texts in terms of their purposes, their audiences, their persuasive strategies, and their effectiveness. Your task for this first major essay is to find an article that addresses the issue you have chosen to focus on this semester, and analyze the strategies the author uses in order to argue/persuade and appeal to her/his audience. You will also need to speak to the effectiveness of the article: In your opinion do you think the article is a successful piece of persuasion? You will need to guide your readers (your peers and your professor) through your analysis so that they too recognize the persuasive strategies the writer has used.
 
@@ -107,7 +107,7 @@ We have read and analyzed essays pertaining to the university community (e.g. ar
 
 > your reader to accept your point of view. Pay attention to your own persuasive strategies.
 
-Assessment Criteria
+## Assessment Criteria
 
 I will be assessing your papers based on the following:
 
@@ -135,7 +135,7 @@ I will be assessing your papers based on the following:
 
 > errors.
 
-Requirements and Due Dates
+## Requirements and Due Dates
 
 • Your paper should be between 5 and 6 pages (double-spaced
 

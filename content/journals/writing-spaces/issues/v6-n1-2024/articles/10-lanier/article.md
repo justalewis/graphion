@@ -41,7 +41,7 @@ So social media is more than the platforms we use, it is what they allow us to d
 
 Now that we have defined social media, we will turn to understanding how it is being used every day in technical communication. While this section cannot cover every major way in which it is used, it will cover some of the more important areas where social media can help technical writers create better information products for users.
 
-# Documentation Distribution
+## Documentation Distribution
 
 When people think of technical communication, one of the first things that might come to mind is technical documentation. In this case, documentation means information that teaches or explains to readers how to use or do something. Examples of the kinds of documentation you, as a technical writer, might create include instruction manuals, how-to guides, and reference books. Technical writers have been creating such technical documents for decades and, in fact, the technical communication profession itself was formed to better study and create such products. These documents were the stock-in-trade of the technical writer, who worked diligently for years to help people better understand how to use their technology product, be it a small software application or a military jet fighter.
 
@@ -61,7 +61,7 @@ Past studies have shown that there are right and wrong ways to create technical 
 
 The use of videos, through social media platforms like YouTube, will surely increase as internet speeds become even faster and more people carry devices on which to watch them. They are a convenient and effective way of supporting users of technology.
 
-# Audience Analysis
+## Audience Analysis
 
 Social media is also really useful for understanding an audience. Though technical communication is best known for the products it creates, like instruction manuals or how-to videos, much of a technical communicator’s time is spent in the planning process. And within that process, one of the most important stages is understanding the people who will actually be reading the instructions or watching the videos. Without this knowledge, technical communicators may have no idea what or how much information their readers actually need. If a product’s documentation does not match a reader’s expectations, there could be some very negative results, like bad product reviews or a loss in sales. To make sure that the information they are providing is actually the information the readers need, and to also make sure they are giving the information in the right way, technical communicators will study their audience through a method often referred to as an “audience analysis.”
 
@@ -77,7 +77,7 @@ Facebook provides even more insight about its users, which can also really help 
 
 Now, understandably, some might feel a bit creepy looking at all of these users and collecting their information. If that is the case, then these platforms also permit other great ways of conducting reader research. All three of them allow the creating and posting of polls, so technical writers can ask users questions about themselves. These polls can either be included as page posts (or Instagram posts or a tweet on Twitter (X)), or as advertisements to platform-users who have been identified as potential audience members. Whatever method is chosen, all of the information helps technical communicators create better information products that will be more effective and helpful for the readers.
 
-# Reader Feedback
+## Reader Feedback
 
 It is sometimes very difficult to understand whether the information products that technical communicators create are actually effective or not. Is the information in them correct? Is it easy to understand? Does it actually help the readers accomplish their tasks? Aside from conducting a thorough analysis of the audience, as explained in the previous section, how can we find out this information? The easiest way is to get feedback from the readers themselves (Kahn). If we know, for example, that certain steps in an instruction manual are confusing, then we can fix them for the next readers. But unfortunately, getting that information is not at all easy.
 
@@ -95,19 +95,19 @@ In the previously noted case, the social media platforms’ advertising ability 
 
 This section provides some tips for actually using social media to carry out technical communication. This is not at all as easy as you might think. As with communicating through any other media, there are a lot of things to consider before you begin creating a Facebook post or YouTube video. Three specific questions to ask are: When should social media be used instead of other media? What platform might be best to use? How should technical information be presented on them? The following discussions will try to answer these questions in turn.
 
-# When should social media be used?
+## When should social media be used?
 
 Where technical writing is concerned, what you use to communicate to an audience will depend on the context of the writing situation. If your audience is working in a circumstance where they will not have access to the internet, then perhaps the information they need is best communicated offline, as in a traditional hard copy manual. But if you are sure they will have access to the internet and the ability to stream multi-media, then making information available through social media becomes an option.
 
 Another item to consider is the amount of technical information to be communicated. Social media does not lend itself to large amounts of information with multiple sections, reference items or explanations. According to research conducted by the software company, TechSmith Corporation, 52% of YouTube viewers prefer instructional videos no longer than 6 minutes (TechSmith). And while both Facebook and LinkedIn allow users to write longer posts, they have no way to maneuver or navigate within them (like linked tables of contents or ways to jump to different subjects), forcing readers to scroll down and scan for information needed. Finally, does your audience actually use social media? Each social media platform has specific audience demographics that are easy to identify (for example, see Chen), and if the audience you are trying to reach does not fall into a group using the platform you are considering, then you should find another way to reach them, maybe one that does not even include social media.
 
-# What platform would be best to use?
+## What platform would be best to use?
 
 Again, the platform you use to communicate to audiences or use to research your audience or gain feedback will depend on your goals and audience. If you hope to conduct research about your readers to create better documentation for them, then using a platform that allows you to conduct such research would be ideal. Platforms like Twitter (X) or Instagram let you see details about users if their accounts are public, whereas Facebook and LinkedIn may not provide any details at all. However, if you hope to share detailed information with those readers, then you want to choose a platform that allows you to provide longer forms of information, like Facebook, LinkedIn, and YouTube.
 
 Likewise, if your goal is to share multi-media, like an instructional video, then choose those platforms that allow you to distribute that type of media, especially YouTube, which was designed to broadcast video. Conversely, while YouTube is perhaps the best at distributing videos, it is far less effective at communicating directly to audiences. It does have a commenting feature, but the near real-time ability to converse with customers or product users that Twitter (X) or Facebook offer is much better. So, before deciding which platform to use, try to understand what you want to achieve and who you are trying to communicate with, and then let that information guide your decision.
 
-# How should information be presented?
+## How should information be presented?
 
 Finally, you need to understand how best to present information on these various platforms. Because each one is so different, there are different methods and best practices for each, and so a full accounting of how to do it is out of the scope of this chapter. But there are some general rules that can be followed which may help, the most important might be to remember that the information should be brief, professional, interactive, and multi-media. First, remember that social media is not the best platform for long form information (like an installation guide with hundreds of steps). Instead, present information that can be shared in small “bites,” like quick tutorials, explanations, or topics. Alternatively, you can use the post to direct readers to longer forms of information if needed.
 

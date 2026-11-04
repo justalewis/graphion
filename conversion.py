@@ -1311,6 +1311,7 @@ def render_html(article_path: Path, journal_slug: str, part: str = "chapter") ->
     if lua_filter.exists():
         extra.append(f"--lua-filter={lua_filter}")
     extra.extend(_fig_alt_filter_args())
+    extra.extend(_heading_levels_filter_args())
     extra.extend(_citation_args(article_path, journal_slug))
 
     if css.exists():
@@ -1465,6 +1466,37 @@ def _fig_alt_filter_args() -> list:
     if not FIG_ALT_FILTER.exists():
         return []
     return [f"--lua-filter={FIG_ALT_FILTER}"]
+
+
+HEADING_LEVELS_FILTER = BASE_DIR / "filters" / "heading-levels.lua"
+
+
+def _heading_levels_filter_args() -> list:
+    """The Pandoc arguments that close the gaps in a galley's outline.
+
+    PDF/UA wants a heading outline that starts at level 1 and skips
+    nothing, and a book promises neither. `on-the-other-hand` sets its
+    sections in `Header_A` and its five steps in `Header_C` with no
+    `Header_B` between, so the chapter goes from a first level to a third;
+    the teacher half of a split article renders as its own document whose
+    intermediate drops the `Teacher Resources` heading, so its first
+    heading is the level 2 that sat under it. Typst validates the standard
+    rather than declaring it, so either one aborts the compile and
+    `_compile_typst` falls back to an unconstrained render: four galleys
+    lost the conformance identifier the first time ingest read the
+    structure trees.
+
+    A filter rather than a fix to `blocks_to_markdown`, because the
+    constraint belongs to the document being rendered and one body renders
+    as two of them, while `article.md` keeps the levels the book states.
+
+    App level for the reason `math-alt.lua` is: how deep a book sets its
+    sections is a journal's design, and whether a galley's outline can be
+    navigated is not.
+    """
+    if not HEADING_LEVELS_FILTER.exists():
+        return []
+    return [f"--lua-filter={HEADING_LEVELS_FILTER}"]
 
 
 MATH_ALT_FILTER = BASE_DIR / "filters" / "math-alt.lua"
@@ -1668,6 +1700,7 @@ def render_pdf(article_path: Path, journal_slug: str, part: str = "chapter") -> 
         extra.append(f"--lua-filter={lua_filter}")
     extra.extend(_fig_alt_filter_args())
     extra.extend(_math_alt_filter_args())
+    extra.extend(_heading_levels_filter_args())
     extra.extend(_citation_args(article_path, journal_slug))
     pypandoc.convert_file(
         str(md),
@@ -1862,6 +1895,7 @@ def render_epub(article_path: Path, journal_slug: str) -> Path:
     if fig_filter.exists():
         extra.extend(["--lua-filter", str(fig_filter)])
     extra.extend(_fig_alt_filter_args())
+    extra.extend(_heading_levels_filter_args())
     if css.exists():
         extra.extend(["--css", str(css)])
     # Per-article CSS override: additive after the journal CSS
@@ -2221,7 +2255,8 @@ def _md_to_typst_fragment(md_text: Optional[str]) -> str:
     fragment = pypandoc.convert_text(
         md_text, to="typst", format="markdown",
         extra_args=(["--wrap=preserve"] + _fig_alt_filter_args()
-                    + _math_alt_filter_args()),
+                    + _math_alt_filter_args()
+                    + _heading_levels_filter_args()),
     )
     return _fill_math_alt(fragment)
 

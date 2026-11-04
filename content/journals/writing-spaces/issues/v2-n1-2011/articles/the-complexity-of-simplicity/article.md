@@ -7,18 +7,18 @@ short-title: The Complexity of Simplicity
 short-authors: Charlton
 volume: 2
 year: 2011
-start-page: 99
-source-file: charlton--complexity-of-simplicity.pdf
-volume-title: Writing Spaces 2
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
-license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
-chapter-number: 7
+start-page: 100
 images-of-text:
 - figure-p003-1.png
 - figure-p010-1.jpg
 - figure-p011-1.jpg
 - figure-p014-1.jpg
 - figure-p019-1.jpg
+source-file: charlton--complexity-of-simplicity.pdf
+volume-title: Writing Spaces 2
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
+license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
+chapter-number: 7
 ---
 
 *taught: to keep things orderly and clump ideas together. This piece*
@@ -71,7 +71,7 @@ These three questions mark the productive dissonance of the first year writing c
 
 Perfect example: you’re in a class and find out over half the class hasn’t read an assigned reading or prepared a complete draft of a writing project. Does your teacher get mad and reprimand your class, and make a case for why the work should’ve been done? Do disengaged students hide while prepared students silently seethe? I don’t find these situations, and the assumptions about student intent that underly them, very helpful. Instead, imagine if the students and teacher could figure out how to make the situation work, how to invent a moment for learning with what is readily available, how to bang two rocks together and try to make a spark.
 
-Invention Potential 1: Less Can Be More
+## Invention Potential 1: Less Can Be More
 
 Let’s try that, banging two rocks together, first with reading. You didn’t read and prepare for class today. Whether it was too many hours at work or too many other things due in your other classes, something just had to give, and you let the reading go for your writing class. But you have a few minutes before class to pull something together. You have the reading, you have some paper and a pen or a laptop, and you have the course syllabus. Take five minutes, and make them count. Quickly answer these questions.
 
@@ -103,7 +103,7 @@ The trick here is that in college, especially in writing- and readingintensive c
 
 Increasing opportunities for feedback helps you tap into your emerging networks and invent compelling writing projects---ones that blend your interests with what your teacher wants from you according to your assignment, ones that create intriguing experiences and arguments for public audiences, and often look like. . . . Well, over the years, I’ve seen T-shirts, board games, bracelets, student-designed care packages, photo essays, house blueprints, even a letter to college students, divided into seven paragraphs and hung from trees all over campus. All very original, these student projects were created in first semester college writing classes, their authors’ ages ranging from sixteen to fifty-six, with experiences from Central Mexico to Northern Indiana. With that in mind, I want to turn to some course documents, while bringing in some student voices, and a couple of extended examples so that, with this rich context, you can see the potential for re-thinking how you can generate ideas in a first year writing class.
 
-Invention Potential 2: Displacing Focus with Rhetorical Drift
+## Invention Potential 2: Displacing Focus with Rhetorical Drift
 
 As I think through the types of projects I’ve made room for over the years, it strikes me that even if we just think about the ones I listed above, they seem to be a pretty loose group. Not much holding them together. So far this essay of philosophizing mixed with examples might make you think that I let my students write anything they want and that I’m encouraging you, as well, to write anything you want; in other words, trading rules for freedom. I don’t think writers have to choose one over the other. I don’t think you can. If I try to convince you to write whatever you want, I’m using a traditional strategy for engaging students: your choice, your interests, your whatever. But any writing choice is a *choice.* At the end of a semester, Adbe Guerrero, a former student, taught me about the positions that expertise and choice occupied in relation to his experiences, my teaching, and one of our later readings:
 
@@ -125,7 +125,7 @@ Faced with these realities, you can make room to test the effects of different w
 
 ![A collage labelled copper. At the centre, a hand-drawn board headed Experts and Novices. On both sides, Adolfo Guerrero reflecting on Project 3 for English 1301: that writing the paper he felt like one of the students unprepared for college and fighting a Goliath, that he felt it would take too long to graduate, and that he wrote about people who take a break and never go back, knowing his sisters and brother did and never went back.](assets/figure-p011-1.jpg)
 
-Invention Potential 3: If You Can Ask WHY?, You’re a Theorist
+## Invention Potential 3: If You Can Ask WHY?, You’re a Theorist
 
 The first part of a writing sequence that revolves around invention begins with one of three projects. In Project 1-Breaking Ice, I explain our goals this way:
 
@@ -199,7 +199,7 @@ As Brittany tries to work out the relationship between reading and writing, the 
 
 What she’s concerned with are values. She’s asking *Why?* I would argue that this is a writer’s job, this is your job as a first year writing student, almost in any context. Whether you come out and try to answer that question in a piece of writing, or deep down it’s the reason you started a writing project at all, a writer who has a question tugging away at the gray areas, memories, and experiences is a writer who is inventing possible solutions. What makes Brittany a good example here is that she doesn’t stop from expressing her belief. She’s not backing away from engaging me and her peers with her value system, even though it will certainly mean more discussion, negotiation, and revision.
 
-Invention Potential 4: Finding a Question before an Answer
+## Invention Potential 4: Finding a Question before an Answer
 
 For Project 2-Questioning Writing (Studies), I asked students to build out of their Project 1:
 
@@ -259,7 +259,7 @@ Brittany is doing a lot of what I want to see in this early draft---making conne
 
 Reading about Brittany’s writing, I don’t know how connected you feel to your first year writing class and your writing in it. I do know that you are an expert in experiencing and surviving pre-college education, that you are a reader, that you are a writer, even if you don’t like how academics describe those identities. And I know you have questions about your learning, about writing, about reading, and about why you think the way you do about all three. When you find a way to articulate those questions, to make them bridges to how you write or what you have to write about, you are no longer writing and reading because you have to. I think you start writing and reading because you need to.
 
-Invention Potential 5: Adapting Forms as Public Invention
+## Invention Potential 5: Adapting Forms as Public Invention
 
 Because the blog helped us re-invent their diversity, Brittany was able to springboard from her Project 2 argument to an application of it in Project 3. In Project 3-Going Public, I asked that students take their ideas from Project 2 and adapt them to a new format that requires them to consider a public audience’s desires, needs, limitations, expectations, etc., while experimenting with new forms for their ideas in a public context.
 
@@ -311,7 +311,57 @@ attempt to teach “academic discourse.”
 
 1. What “assumptions,” as stated by Downs & Wardle have become common misconceptions of writing? a. That writing mainly deals with grammatical concerns and has nothing to do with content. b. Writing is merely to do with content. c. Writing varies between focusing on content and syntactics. d. That writing is both content and mechanics. . . .
 
-2. Write a short explanation (about 4--5 sentences) in which you discuss the significance of Downs & Wardle’s argument to a first-year college student. Study Guide Students will be given a passage with a set of questions in which they will decipher the answer. The main difference in this adaptation is the alteration in passage material being tested on. The testing procedures are the same, but the questions being asked are ones that will test on whether or not the test-taker comprehends the material. In #5 for example, the reader is asked to put pen to paper and answer the question that will be graded on a scale of 1--4 purely on content. The resulting score will determine if the student fully comprehends this piece and can incorporate it into a situation that they will possibly face going into first-year English in college. If students are tested over material that they will witness in an actual college class, such as the Downs & Wardle article, not only are they exposed to it, but it gives them a view into what an actual college course and its professor is going to want to see from them as students. The exam allows students to “get their feet wet” in writing, well, about *writing.* In FYC, the focus is mainly that, so this gives them an idea as to what to expect and what will be expected of them in terms of writing. This being a writing exam, having actual questions that require written responses makes more sense. Scores will more accurately reflect the college-capability of the test-taker.
+2. Write a short explanation (about 4--5 sentences) in which you discuss the significance of Downs & Wardle’s argument to a first-year college student.
+
+### Study Guide
+
+Students will be given a passage with a set of questions in
+
+which they will decipher the answer. The main difference
+
+in this adaptation is the alteration in passage material being
+
+tested on. The testing procedures are the same, but the ques-
+
+tions being asked are ones that will test on whether or not the
+
+test-taker comprehends the material.
+
+> In #5 for example, the reader is asked to put pen to paper
+
+and answer the question that will be graded on a scale of 1--4
+
+purely on content. The resulting score will determine if the
+
+student fully comprehends this piece and can incorporate it
+
+into a situation that they will possibly face going into first-
+
+year English in college.
+
+> If students are tested over material that they will witness
+
+in an actual college class, such as the Downs & Wardle ar-
+
+ticle, not only are they exposed to it, but it gives them a view
+
+into what an actual college course and its professor is going to
+
+want to see from them as students.
+
+> The exam allows students to “get their feet wet” in writ-
+
+ing, well, about *writing.* In FYC, the focus is mainly that, so
+
+this gives them an idea as to what to expect and what will be
+
+expected of them in terms of writing. This being a writing
+
+exam, having actual questions that require written responses
+
+makes more sense. Scores will more accurately reflect the col-
+
+lege-capability of the test-taker.
 
 Brittany questioned the form and function of a test, so it made sense for her to try and create one that met her goals. In the end, she created what we might now call an example of high school and college alignment---an exam in high school that might have prepared her for our college writing class. It is wishful thinking, but classmates were prompted to talk about how to approach tests that they needed to take but didn’t agree with, and my colleagues and I learned that alignment discussions can be had among all stakeholders, rather than among teachers and administrators alone.
 

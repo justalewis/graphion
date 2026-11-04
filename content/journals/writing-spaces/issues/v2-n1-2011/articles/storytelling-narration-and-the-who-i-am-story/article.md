@@ -7,7 +7,7 @@ short-title: Storytelling, Narration, and the “Who I Am” Story
 short-authors: Ramsdell
 volume: 2
 year: 2011
-start-page: 264
+start-page: 269
 source-file: ramsdell--storytelling-narration.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
@@ -107,7 +107,7 @@ As with most other types of writing, brainstorming can be a useful tool. To begi
 
 Once you have a characteristic in mind, keep brainstorming and think of one specific example or event that illustrates this characteristic. This example will become your story. Again, much like a topic, sometimes an example, or story, will just jump to mind. However, if you cannot think of an example right away, look through some old pictures, scrapbooks, or yearbooks. Reread journals or listen to favorite songs. All of these things can spark memories, and one of these memories can become the example or event on which your Who I Am story will focus. This event does not have to be exciting or flamboyant. Simple but heartfelt stories often are the most effective. Many things can be faked in life, but sincerity is generally not one of them.
 
-Writing the “Who I Am” Story
+## Writing the “Who I Am” Story
 
 Once you have the topic, just start writing. Writing a story is not like baking a cake---there is no formula or recipe that guarantees a perfect story. But here are some steps to consider:
 

@@ -7,7 +7,7 @@ short-title: On the Other Hand
 short-authors: Krause
 volume: 2
 year: 2011
-start-page: 138
+start-page: 140
 source-file: krause--on-the-other-hand.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
@@ -39,23 +39,27 @@ The second general value for antithesis exercises is to raise more awareness of 
 
 I’ve already discussed this step in some detail:
 
-Step 1: Have a Working Thesis and Make Sure You Have Begun the Research Process. Developing a good antithetical argument is not something you can do as a “first step” in the research process. Generally, you need to have already developed a basic point and need some evidence and research to develop that point. In other words, the process of developing an antithetical position has to come *after* you develop an initial position in the first place.
+### Step 1: Have a Working Thesis and Make Sure You Have Begun the Research Process.
 
-Step 2: Consider the Direct Opposite of Your Working Thesis. This is an especially easy step if your working thesis is about a controversial topic:
+Developing a good antithetical argument is not something you can do as a “first step” in the research process. Generally, you need to have already developed a basic point and need some evidence and research to develop that point. In other words, the process of developing an antithetical position has to come *after* you develop an initial position in the first place.
 
-> *Working thesis:*
+### Step 2: Consider the Direct Opposite of Your Working Thesis.
+
+This is an especially easy step if your working thesis is about a controversial topic:
+
+### Working thesis:
 
 > To prevent violence on campus, students, staff, and faculty should not be allowed to carry concealed weapons.
 
-> *Antithesis:*
+### Antithesis:
 
 > To prevent violence on campus, students, staff, and faculty should be allowed to carry concealed weapons.
 
-> *Working thesis:*
+### Working thesis:
 
 > Drug companies should be allowed to advertise prescription drugs on television.
 
-> *Antithesis:*
+### Antithesis:
 
 > Drug companies should not be allowed to advertise prescription drugs on television.
 
@@ -63,17 +67,19 @@ This sort of simple change of qualifiers also exposes weak theses, because, gene
 
 Usually though, considering the opposite of a working thesis is a little more complicated. For example:
 
-> *Working Thesis:*
+### Working Thesis:
 
 > Many computer hackers commit serious crimes and represent a major expense for internet-based businesses.
 
-> *Antitheses:*
+### Antitheses:
 
 > Computer hackers do not commit serious crimes. Computer hacking is not a major expense for internet-based businesses.
 
 Both of the antithetical examples are the opposite of the original working theses, but each focuses on different aspects of the working thesis.
 
-Step 3: Ask “Why” about Possible Antithetical Arguments. Creating antitheses by simply changing the working thesis to its opposite typically demands more explanation. The best place to develop more details with your antithesis is to ask “why.” For example:
+### Step 3: Ask “Why” about Possible Antithetical Arguments.
+
+Creating antitheses by simply changing the working thesis to its opposite typically demands more explanation. The best place to develop more details with your antithesis is to ask “why.” For example:
 
 > *Why* should drug companies not be allowed to advertise prescription drugs? Because . . .
 
@@ -83,11 +89,17 @@ Step 3: Ask “Why” about Possible Antithetical Arguments. Creating antitheses
 
 > • They are usually pranks or acts of mischief. • Computer hackers often expose problems for Internet businesses before serious crimes result.
 
-The point here is to dig a little further into your antithetical argument. Asking “why” is a good place to begin that process. Step 4: Examine Alternatives to Your Working Thesis. Often, the best antithetical arguments aren’t about “the opposite” so much as they are about alternatives. For example, the working thesis “To prevent violence on campus, students, staff, and faculty should not be allowed to carry concealed weapons” presumes that a serious potential cause for violence on campuses is the presence of guns. However, someone could logically argue that the more important cause of violence on college campuses is alcohol and drug abuse. Certainly the number of incidents involving underage drinking and substance abuse outnumber those involving firearms on college campuses, and it is also probably true that many incidents of violence on college campuses involve drinking or drugs.
+The point here is to dig a little further into your antithetical argument. Asking “why” is a good place to begin that process.
+
+### Step 4: Examine Alternatives to Your Working Thesis.
+
+Often, the best antithetical arguments aren’t about “the opposite” so much as they are about alternatives. For example, the working thesis “To prevent violence on campus, students, staff, and faculty should not be allowed to carry concealed weapons” presumes that a serious potential cause for violence on campuses is the presence of guns. However, someone could logically argue that the more important cause of violence on college campuses is alcohol and drug abuse. Certainly the number of incidents involving underage drinking and substance abuse outnumber those involving firearms on college campuses, and it is also probably true that many incidents of violence on college campuses involve drinking or drugs.
 
 Now, unlike the direct opposite of your working thesis, the alternatives do not necessarily negate your working thesis. There is no reason why a reader couldn’t believe that *both* concealed weapons *and* alcohol and substance abuse contribute to violence on campuses. But in considering alternatives to your working thesis, the goal is to “weigh” the positions against each other. I’ll return to this matter of “weighing your position” later.
 
-Step 5: Imagine Hostile Audiences. Whenever you are trying to develop a clearer understanding of the antithesis of your working thesis, you need to think about the kinds of audiences who would disagree with you. By thinking about the opposites and alternatives to your working thesis, you are already starting to do this because the opposites and the alternatives are what a hostile audience might think.
+### Step 5: Imagine Hostile Audiences.
+
+Whenever you are trying to develop a clearer understanding of the antithesis of your working thesis, you need to think about the kinds of audiences who would disagree with you. By thinking about the opposites and alternatives to your working thesis, you are already starting to do this because the opposites and the alternatives are what a hostile audience might think.
 
 Sometimes, potential readers are hostile to a particular working thesis because of ideals, values, or affiliations they hold that are at odds with the point being advocated by the working thesis. For example, people who identify themselves as being “pro-choice” on the issue of abortion would certainly be hostile to an argument for laws that restrict access to abortion; people who identify themselves as being “prolife” on the issue of abortion would certainly be hostile to an argument for laws that provide access to abortion.
 
@@ -99,17 +111,21 @@ Regardless of the reasons why your audience might be hostile to the argument you
 
 # Strategies for Answering Antithetical Arguments
 
-It might not seem logical, but directly acknowledging and addressing positions that are different from the one you are holding in your research can actually make your position stronger. When you take on the antithesis in your research project, it shows you have thought carefully about the issue at hand and you acknowledge that there is no clear and easy “right” answer. There are many different ways you might incorporate the antithesis into your research to make your own thesis stronger and to address the concerns of those readers who might oppose your point of view. For now, focus on three basic strategies: directly refuting your opposition, weighing your position against the opposition, and making concessions. Directly Refuting Your Opposition
+It might not seem logical, but directly acknowledging and addressing positions that are different from the one you are holding in your research can actually make your position stronger. When you take on the antithesis in your research project, it shows you have thought carefully about the issue at hand and you acknowledge that there is no clear and easy “right” answer. There are many different ways you might incorporate the antithesis into your research to make your own thesis stronger and to address the concerns of those readers who might oppose your point of view. For now, focus on three basic strategies: directly refuting your opposition, weighing your position against the opposition, and making concessions.
+
+## Directly Refuting Your Opposition
 
 Perhaps the most obvious approach, one way to address those potential readers who might raise objections to your arguments, is to simply refute their objections with better evidence and reasoning. Of course, this is an example of yet another reason why it is so important to have good research that supports your position: when the body of evidence and research is on your side, it is usually a lot easier to make a strong point.
 
 Answering antithetical arguments with research that supports your point of view is also an example of where you as a researcher might need to provide a more detailed evaluation of your evidence. The sort of questions you should answer about your own research---who wrote it, where was it published, when was it published, etc.---are important to raise in countering antithetical arguments that you think come from suspicious sources.
 
-Weighing Your Position Against the Opposition
+## Weighing Your Position Against the Opposition
 
 Readers who oppose the argument you are trying to support with your research might do so because they value or “weigh” the implications of your working thesis differently than you do. For example, those opposed to a working thesis like “Drug companies should not be allowed to advertise prescription drugs on TV” might think this because they think the advantages of advertising drugs on television---increased sales for pharmaceutical companies, revenue for advertising agencies and television stations, and so forth---are more significant than the disadvantages of advertising drugs on television.
 
-Besides recognizing and acknowledging the different ways of comparing the advantages and disadvantages suggested by your working thesis, the best way of answering these antithetical arguments in your own writing is to clearly explain how you weigh and compare the evidence. This can be a challenging writing experience because it requires a subtle hand and a broad understanding of multiple sides of your topic. But if in acknowledging to your readers that you have carefully considered the reasons against your working thesis and you can demonstrate your position to be more persuasive, then this process of weighing positions can be very effective. Making Concessions
+Besides recognizing and acknowledging the different ways of comparing the advantages and disadvantages suggested by your working thesis, the best way of answering these antithetical arguments in your own writing is to clearly explain how you weigh and compare the evidence. This can be a challenging writing experience because it requires a subtle hand and a broad understanding of multiple sides of your topic. But if in acknowledging to your readers that you have carefully considered the reasons against your working thesis and you can demonstrate your position to be more persuasive, then this process of weighing positions can be very effective.
+
+## Making Concessions
 
 In the course of researching and thinking about the antithesis to your working thesis and its potentially hostile audiences, it may become clear to you that these opposing views have a point. When this is the case, you may want to consider revising your working thesis or your approach to your research to make some concessions to these antithetical arguments.
 

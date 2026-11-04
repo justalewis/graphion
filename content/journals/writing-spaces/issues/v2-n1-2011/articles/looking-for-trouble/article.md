@@ -49,7 +49,7 @@ While there is no direct or indirect mention of problems in this particular assi
 
 At this point, you may be wondering “What’s all this about problems? What about thesis or argument?” Problems motivate good papers, and good problems will lead you to your thesis or argument. Theses do not fall from the sky. Finding a rich problem can be a big step in the direction of developing a compelling thesis. But when you are left to find and articulate your own problem, how do you go about it?
 
-Looking for Trouble in Four Steps
+## Looking for Trouble in Four Steps
 
 There are four steps toward finding problems and developing meaningful projects of your own:
 
@@ -61,7 +61,9 @@ There are four steps toward finding problems and developing meaningful projects 
 
 4. Identifying what is at stake.
 
-Noticing We all know that it is important to warm up before you exercise. Warming up decreases your chance of sustaining an injury and generally makes working out easier on your body. Noticing is the equivalent of warming up your mind. In your first encounter with a text, begin by noticing different aspects. In other words, look for anything that stands out to you as unique or odd, identify patterns, and consider how a text does or does not meet your expectations. For example,
+### Noticing
+
+We all know that it is important to warm up before you exercise. Warming up decreases your chance of sustaining an injury and generally makes working out easier on your body. Noticing is the equivalent of warming up your mind. In your first encounter with a text, begin by noticing different aspects. In other words, look for anything that stands out to you as unique or odd, identify patterns, and consider how a text does or does not meet your expectations. For example,
 
 • Identify a particular word, concept, idea, or image that strikes
 
@@ -71,7 +73,11 @@ Noticing We all know that it is important to warm up before you exercise. Warmin
 
 • Focus in on something that perplexes you.
 
-Keep in mind that there’s no “right” or “wrong” when noticing. As you notice, take notes in the margins of the texts or on a separate sheet of paper. If you are like me, you might be in a hurry, and you might occasionally exercise without warming up. Similarly, you might feel compelled to skip “noticing.” Here’s a tip to keep in mind: the more complicated or unfamiliar the texts you are working with the more likely you’ll want to spend some time noticing. You wouldn’t dream of running a marathon without stretching, but you might bang out three miles without ever bending over to touch your toes (though I’m not recommending it!). Articulating a Problem and its Details After you’ve spent some time noticing, review what you’ve noticed and look specifically for tensions. Here are some approaches to finding problems worth pursuing:
+Keep in mind that there’s no “right” or “wrong” when noticing. As you notice, take notes in the margins of the texts or on a separate sheet of paper. If you are like me, you might be in a hurry, and you might occasionally exercise without warming up. Similarly, you might feel compelled to skip “noticing.” Here’s a tip to keep in mind: the more complicated or unfamiliar the texts you are working with the more likely you’ll want to spend some time noticing. You wouldn’t dream of running a marathon without stretching, but you might bang out three miles without ever bending over to touch your toes (though I’m not recommending it!).
+
+### Articulating a Problem and its Details
+
+After you’ve spent some time noticing, review what you’ve noticed and look specifically for tensions. Here are some approaches to finding problems worth pursuing:
 
 1. Juxtapose texts from the same genre or on the same topic and identify tensions or contradictions in terms of their ideas and/ or definitions of key concepts.
 
@@ -81,7 +87,9 @@ Keep in mind that there’s no “right” or “wrong” when noticing. As you 
 
 4. Note a gap or something relevant the text overlooks.
 
-Posing Fruitful Questions Problems naturally lead to questions. Once you’ve identified a problem or two that strikes you as worth considering, make a list of questions each problem raises for you. Good questions will lead you toward developing an argument of your own, but all questions are not good questions. You will need to assess your questions in a variety of contexts to determine whether or not they are worth pursuing.
+### Posing Fruitful Questions
+
+Problems naturally lead to questions. Once you’ve identified a problem or two that strikes you as worth considering, make a list of questions each problem raises for you. Good questions will lead you toward developing an argument of your own, but all questions are not good questions. You will need to assess your questions in a variety of contexts to determine whether or not they are worth pursuing.
 
 First, consider your questions in the context of the academic discipline and genre for which you are writing. As a college student you are in the process of gaining access to a variety of new discourse communities. Anne Beaufort provides us with a succinct definition of a discourse community: “a social group that communicates at least in part via written texts and shares common goals, values, and writing standards, a specialized vocabulary and specialized genres” (179). Just as discourse communities have specialized vocabularies and standards, different discourse communities pursue different kinds of questions. Let’s take a big problem like global warming and focus on Alaska. An environmental scientist, a pathologist, an economist, and an anthropologist would raise different kinds of questions about the same problem. The environmental scientist would ask questions like: how much has the water risen since we last checked? How have the increasing temperatures and rising water levels affected the vegetation and animal life? A pathologist would take a different approach: what new diseases have emerged in correlation with global warming? Economists would ask how global warming is affecting the economic situation in Alaska. How has the lumber or the fishing industry been affected by global warming? How has global warming affected tourism? An anthropologist might ask how global warming is affecting the ways of life of certain indigenous groups. Because questions vary significantly from discipline to discipline, or field to field, it is important that you assess your questions according to the discourse community you are writing within.
 
@@ -91,17 +99,21 @@ In addition to assessing whether or not you are asking the type of questions rel
 
 Finally, know that some questions will lead you down dead ends and others will bear fruit. What makes a question fruitful? A question is fruitful if it leads you to discover new information or a new idea. Fruitful questions tend to begin with “why,” “how,” or “what” and can’t be answered with a quick “yes” or “no.” If you have come up with a yes/no question that strikes you as fruitful, try adding a “why” or “how” to it. For example, one might ask: “Are water levels rising in Alaska?” The answer to this question is a quick yes. But asking how rising water levels are affecting Alaska transforms a dead-end question into a fruitful one.
 
-What Is at Stake? The next qualification of a fruitful question is that the question must be worth asking. It’s likely you’ve heard a teacher ask “so what?” or “what is at stake?” or even, “why is this important?” It can be difficult to explain what is at stake, especially if your teacher has written the assignment. Not surprisingly, your initial response might be that what is at stake is a decent grade. This is true, but in order to motivate yourself and interest your reader, it is essential to identify why the question you or your teacher has posed is worth pursuing. Composition and rhetoric scholar Joseph Williams articulates this best when he asks: “What will you gain from answering your question or what will be lost if you do not answer your question?”
+### What Is at Stake?
+
+The next qualification of a fruitful question is that the question must be worth asking. It’s likely you’ve heard a teacher ask “so what?” or “what is at stake?” or even, “why is this important?” It can be difficult to explain what is at stake, especially if your teacher has written the assignment. Not surprisingly, your initial response might be that what is at stake is a decent grade. This is true, but in order to motivate yourself and interest your reader, it is essential to identify why the question you or your teacher has posed is worth pursuing. Composition and rhetoric scholar Joseph Williams articulates this best when he asks: “What will you gain from answering your question or what will be lost if you do not answer your question?”
 
 These steps, unfortunately, don’t always lead directly to a worthwhile project; don’t be surprised if every problem you isolate and every question you pose doesn’t lead you down a well-paved path to a meaningful project and a complex argument. Also, you’ll have more success if you’re willing to cycle back in the process and refine your project and questions over the course of planning and drafting. Developing meaningful projects is hard work and takes practice. The more you practice, like most things, the more efficient you’ll become.
 
 # Looking for Trouble: Practice, Practice, Practice
 
-Let’s walk through the process using specific texts. A few years ago I was teaching an essay writing course at Columbia University, and I asked my students to read bell hooks’s “In our Glory: Photography and Black Life.”[^2] In this essay, hooks describes the important role played by family photographs displayed on the walls of African American homes. When she was a child and media representation of black Americans was either negative or over-simplified, this semi-public display of personal photos served as a site of protest. In other words, on these walls her race was depicted in rich and complex ways unlike anything in the mainstream media. Here’s how I went through the process of noticing, articulating problems, posing and assessing questions, and identifying what is at stake: Noticing
+Let’s walk through the process using specific texts. A few years ago I was teaching an essay writing course at Columbia University, and I asked my students to read bell hooks’s “In our Glory: Photography and Black Life.”[^2] In this essay, hooks describes the important role played by family photographs displayed on the walls of African American homes. When she was a child and media representation of black Americans was either negative or over-simplified, this semi-public display of personal photos served as a site of protest. In other words, on these walls her race was depicted in rich and complex ways unlike anything in the mainstream media. Here’s how I went through the process of noticing, articulating problems, posing and assessing questions, and identifying what is at stake:
+
+## Noticing
 
 What struck me the most, and even surprised me, was hooks’ idea that what we hang on our walls---even the walls of our homes---could be so meaningful or powerful.
 
-Articulating Problems
+## Articulating Problems
 
 This naturally led me to consider what hangs on my walls. At the time, an image I took while on vacation in Nicaragua was hanging on my office wall. Here’s the image:
 
@@ -116,7 +128,7 @@ Once hooks’ ideas entered my office, trouble was not hard to find. I hung this
 
 3. hooks and her family represented themselves in images on the walls in their homes and in this way challenged the mainstream media’s representation of black Americans. The tourist photos that I hang on the walls of my office (a semi-public space) have the power to influence people’s perceptions of Nicaragua, a poor country that has a long history of civil unrest.
 
-Posing Fruitful Questions
+## Posing Fruitful Questions
 
 Questions I asked that emerged out of the above problems:
 
@@ -138,7 +150,7 @@ Questions three and four, on the other hand, are headed in the right direction. 
 
 The final question emerges from hooks’s ideas about the power of images and her claim that, “the field of representation (how we see ourselves, how others see us) is a site of ongoing struggle” (57). This last question is the most promising in the context of the assignment for this class, which is: “Use hooks’s essay as a lens to analyze a personal experience and develop an argument of your own.”
 
-What Is at Stake Here?
+## What Is at Stake Here?
 
 Let’s say that I decide to pursue the final question: What are the ethical responsibilities of tourists when it comes to displaying pictures of their travels? What do we gain by answering this question and/or what do we lose by not answering it? By answering this question, we can develop an ethical approach to taking tourist photos and displaying them. Developing an approach and a heightened awareness of how we represent other cultures seems particularly important when the received idea of these places is negative and overly-simplistic. The stereotype is that Nicaragua is a violent and dangerous country, and while there are unsafe pockets, this, of course, is not the whole picture. Additionally, tourism to Nicaragua has the potential to boost the economy; how I represent this country could influence people to either visit or to avoid the country. In fact, two separate friends of mine decided to visit after hearing about my trip. Considering what is at stake not only helps test the question’s potential, it also leads in the direction of an argument. If I were to pursue this question with the help of hooks and my own experience, I might end up with an argument that goes something like this:
 

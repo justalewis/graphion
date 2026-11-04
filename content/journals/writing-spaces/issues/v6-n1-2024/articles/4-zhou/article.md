@@ -9,14 +9,14 @@ volume: 6
 year: 2024
 start-page: 59
 chapter-number: 4
+images-of-text:
+- figure-p007-1.jpg
+- figure-p008-1.jpg
+teacher-resources: separate
 source-file: 4Zhou.pdf
 volume-title: Technical Writing Spaces 6
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
 license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
-teacher-resources: separate
-images-of-text:
-- figure-p007-1.jpg
-- figure-p008-1.jpg
 ---
 
 For many of you, the university is an exciting place with a life of its own. But it is also a complex structure with terms that are often new to the first-time college student. For example, you are typically required to take many kinds of courses that range from general education courses, core courses in your major, electives, and so forth. You must understand these terms and types of courses in order to plan your study accordingly. You will also meet an array of people --- professors, deans, advisors, etc. --- and you need to know what roles they each play in your college life. Technical definitions help you understand the environment around you and navigate your college experience.
@@ -29,7 +29,7 @@ In technical communication, technical definitions and descriptions are indispens
 
 Technical documents often come with scientific, technical, business, and other terms of which their readers have little to no prior knowledge. Technical definitions describe and explain technical terms and concepts in text and visuals. A technical definition can not only explain what a term means, but also where it comes from, what it is made of, and what distinguishes it from similar terms. It helps readers understand and differentiate unfamiliar or specialized terms in order to read a technical document and perform tasks. To draft a technical definition, you must analyze your audience and context, gather subject-matter information, determine the appropriate type of definition, and manage content coherence of a document.
 
-# Analyzing Your Audience and Context
+## Analyzing Your Audience and Context
 
 Technical documents are written for specific audiences who have specific characteristics. As you plan for a technical definition, consider who your readers are, what they know, and what they need the definition for. What needs to be defined depends on your audience. You may have noticed that, when I introduced internship earlier, I provided a brief definition. I did so because those of you in your first two years of college might not be familiar with this term. However, if I were writing for seniors only, I might not need to define it.
 
@@ -37,7 +37,7 @@ Consider, too, your readers’ purposes. Do they need to gain a quick understand
 
 While some concepts can be explained in one sentence, many warrant extended definitions to fully make sense. As I discuss later in this chapter, writers use examples, analogy, visuals, and other ways to enrich technical definitions. Does an example provide an adequate explanation? Is an analogy appropriate and effective? What kind of visual is appropriate for your readers’ background and level of knowledge? Getting your audience and context right enables you to draft a technical definition appropriately.
 
-# Gather Subject-Matter Information
+## Gather Subject-Matter Information
 
 Whether you are an expert on the subject matter or possess some knowledge, it is wise to gather information about the terms you are defining. Definitions make a lasting impact in the perception of concepts and terms, thus must be authoritatively and effectively written. The following are some common ways you can go about gathering subject-matter information.
 
@@ -45,11 +45,11 @@ Whether you are an expert on the subject matter or possess some knowledge, it is
 
 Whether it’s the help of reference books, pertinent documents, or subject-matter experts, the key to remember is that your technical definition must enable readers to use information effectively and safely. When in doubt, gather information on your terms and concepts.
 
-# Selecting the Appropriate Type of Definition
+## Selecting the Appropriate Type of Definition
 
 There are generally two categories of technical definitions: sentence definitions and extended definitions. Sentence definitions are short, often one-sentence, descriptions of a technical term. They are often the most typical definition for the everyday reader. Extended definitions are longer, more in-depth explanations.
 
-# Sentence Definition
+### Sentence Definition
 
 A sentence definition is a brief and straightforward explanation of a term. It usually consists of the term being defined, the category it belongs to, and the characteristics that distinguish the term from other terms.
 
@@ -77,11 +77,11 @@ Let’s narrow down the category further.
 
 This version clearly categorizes a mortgage as a loan and then distinguishes mortgage loan from other loans.
 
-# Extended Definition
+### Extended Definition
 
 Unlike sentence definitions, extended definitions provide longer and more comprehensive explanations of a term. Here we discuss common strategies to extend a definition in various situations.
 
-> Extend by Example
+#### Extend by Example
 
 Examples are an effective and powerful way to explain terms that are vague, abstract, complex, easily confused, or too specialized for the regular reader.
 
@@ -95,7 +95,7 @@ For instance, where is text-to-speech technology used? Does it read text on your
 
 Choosing examples takes careful and thoughtful effort. Examples must represent the most typical ways a term can be fleshed out. Choose common, not rare examples. Examples must also be familiar to your readers. Here your knowledge and analysis of your readers come in handy.
 
-> Extend by Visual
+#### Extend by Visual
 
 You may have heard of the expression: A picture is worth a thousand words. Visuals can explain complex terms, spatial relationships, geographical distributions, or other concepts that are otherwise painstaking to explain in text. These days, readers are accustomed to infographics, animated visuals, and even interactive visuals. They expect a visual when it is needed.
 
@@ -110,7 +110,7 @@ Figure 4.1: An exploded view drawing (Source: United States Patent and Trademark
 
 When using visuals, remember that you must consider copyright issues. You should not simply use images from the Web, social media, or other authors without getting permission.
 
-> Extend by Partition
+#### Extend by Partition
 
 Many complex terms can be defined by partitioning their components. Partition elaborates on the categories, variations, and applications of a term. Remember that a term can often be partitioned in more than one way. Choose components that are major to the term and context. Figure 4.2 shows an extended definition of renewable energy by the U.S. Energy Information Administration.
 
@@ -119,13 +119,13 @@ This definition begins with a sentence definition of renewable energy and extend
 ![A web page headed What is renewable energy? It defines renewable energy as energy from sources that are naturally replenishing but flow-limited, virtually inexhaustible in duration but limited in the amount available per unit of time. A list of the major types follows: biomass, with wood and wood waste, municipal solid waste, landfill gas and biogas, ethanol and biodiesel nested under it, then hydropower, geothermal, wind and solar.](assets/figure-p007-1.jpg)\
 Figure 4.2: Renewable energy definition using partitions (Source: U.S. Energy Information Administration)
 
-> Extend by Comparison and Contrast
+#### Extend by Comparison and Contrast
 
 When the term being defined is similar to, commonly associated with, or easily confused with other terms, consider extending the definition through comparison and contrast. What makes the term distinctive? How does the term resemble other terms? How does it differ from other terms? Comparison and contrast help readers distinguish the term being defined from other terms. They help readers gain a deeper understanding of the term.
 
 Take a look at an excerpt of a definition of laminate floors in Figure 4.3. When homeowners consider flooring options, they often must decide among several common flooring materials, including laminate, vinyl, solid hardwood, engineered wood, and natural stone. Homeowners might need to know how laminate floors resemble and differ from other flooring types with regard to their characteristics, quality, installation requirements, and price. Figure 4.3 shows an effective use of comparison and contrast in an extended definition of laminate floors.
 
-> Extend by Analogy
+#### Extend by Analogy
 
 A distinctive way of defining a term is making analogies. Analogy links abstract or unfamiliar terms with concrete and familiar ones.
 
@@ -138,7 +138,7 @@ Figure 4.3: A definition of laminate floor based on comparison (What Are Laminat
 
 Here the writer thoughtfully uses the analogy of an electric typewriter for readers who are not computer savvy. Analogy is challenging. In this definition, for instance, the writer clearly assumes that more readers are familiar with electric typewriters than keyboards. This assumption might ring true these days. A few decades from now, it perhaps will not. Readers might not need a definition of a keyboard, nor might they be familiar with electric typewriters, except having seen one in museums. Appropriate analogy requires savvy understandings of the audience and context.
 
-> Extend by Etymology
+#### Extend by Etymology
 
 Terms can be defined by etymology, or their origin. The origin of a term helps readers understand who invented the term and how the term evolved. The etymology strategy is particularly suitable for terms translated from another language or those that have gone through significant changes.
 
@@ -148,7 +148,7 @@ Consider this definition of emoji:
 
 Emoji isn’t native to the English language. This definition explains the origin of emoji and how it became popular in the English-speaking world. Consider etymology for terms whose origin holds the key to their meaning.
 
-> Extend by Negation
+#### Extend by Negation
 
 Sometimes, a term is defined not by what it is but what it is not. This strategy is considered negation. Much less common, negation can be used to define terms that are commonly misunderstood or confused with other terms.
 
@@ -158,7 +158,7 @@ Take, for example, the coronavirus pandemic that unfolded in late 2019. In the e
 
 Negation helps clarify concepts that the readers are easily confused with or hold widely misunderstood notions of. Use negation scarcely and only when it is necessary.
 
-# Managing Content Coherence
+## Managing Content Coherence
 
 Definitions don’t exist in isolation from the rest of a document. They must serve a document’s coherence and enable readers to move through the document effectively.
 
@@ -190,7 +190,7 @@ To put it altogether, you should determine where a definition is needed, how imp
 
 Technical description explains a technical object, mechanism, or process using text and visuals. Generally, technical descriptions explain how an object functions, how a mechanism works, or how a process takes place. An e-commerce website explains a new microwave oven for customers; a trade magazine describes the mechanism of carbon emissions for professionals; a government brochure describes the process to apply for a passport for the public. Technical descriptions not only inform readers about technical concepts but also educate the public about important issues. To draft a technical description, you must analyze your audience and context, gather subject-matter information, select the appropriate type of description, and develop effective details.
 
-# Analyzing Your Audience and Context
+## Analyzing Your Audience and Context
 
 The first step in drafting a technical description is analyzing your audience and context. Unlike definitions, technical descriptions are longer, more thorough explanations. They give the writer greater flexibility with regard to what and how to draft, but they also require excellent understanding of your audience, purpose, and context. The audience and context of technical descriptions vary greatly.
 
@@ -200,7 +200,7 @@ In addition, readers with different goals have their own expectations for techni
 
 Furthermore, the context in which a technical description is needed determines how it is written. A description of the fire evacuation process is usually needed in an emergency situation where readers must take quick action. Such a process description must be easy to read and visually salient. On the other hand, a description of how to take care of a plant is often kept by gardeners as a reference to consult with from time to time.
 
-# Gather Subject-Matter Information
+## Gather Subject-Matter Information
 
 Technical descriptions often require substantial support of pertinent information. Gathering such information can be crucial as it gives you a thorough understanding of a mechanism or process. You can do so by synthesizing documents and gathering information with subject-matter experts.
 
@@ -208,11 +208,11 @@ Technical descriptions often require substantial support of pertinent informatio
 
 You might think you already know everything about a technical mechanism or process. But describing it to others is a different feat. As you dive further into a topic, you might uncover blind spots, clear misunderstandings, or learn whole new knowledge. Be prepared and allow yourself enough time to gather helpful information.
 
-# Selecting the Appropriate Type of Description
+## Selecting the Appropriate Type of Description
 
 In general, there are two types of technical descriptions: Mechanism descriptions and process descriptions. Some also consider instructions as a form of technical description. For the purpose of this book, we do not cover instructions in this chapter.
 
-# Mechanism Descriptions
+## Mechanism Descriptions
 
 A mechanism or object description explains how a mechanism or an object functions. Mechanism descriptions can explain how a machine works, how a biological mechanism takes place, or how an engineering system operates. They are suitable for but not limited to the following topics:
 
@@ -220,7 +220,7 @@ A mechanism or object description explains how a mechanism or an object function
 
 Excellent mechanism descriptions enable readers to understand how an overall mechanism works and reduce unnecessary confusion.
 
-# Process Descriptions
+## Process Descriptions
 
 A process description explains how a process works or how to carry it out. Process descriptions can explain how a phenomenon occurs, how a product is manufactured, or how a task is accomplished step-by-step. They are suitable for but not limited to the following topics:
 
@@ -228,11 +228,11 @@ A process description explains how a process works or how to carry it out. Proce
 
 Excellent process descriptions help readers understand the scale, length, and complexity in a process and prepare for it informatively.
 
-# Developing Effective Details
+## Developing Effective Details
 
 An excellent technical description requires an effective structure and appropriate details. While mechanism and process descriptions share a lot in common, they have clear distinctions.
 
-# Mechanism Descriptions
+## Mechanism Descriptions
 
 Begin your mechanism description with your purpose, context, and scope. What does this description accomplish? What will readers take away from it? How in-depth is it? If readers hope to gain a basic understanding of a mechanism in a few minutes, provide a short description with basic facts and practical information. If readers are conducting research on a mechanism, perhaps provide a thorough description with comprehensive facts, background, and applications of that mechanism.
 
@@ -260,7 +260,7 @@ Table 4.1. A Mechanism Description (continued)
 | --- | --- |
 | Types of Text-to-Speech Tools (continued) • Chrome tools: Chrome is a relatively new platform with several TTS tools. These include Read&Write for Google Chrome and Snap&Read Universal. You can use these tools on a Chromebook or any computer with the Chrome browser. See more Chrome tools to help with reading. • Text-to-speech software programs: There are also several literacy software programs for desktop and laptop computers. In addition to other reading and writing tools, many of these programs have TTS. Examples include Kurzweil 3000, ClaroRead and Read&Write. Microsoft’s Immersive Reader tool also has TTS. It can be found in programs like OneNote and Word. See more examples of software for kids with reading issues. How Your Child Can Access Text-to-Speech at School It’s a good idea to start the conversation with your child’s teacher if you think your child would benefit from TTS. If your child has an Individualized Education Program(IEP) or a 504 plan, your child has a right to the assistive technology she needs to learn. But even without an IEP or a 504 plan, a school may be willing to provide TTS if it can help your child. You can also use TTS at home. Try one of the previously mentioned tools, or check out options for free audiobooks and digital TTS books. And learn more about assistive technology for reading. Key Takeaways • Text-to-speech (TTS) can provide a multisensory reading experience that combines seeing with hearing. • Using TTS won’t delay the development of your child’s reading skills. • Your child’s school can provide TTS, but you can also try it at home. | Finally, the author concludes this description with a summary of important points. Notice that this summary differs from the one at the beginning. It focuses more on actions parents can take. |
 
-# Process Descriptions
+## Process Descriptions
 
 Begin your description by introducing the process, your purpose, and scope. Describe the overall process and provide necessary definitions. State your purpose and the scope of your description. Does your description provide a basic outline of a process for readers who have an interest? Is your description here to help readers carry out a process with all the details needed? Does your description cover only major steps of a process, or does it also cover less important and miscellaneous details?
 
@@ -337,7 +337,7 @@ Wallender, Lee. “*What Are Laminate Floors?” TheSpruce.com*, https://www.the
 
 # Teacher Resources
 
-# Overview and Teaching Strategies
+## Overview and Teaching Strategies
 
 Technical definitions and descriptions can be addressed in several ways in an introductory technical communication course. Instructors of such courses can incorporate technical definitions and descriptions in various kinds of projects, including but not limited to user manuals, product documentation, scientific publications, and Web content.
 
@@ -349,7 +349,7 @@ When asking learners to draft technical definitions and descriptions, instructor
 
 In summary, instructors can use this chapter to teach learners why technical definitions and descriptions matter, what they are, and how to create them. The key is to contextualize technical definitions and descriptions and link concepts from this chapter with specific contexts and audience goals.
 
-# Discussion Questions
+## Discussion Questions
 
 To help learners understand technical definitions and descriptions, consider the following questions when analyzing or drafting these definitions and descriptions:
 

@@ -7,7 +7,7 @@ short-title: Walk, Talk, Cook, Eat
 short-authors: Haller
 volume: 2
 year: 2011
-start-page: 188
+start-page: 192
 source-file: haller--walk-talk-cook-eat.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
@@ -49,7 +49,9 @@ O-Prof: OK, so you’d *walk* to where you could find relevant information for y
 
 Marvin: Wait a minute. For the article on student clubs, maybe I could save some walking. Maybe the list of clubs and the club descriptions are on the Student Activities web page. That’d save me a trip.
 
-O-Prof: Yes, the Internet has cut down on the amount of physical walking you need to do to find sources. Before the Internet, you had to either travel to a source’s physical location, or bring that source to your location. Think about your project on bottled water. To get information about the quality of a city’s tap water in the 1950s, you would have had to figure out who’d have that information, then call or write to request a copy or *walk* to wherever the information was stored. Today, if you type “local water quality” into Google, the Environmental Protection Agency page comes up as one of the first hits. Its home page links to water quality reports for local areas. Marvin pauses for a second before responding, thinking he’s found a good short cut for his paper.
+O-Prof: Yes, the Internet has cut down on the amount of physical walking you need to do to find sources. Before the Internet, you had to either travel to a source’s physical location, or bring that source to your location. Think about your project on bottled water. To get information about the quality of a city’s tap water in the 1950s, you would have had to figure out who’d have that information, then call or write to request a copy or *walk* to wherever the information was stored. Today, if you type “local water quality” into Google, the Environmental Protection Agency page comes up as one of the first hits. Its home page links to water quality reports for local areas.
+
+Marvin pauses for a second before responding, thinking he’s found a good short cut for his paper.
 
 Marvin: So can I just use Google or Bing to find sources?
 

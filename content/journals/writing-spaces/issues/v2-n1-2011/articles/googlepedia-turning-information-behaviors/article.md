@@ -6,14 +6,14 @@ short-title: Googlepedia
 short-authors: McClure
 volume: 2
 year: 2011
-start-page: 214
+start-page: 218
+images-of-text:
+- figure-p012-1.png
 source-file: mcclure--googlepedia.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
 license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
 chapter-number: 14
-images-of-text:
-- figure-p012-1.png
 ---
 
 # Introduction
@@ -40,13 +40,13 @@ Still, the accuracy and verifiability of information are not as clear and consis
 
 The concept of presearch is an important one for this chapter; Edward’s reliance on Wikipedia and Susan’s reliance on Google are not research crutches, but useful presearch tools. However, Edward and Susan admit they would not have made the research move into the virtual library to conduct database-oriented research without my intervention in the research process. Both students originally viewed this move like many students do, as simply unnecessary for most writing situations.
 
-Talkin’ Bout This Generation
+## Talkin’ Bout This Generation
 
 Wikipedia might be the starting point for some writers; however, Google remains the starting point for most students I know. In fact, one group of researchers believes this information behavior---students’ affinity for all things “search engine”---is so prominent that it has dubbed the current generation of students “the Google Generation.” Citing not only a 2006 article from *EDUCAUSE Review* but also, interestingly enough, the Wikipedia discussion of the term, a group of researchers from University College London (UCL) note the “first port of call for knowledge [for the Google Generation] is the [I]nternet and a search engine, Google being the most popular” (Nicholas, Rowlands and Huntington 7). In other words, the UCL researchers argue that “students have already developed an ingrained coping behavior: they have learned to ‘get by’ with Google” (23). I believe we all are immersed and comfortable in the information world created by Googlepedia, yet there is much more to research than this.
 
 Despite the fact that it would be easy and understandable to dismiss your information behaviors or to just tell you never to use Google or Wikipedia, I agree with teacher and author Troy Swanson when he argues, “We [teachers] need to recognize that our students enter our [college] classrooms with their own experiences as users of information” (265). In my attempt though to show you that research is more than just a five-minute stroll through Googlepedia, I first acknowledge what you already do when conducting research. I then use these behaviors as part of a process that is still quick, but much more efficient. By mirroring what writers do with Googlepedia and building on that process, this essay will significantly improve your research skills and assist you with writing projects in college and your professional career.
 
-The Wikipedia Hoax
+## The Wikipedia Hoax
 
 At this point in the chapter, let me pause to provide an example of why learning to be information literate and research savvy is so important. In his discussion of the “Wikipedia Hoax,” Associated Press writer Shawn Pogatchnik tells the story of University College Dublin student Shane Fitzgerald who “posted a poetic but phony” quote supposedly by French composer Maurice Jarre in order to test how the “Internet-dependent media was upholding accuracy and accountability.” Fitzgerald posted his fake quote on Wikipedia within hours of the composer’s death, and later found that several newspaper outlets had picked up and published the quote, even though the administrators of Wikipedia recognized and removed the bogus post. The administrators removed it quickly, “but not quickly enough to keep some journalists from cutting and pasting it first.”
 
@@ -72,7 +72,7 @@ Edward and Susan are two students comfortable in the world of Googlepedia, begin
 
 For an upcoming research writing project on the topic of outsourcing American jobs, Susan chooses to begin her preliminary research with Google while Edward chooses to start with Wikipedia. The students engage in preliminary research, research at the beginning of the research writing process; yet, they work with a limited amount of information about the assignment, a situation still common in many college courses. The students know they have to write an argumentative essay of several pages and use at least five sources of information, sources they are required to find on their own. The students know the research-based essay is a major assignment for a college course, and they begin their searches in Googlepedia despite the sources available to them through the university library.
 
-Edward
+## Edward
 
 Edward begins his research in Wikipedia, spending less than one minute to find and skim the summary paragraph on the main page for “outsourcing.” After reading the summary paragraph[^2] to, in Edward’s words, “make sure I had a good understanding of the topic,” and scanning the rest of the main page (interestingly) from bottom to top, Edward focuses his reading on the page section titled “criticism.” Edward explains his focus,
 
@@ -82,7 +82,7 @@ This search for public opinion leads Edward to examine polls as well as skim rel
 
 It is at this point, barely fifteen minutes into his research, that Edward returns to the top of the Wikipedia main page on outsourcing to re-read the opening summary on the topic, as I stop him to discuss the thesis he is developing on corporate responsibility for the outsourcing problem. We discuss what I make of Edward’s early research; Edward relies on Wikipedia for a broad overview, to verify his understanding on a subject.
 
-Presearch into Research
+### Presearch into Research
 
 *Analysis:* Some teachers and librarians might argue against it,
 
@@ -120,7 +120,7 @@ After our brief discussion to flush out his process in conducting research for a
 
 He then searches the Wikipedia page for what he believes are links to expert opinions along with more specific sources that interest him and, in his approach to argumentative writing, contradict his opinion on the subject. Unlike Susan who later chooses to side with the majority opinion, Edward wants to turn his essay into a debate, regardless of where his ideas fall on the spectrum of public opinion.
 
-Research and Critical/Creative Thinking
+### Research and Critical/Creative Thinking
 
 *Analysis:* Edward’s reliance on Wikipedia at this point is still
 
@@ -144,7 +144,7 @@ your thinking.
 
 Staying in Wikipedia leads Edward to texts such as “Outsourcing Bogeyman” and “Outsourcing Job Killer.” Edward explains that his choices are largely based on the titles of the texts (clearly evident from these examples), not the authors, their credentials, the websites or sources that contain the texts, the URLs, or perhaps their domain names (e.g. .org, .edu, .net, .com)---characteristics of Web-based sources that most academic researchers consider. Even though Edward acknowledges that the source of the “Bogeyman” text is the journal *Business Week,* for example, he admits selecting the text based on the title alone, claiming “I don’t read [*Business Week*], so I can’t judge the source’s quality.”
 
-Research and Credibility
+### Research and Credibility
 
 *Analysis:* Understanding the credentials of the author or source
 
@@ -198,7 +198,7 @@ What Edward trusts are the ideas contained in the text, believing the writer use
 
 > lish relationships with other sources of information. (Clines and Cobb 2)
 
-A Text’s Credibility Is Your Credibility
+### A Text’s Credibility Is Your Credibility
 
 *Analysis:* Viewed one way, Edward is trying to establish the
 
@@ -238,7 +238,7 @@ Before working with Edward to bring his Googlepedia-based research process toget
 
 *able and more efficient way to do research?*
 
-Susan
+## Susan
 
 Susan begins her research where most students do, on Google. Interestingly, Susan does not start with the general topic of outsourcing, opting instead to let the search engine recommend related search terms. As Susan types in the term “outsourcing,” Google as a search engine builds on character recognition software providing several “suggestions” or related search terms, terms that Susan expects to be provided for her, and one---“outsourcing pros and cons”---quickly catches her attention. Commenting on this choice instead of searching by the general concept of outsourcing, Susan notes, “I would have to sort through too much stuff [on Google] before deciding what to do.” She selects “pros and cons” from the many related and limiting search terms suggested to her; Susan states, “I want both sides of the story because I don’t know much about it.”
 
@@ -247,7 +247,7 @@ Fig. 1. Outsourcing suggestions from Google.
 
 Susan next moves into examining the top ten returns provided on the first page of her Google search for outsourcing pros and cons. Doing what is now common practice for most Web users, Susan immediately selects the link for the first item returned in the query. I believe most search engine users are wired this way, even though they are likely familiar with the emphasis given to commercial sites on Google and other search engines. Quickly unsatisfied with this source, Susan jumps around on the first page of returns, stopping on the first visual she encounters on a linked page: a table illustrating pros and cons. Asked why she likes the visual, Susan responds that she is trying to find out how many arguments exist for and against outsourcing. On this page, Susan notes the author provides seven pros and four cons for outsourcing. This finding leads Susan to believe that more pros likely exist and that her essay should be in support of outsourcing.
 
-“Visual” Research
+### “Visual” Research
 
 *Analysis:* There are at least two points worthy of your attention
 
@@ -283,7 +283,7 @@ really mean.
 
 Like Edward, Susan is not (initially) concerned about the credibility of the text (author’s credentials, source, sponsoring/hosting website, URL or domain, etc.); she appears only concerned with the information itself. When prodded, Susan mentions the text appears to be some form of press release, the URL seems legitimate, and the site appears credible. She fails to mention that the author’s information is not included on the text, but Susan quickly dismisses this: “The lack of author doesn’t bother me. It would only be a name anyway.” Susan adds that her goal is to get the research done “the easiest and fastest way I can.” These attitudes---there is so much information available in the Googlepedia world that the information stands on its own and the research process itself doesn’t need to take much time---appear to be a common misconception among students today, and the behaviors that result from them could possibly lead to flimsy arguments based on the multiplicity rather than the quality of information.
 
-Research and CRAAP
+### Research and CRAAP
 
 *Analysis:* I have referenced criteria for evaluating sources
 
@@ -317,7 +317,7 @@ teacher or a reference librarian.
 
 Unlike Edward, Susan is not concerned with engaging in a debate on the subject of outsourcing, regardless of her opinions on it. Susan views the assignment as I think many students would, another “get it done” research paper. Further, she believes the majority opinion, at least as it is discussed in the initial source she locates, should be *her* opinion in her essay. Susan explains, “I tend to take the side that I think I can make the stronger argument for . . . If it was a personal issue or an issue I was really interested in, like abortion, I wouldn’t do this. This topic doesn’t affect me though.”
 
-Good Search Terms=Good Research Options
+### Good Search Terms=Good Research Options
 
 *Analysis:* Susan needs to understand why being overly reliant
 
@@ -355,7 +355,7 @@ To her credit, Susan understands the need to validate the information provided b
 
 Next, Susan identifies a subsequent source, www.outsource2india. com. This website provides the confirmation that Susan is looking for, noting sixteen pros and only twelve cons for outsourcing. At this point, Susan confirms her process for gathering source material for argumentative essays: she looks for two to three web-based articles that share similar views, particularly views that provide her with arguments, counterarguments, and rebuttals. Once she has an adequate list of points and has determined which side of a debate can be more effectively supported, Susan refines her Google search to focus only on that side of the debate.
 
-Don’t Rush to Argument
+### Don’t Rush to Argument
 
 *Analysis:* There are two concerns with Susan’s research at this
 
@@ -379,7 +379,7 @@ outs/argument.html#2.
 
 Similar to the way she began searching for information only fifteen minutes earlier, Susan uses Google’s “suggestions” to help her identify additional sources that support the side of the debate she has chosen to argue. As she types in “pros outsourcing,” Susan identifies and selects “pro outsourcing statistics” from the recommended list of searches provided by Google in a drop-down menu. Like Edward, Susan is interested in validating the points she wants to use in her essay with research studies and scientific findings. Susan comments, “Statistics. Data. Science. They all make an argument stronger and not just opinion.” Susan again relies on the first page of search results and focuses on title and URL to make her selections. As she finds information, she copies and pastes it along with the URL to a Word document, noting once she has her five sources with a blend of ideas and statistics together in a Word file that she will stop her research and start her writing.
 
-Track Your Research/Give Props
+### Track Your Research/Give Props
 
 *Analysis:* Susan demonstrates here the common information
 
@@ -433,7 +433,7 @@ how the ideas of others relate to your thesis (and don’t forget to
 
 give props).
 
-Edward and Susan: Remix
+## Edward and Susan: Remix
 
 As you know by now, I certainly have concerns with Susan’s and Edward’s research process; however, I recognize that the process used by each of these students is not uncommon for many student researchers. More importantly, each process includes strategies which could be easily reworked in the digital library.
 

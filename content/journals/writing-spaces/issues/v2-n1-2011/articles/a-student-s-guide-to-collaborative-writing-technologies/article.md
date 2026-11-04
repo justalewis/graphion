@@ -8,17 +8,17 @@ short-title: A Student’s Guide to Collaborative Writing Technologies
 short-authors: Barton and Klint
 volume: 2
 year: 2011
-start-page: 314
-source-file: barton-and-klint--a-students-guide.pdf
-volume-title: Writing Spaces 2
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
-license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
-chapter-number: 20
+start-page: 319
 images-of-text:
 - figure-p003-1.jpg
 - figure-p005-1.png
 - figure-p006-1.png
 - figure-p010-1.png
+source-file: barton-and-klint--a-students-guide.pdf
+volume-title: Writing Spaces 2
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
+license-url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
+chapter-number: 20
 ---
 
 This chapter presents a scenario in which students use Web 2.0 social media technologies at each stage of the writing process. After the scenario, we give a breakdown of each tool and where to download it.

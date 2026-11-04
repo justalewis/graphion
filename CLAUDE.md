@@ -27,23 +27,24 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (696 functions, 748 cases once the parametrized ones expand: 142 in
+Tests (716 functions, 768 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 64 in `test_assess.py`,
-43 in `test_ingest_volume.py`, 42 in `test_lint.py`, 38 in
-`test_describe.py`, 36 in `test_register.py`, 14 in `test_structure.py`,
-14 in `test_stated_headings.py`,
+46 in `test_ingest_volume.py`, 42 in `test_lint.py`, 38 in
+`test_describe.py`, 36 in `test_register.py`, 23 in
+`test_stated_headings.py`, 14 in `test_structure.py`,
 29 in `test_teacher_resources.py`,
 29 in `test_metadata_roundtrip.py`, 26 in `test_pdf_tags.py`,
 24 in `test_math_alt.py`,
 18 in `test_acr.py`, 14 in `test_epub_a11y.py`,
 13 in `test_template_bundles.py`, 12 in `test_validate_galleys.py`,
 9 in `test_pdf_ua.py`, 8 in `test_accessibility_routes.py`,
-7 in `test_fig_alt.py`, 6 in `test_standalone_html.py`,
+8 in `test_heading_levels.py`, 7 in `test_fig_alt.py`,
+6 in `test_standalone_html.py`,
 5 in `test_validators.py`,
 4 in `test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
-runs without Pandoc; `test_journal_filter.py` and `test_fig_alt.py` need
-it, and `test_math_alt.py` needs it for the filter round trip alone. All
-skip where it is absent. `test_assess.py` runs verapdf and pa11y where they
+runs without Pandoc; `test_journal_filter.py`, `test_fig_alt.py` and
+`test_heading_levels.py` need it, and `test_math_alt.py` needs it for the
+filter round trip alone. All skip where it is absent. `test_assess.py` runs verapdf and pa11y where they
 are on PATH and says less where they are not, which is how the no-write
 contract gets tested against a real subprocess:
 
@@ -1382,6 +1383,120 @@ separate them; the longest chapter outweighs the shortest volume. A
 manifest entry naming a file overrides the skip, and a PDF that will not
 open is left in the plan for ingest to report by name.
 
+**`--replace` wrote a second copy and repointed the row at it.**
+`ingest_one` found the existing article, by `(volume, source-file)` the way
+`existing_sources` intends, and then called
+`conversion.article_dir(journal, None, slug)`, whose `None` names the
+`_unfiled` directory. So a replace over the whole of volume 2 reported 21
+chapters replaced, wrote 21 fresh drafts under `_unfiled`, pointed all 21
+database rows at those, and never touched the published text or the
+galleys beside it. That is the shape with no symptom: the run says it
+worked, the article page serves a draft with no galleys, and the files
+that were actually published are orphaned from the row that names them.
+`replace_dir` writes where the article lives, and makes `assets` and
+`.versions` there, because a path out of the database has only ever been
+a directory. A row whose directory is gone falls back to the draft, since
+rebuilding an article somewhere nothing files it is the worse of the two.
+
+**A sentence is not a heading, whichever style the file set it in.** Volume
+2's `walk-talk-cook-eat` is written as a dialogue and sets its stage
+directions in `Header_C`, which is the style the series uses for a third
+level section head and which its RoleMap maps straight to `/H3`. So the
+file states that "Marvin types it in." is a heading, while that chapter's
+own heads, "Discussion" and "Works Cited", are H1s in the same series.
+Reading the tree faithfully published twelve stage directions as headings,
+which is a worse galley than the sixteen it was missing: a reader
+navigating by heading hears "Marvin types it in" announced as a section,
+and the levels are incoherent anyway, three deep under nothing.
+`states_a_sentence` is the one place that judgement lives, and it needed
+two tests rather than one. A full stop is what ends a sentence, and the
+stop alone was wrong: measured over the 18 stated headings in this archive
+that end in one, 12 are those stage directions and 6 are real heads, since
+`on-the-other-hand` heads five sections "Step 1:" to "Step 5:" and ends
+each with a stop. Turning them all down would have cost six real headings
+to stop twelve false ones, which is the trade the measurement exists to
+catch and a fixture would not have. What separates them is the case: a
+title capitalises its substantial words and a sentence does not, so
+"Step 5: Imagine Hostile Audiences." parts from "Marvin types it in." The
+stage directions capitalise at most a quarter of their long words and the
+real heads all of them, so `TITLE_CASE_SHARE` sits at a half in the gap.
+Only words of four letters or more vote, because a title leaves its
+function words alone, and the first word never votes, because a sentence
+capitalises that too; a line with no long word left reads as a title
+rather than being turned down on no evidence.
+
+Terminal punctuation in general is not the test: a head may ask a
+question and `writing-eyeball-to-eyeball` closes on "What Difference Does
+a Mindful Collaboration Make?". An ellipsis is not a full stop either,
+spaced or not, which is two more heads here. Emphasis comes off first, for
+the reason the captions do, since a stage direction is set in italic and
+arrives wrapped, and it goes back on where the line is kept as body,
+because there the italic is the direction's own and a reader is meant to
+hear it.
+
+**And it is asked in `flush`, because a heading wraps.**
+`apply_stated_headings` marks lines and decides nothing: asked of one
+physical line, the test let five of the twelve stage directions through,
+the long ones, since the first line of a wrapped sentence carries no full
+stop at all. `assemble`'s `flush` holds the text `join_lines` has already
+put back together, which is the only place the whole heading exists; it is
+also after the hyphen is rejoined, and
+`annoying-ways-people-use-sources` breaks "Useless" across the line in a
+head. So the stated level is applied there or turned into body there, and
+`assemble` fills `declined_heads` in the optional `report` so `extract`
+can say so in a note. An out parameter rather than a second return value,
+because the pair `assemble` returns is what every caller and every test
+builds, and a stated head overruled is something to say out loud rather
+than something to act on. This is the one place ingest overrules what a
+file states about itself, so it names the lines and the reason.
+
+**A book's levels are not a conformant outline, and `filters/heading-levels.lua`
+is what closes the gap.** PDF/UA wants a heading outline that starts at
+level 1 and skips nothing. Reading the structure trees made both live at
+once, and both are the book being reproduced faithfully:
+`on-the-other-hand` sets its sections in `Header_A` and its five steps in
+`Header_C` with no `Header_B` between, so the chapter goes from a first
+level to a third, and `the-complexity-of-simplicity` does the same at
+"Study Guide". Typst validates rather than declares, so each aborted the
+compile and `_compile_typst` shipped the galley unconstrained. Four
+galleys lost the conformance identifier the first time these headings
+reached a render, and `register.record_pdfua` is what would have counted
+it.
+
+The other two were the teacher halves of `3-ilyasova` and `4-zhou`, and
+they fail differently: "the first heading must be of level 1". A split
+article renders two documents out of one body, and the teacher
+intermediate drops the `Teacher Resources` heading because the template
+prints it as that galley's title, so the document opens on whatever sat
+under it. That was a `#` before and is a `##` now, which is the same
+recovery working correctly and costing the galley its conformance.
+
+So this is a filter rather than a fix to `blocks_to_markdown`. The
+constraint belongs to the document being rendered, one `article.md`
+renders as two of them, and the canonical copy keeps the levels the book
+states. Each galley is normalised on its own way out, by
+`_heading_levels_filter_args()` from `render_html`, `render_pdf`,
+`render_epub` and `_md_to_typst_fragment`, which is the same four call
+sites `fig-alt.lua` needs and for the same reason.
+
+The transform is a stack of the levels seen, and the depth written is the
+stack's height, so a heading deeper than the one before it goes exactly
+one deeper and nesting survives. Ranking the distinct levels instead does
+not work: a chapter can hold every level and still skip one positionally,
+which is a `#` followed by a `###` with the `##` elsewhere in the
+document. `test_a_positional_skip_is_caught_where_ranking_would_miss_it`
+is what holds that.
+
+What it does not fix is that chapter's one split head. The page sets a
+marginal pull quote down the side, and its lines interleave in reading
+order with the two lines of the heading, so nothing is adjacent to be
+merged and the galley carries "Uncle Barry and His Encyclopedia of Use-"
+and "less Information" as two. That interleaving is older than any of
+this; the same lines were in the same order before, as paragraphs rather
+than heads, which is where reading the tree made a pre-existing defect
+legible rather than causing one. Separating a marginal column from the
+text block is the fix and it is not written.
+
 **An article can render as two galleys.** `teacher-resources: separate` in
 the front matter splits a chapter at its `Teacher Resources` heading, so the
 material addressed to instructors renders as its own document
@@ -1488,12 +1603,15 @@ Anything touching Claude (`stylize.py`, `llm_cleanup.py`) requires
   wordmark, and the Claude `style-guide.md`. The LiCS bundle is the worked
   example; `new_journal.py <slug> "Name"` clones it.
 - `filters/` holds the Pandoc Lua filters that belong to the app rather than
-  to a journal: `math-alt.lua`, which puts alt text on every equation, and
+  to a journal: `math-alt.lua`, which puts alt text on every equation,
   `fig-alt.lua`, which puts a figure's description where a writer will turn
-  it into alt text. The test for whether a filter goes here or in a bundle
-  is whether a new journal should be able to start without it:
-  `new_journal.py` clones a bundle, so anything it clones is something a
-  journal can also drop.
+  it into alt text, and `heading-levels.lua`, which makes a galley's
+  outline start at level 1 and skip nothing. The test for whether a filter
+  goes here or in a bundle is whether a new journal should be able to start
+  without it: `new_journal.py` clones a bundle, so anything it clones is
+  something a journal can also drop. How a caption is set and how deep a
+  book sets its sections are a journal's design; whether a figure can be
+  read aloud, a formula heard, or an outline navigated is not.
 - Typst compiles with `root=CONTENT_DIR` so templates can reference image assets
   under `content/`.
 - Pandoc 3 emits Figure blocks rather than `Para[Image]`; the figures filter

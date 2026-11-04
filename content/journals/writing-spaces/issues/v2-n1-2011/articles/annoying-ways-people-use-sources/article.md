@@ -2,12 +2,11 @@
 title: Annoying Ways People Use Sources
 author:
 - name: Kyle D. Stedman
-abstract: '*by Kyle D. Stedman*'
 short-title: Annoying Ways People Use Sources
 short-authors: Stedman
 volume: 2
 year: 2011
-start-page: 234
+start-page: 239
 source-file: stedman--annoying-ways.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
@@ -39,11 +38,11 @@ This judgment, of course, will often be unfair. These readers might completely i
 
 It helps me to remember that the conventions of writing have a fundamentally *rhetorical* nature. That is, I follow different conventions depending on the purpose and audience of my writing, because I know that I’ll come across differently to different people depending on how well I follow the conventions expected in any particular writing space. In a blog, I cite a source by hyperlinking; in an academic essay, I use a parenthetical citation that refers to a list of references at the end of the essay. One of the fundamental ideas of rhetoric is that speakers/writers/composers shape what they say/write/create based on what they want it to do, where they’re publishing it, and what they know about their audience/readers. And those decisions include nitty-gritty things like introducing quotations and citing paraphrases clearly: not everyone in the entire world approaches these things the same way, but when I strategically learn the expectations of my U.S. academic audience, what I really want to say comes across smoothly, without little annoying blips in my readers’ experience. Notice that I’m not saying that there’s a particular *right* or *wrong* way to use conventions in my writing---if the modern U.S. academic system had evolved from a primarily African or Asian or Latin American cultural consciousness instead of a European one, conventions for writing would probably be very different. That’s why they’re *conventions* and not *rules.*
 
-The Annoyances
+## The Annoyances
 
 Because I’m not here to tell you *rules, decrees,* or *laws,* it makes sense to call my classifications *annoyances.* In the examples that follow, I wrote all of the annoying examples myself, but all the examples I use of good writing come from actual student papers in first year composition classes at my university; I have their permission to quote them.
 
-Armadillo Roadkill
+### Armadillo Roadkill
 
 > *Armadillo Roadkill:*
 
@@ -69,7 +68,9 @@ Here’s an actual example from Alexsandra. Notice the way she builds up to the 
 
 Alexsandra prepares us for the quotation, quotes, and then analyzes it. I love it. This isn’t a hard and fast rule---I’ve seen it broken by the best of writers, I admit---but it’s a wise standard to hold yourself to unless you have a reason not to.
 
-Dating Spider-Man An annoyance that’s closely connected to *Dating Spider-Man:* Armadillo Roadkill is the tendency writ- *starting or ending a para*ers sometimes have of starting or ending *graph with a quotation* paragraphs with quotations. This isn’t technically *wrong,* and there are situations when the effect of surprise is what you’re going for. But often, a paragraph-beginning or paragraph-closing quotation feels rushed, unexplained, disjointed.
+### Dating Spider-Man
+
+An annoyance that’s closely connected to *Dating Spider-Man:* Armadillo Roadkill is the tendency writ- *starting or ending a para*ers sometimes have of starting or ending *graph with a quotation* paragraphs with quotations. This isn’t technically *wrong,* and there are situations when the effect of surprise is what you’re going for. But often, a paragraph-beginning or paragraph-closing quotation feels rushed, unexplained, disjointed.
 
 It’s like dating Spider-Man. You’re walking along with him and he says something remarkably interesting---but then he tilts his head, hearing something far away, and suddenly shoots a web onto the nearest building and *zooms* away through the air. As if you had just read an interesting quotation dangling at the end of a paragraph, you wanted to hear more of his opinion, but it’s too late---he’s already moved on. Later, he suddenly jumps off a balcony and is by your side again, and he starts talking about something you don’t understand. You’re confused because he just dropped in and expected you to understand the context of what was on his mind at that moment, much like when readers step into a paragraph that begins with a quotation. Here’s an example:
 
@@ -87,11 +88,11 @@ Instantly, her quotation hooks me. It doesn’t feel thoughtless, like it would 
 
 > *Uncle Barry and his*
 
-Uncle Barry and His Encyclopedia of Use-
+### Uncle Barry and His Encyclopedia of Use-
 
 > *Encyclopedia of Useless*
 
-less Information
+### less Information
 
 > *Information: using too*
 
@@ -113,7 +114,7 @@ Toner’s response to the Obama video is like a diving board that Jessica bounce
 
 > *Am I in the Right Movie?*
 
-Am I in the Right Movie?
+### Am I in the Right Movie?
 
 > *failing to integrate a quota-*
 
@@ -133,7 +134,7 @@ She saw a phrase that she liked in Muller’s article, so she found a way to wor
 
 > *I Can’t Find the Stupid Link:*
 
-I Can’t Find the Stupid Link
+### I Can’t Find the Stupid Link
 
 > *no connection between the*
 
@@ -181,7 +182,7 @@ Citations not including last names may seem to complicate this advice, but they 
 
 > To further this point, Opotow notes, “Don’t imagine you’ll be unscathed by the methods you use. The end may justify the means. . . . But there’s a price to pay, and the price does tend to be oneself.”
 
-I Swear I Did Some Research!
+### I Swear I Did Some Research!
 
 > *I Swear I Did Some*
 

@@ -91,7 +91,7 @@ Among the contextual factors you’ll want to consider before you even start rea
 
 It may be that you need to start reading before you can answer these first two questions, but it’s worth trying to answer them before you start. For example, if you know at the outset that the author is trying to reach a very specific group of readers, then his or her writerly techniques may seem more or less effective than if he/she was trying to reach a more general audience. Similarly---returning to our earlier example of beginning an essay with a quote from President Obama about the war in Iraq---if you know that the author’s purpose is to address some of the dangers and drawbacks of warfare, this may be a very effective opening. If the purpose is to encourage Americans to wear sunscreen while at the beach this opening makes no sense at all. One former student, Lola, explained that most of her reading assignments in college writing classes were designed “to provoke analysis and criticisms into the style, structure, and *purpose* of the writing itself.”
 
-In What Genre Is This Written?
+## In What Genre Is This Written?
 
 Another important thing to consider before reading is the genre of the text. Genre means a few different things in college English classes, but it’s most often used to indicate the *type* of writing: a poem, a newspaper article, an essay, a short story, a novel, a legal brief, an instruction manual, etc. Because the conventions for each genre can be very different (who ever heard of a 900-page newspaper article?), techniques that are effective for one genre may not work well in another. Many readers expect poems and pop songs to rhyme, for example, but might react negatively to a legal brief or instruction manual that did so.
 
@@ -101,11 +101,11 @@ Another former student, Mike, comments on how important the genre of the text ca
 
 Although Mike specifically mentions what he looked for while reading a published novel, one of the great things about RLW is that it can be used equally well with either published or student-produced writing.
 
-Is This a Published or a Student-Produced Piece of Writing?
+## Is This a Published or a Student-Produced Piece of Writing?
 
 As you read both kinds of texts you can locate the choices the author made and imagine the different decisions that he/she might have made. While it might seem a little weird at first to imagine how published texts could be written differently---after all, they were good enough to be published---remember that all writing can be improved. Scholar Nancy Walker believes that it’s important for students to read published work using RLW because “the work ceases to be a mere artifact, a stone tablet, and becomes instead a living utterance with immediacy and texture. It could have been better or worse than it is had the author made different choices” (36). As Walker suggests, it’s worth thinking about how the published text would be different---maybe even *better*---if the author had made different choices in the writing because you may be faced with similar choices in your own work.
 
-Is This the Kind of Writing You Will Be Assigned to Write Yourself?
+## Is This the Kind of Writing You Will Be Assigned to Write Yourself?
 
 Knowing ahead of time what kind of writing assignments you will be asked to complete can really help you to read like a writer. It’s probably impossible (and definitely too time consuming) to identify *all* of the choices the author made and *all* techniques an author used, so it’s important to prioritize while reading. Knowing what you’ll be writing yourself can help you prioritize. It may be the case that your instructor has assigned the text you’re reading to serve as model for the kind of writing you’ll be doing later. Jessie, a former student, writes, “In college writing classes, we knew we were reading for a purpose---to influence or inspire our own work. The reading that I have done in college writing courses has always been really specific to a certain type of writing, and it allows me to focus and experiment on that specific style in depth and without distraction.”
 

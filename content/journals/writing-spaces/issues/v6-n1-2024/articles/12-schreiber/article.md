@@ -7,7 +7,7 @@ short-title: Beyond Audience Analysis
 short-authors: Schreiber
 volume: 6
 year: 2024
-start-page: 243
+start-page: 242
 chapter-number: 12
 source-file: 12Schreiber.pdf
 volume-title: Technical Writing Spaces 6

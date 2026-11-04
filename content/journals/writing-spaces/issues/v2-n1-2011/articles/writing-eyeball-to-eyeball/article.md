@@ -6,7 +6,7 @@ short-title: Writing “Eyeball To Eyeball”
 short-authors: Ingalls
 volume: 2
 year: 2011
-start-page: 120
+start-page: 121
 source-file: ingalls--writing-eyeball-to-eyeball.pdf
 volume-title: Writing Spaces 2
 license: This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License (CC BY-NC-SA 3.0 US).
@@ -36,7 +36,7 @@ And, for those of you who have the kind of Lennon-McCartney hopes of making a gi
 
 As you read, you may be tapping into your memories of group work---some of these memories may be positive, and some may be less so. Some of you may have some memories of collaboration that leave you wondering if it can really work at all; what if a group just can’t seem to get it together? How is it possible to make sure each group member carries an equal load? Others may have hopeful memories of a project or two that went well . . . maybe even *really* well. There was a motivation, a synergy, a collective feeling of pride among you. What we remember about our collaborative experiences can shape how we see collaboration now, so it’s useful to dig into those memories and reflect on them before you get started. Once we know why we see collaboration in certain ways, and once we share some of those stories, we can begin to create the kind of common ground that collaboration asks for.
 
-Your Experiences Matter
+## Your Experiences Matter
 
 Take some time to think through some of the collaborative work you’ve done in the past. Without worrying about mechanics or organization---spend fifteen minutes just writing about one or two experiences you’ve had. After you’ve spent some time writing, go back and re-read your freewrite, paying careful attention to the emotions you read in your words. Do you see inspiration? Anxiety? Pride? Frustration? Confidence? Confusion? What were the sources of these emotions in your experience? How do they shape the ways in which you view collaboration today?
 
@@ -80,19 +80,27 @@ Rather than just labeling a collaborative experience “good” or “bad,” ho
 
 > the group?
 
-By looking at how a collaborative project was structured, and by examining our personal behavior in a collaborative situation, we can think more critically about how we might keep or change our approaches in future contexts. Structuring the Path Ahead: Setting Up Your Project
+By looking at how a collaborative project was structured, and by examining our personal behavior in a collaborative situation, we can think more critically about how we might keep or change our approaches in future contexts.
+
+## Structuring the Path Ahead: Setting Up Your Project
 
 Remember that Lennon and McCartney depended on their mutual respect, communication skills, and shared goals in their collaborative compositions. So, too, can you focus on these elements in your own collaborative work---the key is to build a structure that supports those components. Before you begin to research, design, and write your composition, prepare yourself and your group for the work ahead by considering three important steps to setting up your project: opening your mind, selecting group members, and articulating goals in a group contract.
 
-Keep an Open Mind Go back to the freewrite you composed about your experiences with collaboration, and re-acquaint yourself with the mindset you had about those experiences. Then look carefully once again at the ways in which that collaboration was structured. What would you change? What would you keep the same? Perhaps one of the most important approaches you can take to collaborative work is to keep an open mind; draw from your experiences, and be willing to learn something entirely new. Do not only assume that because a certain approach did or did not work in the past it will or will not work in the future. For example, though your group’s biology lab in your junior year of high school seemed to write itself, you may encounter new writing challenges now that you’re working with a brand new group of students. Likewise, though the senior year capstone collaborative project seemed dominated by the one student who struggled to incorporate others’ ideas, you may find that your group members in college are less willing to be silenced. A brand new collaborative situation offers you the opportunity to see yourself and your peers as credible sources of information. Each of you has something to offer, and whether your offerings coincide or clash, the valuable chance to learn from one another is there. If each group member pledges to allow for the thoughts and ideas of other members, you’ve gotten off to a promising start.
+### Keep an Open Mind
 
-Selecting Group Members A teacher will often invite students to decide how they want to be grouped in collaborative work. If this is the case, think carefully about this critical part of the project. Want to work with your friends? Sometimes this is a great plan; after all, we often choose our friends based on common interests and views on the world. But consider the insight of teacher and scholar Rebecca Moore Howard. In her work on collaboration, Howard describes one collaborative assignment in which she explained to her students
+Go back to the freewrite you composed about your experiences with collaboration, and re-acquaint yourself with the mindset you had about those experiences. Then look carefully once again at the ways in which that collaboration was structured. What would you change? What would you keep the same? Perhaps one of the most important approaches you can take to collaborative work is to keep an open mind; draw from your experiences, and be willing to learn something entirely new. Do not only assume that because a certain approach did or did not work in the past it will or will not work in the future. For example, though your group’s biology lab in your junior year of high school seemed to write itself, you may encounter new writing challenges now that you’re working with a brand new group of students. Likewise, though the senior year capstone collaborative project seemed dominated by the one student who struggled to incorporate others’ ideas, you may find that your group members in college are less willing to be silenced. A brand new collaborative situation offers you the opportunity to see yourself and your peers as credible sources of information. Each of you has something to offer, and whether your offerings coincide or clash, the valuable chance to learn from one another is there. If each group member pledges to allow for the thoughts and ideas of other members, you’ve gotten off to a promising start.
+
+### Selecting Group Members
+
+A teacher will often invite students to decide how they want to be grouped in collaborative work. If this is the case, think carefully about this critical part of the project. Want to work with your friends? Sometimes this is a great plan; after all, we often choose our friends based on common interests and views on the world. But consider the insight of teacher and scholar Rebecca Moore Howard. In her work on collaboration, Howard describes one collaborative assignment in which she explained to her students
 
 > that choosing their own groups would allow them maximum comfort but would leave some students feeling unloved, and . . . that the comfort of self-chosen groups could sometimes result in poor decision-making, with too much consideration for established relations and not enough for the collaborative project. (64--65)
 
 If you decide to work with your friends, it could be the best collaboration ever. But it could also put additional pressures on the friendships, which may detract from the tasks at hand. And what about those students who don’t have any close friends in the class? With these cautionary notes in mind, Howard’s students decided to be randomly grouped together. However you decide to group your project, go back to that “Keep an Open Mind” idea and consider how you might populate your group most effectively for the benefit of the class, the project, and your own development as a writer and student.
 
-Establishing a Group Contract Once you’ve established your group, there is an important step to take before you dive into the work, and in many ways it acts as your first collaborative writing activity: the group contract. This contract serves as a kind of group constitution: it lays out the collective goals and ground rules that will adhere group members to a core ethos for productive, healthy, creative work. It also gives you a map of where to begin and how to proceed as you divide the labor of the project. In composing your contract, consider the following issues.
+### Establishing a Group Contract
+
+Once you’ve established your group, there is an important step to take before you dive into the work, and in many ways it acts as your first collaborative writing activity: the group contract. This contract serves as a kind of group constitution: it lays out the collective goals and ground rules that will adhere group members to a core ethos for productive, healthy, creative work. It also gives you a map of where to begin and how to proceed as you divide the labor of the project. In composing your contract, consider the following issues.
 
 • Understanding the project at hand. From the get-go, group
 
@@ -120,7 +128,7 @@ As you can see, this contract is not to be taken lightly: time and effort spent 
 
 Now, with your contract signed, sealed, and e-delivered to one another, you’re ready to launch into developing your project. In this section, we’ll explore some activities that will help you to make decisions about topics, carry out the specifics of project administration, resolve conflict, and re-calibrate your contract.
 
-Choosing a Worthy Topic
+## Choosing a Worthy Topic
 
 In many cases your teacher may assign you the specific topic for your collaborative project; in other cases, you may actually be grouped together according to your common interests or fields of study. In still other cases, you may find yourself in a situation in which your group is composed of a diversity of interests, and where there are fewer constraints on the assignment. For example, maybe you’ve been assigned to write a proposal that offers a solution to a citywide problem, maybe you’ve been asked to work together to research and compose an analytical report on a debate in the latest Presidential election, or maybe you’ve just been asked to get together to defend one side of an issue that is important to you. In any of these cases, you’re likely to face one big question: what should your topic be?
 
@@ -137,13 +145,13 @@ Fig. 1. Affinity diagram for deciding on a topic.
 
 of what needs to be done to remedy the problem. Filling in these categories above may help you to see more clearly what challenges may lie ahead for you if you decide to take on any one of these campus concerns. Thus, once you’ve enriched your diagram, you can begin to see together which topics have the most promise in terms of enjoyment, challenge, and sustainability. Moreover, as Green and Duerden found to be true for their students, don’t hesitate to give the diagram some time to “incubate” (4). That is, if class time is only an hour or so, get the diagram started, but check back in with group members later in the day, or even the next day. Talk to others, do some initial online research, let the ideas marinate so that you can best represent them in the diagram before you make a decision together about which topic you want to tackle.
 
-Project Management
+## Project Management
 
 Now that you’ve selected a topic you can all invest in, you’re ready to lay out work for the next few weeks. Together, divide the project into logical stages of development, taking into consideration what the composition will need in terms of its research, analysis, organizational sections, graphics, fact-checking, editing, and drafting. Also consider the responsibilities necessary for each of these stages. Again, you may find that the affinity diagram is helpful here to illustrate the major steps toward completion, the sub-steps of each, and the places where steps in the process may be combined. The diagram can be a tangible way to see or imagine the process of the project when you don’t yet have the final product in hand.
 
 Next, divide the labor mindfully and fairly by discussing who will take on each responsibility. Think back on your experience and tendencies with collaboration. Is there an opportunity to do more listening, leading, negotiating, or questioning than you have in the past? Are there unique talents that individuals can bring to the project’s various elements? Is one of you interested in design or illustration, for instance? Is another interested in multimedia approaches to presentation? You may elect a “divide and conquer” approach, but consider, too, that some sections of the project may require a sub-set of group members, and that other sections will need everyone’s input (like research, editing, checking for documentation accuracy, decisions on design). In combining your individual skills with common goals, you’re likely to find that the work you’re doing is much greater than the sum of its parts. While individual group members’ specific skills will be spotlighted in their own ways, this plan for the management of the project should also reveal that every stage of the process gets input from each member.
 
-When Conflict Gets You Stuck: Writing Your Way Out
+## When Conflict Gets You Stuck: Writing Your Way Out
 
 Though your group contract is meant to help you to avoid or foresee conflict before it arises, you still may encounter some unexpected patches of conflict along the way that you didn’t see coming. Maybe it’s late and the group is hungry, tired, and grumpy. Maybe one group member brought some of his personal struggles with him to the scheduled meeting. Maybe another group member suddenly decides that she doesn’t like an idea you all agreed upon last week. Either way, the conflict that sneaks up on you can be challenging to work through, and it can make you all feel a little stuck.
 
@@ -153,7 +161,7 @@ You may be taken aback by what seemed like an outburst from your fellow group me
 
 So, what do you do? Dive into the argument? Maybe. In the middle of the conflict, launching into conversation about the issue at hand may seem like steps ahead of the tense moment, so you might find some relief in writing first, then turning to one another with your concerns. You might be thinking, how in the world will we as a group have the presence of mind to stop and write about our conflict before we begin to discuss it? After all, this write-before-you-speak approach is itself a form of abnormal discourse---we’re not used to doing it in our everyday interactions, right? But you may find that writing first helps you to process your thoughts, gather your questions, calm your mind a bit before you get to the heart of the matter. You might even write this method into your group contract so that you remember that, at one point in the planning of this complex project, you promised one another that you would use this technique if you ever encountered tension.
 
-Revisiting Your Contract
+## Revisiting Your Contract
 
 While you’ve worked hard to compose your group contract, it can be difficult to keep the elements of the contract in the forefront of your mind when you and your group members immerse yourselves in the project. Instead of moving the contract to the back burner, be sure to return to it once or twice throughout the project. In reflecting on collaborative work, one student in my class remarked, “People’s roles in the project, responsibilities, work done, that can all be adjusted, but when it is time to submit it you have no room to improvise.” The “adjustments” that this student refers to can happen when you and your group touch base with the goals you set from the beginning. You might also find that it’s useful to meet briefly as a group in a more informal setting, like a coffee shop, so that you can take a refreshing look at the status of the project so far. Specifically, you might examine the following aspects of your collaboration:
 
@@ -183,11 +191,11 @@ If this extra step seems like more work, consider the possibility that as you pu
 
 # Concluding Your Project: Looking Back, Looking Ahead
 
-Collaborative Review
+## Collaborative Review
 
 Before you turn that project in, remember: even if you divided it up, the completed product belongs to all of you and should get each group member’s final review and approval before you submit it. This final review includes editing for mechanics, style, and surface issues (including proper documentation, fact checking, and document layout). It can be especially helpful to go over the entire final composition together, *as a group.* Each person takes a turn reading aloud, while other members of the group follow along and check for errors. This shared editing session can also be an opportunity to pat one another on the back.
 
-The Post-Mortem
+## The Post-Mortem
 
 That’s it, right? On to the next thing? Not yet. Too often, we progress from project to project, from class to class without pausing to think back on what we have accomplished. We often miss out on reflection of the goals we had for ourselves, neglecting to ask critical analytical questions: what did I hope to accomplish? In what ways did I grow as a person? As a student or scholar? What evidence do I have for that growth? How does this growth prepare me for what is next? When it comes to the high-impact learning potential involved in collaborative work, it can be an invaluable exercise to take stock by reflecting on the stages of the process and making sense of what you experienced. Someday, in the not-too-distant future, a prospective employer or graduate school is going to want to know, “How did you get to where you are today?” This final step in the process---called a “post-mortem”---will give you some practice at formulating an answer to this complex question.
 
@@ -213,7 +221,7 @@ Less morbid than it sounds, the “post-mortem” is an activity that you are li
 
 Once you’ve done your own reflecting, take your observations back to your group, and discuss together what you’ve concluded about the process. Not only does this final step bring some healthy closure to the project, but it also opens up opportunities for resolution of lingering conflict, mutual recognition of your accomplishments, and, for those of you who’ve got an especially good thing going with your work, a conversation about possibly taking your project beyond the classroom.
 
-What Difference Does a Mindful Collaboration Make?
+## What Difference Does a Mindful Collaboration Make?
 
 Does it really make a difference to do all of this prep-work and strategizing and management and reflection? I wanted to find out. Several months after my students completed a collaborative project, I did a kind of post-mortem by anonymously surveying them to get their views on collaboration. I was curious: most of them had never before taken these structured steps toward the preparation, management, and reflection on their group work. I learned from their pre-project reflections that most had worked in groups without talking about goals or communication strategies, making assumptions that their group members knew what they had to do and why. They had only known how to “launch in” and (gulp) hope for the best. And for many of these students, tensions loomed from the start. Would these new strategies change their views?
 

@@ -9,17 +9,17 @@ volume: 6
 year: 2024
 start-page: 40
 chapter-number: 3
-source-file: 3Ilyasova.pdf
-volume-title: Technical Writing Spaces 6
-license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
-license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
-teacher-resources: separate
 images-of-text:
 - figure-p003-1.png
 - figure-p009-1.jpg
 - figure-p009-2.jpg
 - figure-p013-1.png
 - figure-p014-1.png
+teacher-resources: separate
+source-file: 3Ilyasova.pdf
+volume-title: Technical Writing Spaces 6
+license: This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
+license-url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 ---
 
 What follows is a series of practical guidelines that help you understand the *why* and the *how* for three specific pieces of writing that often accompany reports and other professional and technical writing assignments. These three pieces of writing are cover memos, executive summaries, and abstracts. As you read the guidelines, you’ll come away understanding the goal, purpose or why of each piece of writing, the definition, and what aspects make each effective. Along the way, we’ll apply some of these guidelines to actual examples. You’ll also be able to get into the heads of other writers as they formulate their own approaches to how they write these specific pieces/assignments.
@@ -34,7 +34,7 @@ Cover memos are a specific kind of memo that provide information about projects,
 
 The objective of this process is to help you articulate information about project updates or completion, ongoing and/or completed tasks, decisions from important meetings, and/or short proposals that either you are working on by yourself or with a team.
 
-# Why We Write Cover Memos
+## Why We Write Cover Memos
 
 To understand why we write cover memos, let’s look at an example of one in Figure 3.1 and examine the following three aspects:
 
@@ -57,7 +57,7 @@ Despite these differences, memos and emails share many of the same basic formatt
 
 Each section is key, for readers rely on such information to understand what is being asked of them and how urgent the information or request is in taking the next step.
 
-# Before You Start to Write
+## Before You Start to Write
 
 Because of the reach, formality, and importance associated with memos, when you begin writing the various sections, you should take some time to consider your readers and how they will use this information. Because memos are meant to quickly convey information, attention should be paid to include only relevant information. In other words, doing some planning and research will help ensure that you come off as a professional and that you include only need-to-know information.
 
@@ -69,7 +69,7 @@ Answering these questions is an important pre-writing step because it will help 
 
 Once you have answered these questions, you might consider having these answers handy and referring back to them to make sure you are staying on track as you write your memo.
 
-# Writing the Memo
+## Writing the Memo
 
 Now that you have a clearer idea about who you’re writing to and why you’re writing, it’s time to organize and draft your memo. As with most writing tasks, some memos will require more time and care to develop than others. However, as you get more familiar with this type of writing and gain more practice, writing memos will become easier and just another part of the flow of your workday. Part of what will help you get better at this writing task is understanding that some parts of the memo make predictable moves regardless of your purpose. Specifically,
 
@@ -77,13 +77,13 @@ Now that you have a clearer idea about who you’re writing to and why you’re 
 
 Keeping this in mind and recalling what these moves include will allow you to spend more time on what you need to develop clearly and concisely---the body of the memo. Finally, memos are often one-two pages in length so that they can be read quickly, with only the most pertinent information included.
 
-# Header
+## Header
 
 Let’s first take a look at the header and introduction (see Figure 3.2) and identify the predictable moves in each. In the header, there are two moves to get right. First, getting the features of the header correct, and second, having a clear and concise subject line (see Figure 3.2). The header must have the DATE, TO, FROM, and SUBJECT, in that order, and ideally, formatted so that the information in each line is aligned the same. Additionally, for memos, your initials must appear at the end of your name in the FROM line. (Side note: unlike letters, memos are NOT signed at the bottom. Instead, memos are initialed at the top, next to the name of the person who wrote the memo).
 
 Lastly, with the SUBJECT line, you should offer a descriptive and specific phrase that describes the content of the memo. Simply writing, “Project” or “Update” is too vague. None of us like reading an email with a non-descript or boring title, and we likely skip over it since it might seem unimportant. Most readers look to the subject line first to determine if they want to read the memo and/or when to read the memo depending on the SUBJECT line. Giving more specific information, such as “Update on Project Springs” or “Accident at District #4” helps a reader make that decision.
 
-# Introduction
+## Introduction
 
 In the introduction (see Figure 3.2, first paragraph) you should make at least three of the moves listed here, depending on your reader and your purpose:
 
@@ -101,7 +101,7 @@ sentences of your introduction in order to reduce how long it takes for your rea
 
 As you might have noticed, the introduction (first paragraph) of the memo in Figure 3.2 also includes some background information, very brief, one sentence, “Last week, the Director’s Board . . .” about where this idea came from. The writer also stresses the urgency or importance in addressing this concern “as soon as possible”. In some cases, providing the background makes receiving the memo less confusing, and stressing the importance is warranted given the situation. Both of these moves are ones you will need to determine depending on the situation, however, moves 1, 2, and 3 are always required.
 
-# Body: The Details
+## Body: The Details
 
 The body of the memo (see Figure 3.2) is where you provide your readers with the information they need to make a decision or take action. The body of the memo is often the largest part, and often takes up multiple paragraphs. This is where you develop your points by providing facts, examples, data, and/or reasoning for the decision or action you want taken. Referring back to the answers to the 5W and How Questions about why are you writing, what is your main point and what do you want your reader to do with this information at this point? Once you’ve done that, what information do you need to provide your reader for you to achieve your purpose?
 
@@ -113,7 +113,7 @@ When you include these elements---facts, examples, data, reasoning, actions---in
 
 Take your time with this section since it will provide the needed details to help your reader take action.
 
-# Conclusion
+## Conclusion
 
 Finally, you’re at the conclusion. The conclusion should be short, and like the rest of the memo, to the point (see Figure 3.2). Typically, you are looking at no more than three sentences, and nothing essential should be in the conclusion that hasn’t already been stated in either the introduction or the body. As mentioned earlier, the conclusion is another place that has specific moves you can do quickly once you know them. These moves are:
 
@@ -138,11 +138,11 @@ Next, let’s review the process of writing abstracts and executive summaries. T
 
 The objective of this process is to learn how to provide a brief and clear overview of an entire report without having your reader read the report itself.
 
-# Why We Write Abstracts and Executive Summaries
+## Why We Write Abstracts and Executive Summaries
 
 One of the writing assignments you will likely encounter in technical communication is report writing. And at some point, you will be tasked to write the front matter for a report, which will include either an abstract or an executive summary. Both the abstract and the executive summary are designed to provide a brief and clear overview of the entire report without having your reader read the report itself. Like most writing in technical communication, the goal is to provide clear and concise information quickly. That’s what abstracts and executive summaries need to do well when accompanying a report---to inform readers about what they are about to read in the report.
 
-# Before You Start: Abstracts Versus Executive Summaries
+## Before You Start: Abstracts Versus Executive Summaries
 
 As you might have already figured out, you can only write these abstracts and executive summaries once you have finished your report. Because both the abstracts and executive summaries reflect the complete content of your report, you must be done with your report in order to accurately reflect its content in either the abstract or the executive summary. Moreover, as you have also figured out by now, these pieces of writing will be the first things your readers will read in order to decide 1) if they want to read the rest of the report and/or 2) if they can make a decision based on the information in just the abstract or the executive summary. In other words, take your time drafting these as it will determine whether your reader proceeds with reading your report. Even though they are short or shorter than the report itself, abstract/executive summaries are the first impression readers will have about you, your work and professionalism, so they are quite crucial.
 
@@ -167,7 +167,7 @@ You will likely find some weakness, wordiness, and errors. Revise your rough dra
 
 > • Correct weaknesses in organization and coherence, • Drop superfluous information, • Add important information originally left out, • Eliminate wordiness, and • Correct errors in grammar and mechanics. • Carefully proofread your final copy.
 
-# Writing the Abstract or Executive Summary (Purdue OWL Staff) Abstracts
+## Writing the Abstract or Executive Summary (Purdue OWL Staff) Abstracts
 
 When writing an abstract, draw on the key sentences directly from your report. Key sentences would be the ones that have a purpose statement, and then your main points. From there you should pull one or two key sentences from each major section of your report. This is where you might find key sentences that speak to your methodology, the results and/or discussion, and the conclusions or recommendations. Here is what this might look in terms of organization:
 
@@ -181,7 +181,7 @@ Writing a descriptive abstract or not including the results and recommendations/
 
 Figure 3.3 provides an example of a scientific abstract. It contains all of the elements mentioned earlier for an effective abstract: purpose, main points, methodology, results, and conclusions/recommendations.
 
-# Executive Summaries
+## Executive Summaries
 
 When writing your executive summary, you need to keep in mind two main aspects of executive summaries that differ from writing abstract. First, you should paraphrase the main sections and main points of your report versus trying to use the same phrasing from the report as you would in an abstract.
 
@@ -217,7 +217,7 @@ Purdue OWL Staff. *Purdue Online Writing Lab*. 3 Aug. 2020, https://owl. purdue.
 
 # Teacher Resources
 
-# Overview and Teaching Strategies
+## Overview and Teaching Strategies
 
 These writing tasks are often drafted at one or more of three points during a larger project, report, or team task:
 

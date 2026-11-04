@@ -421,3 +421,60 @@ def test_matter_slug_without_a_volume_is_left_alone(tmp_path):
     """--volume is optional, and a run without one still has to work."""
     _dir(tmp_path, "contributors.pdf")
     assert iv.plan(tmp_path, {})[0].slug == "contributors"
+
+
+# ---------- where a replace writes ----------
+
+def test_a_replace_writes_where_the_article_already_lives(tmp_path):
+    """An article filed into an issue is replaced in its own directory.
+
+    `conversion.article_dir` with no issue slug names the unfiled one, so a
+    replace that used it left a second copy under `_unfiled`, repointed the
+    row at that copy, and never touched the published text. The run reported
+    every chapter replaced and the galleys beside the article went on
+    carrying what they always had.
+    """
+    filed = tmp_path / "issues" / "v2-n1-2011" / "articles" / "how-to-read"
+    filed.mkdir(parents=True)
+
+    target = iv.replace_dir("writing-spaces", "how-to-read",
+                            {"id": 66, "project_path": str(filed)})
+
+    assert target == filed
+    assert (target / "assets").is_dir()
+    assert (target / ".versions").is_dir()
+
+
+def test_a_chapter_arriving_for_the_first_time_goes_to_the_unfiled_dir(
+        tmp_path, monkeypatch):
+    """Nothing to replace, so the new chapter lands as a draft, which is
+    what every first pass over a volume does.
+
+    `article_dir` makes the directory it names, so the content root is
+    moved aside; a test that writes into the archive is a test that changes
+    what the next one reads.
+    """
+    import conversion
+    monkeypatch.setattr(conversion, "CONTENT_DIR", tmp_path)
+
+    target = iv.replace_dir("writing-spaces", "how-to-read", None)
+
+    assert target.name == "how-to-read"
+    assert target.parent.name == "_unfiled"
+    assert tmp_path in target.parents
+
+
+def test_a_recorded_path_that_is_no_longer_a_directory_is_not_written_to(
+        tmp_path, monkeypatch):
+    """A row can outlive its directory, and `ingest_pdf` would otherwise
+    rebuild the article somewhere nothing files it. The draft directory is
+    the honest answer there."""
+    import conversion
+    monkeypatch.setattr(conversion, "CONTENT_DIR", tmp_path)
+    gone = tmp_path / "issues" / "v2-n1-2011" / "articles" / "moved-away"
+
+    target = iv.replace_dir("writing-spaces", "moved-away",
+                            {"id": 66, "project_path": str(gone)})
+
+    assert target != gone
+    assert target.parent.name == "_unfiled"

@@ -760,20 +760,92 @@ def classify(line: Line, layout: Layout) -> str:
     return "body"
 
 
+# A heading names a section and a sentence names nothing, which is the one
+# thing a file cannot be trusted about. Volume 2's `walk-talk-cook-eat` is
+# written as a dialogue and sets its stage directions in `Header_C`, the
+# same style the series uses for a third-level section head, so the file
+# states that "Marvin types it in." is an H3 while that chapter's own heads
+# are H1s in the same series. The RoleMap maps the style straight to /H3,
+# so a faithful read gets this wrong too, and nothing in the file separates
+# the two. The text is what has to.
+#
+# A full stop ends it, and not terminal punctuation in general: a head may
+# ask a question, and `writing-eyeball-to-eyeball` closes on "What
+# Difference Does a Mindful Collaboration Make?". A closing quotation mark
+# or bracket may follow the stop, since one of these directions ends on a
+# quoted search term. An ellipsis is not a full stop, spaced or not, and
+# two heads in this archive end in one.
+_STATED_SENTENCE_RE = re.compile(r"(?<!\.)(?<!\. )\.[\"'’”)\]]?$")
+
+# A function word stays lower case in a title, so only the longer words
+# vote. The archive's own measurement is what sets the bar: over the 18
+# stated headings that end in a full stop, the 12 stage directions
+# capitalise at most a quarter of their long words and the 6 real heads
+# capitalise all of them, so a half sits in the gap with room either side.
+_TITLE_WORD = re.compile(r"^[^\W\d_][\w'’-]{3,}$", re.UNICODE)
+TITLE_CASE_SHARE = 0.5
+
+
+def reads_as_title_case(text: str) -> bool:
+    """Whether the words after the first are capitalised like a title.
+
+    The first word is skipped because a sentence capitalises it too, and a
+    word shorter than four letters is skipped because a title leaves its
+    function words alone. A line with no long word left to read is not
+    called sentence case on no evidence.
+    """
+    words = text.split()[1:]
+    long_words = [w.strip(".,;:!?()[]\"'‘’“”")
+                  for w in words]
+    long_words = [w for w in long_words if _TITLE_WORD.match(w)]
+    if not long_words:
+        return True
+    capitalised = sum(1 for w in long_words if w[:1].isupper())
+    return capitalised / len(long_words) >= TITLE_CASE_SHARE
+
+
+def states_a_sentence(text: str) -> bool:
+    """Whether a line the file calls a heading reads as a sentence.
+
+    Two tests, and the archive needs both. A full stop is what ends a
+    sentence, but `on-the-other-hand` heads five sections "Step 1:" to
+    "Step 5:" and ends each with one, so the stop alone would cost six real
+    headings to stop twelve false ones. What separates them is the case: a
+    title capitalises its substantial words and a sentence does not, which
+    is how "Step 5: Imagine Hostile Audiences." parts from "Marvin types it
+    in."
+
+    Emphasis comes off first, because a stage direction is set in italic
+    and arrives wrapped, which is the same reason the captions call
+    `unemphasize`.
+    """
+    stripped = unemphasize(text)
+    if not _STATED_SENTENCE_RE.search(stripped):
+        return False
+    return not reads_as_title_case(stripped)
+
+
 def apply_stated_headings(lines: list, heads: dict) -> int:
     """Mark the lines a file's own structure tree calls headings.
 
     Joined on the marked content id, which is the only thing that ties a
     structure element to the ink on the page: nothing here is read off how
     the line is set, which is the point, since how it is set is exactly
-    what misses it. Returns how many lines were marked, for the note the
-    caller leaves.
+    what misses it. Returns `(marked, declined)`, for the note the caller
+    leaves.
 
     `line.page` counts from one, as every page number in this module does,
     and a structure tree indexes its pages from zero.
 
     A line that claims two levels is a head something was joined to, and
     the shallower is the one the outline hangs from.
+
+    Whether a marked line is really a heading is not decided here, because
+    a heading wraps: `assemble` holds the joined text and `flush` is where
+    a stated head that reads as a sentence is turned back into body. Asking
+    it of one physical line let five of the twelve stage directions through,
+    the long ones, since the first line of a wrapped sentence carries no
+    full stop.
     """
     marked = 0
     for line in lines:
@@ -848,15 +920,24 @@ def split_dropcap(text: str, vocab: set) -> str:
     return text
 
 
-def assemble(lines: list, layout: Layout, vocab: set, compounds: set) -> list:
+def assemble(lines: list, layout: Layout, vocab: set, compounds: set,
+             report: Optional[dict] = None) -> list:
     """Group classified lines into blocks of Markdown.
 
     Paragraph boundaries come from the first-line indent, which is the
     only mark the series gives them: there is no blank line between
     paragraphs on the printed page, so joining on vertical gaps alone
     runs the whole chapter together.
+
+    `report`, where one is passed, is filled with
+    `declined_heads`: the stated headings that read as sentences and were
+    kept as body. It is an out parameter rather than a second return value
+    because the pair this returns is what every caller and every test
+    builds, and a stated head overruled is something the caller says out
+    loud rather than something it acts on.
     """
     blocks = []
+    declined: list = []
     buffer: list = []
     kind = None
     had_dropcap = False
@@ -890,9 +971,20 @@ def assemble(lines: list, layout: Layout, vocab: set, compounds: set) -> list:
             # 6 names its fourth level `Header_D_Italics`. `unemphasize`
             # is the same function the captions use, and it takes off
             # wrapping that covers the line and only that.
-            text = unemphasize(text)
-            if buffer[0].heading_level > 1:
-                out_kind = "head%d" % min(buffer[0].heading_level, 6)
+            stated = unemphasize(text)
+            if states_a_sentence(stated):
+                # A sentence is not a heading, whichever style the file set
+                # it in. This is the one place that is decided, because it
+                # is the only place the whole heading exists: a head wraps,
+                # and the first line of a wrapped sentence carries no full
+                # stop. The emphasis stays on, since the italic is the
+                # stage direction's own and a reader is meant to hear it.
+                out_kind = "body"
+                declined.append(stated)
+            else:
+                text = stated
+                if buffer[0].heading_level > 1:
+                    out_kind = "head%d" % min(buffer[0].heading_level, 6)
         blocks.append((out_kind, text))
         buffer = []
         kind = None
@@ -1004,6 +1096,8 @@ def assemble(lines: list, layout: Layout, vocab: set, compounds: set) -> list:
             had_dropcap = True
             dropcap_run = True
     flush()
+    if report is not None:
+        report["declined_heads"] = declined
     return blocks
 
 
@@ -2483,7 +2577,20 @@ def extract(pdf_path: Path, genre_heads: Optional[tuple] = None,
     )
     body_lines.extend(rest)
 
-    blocks = assemble(body_lines, layout, vocab, compounds)
+    assembly: dict = {}
+    blocks = assemble(body_lines, layout, vocab, compounds, report=assembly)
+    declined = assembly.get("declined_heads") or []
+    if declined:
+        # Said out loud, because the file states these are headings and
+        # this is the one place ingest overrules what a file says about
+        # itself. A chapter written as dialogue sets its stage directions
+        # in a heading style, and publishing them as headings is what
+        # somebody navigating by heading would hear.
+        notes.append(
+            f"Kept {len(declined)} line(s) the structure tree calls a "
+            f"heading as body, because each reads as a sentence rather "
+            f"than a title: {'; '.join(t[:40] for t in declined[:3])}"
+            f"{'; ...' if len(declined) > 3 else ''}.")
 
     if tables_by_page:
         tables = []
