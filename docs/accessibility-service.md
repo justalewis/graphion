@@ -638,8 +638,56 @@ the size of the job before commissioning it.
   checked against, and nothing checks it. The assessment says that where a
   tree exists and says the harder thing where none does, which is the case
   a typeset back catalogue is full of and this archive never shows.
-- Still to do, and larger than this stage: reading a structure tree where
-  one is there, instead of inferring past it.
+- Still to do, and now measured: reading a structure tree where one is
+  there, instead of inferring past it. `structure.py` reads one, the
+  assessment reports what each file's tree reaches, and the number that
+  decides the rest is in hand.
+
+  **Of 118 originals, 101 carry a tree that reaches the text**, at a median
+  of 97.8% of the characters. The other 17 tag the publisher's cover page
+  and leave the chapter alone, which is why counting that a tree exists
+  answers nothing: all 118 have one.
+
+  **Over the 39 chapters whose tree reaches the text and names headings,
+  262 of 784 stated headings are missing from `article.md`.** By level:
+
+  | level | the file states | ingest has | missing |
+  | --- | --- | --- | --- |
+  | H1 | 192 | 155 | 37 |
+  | H2 | 228 | 145 | 83 |
+  | H3 | 265 | 213 | 52 |
+  | H4 | 7 | 7 | 0 |
+  | H5 | 92 | 2 | **90** |
+  | all | 784 | 522 | 262 |
+
+  Ingest invents nothing: every heading in the Markdown is one the tree
+  also calls a heading. What it does is lose the deeper levels, and H5
+  almost entirely, because that level is set at body size in italic and
+  `classify` reads it as emphasis inside a paragraph.
+  `introduction-to-primary-research` states 48 headings and publishes 13;
+  every `Header_B` and `Header_C` in it is gone, which is the whole of its
+  second and third level. The galleys are PDF/UA-1 and pa11y-clean
+  throughout, because conformance asks that a heading be marked up
+  correctly and not that the document keep its headings.
+
+  Two things make the tree harder to read than it looks, and both are in
+  `structure.py` with a test each. A tree can cover almost nothing, so
+  `usable` gates on coverage rather than on existence. And the RoleMap
+  throws the headings away: InDesign exports each style twice, once mapped
+  to its real type and once flattened to `/P`, and the document uses the
+  flattened one, so `Header_A` maps to `/P` while `Header_A_1` maps to
+  `/H2`. Applying the RoleMap faithfully gives a chapter with no headings
+  at all; 18 of the archive's files are in that shape.
+  `heading_levels()` pairs a flattened style with its numbered twin and
+  reads the level back off the file's own map, which is the file answering
+  for itself rather than this codebase knowing what a publisher calls a
+  head.
+
+  What is left is the work itself: a reconstruction path that reads the
+  tree where it reaches the text and infers where it does not, and a
+  re-ingest of the chapters that would gain by it. That is destructive, so
+  it is an editor's decision and not a refactor; see the carrying rules in
+  CLAUDE.md for what a re-ingest costs.
 
 ### Stage 4: the description queue (done)
 

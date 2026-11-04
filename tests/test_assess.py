@@ -810,16 +810,48 @@ def test_the_summary_counts_the_fonts_and_not_the_characters():
     assert "1 font(s), of which 1 are not mapped yet: acmedingbats" in text
 
 
-def test_a_tree_is_something_the_result_could_be_checked_against():
-    """`pdf_ingest` infers for a tagged file and an untagged one alike, so
-    a structure tree is not something it reads. Saying it is would promise
-    a reconstruction nobody wrote."""
+def test_a_tree_that_reaches_the_text_is_reported_as_reachable():
+    """Whether a tree exists is nearly free information: all 118 originals
+    in this series carry one. How much of the chapter it reaches is what
+    separates a tree worth reading from one worth nothing."""
+    assessment = assess.Assessment(
+        path=Path("a.pdf"), pages=20, tagged=True, text_chars=54290,
+        marked_chars=53277, tree_elements=691, tree_headings=18)
+    assess._add_notes(assessment)
+
+    assert assessment.tree_usable
+    notes = " ".join(assessment.notes)
+    assert "98% of the text" in notes
+    assert "names 18 heading(s)" in notes
+    assert "the one this pipeline passes over" in notes
+
+
+def test_a_tree_that_reaches_a_cover_page_says_so():
+    """The Word-exported volumes tag the publisher's boilerplate and leave
+    the chapter untouched, so counting the file as tagged would answer a
+    question nobody asked."""
+    assessment = assess.Assessment(
+        path=Path("a.pdf"), pages=24, tagged=True, text_chars=32645,
+        marked_chars=1480, tree_elements=50)
+    assess._add_notes(assessment)
+
+    assert not assessment.tree_usable
+    notes = " ".join(assessment.notes)
+    assert "reaches only 5% of the text" in notes
+    assert "says nothing about what could be read from it" in notes
+
+
+def test_a_tree_whose_reach_was_never_measured_is_not_a_tree_of_no_reach():
+    """A file pdfplumber could not open has told you nothing about its
+    tree, and reporting that as no coverage would be the one kind of claim
+    this module exists to refuse."""
     assessment = assess.Assessment(path=Path("a.pdf"), pages=4, tagged=True)
     assess._add_notes(assessment)
 
-    notes = " ".join(assessment.notes)
-    assert "rather than from the structure tree" in notes
-    assert "nothing checks it yet" in notes
+    assert assessment.tree_coverage is None
+    assert not assessment.tree_usable
+    assert any("unknown rather than none" in note
+               for note in assessment.notes)
 
 
 def test_a_file_with_no_tree_has_nothing_to_check_against():

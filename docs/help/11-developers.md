@@ -30,6 +30,13 @@ Graphion/
                         current one; one taken against content that has
                         since changed counts as unanswered, not as done.
                         Feeds the journal rollup at /accessibility.
+  structure.py        ← What a PDF states about its own structure. Walks
+                        the tree, joins it to the page on the
+                        marked-content id, and reads a heading level back
+                        off the file's own RoleMap where the map flattened
+                        it. Gates on how much of the text the tree
+                        reaches, because every file in this archive
+                        carries one and only some of them carry anything.
   assess.py           ← What remediating a PDF would take, read without
                         ingesting it. Reads only; no article directory,
                         no database row, no file beside the PDF. Point it
@@ -327,6 +334,10 @@ Currently 614 passing. Unit-tested:
   both the declaration and the inference, and that a long cell under a
   header is still a data table, because length alone would take real ones
   with it.
+- `structure.py` — the two ways of being confidently wrong about a tree: a
+  tree that covers the cover page and nothing else, and a RoleMap that
+  flattens every heading to a paragraph. Plus the joins and the loops,
+  since this is pointed at files nobody here produced.
 - `filters/fig-alt.lua` — that a figure's description reaches the alt text
   of every writer, and that the caption stays the caption. Only running
   Pandoc shows it, so the file skips where Pandoc is absent.

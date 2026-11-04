@@ -27,10 +27,10 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (666 functions, 718 cases once the parametrized ones expand: 142 in
-`test_pdf_ingest.py`, 96 in `test_cleanups.py`, 62 in `test_assess.py`,
+Tests (682 functions, 734 cases once the parametrized ones expand: 142 in
+`test_pdf_ingest.py`, 96 in `test_cleanups.py`, 64 in `test_assess.py`,
 43 in `test_ingest_volume.py`, 42 in `test_lint.py`, 38 in
-`test_describe.py`, 36 in `test_register.py`,
+`test_describe.py`, 36 in `test_register.py`, 14 in `test_structure.py`,
 29 in `test_teacher_resources.py`,
 29 in `test_metadata_roundtrip.py`, 26 in `test_pdf_tags.py`,
 24 in `test_math_alt.py`,
@@ -406,13 +406,42 @@ symbol type on 21 pages in two families, both already translated, and 28
 of those characters landed in the private use area.
 
 **A structure tree is what a reconstruction could be checked against, and
-nothing checks it.** All 118 originals here carry one, and `pdf_ingest`
-infers anyway, for a tagged file and an untagged one alike, so an
-assessment that said a tagged file would be read rather than inferred
-would be promising a path nobody wrote. `_add_notes` says that where a
-tree exists and says the harder thing where none does, which is the case a
-typeset back catalogue is full of and this archive never shows; the
-untagged branch is held by a test rather than by a run.
+`structure.py` is what reads one.** All 118 originals here carry a tree,
+which is why counting that one exists answers nothing; 101 carry one that
+reaches the text, at a median of 97.8% of the characters, and the other 17
+tag the publisher's cover page and leave the chapter alone.
+`Outline.usable` gates on that coverage rather than on existence, and
+`coverage` is None where no text was read, because a zero there would be a
+number reported for a reading that never happened.
+
+**The RoleMap throws the headings away, and the file still holds them.**
+InDesign exports a style that has to map two ways twice, once to its real
+type and once flattened to `/P`, and the document uses the flattened one,
+so `Header_A` maps to `/P` while `Header_A_1` maps to `/H2`. Applying the
+RoleMap faithfully reads a chapter as having no headings at all, which is
+the shape 18 of these files are in. `structure.heading_levels()` pairs a
+flattened style with its numbered twin and reads the level back off the
+file's own map; a name that merely ends in a number is not a twin, since
+promoting `Sidebar` because `Sidebar_2` exists would invent a level. It is
+the discipline `learn_layout` already follows: learned per document, never
+hardcoded.
+
+What that measured is the reason to read a tree at all. Over the 39
+chapters whose tree reaches the text and names headings, **262 of 784
+stated headings are missing from `article.md`**, and H5 is gone almost
+entirely, 90 of 92, because that level is set at body size in italic and
+`classify` reads it as emphasis inside a paragraph. Ingest invents
+nothing; it loses depth. `introduction-to-primary-research` states 48
+headings and publishes 13. Every galley involved is PDF/UA-1 and
+pa11y-clean, because conformance asks that a heading be marked up
+correctly and not that a document keep its headings, which is why nothing
+had reported it.
+
+One walker, in `structure.walk`. `assess._read_structure` counts figures
+and headings off its elements rather than walking the tree a second time,
+for the reason `_carried_description` is one function; the two readings
+agreed on this archive's figure counts before they were collapsed, which
+is how that was checked rather than assumed.
 
 **Where a structure tree exists, it decides, and the obvious subtraction is
 wrong for exactly the files that have one.** A tagged PDF states how many
@@ -1391,6 +1420,10 @@ Anything touching Claude (`stylize.py`, `llm_cleanup.py`) requires
   figure's state comes from `lint.figure_state` and a description is
   written by `conversion.with_description`, so what it holds is the order
   the work is done in and the counts an editor works to.
+- `structure.py` (339) is what reads a PDF's own structure tree: the walk,
+  the join to the page on the marked-content id, and the heading level a
+  RoleMap flattened. It is the only tree walker now; `assess` counts
+  figures and headings off its elements.
 - `epub_a11y.py` is the only module that touches EPUB package structure,
   for the same reason `pdf_tags.py` is the only one that touches PDF
   object structure: rewriting a container is a thing to do in one place.

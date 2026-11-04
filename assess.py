@@ -66,6 +66,7 @@ from typing import Optional
 
 import pdf_ingest
 import pdf_tags
+import structure
 import validators
 
 # What a file declares about itself is read by `pdf_tags`, which is also
@@ -162,6 +163,10 @@ class Assessment:
     unreadable_characters: int = 0
     symbol_pages: int = 0
     symbol_fonts: list = field(default_factory=list)
+    tree_elements: int = 0
+    tree_headings: int = 0
+    text_chars: int = 0
+    marked_chars: int = 0
 
     notes: list = field(default_factory=list)
 
@@ -175,6 +180,32 @@ class Assessment:
         a check and not the end of one.
         """
         return bool(self.tagged and self.declared_ua_part and self.xmp_title)
+
+    @property
+    def tree_coverage(self) -> Optional[float]:
+        """How much of the text sits inside the structure tree.
+
+        Whether a tree exists is nearly free information: all 118 originals
+        in this series carry one. What separates a tree worth reading from
+        one worth nothing is how much of the chapter it reaches, and the
+        archive's own split is wide enough that the question answers itself
+        per file.
+
+        None where no text was read, which is not zero. A file pdfplumber
+        could not open has told you nothing about its tree, and reporting
+        that as no coverage would be the one kind of claim this module
+        exists to refuse.
+        """
+        if not self.text_chars:
+            return None
+        return self.marked_chars / self.text_chars * 100.0
+
+    @property
+    def tree_usable(self) -> bool:
+        """Whether the tree covers enough of the text to be read from."""
+        coverage = self.tree_coverage
+        return (self.tagged and coverage is not None
+                and coverage >= structure.USABLE_COVERAGE)
 
     @property
     def checked(self) -> bool:
@@ -873,48 +904,29 @@ def _read_links(assessment: Assessment, reader) -> None:
                 assessment.untagged_links += 1
 
 
-def _read_structure_figures(assessment: Assessment, reader) -> None:
-    """Figure elements in the structure tree, and which carry a description.
+def _read_structure(assessment: Assessment, outline) -> None:
+    """What the tree states: its figures, its headings, and how big it is.
 
-    A tagged PDF states this, so an assessment that counted every raster as
-    work still owed would quote a journal for writing descriptions it
-    already has. Only elements whose `/S` is `/Figure` are counted: an
-    `/Alt` sits on whatever element needs one, equations included, so
-    counting them all would answer a different question.
+    One walk, through `structure.walk`, rather than a second copy of one
+    here. Counting a figure needs the tree and so does saying whether the
+    tree is worth reading from, and two walkers answering about the same
+    elements is the shape this codebase keeps finding wrong.
+
+    Only elements whose role is `/Figure` are counted as figures: an `/Alt`
+    sits on whatever element needs one, equations included, so counting
+    them all would answer a different question. A tagged PDF states how
+    many figures it holds and how many are described, so an assessment that
+    counted every raster as work still owed would quote a journal for
+    descriptions it already has.
     """
-    root = reader.trailer["/Root"]
-    if "/StructTreeRoot" not in root:
-        return
-    seen: set = set()
-
-    def walk(node, depth: int = 0) -> None:
-        if depth > 80:
-            return
-        try:
-            resolved = node.get_object() if hasattr(node, "get_object") else node
-        except Exception:
-            return
-        if isinstance(resolved, list):
-            for kid in resolved:
-                walk(kid, depth + 1)
-            return
-        if not isinstance(resolved, dict):
-            return
-        marker = id(resolved)
-        if marker in seen:
-            return
-        seen.add(marker)
-        if str(resolved.get("/S") or "") == "/Figure":
+    assessment.tree_elements = len(outline.elements)
+    for element in outline.elements:
+        if element.is_figure:
             assessment.tagged_figures += 1
-            if str(resolved.get("/Alt") or "").strip():
+            if element.alt:
                 assessment.described_figures += 1
-        if "/K" in resolved:
-            walk(resolved["/K"], depth + 1)
-
-    try:
-        walk(root["/StructTreeRoot"])
-    except Exception:
-        pass
+        elif element.is_heading:
+            assessment.tree_headings += 1
 
 
 def _read_images(assessment: Assessment, reader) -> None:
@@ -1010,6 +1022,16 @@ def _read_text(assessment: Assessment, pdf, deep: bool) -> None:
             for family, count in here.items():
                 symbols[family] += count
                 symbol_pages[family] += 1
+        # Counted in the loop that is already walking the chars, because
+        # how much of the text the structure tree reaches is what separates
+        # a tree worth reading from one that tags the cover page.
+        try:
+            for char in page.chars:
+                assessment.text_chars += 1
+                if char.get("mcid") is not None:
+                    assessment.marked_chars += 1
+        except Exception:
+            pass
         if text.strip():
             body.append(text)
         else:
@@ -1122,7 +1144,7 @@ def assess_pdf(path: Path, deep: bool = False,
 
     _read_catalog(assessment, reader)
     _read_links(assessment, reader)
-    _read_structure_figures(assessment, reader)
+    _read_structure(assessment, structure.read(path, text=False))
     _read_images(assessment, reader)
 
     try:
@@ -1275,13 +1297,29 @@ def _add_notes(assessment: Assessment) -> None:
     # reads; it is something the result could be checked against. All 118
     # originals in this series carry one, so the second branch is the case
     # this archive never exercises and a typeset back catalogue is full of.
-    if assessment.tagged:
+    if assessment.tagged and assessment.tree_usable:
         assessment.notes.append(
-            "Ingest would reconstruct this from the geometry of the page "
-            "rather than from the structure tree the file carries: "
-            "paragraphs from the first-line indent, heads from type size "
-            "and centring, emphasis from font names. The tree is what that "
-            "could be checked against, and nothing checks it yet.")
+            f"The structure tree reaches "
+            f"{assessment.tree_coverage:.0f}% of the text and names "
+            f"{assessment.tree_headings} heading(s) across "
+            f"{assessment.tree_elements} element(s). Ingest does not read "
+            f"it: paragraphs come from the first-line indent, heads from "
+            f"type size and centring, emphasis from font names. What the "
+            f"file states is the better source and the one this pipeline "
+            f"passes over.")
+    elif assessment.tagged and assessment.tree_coverage is None:
+        assessment.notes.append(
+            "The file carries a structure tree and no text was read, so "
+            "how much of the chapter the tree reaches is unknown rather "
+            "than none.")
+    elif assessment.tagged:
+        assessment.notes.append(
+            f"The structure tree reaches only "
+            f"{assessment.tree_coverage:.0f}% of the text, which is a cover "
+            f"page or a fragment rather than the chapter, so the file being "
+            f"tagged says nothing about what could be read from it. The "
+            f"reconstruction is inferred from the geometry of the page and "
+            f"there is nothing here to check it against.")
     else:
         assessment.notes.append(
             "There is no structure tree, so the reconstruction is inferred "
