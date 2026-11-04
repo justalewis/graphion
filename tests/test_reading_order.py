@@ -312,3 +312,82 @@ def test_carries_body_flow_is_the_one_reader_of_that_flag():
 
     assert not structure.carries_body_flow(inside)
     assert structure.carries_body_flow(outside)
+
+
+# ---------- two columns read across each other ----------
+
+def _char(mcid, text="x"):
+    return {"text": text, "mcid": mcid, "size": 11.0, "x0": 0.0, "x1": 1.0,
+            "top": 0.0}
+
+
+def test_a_line_read_across_two_columns_is_split_where_the_file_jumps():
+    """Page 12 of volume 5's `8-diab` sets a student's draft beside a
+    reviewer's commentary with no rule between them, so pdfplumber reads
+    one line across both and publishes "purpose) into three separate
+    paragraphs in the US who might un- which helps the reader locate each
+    easily". The two halves sit 350 places apart in the file's own order.
+    """
+    order = {(0, 1): 10, (0, 2): 11, (0, 9): 360}
+    chars = [_char(1), _char(2), _char(9)]
+
+    runs = pdf_ingest.column_runs(chars, order, 0)
+
+    assert [[c["mcid"] for c in run] for run in runs] == [[1, 2], [9]]
+
+
+def test_an_inline_element_is_not_a_column():
+    """A link or a run of italic is its own element and lands beside its
+    neighbours. Over this chapter the jumps inside a line are 3 to 23 for
+    those and 319 to 350 for the columns, so the threshold sits at 100 in
+    between."""
+    order = {(0, 1): 10, (0, 5): 31, (0, 2): 12}
+    chars = [_char(1), _char(5), _char(2)]
+
+    runs = pdf_ingest.column_runs(chars, order, 0)
+
+    assert len(runs) == 1
+
+
+def test_the_threshold_is_where_this_chapter_measured_it():
+    assert pdf_ingest.COLUMN_ORDER_JUMP > 23
+    assert pdf_ingest.COLUMN_ORDER_JUMP < 319
+
+
+def test_no_stated_order_leaves_the_line_whole():
+    chars = [_char(1), _char(9)]
+
+    assert pdf_ingest.column_runs(chars, {}, 0) == [chars]
+
+
+def test_a_character_the_tree_says_nothing_about_stays_where_it_was():
+    """An unknown position neither splits nor joins: it carries the last
+    stated one forward, so the character stays in the run it was printed
+    in rather than starting one of its own."""
+    order = {(0, 1): 10, (0, 2): 11}
+    chars = [_char(1), _char(None), _char(2)]
+
+    runs = pdf_ingest.column_runs(chars, order, 0)
+
+    assert len(runs) == 1
+    assert len(runs[0]) == 3
+
+
+# ---------- and why the lines are not reordered to match ----------
+
+def test_the_lines_are_left_in_the_order_the_page_printed_them():
+    """Sorting a page's lines into the tree's order was built and then
+    taken out, because the two orders differ for reasons that are not
+    errors. `how-to-read-like-a-writer` prints "I came to realize that all
+    writing consists of a series of choices" as a display line, and its
+    tree places it elsewhere, so sorting moved the continuation of
+    "re-read entire para-" away from the word it finishes and put the
+    display line there instead. Twenty-odd chapters changed that way, with
+    no word lost and a paragraph relocated in each, which is the failure
+    this module calls present and wrong.
+
+    Splitting a merged line is safe because it only decides where a line
+    ends. Moving a line decides where the text goes, and the file's order
+    is not authority enough for that.
+    """
+    assert not hasattr(pdf_ingest, "_in_stated_order")

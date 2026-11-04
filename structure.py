@@ -256,8 +256,16 @@ def carries_body_flow(element: "Element") -> bool:
     return element.in_flow
 
 
-def reading_order(outline: "Outline") -> Dict[tuple, int]:
+def reading_order(outline: "Outline", gated: bool = True) -> Dict[tuple, int]:
     """Each marked id's place in the order the file states.
+
+    `gated` false skips the document-level coverage check, and only one
+    caller wants that. A repair applied to a single page needs to know
+    whether the tree reaches *that page's* text, which `Outline.usable`
+    cannot answer because it is computed over the whole document and only
+    after every page has been read. `pdf_ingest` reads the tree before the
+    page loop, for the order, and gates each page on its own marked share
+    as it goes. One function either way, so the two cannot drift.
 
     Numbered over the body-flow elements in document order, so a marked id's
     position is where the tree puts the text it holds. This is the one thing
@@ -275,7 +283,9 @@ def reading_order(outline: "Outline") -> Dict[tuple, int]:
     Empty where the tree does not reach the text, by the rule `heading_map`
     follows, so a caller gets the file's answer or none of it.
     """
-    if not outline.usable:
+    if gated and not outline.usable:
+        return {}
+    if not outline.tagged:
         return {}
     out: Dict[tuple, int] = {}
     position = 0

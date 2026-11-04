@@ -517,7 +517,71 @@ def drop_clipped_ink(page):
     return kept, len(clipped)
 
 
-def _page_lines(page, page_no: int) -> list:
+# How far apart in the file's stated order two consecutive characters must
+# sit before they are read as belonging to different columns. An inline
+# link or a run of italic is its own element and lands beside its
+# neighbours, a word or two away; two columns set side by side are whole
+# paragraphs apart. Measured over this archive: see
+# `docs/accessibility-service.md`.
+COLUMN_ORDER_JUMP = 100
+
+
+def column_runs(chars: list, order: dict, page_index: int,
+                jump: int = COLUMN_ORDER_JUMP) -> list:
+    """A line's characters, split where they jump in the file's own order.
+
+    pdfplumber reads a line of ink across the whole measure, so two columns
+    set side by side whose baselines coincide come out as one line with
+    their words alternating. Page 12 of volume 5's `8-diab` sets a
+    student's draft at 11pt beside a reviewer's commentary at 9pt and
+    publishes "purpose) into three separate paragraphs in the US who might
+    un- which helps the reader locate each easily, intentionally contribute
+    to thus read, comprehend, and use the text".
+
+    Where the columns are ruled, `find_page_tables` already stops this by
+    reading the box as a table, which is what keeps the two annotated-draft
+    chapters of volumes 1 and 2 legible. This page rules nothing, and the
+    geometry cannot be read instead: the page alternates between two
+    columns and full-width prose four times, so there is no gutter that
+    holds down its height, and a gap-and-type-size test fires on 69 pages
+    across the archive of which 67 need nothing.
+
+    So the file is asked. Its tree holds page 12 as whole paragraphs in the
+    right order, the draft before the commentary, and even names the two
+    styles `/Example_of_Student_Writing` and `/Annotations`. Two characters
+    printed side by side whose elements sit hundreds of places apart in
+    that order are not neighbours, whatever the ink says.
+
+    An unknown position neither splits nor joins: it carries the last known
+    one forward, so a character the tree says nothing about stays with the
+    run it was printed in.
+
+    This decides where a line ends and nothing else. Sorting the lines into
+    the tree's order was built next and then taken out: the two orders
+    differ for reasons that are not errors, and over twenty chapters it
+    moved a paragraph away from the word it finishes. Deciding where a line
+    ends is safe; deciding where the text goes is not, and the file's order
+    is not authority enough for it. `tests/test_reading_order.py` holds the
+    case.
+    """
+    if not chars:
+        return []
+    if not order:
+        return [chars]
+    runs = [[chars[0]]]
+    last = order.get((page_index, chars[0].get("mcid")))
+    for char in chars[1:]:
+        here = order.get((page_index, char.get("mcid")))
+        if last is not None and here is not None and abs(here - last) > jump:
+            runs.append([char])
+        else:
+            runs[-1].append(char)
+        if here is not None:
+            last = here
+    return runs
+
+
+def _page_lines(page, page_no: int, order: Optional[dict] = None) -> list:
     """Lines on one page, with the rotated margin furniture dropped.
 
     The volume label runs up the outer margin, so its characters are not
@@ -525,51 +589,91 @@ def _page_lines(page, page_no: int) -> list:
     how "WRITING SPACES 5" arrives as a line reading "SECAPS". Dropping
     non-upright characters before line assembly removes the whole tab
     without having to recognise its wording.
+
+    `order` is the file's own reading order, from
+    `structure.reading_order`, and where it is given a line read across two
+    columns is split back into them by `column_runs`. The lines stay in the
+    order the page printed them; only where one ends changes. It is gated
+    on this page rather than on the document, because whether the tree
+    reaches the text is a per-page question and a page it does not reach
+    must come through exactly as it did before.
     """
     upright = page.filter(lambda obj: obj.get("upright", True))
     raw_lines = upright.extract_text_lines(return_chars=True, strip=True)
+    if order:
+        # The tree has to reach this page's text, by the measure
+        # `Outline.usable` applies to a document. A page of scanned ink
+        # inside a tagged file states nothing about its own order.
+        import structure
+
+        marked = sum(1 for ln in raw_lines for c in ln["chars"]
+                     if c.get("mcid") is not None)
+        total = sum(len(ln["chars"]) for ln in raw_lines)
+        if not total or marked / total * 100.0 < structure.USABLE_COVERAGE:
+            order = None
     # The page's own commonest character size stands in for the body size,
     # which the document-wide pass has not worked out yet. It only has to be
     # good enough to spot a superscript against.
     page_body = _modal([c["size"] for ln in raw_lines for c in ln["chars"]]) or 10.0
     lines = []
     for raw in raw_lines:
-        chars = sorted(raw["chars"], key=lambda c: c["x0"])
-        if not chars:
+        ordered = sorted(raw["chars"], key=lambda c: c["x0"])
+        if not ordered:
             continue
-        lead_size = round(chars[0]["size"], 1)
-        line_src = raw["text"]
-        dropcap = lead_size >= page_body * DROPCAP_SIZE_FACTOR and len(chars) > 1
-        if dropcap:
-            # A dropped initial is set so large that its advance width reaches
-            # under the text beside it. pdfplumber measures the gap to the
-            # next character from that overhang, decides the first gap is
-            # negative and the second is wide, and produces "Af ew semesters".
-            # Clipping the initial's width back to where the text actually
-            # resumes leaves the spacing to be measured normally. Whether a
-            # space belongs after the initial is split_dropcap's decision,
-            # not a question of where the ink sits.
-            chars = [dict(chars[0], x1=chars[1]["x0"])] + chars[1:]
-            line_src = _extract_text(chars)
-        text, italic, fonts = _line_text(
-            line_src, chars, _superscript_runs(chars, page_body)
-        )
-        if not text:
-            continue
-        sizes = [c["size"] for c in chars]
-        lines.append(Line(
-            text=text,
-            mcids={c["mcid"] for c in chars if c.get("mcid") is not None},
-            size=round(statistics.median(sizes), 1),
-            x0=round(raw["x0"], 1),
-            x1=round(raw["x1"], 1),
-            top=round(raw["top"], 1),
-            page=page_no,
-            italic=italic,
-            fonts=fonts,
-            lead_size=lead_size,
-            dropcap=dropcap,
-        ))
+        runs = column_runs(ordered, order or {}, page_no - 1)
+        for chars in runs:
+            if not chars:
+                continue
+            # A run that is the whole line keeps the line's own measured
+            # box; a split one is measured from its own characters, since
+            # the line's box spans both columns.
+            whole = len(runs) == 1
+            lines.extend(_lines_from_chars(
+                chars, raw, page_no, page_body, whole))
+    return lines
+
+
+def _lines_from_chars(chars: list, raw: dict, page_no: int,
+                      page_body: float, whole: bool) -> list:
+    """The `Line` a run of one printed line's characters makes.
+
+    A list, because a run yields nothing where its text comes out empty,
+    and the caller extends rather than appends.
+    """
+    lines = []
+    lead_size = round(chars[0]["size"], 1)
+    line_src = raw["text"] if whole else _extract_text(chars)
+    dropcap = lead_size >= page_body * DROPCAP_SIZE_FACTOR and len(chars) > 1
+    if dropcap:
+        # A dropped initial is set so large that its advance width reaches
+        # under the text beside it. pdfplumber measures the gap to the
+        # next character from that overhang, decides the first gap is
+        # negative and the second is wide, and produces "Af ew semesters".
+        # Clipping the initial's width back to where the text actually
+        # resumes leaves the spacing to be measured normally. Whether a
+        # space belongs after the initial is split_dropcap's decision,
+        # not a question of where the ink sits.
+        chars = [dict(chars[0], x1=chars[1]["x0"])] + chars[1:]
+        line_src = _extract_text(chars)
+    text, italic, fonts = _line_text(
+        line_src, chars, _superscript_runs(chars, page_body)
+    )
+    if not text:
+        return lines
+    sizes = [c["size"] for c in chars]
+    lines.append(Line(
+        text=text,
+        mcids={c["mcid"] for c in chars if c.get("mcid") is not None},
+        size=round(statistics.median(sizes), 1),
+        x0=round(raw["x0"] if whole else min(c["x0"] for c in chars), 1),
+        x1=round(raw["x1"] if whole else max(c["x1"] for c in chars), 1),
+        top=round(raw["top"] if whole else min(c["top"] for c in chars), 1),
+        page=page_no,
+        italic=italic,
+        fonts=fonts,
+        lead_size=lead_size,
+        dropcap=dropcap,
+    ))
     return lines
 
 
@@ -2544,6 +2648,21 @@ def extract(pdf_path: Path, genre_heads: Optional[tuple] = None,
     table_anchors: dict = {}
     clipped_ink = 0
     chars_seen = chars_marked = 0
+    # Read before the pages, because a line read across two columns has to
+    # be split as it is built: the characters are in hand then and the
+    # emphasis and symbol translation that follow are applied per line.
+    # `text=False` keeps this to pypdf, so it costs no second pass over the
+    # ink, and `gated=False` because how far the tree reaches is decided
+    # per page inside `_page_lines`, which is the only place that can.
+    column_order: dict = {}
+    if read_structure:
+        try:
+            import structure
+
+            early = structure.read(pdf_path, text=False)
+            column_order = structure.reading_order(early, gated=False)
+        except Exception:
+            column_order = {}
     with pdfplumber.open(str(pdf_path)) as pdf:
         if not pdf.pages:
             raise ValueError(f"{pdf_path.name} has no pages.")
@@ -2561,7 +2680,8 @@ def extract(pdf_path: Path, genre_heads: Optional[tuple] = None,
                         chars_marked += 1
             except Exception:
                 pass
-            all_lines.extend(_page_lines(page, page_no))
+            all_lines.extend(
+                _page_lines(page, page_no, column_order))
             found = find_page_tables(page)
             if found:
                 tables_by_page[page_no] = found

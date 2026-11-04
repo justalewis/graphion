@@ -27,7 +27,7 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (745 functions, 797 cases once the parametrized ones expand: 142 in
+Tests (751 functions, 803 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 64 in `test_assess.py`,
 50 in `test_lint.py`, 46 in `test_ingest_volume.py`, 38 in
 `test_describe.py`, 36 in `test_register.py`, 23 in
@@ -38,7 +38,7 @@ Tests (745 functions, 797 cases once the parametrized ones expand: 142 in
 18 in `test_acr.py`, 14 in `test_epub_a11y.py`,
 13 in `test_template_bundles.py`, 12 in `test_validate_galleys.py`,
 9 in `test_pdf_ua.py`, 8 in `test_accessibility_routes.py`,
-21 in `test_reading_order.py`,
+27 in `test_reading_order.py`,
 8 in `test_heading_levels.py`, 7 in `test_fig_alt.py`,
 6 in `test_standalone_html.py`,
 5 in `test_validators.py`,
@@ -1592,6 +1592,72 @@ reconstruction is weakest, and a chapter reporting no descents may simply
 be a chapter nothing could be asked about. That is why the count of
 chapters checked is reported next to the count of descents rather than
 underneath it.
+
+**Two columns with no rule between them are split by asking the file.**
+Pages 12 and 13 of volume 5's `8-diab` reproduce a student's draft at 11pt
+beside a reviewer's commentary at 9pt, and rule nothing. pdfplumber reads a
+line of ink across the whole measure, so the two came out alternating word
+by word: "purpose) into three separate paragraphs in the US who might un-
+which helps the reader locate each easily, intentionally contribute to thus
+read, comprehend, and use the text". No check saw it, which is why
+`lint.check_reading_order` exists; it reported the chapter at 18 descents
+against a median of 0 and that is how this was found.
+
+Neither path above reaches it. `find_page_tables` asks for ruled lines and
+the page has one, a decorative rule in the margin, so there is no box. And
+`infer_column_rules` wants a frame, horizontal rules running between two
+verticals, which is the shape a Word table leaves and not this.
+
+The geometry cannot be read instead, and that is worth knowing before
+somebody tries it. The page alternates between two columns and full-width
+prose four times, so no gutter holds down its height and there is no region
+to find. A test on the obvious signal, a wide horizontal gap where the type
+size changes, fires on 335 lines across 69 pages of this archive, of which
+67 need nothing: the comment balloons of volumes 1 and 2 are already
+repaired by the ruled-table path, and `1-rose` sets a Wingdings checkbox
+form that reads the same way.
+
+So `column_runs` asks the tree. Two characters printed side by side whose
+elements sit hundreds of places apart in the file's stated order are not
+neighbours, whatever the ink says, and the split goes between them. It
+repairs the other chapter the check flagged as well:
+`annoying-ways-people-use-sources` ran its marginal gloss through the
+middle of a sentence, publishing "Everyone in the car hears it: buh-BUMP.
+*dropping in a quotation* The driver insists to the passengers, "But
+*without introducing it* that armadillo", and the body sentence now comes
+through whole with the gloss beside it.
+`COLUMN_ORDER_JUMP` is 100, measured over this chapter: an inline link or a
+run of italic is its own element and jumps 3 to 23, while the columns jump
+319 to 350. It is gated on the page and not the document, because whether
+the tree reaches the text is a per-page question and a page it does not
+reach has to come through exactly as it did before.
+
+**Sorting the lines into that order was built next and taken out.** It
+looked like the other half of the same fix, and it did close the chapter
+from 33 descents to 2 and rejoin four words broken across the column break.
+It also changed nineteen chapters that have no column anywhere, relocating
+a paragraph in each with no word lost.
+`how-to-read-like-a-writer` prints "I came to realize that all writing
+consists of a series of choices" as a display line and its tree places it
+elsewhere, so the sort moved the continuation of "re-read entire para-"
+away from the word it finishes and put the display line there instead. The
+two orders differ for reasons that are not errors. Deciding where a line
+ends is safe; deciding where the text goes is not, and a file's stated
+order is not authority enough for it.
+
+What this does not fix is the paragraphing, and that is pre-existing.
+`starts_para` fires on every indented line, because in this series a
+paragraph's first line is indented and its turn lines are flush. The quoted
+draft is indented as a whole, 18pt from a learned `body_left` of 58.5, so
+every line of it reads as a paragraph start and comes out as its own block.
+The published galley already did that; what changed is that the words are
+no longer shredded and nothing is missing.
+
+One measurement trap, because it cost an hour. Comparing an `extract` body
+against a published `article.md` reads as a 72-word loss that is not there:
+`extract` places no figures without an `assets_dir`, and this chapter's two
+figure descriptions are hand-written and long. Exclude the image markup
+from both sides, and the split is exactly word for word neutral.
 
 **An article can render as two galleys.** `teacher-resources: separate` in
 the front matter splits a chapter at its `Teacher Resources` heading, so the

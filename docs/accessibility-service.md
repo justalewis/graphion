@@ -469,6 +469,35 @@ a week and a month.
   subtree, because a `/P` inside a `/Note` is still a note and the text
   sits in a `/Span` below that again.
 
+  **What it found has been half fixed, and the half that was not is the
+  more interesting.** Pages 12 and 13 of `8-diab` set a student's draft at
+  11pt beside a reviewer's commentary at 9pt and rule nothing between them,
+  so pdfplumber read a line of ink across both columns. `column_runs` now
+  splits such a line by asking the tree: two characters printed side by
+  side whose elements sit hundreds of places apart in the stated order are
+  not neighbours. `COLUMN_ORDER_JUMP` is 100, measured over that chapter,
+  where an inline link or a run of italic jumps 3 to 23 and the columns
+  jump 319 to 350. The split is word for word neutral and the gibberish is
+  gone.
+
+  Sorting the lines into the tree's order was then built and taken out, and
+  it is worth recording why. It closed the chapter from 33 descents to 2
+  and rejoined four words broken across the column break, and it also
+  changed nineteen chapters that hold no column anywhere, relocating a
+  paragraph in each with no word lost. `how-to-read-like-a-writer` prints
+  "I came to realize that all writing consists of a series of choices" as a
+  display line, and its tree places that elsewhere, so the sort moved the
+  continuation of "re-read entire para-" away from the word it finishes.
+  The two orders differ for reasons that are not errors. Deciding where a
+  line ends is safe; deciding where the text goes is not, and a file's
+  stated order is not authority enough for it.
+
+  So `8-diab` now reads with both voices intact and nothing fabricated,
+  still alternating line by line, and the paragraphing is a separate
+  pre-existing defect: `starts_para` fires on every indented line because
+  this series marks a paragraph by its first-line indent, and that quoted
+  draft is indented as a whole.
+
   What remains is the blind spot. 18 of the 115 state no order at all, and
   volume 1's chapter 6, the worst reconstruction in this archive by a
   distance, is one of them: its tree covers the publisher's cover page. So
