@@ -27,8 +27,9 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (814 functions, 869 cases once the parametrized ones expand: 142 in
+Tests (836 functions, 891 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 64 in `test_assess.py`,
+22 in `test_assess_route.py`,
 50 in `test_lint.py`, 46 in `test_ingest_volume.py`, 38 in
 `test_describe.py`, 42 in `test_register.py`, 23 in
 `test_stated_headings.py`, 14 in `test_structure.py`,
@@ -1985,14 +1986,18 @@ Anything touching Claude (`stylize.py`, `llm_cleanup.py`) requires
 
 ## Layout notes
 
-- `app.py` (3152 lines) is the whole HTTP surface. `conversion.py` (2687) is the
+- `app.py` (3327 lines) is the whole HTTP surface. `conversion.py` (2937) is the
   pipeline. Those two hold most of the complexity.
+- `assess.py` (1712) reads a PDF that Graphion does not hold and writes
+  nothing. `/assess` is its only route and the only page here that is not
+  scoped to a journal; everything else reads an article already filed
+  under one.
 - `describe.py` (422) is the description queue behind
   `/accessibility/<slug>/describe`. It owns no judgement of its own: a
   figure's state comes from `lint.figure_state` and a description is
   written by `conversion.with_description`, so what it holds is the order
   the work is done in and the counts an editor works to.
-- `structure.py` (371) is what reads a PDF's own structure tree: the walk,
+- `structure.py` (690) is what reads a PDF's own structure tree: the walk,
   the join to the page on the marked-content id, and the heading level a
   RoleMap flattened. It is the only tree walker now; `assess` counts
   figures and headings off its elements, and `pdf_ingest` takes its
