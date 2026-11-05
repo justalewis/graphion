@@ -391,3 +391,147 @@ def test_the_lines_are_left_in_the_order_the_page_printed_them():
     is not authority enough for that.
     """
     assert not hasattr(pdf_ingest, "_in_stated_order")
+
+
+# ---------- where the file says its figures and tables sit ----------
+
+def test_a_figure_is_stated_after_the_body_it_follows():
+    """`pdf_ingest` places a figure beside its caption, or at the hole its
+    page left, or after the figure before it, and nothing has ever checked
+    the result: a figure in the wrong paragraph renders identically."""
+    outline = _usable(
+        _element("/P", (0, 1), (0, 2)),
+        structure.Element(role="/Figure", style="/Figure", page=0,
+                          mcids=[(0, 50)], in_flow=False),
+        _element("/P", (0, 3)),
+        structure.Element(role="/Figure", style="/Figure", page=0,
+                          mcids=[(0, 51)], in_flow=False),
+    )
+
+    placements = structure.stated_placements(outline)
+
+    assert [(p.role, p.index, p.after) for p in placements] == [
+        ("/Figure", 1, 1), ("/Figure", 2, 2)]
+
+
+def test_a_figure_opening_the_document_follows_nothing():
+    outline = _usable(
+        structure.Element(role="/Figure", style="/Figure", page=0,
+                          mcids=[(0, 50)], in_flow=False),
+        _element("/P", (0, 1)),
+    )
+
+    assert structure.stated_placements(outline)[0].after is None
+
+
+def test_a_table_is_counted_apart_from_the_figures():
+    outline = _usable(
+        _element("/P", (0, 1)),
+        structure.Element(role="/Table", style="/Table", page=0,
+                          mcids=[(0, 50)], in_flow=False),
+        structure.Element(role="/Figure", style="/Figure", page=0,
+                          mcids=[(0, 51)], in_flow=False),
+    )
+
+    placements = structure.stated_placements(outline)
+
+    assert [(p.role, p.index) for p in placements] == [
+        ("/Table", 1), ("/Figure", 1)]
+
+
+def test_a_caption_is_not_a_placement():
+    """It travels with its figure and is placed by the same decision, so
+    counting it would report one misplacement twice."""
+    outline = _usable(
+        _element("/P", (0, 1)),
+        structure.Element(role="/P", style="/Caption", page=0,
+                          mcids=[(0, 50)], in_flow=False),
+    )
+
+    assert structure.stated_placements(outline) == []
+
+
+def test_a_tree_that_states_no_order_states_no_placement():
+    thin = structure.Outline(path=Path("x.pdf"))
+    thin.chars, thin.marked_chars = 100, 2
+    thin.styles = {"/P": 1}
+    thin.elements = [_element("/P", (0, 1))]
+
+    assert structure.stated_placements(thin) == []
+
+
+# ---------- and when that statement is an export artefact ----------
+
+def test_a_run_of_figures_sharing_one_place_is_not_a_placement():
+    """A tagger that serialises anchored objects together gives a run of
+    figures one position between them. `the-complexity-of-simplicity`
+    states all seven collages after a Works Cited entry at 97% of the
+    text, which is the defect `figure_anchors_from_holes` was written to
+    repair, and the galley now spreads them through the prose where the
+    chapter's own words put them. 7 of this archive's 41 multi-figure
+    chapters do this.
+    """
+    body = _element("/P", *[(0, n) for n in range(1, 21)])
+    together = [structure.Element(role="/Figure", style="/Figure", page=0,
+                                  mcids=[(0, 50 + i)], in_flow=False)
+                for i in range(4)]
+    outline = _usable(body, *together)
+
+    assert structure.collects_figures_at_one_place(outline)
+
+
+def test_being_late_is_not_the_test():
+    """`15-bennett` states six of its seven figures at 75% of the text
+    while the galley puts them at 6 to 11%, so the artefact is a run with
+    one position between them and not a position near the end. The first
+    version of this gate tested for lateness and let that chapter through.
+    """
+    early = [structure.Element(role="/Figure", style="/Figure", page=0,
+                               mcids=[(0, 50 + i)], in_flow=False)
+             for i in range(4)]
+    outline = _usable(*early, _element("/P", *[(0, n) for n in range(1, 21)]))
+
+    assert structure.collects_figures_at_one_place(outline)
+
+
+def test_figures_each_in_their_own_place_are_a_placement():
+    outline = _usable(
+        _element("/P", *[(0, n) for n in range(1, 11)]),
+        structure.Element(role="/Figure", style="/Figure", page=0,
+                          mcids=[(0, 50)], in_flow=False),
+        _element("/P", *[(0, n) for n in range(11, 21)]),
+        structure.Element(role="/Figure", style="/Figure", page=0,
+                          mcids=[(0, 51)], in_flow=False),
+    )
+
+    assert not structure.collects_figures_at_one_place(outline)
+
+
+def test_two_figures_side_by_side_are_left_alone():
+    """A page can print a pair together, so two sharing a place is
+    ordinary. The threshold sits above that and below the runs of six."""
+    outline = _usable(
+        _element("/P", *[(0, n) for n in range(1, 11)]),
+        structure.Element(role="/Figure", style="/Figure", page=0,
+                          mcids=[(0, 50)], in_flow=False),
+        structure.Element(role="/Figure", style="/Figure", page=0,
+                          mcids=[(0, 51)], in_flow=False),
+        _element("/P", *[(0, n) for n in range(11, 21)]),
+        structure.Element(role="/Figure", style="/Figure", page=0,
+                          mcids=[(0, 52)], in_flow=False),
+        _element("/P", *[(0, n) for n in range(21, 31)]),
+        structure.Element(role="/Figure", style="/Figure", page=0,
+                          mcids=[(0, 53)], in_flow=False),
+    )
+
+    assert not structure.collects_figures_at_one_place(outline)
+
+
+def test_a_single_figure_is_not_called_an_artefact():
+    outline = _usable(
+        _element("/P", (0, 1), (0, 2)),
+        structure.Element(role="/Figure", style="/Figure", page=0,
+                          mcids=[(0, 50)], in_flow=False),
+    )
+
+    assert not structure.collects_figures_at_one_place(outline)

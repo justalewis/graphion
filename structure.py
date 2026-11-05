@@ -359,6 +359,111 @@ def _keys_of(mcids) -> List[tuple]:
     return out
 
 
+@dataclass
+class StatedPlacement:
+    """Where the file says one figure or table sits in its own text.
+
+    `after` is the reading-order position of the last body-flow marked id
+    before it, so it names the place in the prose the element belongs
+    after. None where nothing precedes it, which is a figure or table
+    opening the document.
+    """
+
+    role: str
+    index: int
+    after: Optional[int] = None
+
+
+# What this reports on. A caption is excluded: it travels with its figure
+# and is placed by the same decision, so counting it would report one
+# misplacement twice.
+PLACED_ROLES = frozenset({"/Figure", "/Table"})
+
+# Where this share or more of a chapter's figures are stated at one single
+# position, the exporter has given a run of them one place between them and
+# said nothing about any of them.
+#
+# Measured over the 41 chapters of this archive that state two figures or
+# more. The largest run sharing a position runs
+# [1 x22, 2 x10, 3 x2, 4 x2, 5 x2, 6 x2, 7 x1], and as a share of the
+# chapter's figures the seven worst sit at 80 to 88% while the next is 67%,
+# which is two of three and plausibly a page that prints them side by side.
+# So 75 sits in the measured gap.
+GROUPED_SHARE = 75.0
+
+
+def collects_figures_at_one_place(
+        outline: "Outline",
+        placements: Optional[List["StatedPlacement"]] = None) -> bool:
+    """Whether this file's figure placements are an export artefact.
+
+    A tagger that serialises anchored objects together gives a run of
+    figures one position between them, which says where the exporter put
+    them and nothing about where the page prints any one of them. Two
+    figures sharing a place is ordinary, since a page can print them side
+    by side; six is the exporter.
+
+    Being late is not the test, which is what the first version got wrong.
+    `the-complexity-of-simplicity` states all seven collages after a Works
+    Cited entry at 97% of the text, and `15-bennett` states six of its
+    seven at 75%, while the galley puts those at 6 to 11%. One is late and
+    one is not; both are a run of figures with a single position.
+
+    So a reconstruction can be measured against a file's stated placements
+    only where this is False, which is 34 of the 41 chapters here that
+    state more than one figure. Where it is True the file has not said, and
+    `register.UNRUN`'s distinction holds: nobody asked is not a finding.
+    """
+    import collections
+
+    placements = (stated_placements(outline, gated=False)
+                  if placements is None else placements)
+    figures = [p for p in placements if p.role == "/Figure"]
+    if len(figures) < 2:
+        return False
+    counts = collections.Counter(p.after for p in figures)
+    biggest = counts.most_common(1)[0][1]
+    return biggest / len(figures) * 100.0 >= GROUPED_SHARE
+
+
+def stated_placements(outline: "Outline",
+                      gated: bool = True) -> List[StatedPlacement]:
+    """Where the file puts each of its figures and tables, in its own order.
+
+    `pdf_ingest` places a figure beside the caption that names it, or at the
+    hole its page left, or after the figure before it, and a table by its
+    caption or by the line left standing above it. Every one of those is a
+    judgement, and nothing has ever checked the result: a figure in the
+    wrong paragraph renders identically and reads as prose with a picture
+    in the middle of it. Seven of this archive's figures once closed a
+    document after the Works Cited.
+
+    A tagged file states the answer. The positions are
+    `reading_order`'s own, so what this returns and what a reconstruction's
+    lines are measured against cannot drift: one numbering, read twice.
+    """
+    order = reading_order(outline, gated=gated)
+    if not order:
+        return []
+
+    out: List[StatedPlacement] = []
+    seen: Dict[str, int] = {}
+    position: Optional[int] = None
+    for element in outline.elements:
+        if carries_body_flow(element):
+            here = [order[key] for key in element.mcids if key in order]
+            if here:
+                position = max(here)
+            continue
+        if element.role not in PLACED_ROLES:
+            continue
+        seen[element.role] = seen.get(element.role, 0) + 1
+        out.append(StatedPlacement(role=element.role,
+                                   index=seen[element.role],
+                                   after=position))
+    return out
+
+
 def heading_levels(rolemap: Dict[str, str]) -> Dict[str, int]:
     """The heading level each style means, read off the file's own RoleMap.
 

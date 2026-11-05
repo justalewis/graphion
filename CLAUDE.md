@@ -27,7 +27,7 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (757 functions, 812 cases once the parametrized ones expand: 142 in
+Tests (767 functions, 822 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 64 in `test_assess.py`,
 50 in `test_lint.py`, 46 in `test_ingest_volume.py`, 38 in
 `test_describe.py`, 36 in `test_register.py`, 23 in
@@ -38,7 +38,7 @@ Tests (757 functions, 812 cases once the parametrized ones expand: 142 in
 18 in `test_acr.py`, 14 in `test_epub_a11y.py`,
 34 in `test_template_bundles.py`, 12 in `test_validate_galleys.py`,
 9 in `test_pdf_ua.py`, 8 in `test_accessibility_routes.py`,
-27 in `test_reading_order.py`,
+37 in `test_reading_order.py`,
 8 in `test_heading_levels.py`, 7 in `test_fig_alt.py`,
 6 in `test_standalone_html.py`,
 5 in `test_validators.py`,
@@ -1689,6 +1689,42 @@ against a published `article.md` reads as a 72-word loss that is not there:
 `extract` places no figures without an `assets_dir`, and this chapter's two
 figure descriptions are hand-written and long. Exclude the image markup
 from both sides, and the split is exactly word for word neutral.
+
+**A tree states where its figures sit, and sometimes that is the exporter
+talking.** `structure.stated_placements` reads it: for each `/Figure` and
+`/Table`, the reading-order position of the body text it follows, numbered
+by `reading_order` itself so the two cannot drift. It was read in order to
+check the placement decisions in this module, since a figure beside the
+wrong paragraph renders identically and nothing has ever looked.
+
+The reading is sound and the check is not built, because the premise needed
+qualifying first and the qualification is the finding.
+`the-complexity-of-simplicity` states all seven of its collages after a
+Works Cited entry at 97% of the text, which is exactly the defect
+`figure_anchors_from_holes` was written to repair; the galley now spreads
+them through the prose at 4 to 87%, where the chapter's own words put them.
+There the tree is wrong and this module is right, so a check that trusted
+it would report the correct answer as a fault.
+
+`collects_figures_at_one_place` is the gate, and what it tests is a run of
+figures sharing one stated position, not a position near the end. Being
+late was the first guess and it let `15-bennett` through, which states six
+of its seven at 75% while the galley has them at 6 to 11%: one is late and
+one is not, and both are a run the exporter gave a single place. Two
+sharing is ordinary, since a page can print a pair side by side. Measured
+over the 41 chapters here that state more than one figure, the largest run
+runs [1 x22, 2 x10, 3 x2, 4 x2, 5 x2, 6 x2, 7 x1], and as a share of the
+chapter's figures the seven worst sit at 80 to 88% against a next value of
+67%, so `GROUPED_SHARE` is 75.
+
+So the placements can be trusted for 34 of those 41 and the check remains
+specified rather than written. What it still needs is not plumbing: it is
+ground truth for the chapters where the tree and the galley disagree
+without a grouping artefact, which means somebody looking at the book. The
+plumbing is worth naming too, since it is not free: a block would have to
+carry the reading-order span of the lines that made it, through
+`assemble`'s `report`, and `place_figures` would have to say which block
+index it chose and why.
 
 **An article can render as two galleys.** `teacher-resources: separate` in
 the front matter splits a chapter at its `Teacher Resources` heading, so the
