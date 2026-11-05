@@ -60,6 +60,24 @@
   </form>
   {% endif %}
 
+  {% if downloads %}
+  <div class="reg-note" id="job-downloads">
+    <strong>Results</strong>
+    <ul>
+      {% for key, name in downloads %}
+      <li><a href="{{ url_for('job_download', job_id=job.id, which=key) }}">{{ name }}</a></li>
+      {% endfor %}
+    </ul>
+    <form method="post" action="{{ url_for('job_discard', job_id=job.id) }}">
+      <button type="submit" class="button ghost small">Delete these from the server</button>
+    </form>
+    <p class="dim">
+      The remediated cartridge is a copy of somebody's course. It stays on
+      the server until you delete it, and it is never backed up.
+    </p>
+  </div>
+  {% endif %}
+
   {% if facts %}
   <details class="job-facts">
     <summary>What this batch was asked to do</summary>

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Remediate a course cartridge{% endblock %}
+{% block content %}
+
+<section class="card narrow">
+  <h1>Remediate a course cartridge</h1>
+  <p class="dim">
+    Upload a Common Cartridge (<code>.imscc</code>) from Canvas, D2L or
+    Moodle and get back a copy with the mechanical accessibility problems
+    fixed, a change log, and a list of what still needs a person.
+  </p>
+
+  <h2>What it will and will not do</h2>
+  <ul>
+    <li><strong>It does not change a word of the course.</strong> The
+      visible text of every page and PDF it touches is compared before and
+      after, and a fix that would have moved a word is dropped for that
+      file. The report says how much text was compared.</li>
+    <li><strong>It fixes markup:</strong> the page language, table header
+      scope, heading levels that skip, and a PDF's language, title and
+      title-bar setting.</li>
+    <li><strong>It does not write words for you.</strong> Image
+      descriptions, captions, table headers and frame titles are listed as
+      still owed, not invented.</li>
+    <li><strong>It does not guess the language of the course.</strong> Give
+      it below, or none is written.</li>
+  </ul>
+
+  <h2>Student work comes first</h2>
+  <p>
+    The cartridge is screened before anything else. If it carries what
+    looks like student work, such as caption transcripts of recorded
+    student reflections, submissions or grades, it is <strong>turned away
+    and nothing is kept</strong>. Export the course again without media and
+    without student content. A course export is whatever the instructor
+    chose to include, and that is not always only the course design.
+  </p>
+
+  <h2>Before you import the result</h2>
+  <p>
+    Importing it into a course that is already being taught does not
+    replace anything. Canvas creates new pages with new ids and orphans
+    every assignment, module item and gradebook column attached to the old
+    ones. The result is right for a new shell, a Commons package, an
+    archival copy or a course being handed on. For a live course, use the
+    change log to apply the changes by hand.
+  </p>
+
+  <form method="post" enctype="multipart/form-data" class="stack">
+    <div>
+      <label for="cartridge"><strong>Cartridge</strong></label>
+      <input type="file" id="cartridge" name="cartridge" accept=".imscc"
+             required />
+      <p class="dim">
+        One cartridge, up to {{ shape.max_mb }} MB. It is read in the
+        background; a course with its media takes a few minutes.
+      </p>
+    </div>
+    <div>
+      <label for="language">Course language</label>
+      <input type="text" id="language" name="language" placeholder="en" />
+      <p class="dim">
+        A code such as <code>en</code>, <code>es</code> or
+        <code>fr-CA</code>. Leave it empty if you are not sure: writing
+        the wrong one makes a screen reader pronounce the text with the
+        wrong accent, which is worse than leaving it off.
+      </p>
+    </div>
+    <div class="action-row">
+      <button type="submit" class="button">Remediate it</button>
+    </div>
+  </form>
+</section>
+
+{% endblock %}

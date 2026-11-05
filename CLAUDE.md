@@ -444,6 +444,46 @@ verapdf on at about thirteen, against the 300 second gunicorn timeout
 `python assess.py <folder>`, which has no cap because nothing is waiting
 on it, and the page says so.
 
+**A course cartridge is remediated by `repack.py`, and four decisions in it
+are the product.** `/remediate` takes an `.imscc` and hands back a
+remediated copy, a change log and a worklist, as a job
+(`remediate_cartridge`), because a cartridge with its media is hundreds of
+megabytes. The plan, the measurements behind it and the reasons for each
+refusal are in `docs/cartridge-audit.md`; read it before adding a pass.
+
+It screens first and refuses. A cartridge carrying student work is not
+processed, kept or partly processed: `Refusal` names the container and
+never the content, and `jobs.Refusal` turns it into a message rather than
+a traceback, because a refusal is the job working and not breaking. Four
+of the 35 cartridges measured carried a named student's recorded
+reflection as a caption transcript inside `course_settings/
+media_tracks.xml`, which no filename check sees.
+
+It never writes a file it could not prove changed no words. Each changed
+page or PDF is compared before and after through `invariance`, and a fix
+that moved a word is dropped for that file, which ships as it arrived and
+is listed. One bad page does not cost the cartridge its run.
+
+It verifies what it wrote and not what it meant to write. The zip is
+reopened after it is closed: integrity, member names, a CRC comparison on
+every untouched member, and the text of every changed member compared
+again from the bytes on disk. A check on the in-memory result passes with
+a zip that fails to write.
+
+Nothing is renamed and nothing is added. The manifest is copied untouched
+and every member keeps its path, date and compression, so every id inside
+the course still points where it did. The change log lives beside the
+cartridge, because a member the manifest does not list is something an
+importer either ignores or chokes on.
+
+Two limits are worth knowing. `CARTRIDGE_ENDPOINTS` carries its own
+request ceiling, looked up per request by `_request_limit`, so raising
+what a cartridge may weigh does not raise what a batch of PDFs may. And
+results live in `RESULTS_DIR`, apart from `JOBS_DIR`, because staged input
+is deleted when a job ends and a result must not be; they hold a copy of
+somebody's course, so they are never backed up and the job page offers to
+delete them.
+
 **`jobs.py` is the job runner, and what it mostly has to get right is
 not throughput.** Everything slow here has been a script for one reason:
 a chapter is minutes of pdfplumber and each validator is a subprocess

@@ -63,3 +63,7 @@ _dropbox/
 
 # Staged uploads waiting for a job to read them. Input, not content.
 data/jobs/
+
+# What a remediation job leaves for a person to download: a remediated
+# copy of somebody else's course. Never committed, never backed up.
+data/results/

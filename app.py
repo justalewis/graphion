@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import re
+import shutil
 import sqlite3
 import tempfile
 import threading
@@ -12,7 +13,7 @@ from typing import Optional
 
 from flask import (
     Flask, abort, flash, jsonify, redirect, render_template, request,
-    send_from_directory, url_for,
+    send_file, send_from_directory, url_for,
 )
 from markupsafe import Markup
 from flask_login import current_user, login_required, login_user, logout_user
@@ -34,8 +35,8 @@ from auth import User, login_manager
 from config import (
     ALLOWED_UPLOAD_EXTENSIONS, CONTENT_DIR, LOGIN_MAX_ATTEMPTS,
     LOGIN_WINDOW_SECONDS, MAX_ASSESS_FILES, MAX_ASSESS_VALIDATE_FILES,
-    MAX_BATCH_BYTES, MAX_INGEST_FILES, MAX_UPLOAD_BYTES, SECURE_COOKIES,
-    SECRET_KEY,
+    MAX_BATCH_BYTES, MAX_CARTRIDGE_BYTES, MAX_INGEST_FILES,
+    MAX_UPLOAD_BYTES, SECURE_COOKIES, SECRET_KEY,
 )
 
 # The routes allowed the larger request body, which are the two that take a
@@ -43,6 +44,25 @@ from config import (
 # on the path, so renaming a route cannot silently widen the limit for
 # everything else; a test pins each name to a route that exists.
 BATCH_ENDPOINTS = frozenset({"assess_archive", "journal_ingest_batch"})
+
+# The route that takes a whole course cartridge, which carries its media and
+# so is routinely several hundred megabytes. Kept apart from the batch
+# endpoints rather than folded in, so raising what a cartridge may weigh does
+# not raise what a batch of PDFs may.
+CARTRIDGE_ENDPOINTS = frozenset({"remediate_upload"})
+
+
+def _request_limit(endpoint) -> int:
+    """How large a body this endpoint may carry, read at call time.
+
+    Looked up per request rather than fixed at start-up so each route is held
+    to its own ceiling and not to the largest of them.
+    """
+    if endpoint in CARTRIDGE_ENDPOINTS:
+        return MAX_CARTRIDGE_BYTES
+    if endpoint in BATCH_ENDPOINTS:
+        return MAX_BATCH_BYTES
+    return MAX_UPLOAD_BYTES
 
 
 def create_app() -> Flask:
@@ -53,7 +73,8 @@ def create_app() -> Flask:
     # enforced below for every other route. Setting this to MAX_BATCH_BYTES
     # alone would hand every upload that writes into content/ twelve times
     # the body it has ever accepted.
-    app.config["MAX_CONTENT_LENGTH"] = max(MAX_UPLOAD_BYTES, MAX_BATCH_BYTES)
+    app.config["MAX_CONTENT_LENGTH"] = max(
+        MAX_UPLOAD_BYTES, MAX_BATCH_BYTES, MAX_CARTRIDGE_BYTES)
     app.config["SESSION_COOKIE_HTTPONLY"] = True
     app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
     app.config["SESSION_COOKIE_SECURE"] = SECURE_COOKIES
@@ -67,9 +88,7 @@ def create_app() -> Flask:
         upload that takes one manuscript would quietly have gained the
         same headroom.
         """
-        if request.endpoint in BATCH_ENDPOINTS:
-            return None
-        if (request.content_length or 0) > MAX_UPLOAD_BYTES:
+        if (request.content_length or 0) > _request_limit(request.endpoint):
             abort(413)
         return None
 
@@ -2892,6 +2911,80 @@ def register_routes(app: Flask):
               "success")
         return redirect(url_for("job_detail", job_id=job_id))
 
+    @app.route("/remediate", methods=["GET", "POST"])
+    @login_required
+    def remediate_upload():
+        """Take a course cartridge in and hand a remediated one back.
+
+        Report-only on the course itself: nothing is reworded, and every
+        changed page and PDF is proved unchanged in its text before it is
+        delivered. The cartridge is screened for student work first and
+        refused if it carries any, so what reaches the job is only ever a
+        course design. The work is a job because a cartridge with its media
+        is hundreds of megabytes and minutes of reading.
+        """
+        shape = {"max_mb": MAX_CARTRIDGE_BYTES // (1024 * 1024)}
+        if request.method == "GET":
+            return render_template("remediate.html", shape=shape)
+
+        upload = request.files.get("cartridge")
+        if not upload or not upload.filename:
+            flash("No cartridge uploaded.", "error")
+            return redirect(url_for("remediate_upload"))
+        if Path(upload.filename).suffix.lower() != ".imscc":
+            flash("This takes a Common Cartridge, which ends in .imscc.",
+                  "error")
+            return redirect(url_for("remediate_upload"))
+
+        language = (request.form.get("language") or "").strip()
+        if language and not re.fullmatch(r"[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*",
+                                         language):
+            flash("A language is a code such as en, es or fr-CA.", "error")
+            return redirect(url_for("remediate_upload"))
+
+        name = secure_filename(upload.filename) or "course.imscc"
+        job_id = jobs.create("remediate_cartridge", f"Remediate {name}",
+                             {"language": language, "filename": name}, None)
+        try:
+            upload.save(jobs.staging_dir(job_id) / name)
+        except Exception as exc:
+            jobs.abandon(job_id, f"Staging failed: {type(exc).__name__}: {exc}")
+            flash(f"The upload could not be staged: {exc}", "error")
+            return redirect(url_for("remediate_upload"))
+        jobs.release(job_id, total=0)
+        flash("Queued. The cartridge is screened for student work first and "
+              "turned away if it carries any.", "success")
+        return redirect(url_for("job_detail", job_id=job_id))
+
+    # What a remediation job leaves to download, by the name the URL uses.
+    # A fixed map and never a path taken from the request, so there is no
+    # way to ask for a file that is not one of these.
+    RESULT_FILES = {"cartridge": ("remediated.imscc", "application/zip"),
+                    "report": ("report.md", "text/markdown"),
+                    "report-json": ("report.json", "application/json")}
+
+    @app.route("/jobs/<int:job_id>/download/<which>")
+    @login_required
+    def job_download(job_id, which):
+        entry = RESULT_FILES.get(which)
+        if entry is None or jobs.get(job_id) is None:
+            abort(404)
+        name, mimetype = entry
+        path = jobs.results_dir(job_id) / name
+        if not path.is_file():
+            abort(404)
+        return send_file(str(path), mimetype=mimetype, as_attachment=True,
+                         download_name=name)
+
+    @app.route("/jobs/<int:job_id>/discard", methods=["POST"])
+    @login_required
+    def job_discard(job_id):
+        if jobs.get(job_id) is None:
+            abort(404)
+        shutil.rmtree(jobs.results_dir(job_id), ignore_errors=True)
+        flash("The remediated copy and its reports were deleted.", "success")
+        return redirect(url_for("job_detail", job_id=job_id))
+
     @app.route("/jobs")
     @login_required
     def jobs_home():
@@ -2913,6 +3006,10 @@ def register_routes(app: Flask):
                                items=jobs.items(job),
                                facts=jobs.payload(job),
                                words=jobs.words(job["kind"]),
+                               downloads=[
+                                   (key, name) for key, (name, _m)
+                                   in RESULT_FILES.items()
+                                   if (jobs.results_dir(job_id) / name).is_file()],
                                state_tone=jobs.STATE_TONE,
                                item_tone=jobs.ITEM_TONE,
                                terminal=jobs.TERMINAL)

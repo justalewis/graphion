@@ -53,7 +53,7 @@ from typing import Callable, Optional
 
 import db
 import register
-from config import JOBS_DIR
+from config import JOBS_DIR, RESULTS_DIR
 
 # States. `interrupted` and `cancelled` are deliberately not `failed`: the
 # first says the process died under it and the second says somebody stopped
@@ -120,6 +120,15 @@ KIND_WORDS = {
                 "above and nothing was recorded for it, because a missing "
                 "tool is not a result and would have written over one.",
     },
+}
+
+KIND_WORDS["remediate_cartridge"] = {
+    "heading": "What was done",
+    "item": "Step",
+    "note": "Nothing in the course was reworded: every changed page and PDF "
+            "had its text compared before and after, and a fix that would "
+            "have moved a word was dropped for that file. What is still "
+            "owed needs a person, and is listed in the report.",
 }
 
 DEFAULT_WORDS = {"heading": "What happened", "item": "Item", "note": ""}
@@ -254,6 +263,19 @@ def cancelled(job_id: int) -> bool:
 
 # ---------- progress ----------
 
+class Refusal(Exception):
+    """A job that declined to run, with a sentence to show.
+
+    Distinct from an exception because a refusal is the job working, not
+    breaking: a cartridge carrying student work is turned away on purpose,
+    and a traceback under that message would read as a defect.
+    """
+
+
+def results_dir(job_id: int) -> Path:
+    return Path(RESULTS_DIR) / str(job_id)
+
+
 @dataclass
 class Progress:
     """What a handler writes to as it goes.
@@ -271,8 +293,31 @@ class Progress:
         db.execute("UPDATE jobs SET total = ? WHERE id = ?",
                    (total, self.job_id))
 
+    # Set once a handler has ticked, so `step` stops reporting the length of
+    # the item list as progress. A cartridge job ticks through 440 members and
+    # then records seven summary items, and without this the page read 7 of
+    # 440 after the job had finished all of them.
+    ticked: bool = False
+
+    def tick(self, done: int, total: int) -> None:
+        """Update the counts without recording an item.
+
+        `step` appends to the item list and rewrites it every time, which is
+        right for a chapter and wrong for a cartridge member: a course has
+        thousands of them and the list would be rewritten thousands of
+        times. A job like that records a handful of summary items at the
+        end and ticks the counts as it goes.
+        """
+        self.ticked = True
+        db.execute("UPDATE jobs SET done = ?, total = ? WHERE id = ?",
+                   (done, total, self.job_id))
+
     def step(self, name: str, state: str, detail: str = "") -> None:
         self._items.append({"name": name, "state": state, "detail": detail})
+        if self.ticked:
+            db.execute("UPDATE jobs SET items_json = ? WHERE id = ?",
+                       (json.dumps(self._items), self.job_id))
+            return
         db.execute(
             "UPDATE jobs SET items_json = ?, done = ? WHERE id = ?",
             (json.dumps(self._items), len(self._items), self.job_id),
@@ -353,6 +398,9 @@ def run_job(job_id: int) -> str:
     progress = Progress(job_id=job_id)
     try:
         _HANDLERS[job["kind"]](job, progress)
+    except Refusal as exc:
+        _finish(job_id, FAILED, str(exc))
+        return FAILED
     except Exception as exc:
         # The traceback goes in the row rather than only to a log nobody
         # serves, which is the mistake `conversion.log` already makes: it is
@@ -589,3 +637,53 @@ def _validate(job: dict, progress: Progress) -> None:
             progress.step(f"{kind}: {article['slug']}", "skipped", note)
             continue
         progress.step(f"{kind}: {article['slug']}", level, note)
+
+
+@handler("remediate_cartridge")
+def _remediate_cartridge(job: dict, progress: Progress) -> None:
+    """Screen, remediate and repack one course cartridge.
+
+    Everything about what is changed, what is refused and what is proved is
+    `repack`'s. This stages nothing of its own: it reads the upload, writes
+    the result into `results_dir`, which outlives the job, and records a
+    handful of summary items, because a cartridge has thousands of members
+    and `Progress.step` rewrites its whole list on every call.
+    """
+    import repack
+
+    facts = payload(job)
+    carts = sorted(Path(job["staged_path"]).glob("*.imscc"))
+    if not carts:
+        raise ValueError("No cartridge was staged for this job.")
+    out_dir = results_dir(job["id"])
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    try:
+        report = repack.remediate_cartridge(
+            carts[0], out_dir / "remediated.imscc",
+            language=facts.get("language") or None,
+            tick=lambda done, total, _path: progress.tick(done, total),
+            stop=lambda: progress.cancelled)
+    except repack.Refusal as exc:
+        shutil.rmtree(out_dir, ignore_errors=True)
+        raise Refusal(str(exc))
+    except repack.Stopped:
+        shutil.rmtree(out_dir, ignore_errors=True)
+        return
+
+    (out_dir / "report.json").write_text(repack.report_json(report),
+                                         encoding="utf-8")
+    (out_dir / "report.md").write_text(repack.render_markdown(report),
+                                       encoding="utf-8")
+    progress.tick(report.members, report.members)
+    progress.step("Screened for student work", "pass",
+                  "Nothing was found, so the cartridge was processed.")
+    progress.step(
+        "Text compared after writing",
+        "pass" if report.holds else "fail",
+        report.summary())
+    for kind, count in sorted(report.totals_changed.items()):
+        progress.step(f"Fixed: {kind}", "pass", f"{count}")
+    for item in report.worklist:
+        progress.step(f"Still owed: {item['kind']}", "warn",
+                      f"{item['count']}. {item['detail']}")

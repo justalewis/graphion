@@ -50,6 +50,17 @@ MAX_INGEST_FILES = 200
 # queued batch survives a restart.
 JOBS_DIR = DATA_DIR / "jobs"
 
+# What a job leaves behind for a person to download. Separate from JOBS_DIR
+# because staged input is deleted when a job ends and output must not be.
+# It holds a remediated copy of somebody's course, so it is kept only until
+# they discard it and is never archived by deploy/backup.py.
+RESULTS_DIR = DATA_DIR / "results"
+
+# A course cartridge with its media is routinely a few hundred megabytes: the
+# ones measured here run to 373 MB. The limit is on what a request can
+# carry, and the work happens in a job.
+MAX_CARTRIDGE_BYTES = 800 * 1024 * 1024
+
 VERSIONS_KEEP = 5
 
 # Rendered PDFs declare PDF/UA-1 (ISO 14289-1) conformance, which is the

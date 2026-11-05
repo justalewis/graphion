@@ -421,6 +421,20 @@ document. A Canvas page is not: Canvas renders the page title as the
 put a second `h1` on most pages in the archive. R2 keeps the author's
 base level and closes only the skips below it.
 
-**Next:** R4 (OCR), R5 (Office documents, 777 files and the largest
-remaining), R6 (the drafting queue), R7 (repack, change log and
-worklist).
+**R7 is built, and it was moved ahead of R4 to R6 on purpose.** Everything
+before it was reachable from nowhere: three modules and a thousand lines
+with no route and no job kind, which is the same gap `assess.py` had until
+`/assess` existed. `repack.py` turns them into something that can be
+handed to a person, at `/remediate`, as a job.
+
+**R4, OCR, is deferred and the measurement is why.** It was put third on
+the strength of the journal back-catalogue, where 473 of 473 pages were
+scans. Course cartridges are born-digital: across 919 PDFs and 13,317
+pages, 81 pages (0.6 percent) and 11 PDFs (1.2 percent, really two
+documents duplicated) have no text layer. And there is no tesseract on the
+development machine, so it could not be run once, which after three bugs
+found only by running the real archive is not a thing to ship. It stays
+specified and waits for a folder of scans.
+
+**Next:** R5 (Office documents, 777 files and the largest remaining),
+then R6 (the drafting queue).
