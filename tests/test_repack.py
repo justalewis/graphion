@@ -255,16 +255,29 @@ def test_stopping_part_way_leaves_nothing_behind(tmp_path):
 
 # ---------- the report ----------
 
-def test_the_summary_carries_the_denominator_and_what_it_could_not_read(
-        tmp_path):
-    src = _make(tmp_path, extra={"web_resources/slides.pptx": b"PK\x03\x04"})
+def test_the_summary_carries_the_denominator(tmp_path):
+    src = _make(tmp_path)
 
     report = repack.remediate_cartridge(src, tmp_path / "o.imscc", "en")
     said = report.summary()
 
     assert "characters of text compared" in said
     assert "0 changed" in said
-    assert "hold text this cannot read" in said
+    assert "byte for byte" in said
+
+
+def test_an_untouched_office_file_is_not_called_uncovered(tmp_path):
+    """It is copied through byte for byte, so the check that no word moved
+    holds for it trivially. Listing it as "not covered" was needlessly
+    alarming and untrue."""
+    src = _make(tmp_path, extra={"web_resources/slides.pptx": b"PK"})
+    dst = tmp_path / "o.imscc"
+
+    report = repack.remediate_cartridge(src, dst, "en")
+
+    assert report.unread == []
+    assert "cannot read" not in report.summary()
+    assert _bytes(dst, "web_resources/slides.pptx") == b"PK"
 
 
 def test_the_markdown_leads_with_the_warning_about_re_importing(tmp_path):

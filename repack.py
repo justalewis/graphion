@@ -137,11 +137,25 @@ def _record(path: str, kind: str, result) -> FileRecord:
 
 
 def _fixer(path: str):
+    """The pass for this member, as (kind, callable), or (None, None).
+
+    Pages and PDFs are fixed. Office documents are audited, which changes
+    nothing: see the R5 note in `remediate.py` for why not one fix there is
+    mechanical. Every callable takes `(data, language)` and returns a
+    `remediate.Result`, so the loop below treats them identically.
+    """
     suffix = Path(path).suffix.lower()
     if suffix in HTML_SUFFIXES:
         return "page", remediate.fix_html
     if suffix == ".pdf":
         return "pdf", remediate.fix_pdf
+    if suffix == ".docx":
+        return "document", remediate.audit_docx
+    if suffix == ".pptx":
+        return "slides", remediate.audit_pptx
+    if suffix in remediate._LEGACY:
+        return "legacy", (lambda data, language=None:
+                          remediate.audit_legacy(data, language, name=path))
     return None, None
 
 
@@ -275,13 +289,19 @@ def _verify(src: Path, written: Path, changed: list, originals: dict,
 
 
 def _unread(src: Path) -> list:
-    """Files holding text the proof cannot read, so it says so."""
-    try:
-        with cartridge.open_cartridge(src) as cart:
-            pairs = [(m.path, b"") for m in cart.members()]
-        return invariance.unreadable(pairs)
-    except Exception:
-        return []
+    """Changed files whose text the proof could not read.
+
+    None, by construction, and that is the point of the rule above it: a
+    changed file whose text could not be read is dropped and shipped as it
+    arrived, so it is never changed. An untouched file is byte-identical
+    and so needs no text comparison at all. This used to list every
+    `.pptx` and `.doc` as "not covered", which was needlessly alarming
+    and, for files that are copied through unchanged, untrue.
+
+    Kept as a function so a later pass that does change an unreadable
+    format has somewhere to report it.
+    """
+    return []
 
 
 def _worklist(files: list) -> list:

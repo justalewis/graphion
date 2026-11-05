@@ -58,6 +58,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Optional
 
 # How deep a heading may go. Beyond six there is no tag, so a document
@@ -503,3 +504,258 @@ def fix_pdf(data: bytes, language: Optional[str] = None) -> Result:
     out = io.BytesIO()
     writer.write(out)
     return Result(data=out.getvalue(), changes=changes, owed=owed)
+
+
+# ---------- Office documents ----------
+#
+# R5, and it is an audit rather than a fix. Measured over the distinct
+# Office files in these cartridges (the 777 first counted was the same
+# files recurring across exports; there are 125 .docx, 13 .pptx, 26 .doc
+# and 4 .xlsx), not one fix is mechanical.
+#
+# Every `.docx` already carries a default language, because Word always
+# writes one, so the fix first planned is a no-op. What remains is all
+# content: a picture with no description is words, a table with no header
+# row is a claim about what the table means, a document with no Heading
+# styles is a claim about its structure, and a slide with no title is
+# words. Each is exactly what this pipeline refuses to guess, so each is
+# reported.
+#
+# Nothing is modified, which is also the safest thing to do to a Word
+# file. Round-tripping one through a library can silently drop comments,
+# tracked changes and objects it does not model, and a remediation that
+# returned a changed document with its review history gone would be worse
+# than the gap it closed. The file is copied through byte for byte, and
+# the invariance guarantee holds for it trivially.
+
+_W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+_WP = "http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+_P = "http://schemas.openxmlformats.org/presentationml/2006/main"
+_DC_CORE = "http://purl.org/dc/elements/1.1/"
+
+# Past this many paragraphs a document with no Heading style at all is
+# reported. A one-page handout does not need an outline; a thirty page
+# reading does. Measured: 48 of the 123 documents are long and have none.
+LONG_DOCUMENT_PARAGRAPHS = 40
+
+_LEGACY = {".doc": "Word", ".ppt": "PowerPoint", ".xls": "Excel",
+           ".rtf": "Rich Text"}
+
+
+def _zip_part(data: bytes, name: str):
+    import io
+    import zipfile
+
+    from lxml import etree
+
+    with zipfile.ZipFile(io.BytesIO(data)) as z:
+        if name not in z.namelist():
+            return None
+        return etree.fromstring(z.read(name))
+
+
+def _core_title(data: bytes) -> str:
+    import io
+    import zipfile
+
+    from lxml import etree
+
+    with zipfile.ZipFile(io.BytesIO(data)) as z:
+        if "docProps/core.xml" not in z.namelist():
+            return ""
+        root = etree.fromstring(z.read("docProps/core.xml"))
+    found = root.find(f"{{{_DC_CORE}}}title")
+    return (found.text or "").strip() if found is not None else ""
+
+
+def _title_owed(data: bytes) -> list:
+    try:
+        title = _core_title(data)
+    except Exception:
+        title = ""
+    if title and looks_like_a_title(title):
+        return []
+    return [Owed(
+        kind="office-no-title", count=1,
+        detail=("the document properties carry no title, or only a "
+                "filename. A title is text somebody has to write, and "
+                "it is what a reader announces when the file opens."))]
+
+
+# What an authoring tool writes into a picture's description when it has
+# nothing to say. Calibrated on the real files, and the result reversed the
+# first measurement: of 151 pictures carrying a description across the
+# distinct Office files here, 4 were empty, 108 were a filename or a path
+# (`vrgraphicnovel.png`, `/tmp/beautiful_ai_exports/<uuid>.jpg`) or a bare
+# "Picture 3", and about 40 were Microsoft's machine-written text. Perhaps
+# five read as written by a person. Counting presence said 13 of 50 pictures
+# were undescribed; counting meaning says nearly all of them are, which is
+# the present-and-wrong failure this codebase keeps meeting.
+_FILE_DESCR = re.compile(
+    r"\.(png|jpe?g|gif|bmp|emf|wmf|svg|tiff?|webp)\s*$", re.IGNORECASE)
+_BARE_DESCR = re.compile(
+    r"^(image|picture|img|photo|graphic|figure)[ _-]?\d*$", re.IGNORECASE)
+_MACHINE_DESCR = re.compile(r"automatically generated", re.IGNORECASE)
+
+
+def looks_like_a_placeholder_description(text: str) -> bool:
+    """Whether a picture's description says nothing about the picture."""
+    text = (text or "").strip()
+    if not text:
+        return True
+    return bool(_FILE_DESCR.search(text) or _BARE_DESCR.match(text))
+
+
+def is_machine_description(text: str) -> bool:
+    """Microsoft's "Description automatically generated".
+
+    Reported as owed review and not as missing, because it is present and
+    it passes every checker. It is also often nonsense: one real file
+    reads "A diagram of a diagram of a diagram". A description nobody
+    wrote, vouched for by nobody, is the one kind of answer worse than a
+    marked gap.
+    """
+    return bool(_MACHINE_DESCR.search(text or ""))
+
+
+def _classify_pictures(elements) -> tuple:
+    """(missing, machine_written) over a set of picture elements.
+
+    A picture the author marked decorative has said it carries nothing a
+    reader needs, which is a claim they made and not a gap, so it is
+    counted as neither.
+    """
+    missing = machine = 0
+    for el in elements:
+        if el.xpath(".//*[local-name()='decorative']"):
+            continue
+        text = el.get("descr") or ""
+        if is_machine_description(text):
+            machine += 1
+        elif looks_like_a_placeholder_description(text):
+            missing += 1
+    return missing, machine
+
+
+def _picture_owed(missing: int, machine: int) -> list:
+    owed = []
+    if missing:
+        owed.append(Owed(
+            kind="image-without-description", count=missing,
+            detail=("no description, or only a filename or placeholder, so "
+                    "a screen reader announces a file name or nothing. "
+                    "Describing it is words about the authors own "
+                    "material.")))
+    if machine:
+        owed.append(Owed(
+            kind="image-description-machine-written", count=machine,
+            detail=("carries Microsoft's \"Description automatically "
+                    "generated\" text. It is present, so no checker "
+                    "flags it, and it is often wrong: it needs the author "
+                    "to read it and either keep it or write their own.")))
+    return owed
+
+
+def audit_docx(data: bytes, language: Optional[str] = None) -> Result:
+    """Report what a Word document owes. Changes nothing."""
+    try:
+        document = _zip_part(data, "word/document.xml")
+    except Exception as exc:
+        return Result(data=data, error=f"could not be opened: {exc}")
+    if document is None:
+        return Result(data=data, error="has no word/document.xml")
+
+    ns = {"w": _W, "wp": _WP}
+    owed: list = []
+
+    owed.extend(_picture_owed(*_classify_pictures(
+        document.xpath("//wp:docPr", namespaces=ns))))
+
+    tables = document.xpath("//w:tbl", namespaces=ns)
+    bare = [t for t in tables
+            if not t.xpath(".//w:trPr/w:tblHeader", namespaces=ns)]
+    if bare:
+        owed.append(Owed(
+            kind="table-without-header-row", count=len(bare),
+            detail=("no row is marked as the header, so a screen reader "
+                    "cannot name the column a cell is in. Which row is the "
+                    "header is a claim about the table and is not guessed "
+                    "at here.")))
+
+    paragraphs = len(document.xpath("//w:p", namespaces=ns))
+    headings = document.xpath("//w:pStyle[starts-with(@w:val,'Heading')]",
+                              namespaces=ns)
+    if paragraphs > LONG_DOCUMENT_PARAGRAPHS and not headings:
+        owed.append(Owed(
+            kind="no-headings", count=1,
+            detail=(f"{paragraphs} paragraphs and no Heading style, so a "
+                    f"reader cannot navigate it by section. Bold text is "
+                    f"not a heading to a screen reader, and deciding which "
+                    f"lines are headings is a claim about the structure.")))
+
+    owed.extend(_title_owed(data))
+    return Result(data=data, owed=owed)
+
+
+def audit_pptx(data: bytes, language: Optional[str] = None) -> Result:
+    """Report what a presentation owes. Changes nothing."""
+    import io
+    import re
+    import zipfile
+
+    from lxml import etree
+
+    try:
+        z = zipfile.ZipFile(io.BytesIO(data))
+        names = z.namelist()
+    except Exception as exc:
+        return Result(data=data, error=f"could not be opened: {exc}")
+    if "ppt/presentation.xml" not in names:
+        return Result(data=data, error="has no ppt/presentation.xml")
+
+    ns = {"p": _P}
+    untitled = missing = machine = 0
+    for name in names:
+        if not re.fullmatch(r"ppt/slides/slide\d+\.xml", name):
+            continue
+        slide = etree.fromstring(z.read(name))
+        titled = slide.xpath(
+            "//p:ph[@type='title' or @type='ctrTitle']", namespaces=ns)
+        if not titled:
+            untitled += 1
+        found = _classify_pictures(
+            slide.xpath("//p:pic/p:nvPicPr/p:cNvPr", namespaces=ns))
+        missing += found[0]
+        machine += found[1]
+    z.close()
+
+    owed: list = []
+    if untitled:
+        owed.append(Owed(
+            kind="slide-without-title", count=untitled,
+            detail=("no title placeholder, so a screen reader user has no "
+                    "slide titles to move between. A title is text "
+                    "somebody has to write.")))
+    owed.extend(_picture_owed(missing, machine))
+    owed.extend(_title_owed(data))
+    return Result(data=data, owed=owed)
+
+
+def audit_legacy(data: bytes, language: Optional[str] = None,
+                 name: str = "") -> Result:
+    """Report a binary Office format, which cannot be inspected in place.
+
+    Converting it to the current format would make it checkable, and is
+    not done here, because the conversion renames the file and every
+    reference to it inside the cartridge points at the old name. A
+    remediation that broke the links it was trying to make usable would be
+    worse than the gap.
+    """
+    suffix = Path(name).suffix.lower()
+    kind = _LEGACY.get(suffix, "Office")
+    return Result(data=data, owed=[Owed(
+        kind="legacy-format", count=1,
+        detail=(f"a legacy {kind} file ({suffix}), which cannot be inspected "
+                f"or fixed in place. It needs converting to the current "
+                f"format first, which renames it and so has to be done by "
+                f"somebody who can update what links to it."))])

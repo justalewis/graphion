@@ -436,5 +436,38 @@ development machine, so it could not be run once, which after three bugs
 found only by running the real archive is not a thing to ship. It stays
 specified and waits for a folder of scans.
 
-**Next:** R5 (Office documents, 777 files and the largest remaining),
-then R6 (the drafting queue).
+**R5 is built, and it turned out to be an audit and not a fix.** The 777
+Office documents first counted across the cartridges were the same files
+recurring across exports: 125 distinct `.docx`, 13 `.pptx`, 26 `.doc` and
+4 `.xlsx`. Every `.docx` already carries a default language, because Word
+always writes one, so the one fix planned was a no-op. What remains is all
+content: a picture with no description is words, a table with no header
+row is a claim about what the table means, a document with no Heading
+styles is a claim about its structure, and a slide with no title is
+words. So `remediate.audit_docx`, `audit_pptx` and `audit_legacy` report
+and change nothing, which is also the safest thing to do to a Word file:
+round-tripping one through a library can silently drop comments, tracked
+changes and objects it does not model. Over all 164 distinct files, zero
+were modified.
+
+**The picture finding reversed the first measurement.** Counting whether a
+picture has a description said 15 of 162 were undescribed. Counting what
+the description says gives a very different answer. Of 151 pictures that
+carry one across these files, 4 were empty, 108 were a filename, a path
+(`/tmp/beautiful_ai_exports/<uuid>.jpg`) or a bare "Picture 3", and about
+40 were Microsoft's machine-written "Description automatically generated",
+one of which reads "A diagram of a diagram of a diagram". Perhaps five
+read as written by a person. The audit now reports 123 pictures with no
+real description and 35 more owed review, and it keeps the second apart
+from the first: a machine-written description is present, so no checker
+flags it, and it is often wrong, which makes it the one kind of answer
+worse than a marked gap.
+
+**Legacy formats are reported and never converted.** 26 distinct `.doc`
+files cannot be inspected in place. Converting one makes it checkable and
+renames it, so every reference to it inside the cartridge would point at a
+name that no longer exists. A remediation that broke the links it was
+trying to make usable would be worse than the gap.
+
+**Next:** R6 (the drafting queue). R4 (OCR) still waits for a folder of
+scans and a tesseract install.
