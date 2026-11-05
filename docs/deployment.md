@@ -271,12 +271,59 @@ fly ips release <address>
 Verify by opening the hostname in a private window: you must land on a
 Cloudflare login page, not Graphion's own.
 
-## What is deliberately not installed
+## What the image carries, and what it does not
 
-LibreOffice, Tesseract, verapdf, and pa11y are absent. They would add well over
-1.5 GB, and they are pre-press tools rather than serving-path ones. Every module
-that uses them degrades through its `available()` or `*_available()` probe, so
-the UI simply greys those actions out. Run them locally when you need them.
+**The three external checkers are installed**: verapdf and epubcheck
+(both Java, sharing one `default-jre-headless`) and pa11y (Node, driving
+the system Chromium). They are there because
+`/accessibility/<slug>/validate` runs a conformance pass over a whole
+journal, which is the thing a journal actually asks for, and without them
+in the image that pass could only ever be run on somebody's laptop. They
+are installed above `COPY . .` so an edit to app source does not reinstall
+the better part of a gigabyte.
+
+**LibreOffice is installed too**, in its own layer; `preprocessors.py`
+finds `soffice` for the optional DOCX-normalize pass.
+
+**Tesseract is not.** It backs `ocr.py`, which reads a table that arrived
+as a picture: an editing aid used on one article at a time rather than
+anything a corpus pass needs. `ocr.available()` greys the button out.
+
+### pa11y needs more memory than this machine has
+
+This is the one thing to watch. `fly.toml` is `shared-cpu-1x` with
+`memory = "1gb"`. Chromium wants several hundred megabytes, and it runs
+beside gunicorn, pdfplumber, Typst and the LibreOffice layer. An OOM kills
+the single machine, which takes the whole app down rather than only the
+check.
+
+Nothing launches Chromium until somebody asks for a pa11y run, so the risk
+is confined to that. But before running a validation pass over a whole
+journal in production, raise it:
+
+```toml
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "2gb"
+```
+
+That is roughly another $3 a month. It is left at 1 GB until somebody
+decides to spend it, rather than being raised quietly as part of adding
+the tools.
+
+Two container flags go with Chromium and are not precautions.
+`--no-sandbox` is passed because Chromium refuses to start as root and the
+container runs as root; `--disable-dev-shm-usage` because Docker gives a
+container 64 MB of `/dev/shm` and Chromium crashes partway through a page
+without it. `validators.pa11y_needs_no_sandbox()` decides by asking
+whether the process is root, so a developer's machine does not drop the
+sandbox for no reason; `GRAPHION_PA11Y_NO_SANDBOX` forces it either way.
+
+The JVM heap is capped at 512 MB through `JAVA_TOOL_OPTIONS`, for the same
+reason: sized for the machine rather than for the tools' appetite. It
+prints a "Picked up JAVA_TOOL_OPTIONS" line to stderr on every run, which
+disturbs neither tool, since verapdf is read from stdout and epubcheck
+writes its report to a file.
 
 Pandoc **is** installed (pinned by `PANDOC_VERSION` in the Dockerfile, since
 Debian bookworm ships 2.17 and the app needs 3+). Typst arrives via `typst-py`.

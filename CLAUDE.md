@@ -27,7 +27,7 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (925 functions, 999 cases once the parametrized ones expand: 151 in
+Tests (931 functions, 997 cases once the parametrized ones expand: 151 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 64 in `test_assess.py`,
 50 in `test_jobs.py`, 29 in `test_collections.py`,
 22 in `test_assess_route.py`,
@@ -44,8 +44,13 @@ Tests (925 functions, 999 cases once the parametrized ones expand: 151 in
 17 in `test_long_descriptions.py`,
 8 in `test_heading_levels.py`, 7 in `test_fig_alt.py`,
 6 in `test_standalone_html.py`,
-15 in `test_validators.py`,
-4 in `test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
+21 in `test_validators.py`,
+4 in `test_journal_filter.py`, 3 in `test_preprocessors.py`). The total
+moves with the number of journals on disk, which is worth knowing before
+treating a drop as a regression: `test_template_bundles.py` parametrizes
+over `content/journals/*/template`, so each journal or collection adds 15
+cases and deleting one takes them away. The count above is for the two
+bundles a clean checkout carries. Most of the suite
 runs without Pandoc; `test_journal_filter.py`, `test_fig_alt.py` and
 `test_heading_levels.py` and `test_long_descriptions.py` need it, and
 `test_math_alt.py` needs it for the
@@ -75,8 +80,10 @@ so a clean clone has no database and no galleys. Before anything will run:
    admin user.
 
 Typst arrives through `typst-py` (pip), so it needs no separate install.
-LibreOffice, Tesseract, verapdf, and pa11y are optional and only gate optional
-features; see "Optional dependencies" below.
+LibreOffice, Tesseract, verapdf, pa11y, and epubcheck are optional on a
+development machine and only gate optional features; see "Optional
+dependencies" below. The deployed image carries all but Tesseract, so a
+check that is greyed out locally may well run in production.
 
 Do not assume a sandbox or CI runner has Pandoc. Check before writing code that
 depends on a render succeeding.
@@ -2270,6 +2277,33 @@ Production runs on Fly.io at a public `.fly.dev` hostname; see
   `deploy/backup.py` correctly does not archive it: the files are a copy of
   what the sender already has, and what came of reading them is in `content/`.
   It is on the volume so a queued batch survives a restart.
+
+- **The image carries all three external checkers**, so the validate job
+  runs in production and not only on a laptop. verapdf and epubcheck share
+  one `default-jre-headless`; pa11y drives the system Chromium, with
+  `PUPPETEER_SKIP_DOWNLOAD` stopping puppeteer fetching a second copy of
+  the same browser. Tesseract stays out, because `ocr.py` is an editing aid
+  used one article at a time rather than something a corpus pass needs.
+  They are installed above `COPY . .` so an app edit does not reinstall
+  them. Two things about that are worth knowing before changing it.
+
+  **Chromium will not start as root and the container runs as root.**
+  `run_pa11y` had no way to pass launch arguments, so it writes a
+  `--config` naming `--no-sandbox` and `--disable-dev-shm-usage`, and
+  `validators.pa11y_needs_no_sandbox()` decides by asking whether the
+  process is root rather than by a setting somebody has to remember. A
+  developer's machine therefore keeps the sandbox, which is a real
+  protection and not ceremony. The second flag is not a precaution either:
+  Docker gives a container 64 MB of `/dev/shm` and Chromium crashes
+  partway through a page without it.
+
+  **And pa11y wants more memory than the machine has.** `fly.toml` is 1 GB
+  and Chromium wants several hundred megabytes beside gunicorn, Typst and
+  LibreOffice; an OOM takes the whole app down, not just the check.
+  Nothing launches Chromium until somebody asks for a pa11y run, so it is
+  left at 1 GB rather than raised quietly; `docs/deployment.md` says what
+  to change and roughly what it costs. The JVM heap is capped at 512 MB
+  through `JAVA_TOOL_OPTIONS` for the same reason.
 
 Shell scripts and the Dockerfile must keep LF endings (`.gitattributes` pins
 this). A CRLF shebang makes the container fail to start.

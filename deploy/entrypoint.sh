@@ -74,6 +74,26 @@ if [ -n "${GRAPHION_BACKUP_REMOTE:-}" ]; then
   ) &
 fi
 
+# ------------------------------------------------------------------- checkers
+# Says which of the three external checkers this image can reach, because
+# otherwise there is no way to tell from outside. `fly ssh console` is not
+# always available to whoever is deploying, and a missing tool is silent by
+# design: the form greys the checker out and the validate job leaves it out,
+# which looks the same as nobody having asked for it.
+#
+# Asked of `validators`' own probes rather than of `command -v`, so this
+# line cannot say one thing while `/accessibility/<slug>/validate` shows
+# another. It costs one Python start per boot.
+python - <<'PROBE' || echo "[entrypoint] could not probe the checkers" >&2
+import validators
+
+for label, probe in (("verapdf", validators.verapdf_available),
+                     ("pa11y", validators.pa11y_available),
+                     ("epubcheck", validators.epubcheck_available)):
+    print(f"[entrypoint] checker {label}: "
+          f"{'available' if probe() else 'NOT available'}")
+PROBE
+
 # ---------------------------------------------------------------------- serve
 # Binds 0.0.0.0 because Fly's edge proxy connects from outside the container's
 # loopback interface. The app is public; /login is rate limited in app.py.

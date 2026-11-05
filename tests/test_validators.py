@@ -297,3 +297,120 @@ def test_a_jar_with_no_java_is_a_tool_that_is_not_installed(tmp_path,
 
     assert passed is False
     assert "java" in report["error"]
+
+
+# ---------- Chromium will not run as root ----------
+#
+# pa11y drives headless Chromium through puppeteer, and Chromium refuses
+# to start as root unless `--no-sandbox` is passed. The container runs as
+# root, so without this every pa11y run in production fails; on a
+# developer's machine the flag is a real protection being dropped for no
+# reason. `run_pa11y` built its argv with no way to pass launch arguments
+# at all, which is why this is a change to the module and not to the
+# Dockerfile alone.
+
+
+def _pa11y_argv(tmp_path, monkeypatch):
+    """Run pa11y against a throwaway page and hand back the argv used."""
+    html = tmp_path / "article.html"
+    html.write_text("<p>Body.</p>", encoding="utf-8")
+    monkeypatch.setattr(validators.shutil, "which", lambda name: "/usr/bin/pa11y")
+    ran = _Ran(stdout="[]")
+    monkeypatch.setattr(validators.subprocess, "run", ran)
+    validators.run_pa11y(html)
+    return ran.argv
+
+
+def test_root_is_what_decides_rather_than_a_setting(monkeypatch):
+    """The test is the condition Chromium objects to, so nothing has to be
+    remembered when the app is deployed."""
+    monkeypatch.delenv(validators.PA11Y_SANDBOX_ENV, raising=False)
+    monkeypatch.setattr(validators.os, "geteuid", lambda: 0, raising=False)
+    assert validators.pa11y_needs_no_sandbox() is True
+
+    monkeypatch.setattr(validators.os, "geteuid", lambda: 1000, raising=False)
+    assert validators.pa11y_needs_no_sandbox() is False
+
+
+def test_windows_has_no_geteuid_and_is_not_root(monkeypatch):
+    """The question does not arise there, and asking it must not raise."""
+    monkeypatch.delenv(validators.PA11Y_SANDBOX_ENV, raising=False)
+    monkeypatch.delattr(validators.os, "geteuid", raising=False)
+
+    assert validators.pa11y_needs_no_sandbox() is False
+
+
+@pytest.mark.parametrize("value,wanted", [
+    ("1", True), ("true", True), ("yes", True), ("on", True),
+    ("0", False), ("false", False), ("no", False), ("", False),
+])
+def test_the_environment_can_force_it_either_way(monkeypatch, value, wanted):
+    monkeypatch.setenv(validators.PA11Y_SANDBOX_ENV, value)
+    # Set regardless of what the machine running the tests is.
+    monkeypatch.setattr(validators.os, "geteuid", lambda: 1000, raising=False)
+
+    assert validators.pa11y_needs_no_sandbox() is wanted
+
+
+def test_a_config_is_passed_only_where_the_sandbox_has_to_go(tmp_path,
+                                                             monkeypatch):
+    monkeypatch.setenv(validators.PA11Y_SANDBOX_ENV, "0")
+    argv = _pa11y_argv(tmp_path, monkeypatch)
+
+    assert "--config" not in argv
+    assert argv[-1].endswith("article.html")
+
+
+def test_the_config_names_both_container_flags(tmp_path, monkeypatch):
+    """`--disable-dev-shm-usage` travels with the sandbox flag rather than
+    being a precaution: Docker gives a container 64 MB of /dev/shm and
+    Chromium crashes partway through a page without it."""
+    import json
+
+    monkeypatch.setenv(validators.PA11Y_SANDBOX_ENV, "1")
+    seen = {}
+
+    html = tmp_path / "article.html"
+    html.write_text("<p>Body.</p>", encoding="utf-8")
+    monkeypatch.setattr(validators.shutil, "which", lambda name: "/usr/bin/pa11y")
+
+    def capture(argv, **kwargs):
+        # Read the config while the run is in flight, because the file is
+        # temporary and gone by the time run_pa11y returns.
+        path = Path(argv[argv.index("--config") + 1])
+        seen["config"] = json.loads(path.read_text(encoding="utf-8"))
+        seen["argv"] = argv
+        return subprocess.CompletedProcess(argv, 0, stdout="[]", stderr="")
+
+    monkeypatch.setattr(validators.subprocess, "run", capture)
+    validators.run_pa11y(html)
+
+    args = seen["config"]["chromeLaunchConfig"]["args"]
+    assert "--no-sandbox" in args
+    assert "--disable-dev-shm-usage" in args
+    # The page is still the last word, after the config that was added.
+    assert seen["argv"][-1].endswith("article.html")
+    assert seen["argv"][0] == "/usr/bin/pa11y"
+
+
+def test_the_config_file_does_not_outlive_the_run(tmp_path, monkeypatch):
+    """A validator asked only to read a galley must not leave a file where
+    it looked, which is why `run_epubcheck` writes its report to a temp
+    directory too."""
+    monkeypatch.setenv(validators.PA11Y_SANDBOX_ENV, "1")
+    written = {}
+
+    html = tmp_path / "article.html"
+    html.write_text("<p>Body.</p>", encoding="utf-8")
+    monkeypatch.setattr(validators.shutil, "which", lambda name: "/usr/bin/pa11y")
+
+    def capture(argv, **kwargs):
+        written["path"] = Path(argv[argv.index("--config") + 1])
+        assert written["path"].exists()
+        return subprocess.CompletedProcess(argv, 0, stdout="[]", stderr="")
+
+    monkeypatch.setattr(validators.subprocess, "run", capture)
+    validators.run_pa11y(html)
+
+    assert not written["path"].exists()
+    assert sorted(p.name for p in tmp_path.iterdir()) == ["article.html"]

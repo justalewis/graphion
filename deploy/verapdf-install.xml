@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  Unattended install answers for veraPDF's IzPack installer, replayed by
+  `java -jar verapdf-izpack-installer-<version>.jar <this file>`.
+
+  The panel ids and pack indices are taken from the veraPDF project's own
+  container install file, which is the authority on what this installer
+  expects:
+  https://github.com/veraPDF/veraPDF-apps/blob/integration/docker-install.xml
+
+  Only the CLI pack is selected. The GUI is a Swing application with
+  nothing to display it, the documentation is a copy of the website, and
+  the sample plugins are examples; none of the three is reachable from
+  this app, which calls `verapdf` as a subprocess and reads its JSON.
+
+  If a future installer renumbers its packs this file goes stale silently,
+  selecting whatever now sits at index 1. What catches that is the
+  `test -x` at the end of the Dockerfile layer that runs this: no CLI pack
+  means no launcher at /opt/verapdf/verapdf, and the build stops there
+  rather than shipping an image whose probe says the tool is missing.
+
+  Note for anyone editing this: XML forbids a double hyphen inside a
+  comment, so a CLI flag cannot be written out here. The build caught that
+  the first time.
+-->
+<AutomatedInstallation langpack="eng">
+    <com.izforge.izpack.panels.htmlhello.HTMLHelloPanel id="welcome"/>
+    <com.izforge.izpack.panels.target.TargetPanel id="install_dir">
+        <installpath>/opt/verapdf</installpath>
+    </com.izforge.izpack.panels.target.TargetPanel>
+    <com.izforge.izpack.panels.packs.PacksPanel id="sdk_pack_select">
+        <pack index="0" name="veraPDF GUI" selected="false"/>
+        <pack index="1" name="veraPDF CLI" selected="true"/>
+        <pack index="2" name="veraPDF Documentation" selected="false"/>
+        <pack index="3" name="veraPDF Sample Plugins" selected="false"/>
+    </com.izforge.izpack.panels.packs.PacksPanel>
+    <com.izforge.izpack.panels.install.InstallPanel id="install"/>
+    <com.izforge.izpack.panels.finish.FinishPanel id="finish"/>
+</AutomatedInstallation>

@@ -66,23 +66,75 @@ def pa11y_available() -> bool:
     return shutil.which("pa11y") is not None or shutil.which("pa11y-ci") is not None
 
 
+# Set to force the sandbox flags on or off rather than letting the rule
+# below decide. "0", "false", "no" and the empty string turn them off.
+PA11Y_SANDBOX_ENV = "GRAPHION_PA11Y_NO_SANDBOX"
+
+
+def pa11y_needs_no_sandbox() -> bool:
+    """Whether Chromium has to be told to drop its sandbox.
+
+    pa11y drives headless Chromium through puppeteer, and Chromium
+    refuses to start as root unless `--no-sandbox` is passed. The
+    container runs as root, so in production that refusal is every pa11y
+    run failing; on a developer's machine the flag is an unnecessary
+    loosening of a real protection.
+
+    So the test is the condition Chromium objects to rather than a
+    setting somebody has to remember: being root. `os.geteuid` does not
+    exist on Windows, where the question does not arise.
+    """
+    forced = os.environ.get(PA11Y_SANDBOX_ENV)
+    if forced is not None:
+        return forced.strip().lower() not in ("", "0", "false", "no")
+    geteuid = getattr(os, "geteuid", None)
+    return geteuid is not None and geteuid() == 0
+
+
+def pa11y_launch_config() -> Dict:
+    """What pa11y passes to `puppeteer.launch`.
+
+    `--disable-dev-shm-usage` is here for the same reason as the sandbox
+    flag and not as a precaution: Docker gives a container 64 MB of
+    /dev/shm by default, Chromium puts its shared memory there, and it
+    crashes partway through a page rather than failing to start. Both are
+    about running in a container, which is why they travel together.
+    """
+    return {"chromeLaunchConfig": {"args": ["--no-sandbox",
+                                            "--disable-dev-shm-usage"]}}
+
+
 def run_pa11y(html_path: Path) -> Tuple[bool, List[Dict]]:
     """Run pa11y accessibility audit against an HTML file. Returns
     (no_issues_found, list_of_issues). Each issue is a dict with
     `code`, `type`, `message`, `selector`, `context`.
+
+    Chromium's launch arguments can only be reached through a config
+    file, so one is written beside the run where the environment needs it
+    and left out entirely where it does not. The file is temporary for
+    the reason `run_epubcheck`'s report is: a validator that left
+    something behind beside the galley would be writing into content it
+    was only asked to read.
     """
     if not pa11y_available():
         return False, [{"error": "pa11y not installed (npm install -g pa11y)"}]
     if not html_path.exists():
         return False, [{"error": f"HTML not found: {html_path}"}]
     binary = shutil.which("pa11y") or shutil.which("pa11y-ci")
-    try:
-        result = subprocess.run(
-            [binary, "--reporter", "json", str(html_path)],
-            capture_output=True, text=True, timeout=120,
-        )
-    except subprocess.TimeoutExpired:
-        return False, [{"error": "pa11y timed out (120s)"}]
+    argv = [binary, "--reporter", "json"]
+    with tempfile.TemporaryDirectory() as workspace:
+        if pa11y_needs_no_sandbox():
+            config = Path(workspace) / "pa11y.json"
+            config.write_text(json.dumps(pa11y_launch_config()),
+                              encoding="utf-8")
+            argv += ["--config", str(config)]
+        argv.append(str(html_path))
+        try:
+            result = subprocess.run(
+                argv, capture_output=True, text=True, timeout=120,
+            )
+        except subprocess.TimeoutExpired:
+            return False, [{"error": "pa11y timed out (120s)"}]
     try:
         issues = json.loads(result.stdout) if result.stdout else []
     except json.JSONDecodeError:
@@ -97,6 +149,8 @@ __all__ = [
     "verapdf_available",
     "run_verapdf",
     "pa11y_available",
+    "pa11y_needs_no_sandbox",
+    "pa11y_launch_config",
     "run_pa11y",
 ]
 
