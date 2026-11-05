@@ -484,6 +484,23 @@ is deleted when a job ends and a result must not be; they hold a copy of
 somebody's course, so they are never backed up and the job page offers to
 delete them.
 
+**A scanned page gets a text layer by overlay, and its proof is pixels.**
+`ocrlayer.py` lays Tesseract's text-only output over the original page, so
+the scanned image is the same bytes it arrived as. Every other pass proves
+it changed no word by comparing visible text, which cannot apply where text
+appearing is the point, so a layered page is rendered before and after and
+the images compared, again on the bytes written. `Result.proof` is `"text"`
+or `"pixels"` and `repack` applies the matching check per file; a layer
+whose page moved ships as it arrived.
+
+It never guesses the language (the wrong model produces confident
+nonsense), skips a rotated page rather than misplacing the words, and counts
+no layer as finished: a page that scored 92 percent still read "Schoo! of
+Engineering", and a real PDF lost a drop cap's first letter. Scanned pages
+are reported even when the option is off. Tesseract is optional here
+(`TESSERACT_PATH`, `ocr.available()`), absent from the production image, and
+the route refuses a request for it at the door when it cannot run.
+
 **`jobs.py` is the job runner, and what it mostly has to get right is
 not throughput.** Everything slow here has been a script for one reason:
 a chapter is minutes of pdfplumber and each validator is a subprocess

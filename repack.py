@@ -49,6 +49,7 @@ from typing import Callable, Optional
 
 import cartridge
 import invariance
+import ocrlayer
 import remediate
 
 HTML_SUFFIXES = (".html", ".htm")
@@ -57,6 +58,34 @@ HTML_SUFFIXES = (".html", ".htm")
 # 2,000 untitled frames needs the count and a place to start, not a list
 # nobody will read, and the full detail is in the per-file log.
 WORKLIST_FILES = 200
+
+# The worklist keeps one sentence per kind, taken from the first file that
+# owes it, so a kind whose per-file detail names pages and scores would read
+# as if that file's numbers were the whole archive's. These replace it; the
+# per-file log keeps every file's own.
+_WORKLIST_WORDS = {
+    "ocr-needs-proofing": (
+        "A recognised text layer was added under scanned pages. OCR is "
+        "confidently wrong, so every layer needs a person to read it against "
+        "the page; the per-file log lists the lowest-confidence pages first."),
+    "ocr-page-skipped": (
+        "Scanned pages that were not read, for the reason given against each "
+        "file in the per-file log."),
+    "scanned-pages": (
+        "Pages with no text layer, which a screen reader cannot read at all. "
+        "Turn on the text layer option and give the course language to "
+        "recognise them."),
+    "ocr-unavailable": (
+        "Scanned pages that could not be read because Tesseract is not "
+        "installed here."),
+    "ocr-needs-a-language": (
+        "Scanned pages that were not read because no course language was "
+        "given. Reading them with the wrong language model produces "
+        "confident nonsense."),
+    "ocr-language-unavailable": (
+        "Scanned pages that were not read because the Tesseract model for "
+        "this language is not installed."),
+}
 
 # Said first, in every report, because it is the thing most likely to
 # cause real damage if it is missed.
@@ -96,6 +125,10 @@ class Report:
     changed: int = 0
     identical: int = 0
     verified_chars: int = 0
+    # Pages that gained a recognised text layer and were checked by how they
+    # look rather than by their text, which is the only check that can apply
+    # where text appearing is the point.
+    verified_pages: int = 0
     files: list = field(default_factory=list)
     text_moved: list = field(default_factory=list)
     unread: list = field(default_factory=list)
@@ -118,6 +151,10 @@ class Report:
                 f"{self.verified_chars:,} characters of text compared "
                 f"after writing; "
                 f"{len(self.text_moved_in_output)} changed.")
+        if self.verified_pages:
+            said += (f" The appearance of {self.verified_pages} scanned "
+                     f"page(s) given a text layer was compared as well, "
+                     f"and none had changed.")
         if self.text_moved:
             said += (f" {len(self.text_moved)} fix(es) were dropped because "
                      f"they would have moved a word, and those files are "
@@ -159,10 +196,46 @@ def _fixer(path: str):
     return None, None
 
 
+def _with_ocr(result, language, stop):
+    """Lay a recognised text layer under the scanned pages of a PDF.
+
+    The result keeps `proof = "pixels"` only if a layer was actually added,
+    since that is the one case where the text check cannot apply.
+    """
+    try:
+        layer = ocrlayer.add_text_layer(result.data, language, stop=stop)
+    except ocrlayer.Stopped:
+        raise Stopped()
+    result.owed.extend(layer.owed)
+    if layer.changed:
+        result.data = layer.data
+        result.changes.extend(layer.changes)
+        result.proof = "pixels"
+        result.layered = layer.layered
+    return result
+
+
+def _report_scans(result):
+    """Say a PDF has scanned pages when no text layer was asked for.
+
+    A remediation report that silently omitted them would read as a clean
+    bill of health for a file a screen reader cannot read at all.
+    """
+    try:
+        needing = ocrlayer.pages_needing_ocr(result.data)
+    except Exception:
+        return
+    if needing:
+        result.owed.append(remediate.Owed(
+            kind="scanned-pages", count=len(needing),
+            detail=f"{len(needing)} page(s) have no text layer"))
+
+
 def remediate_cartridge(
         src, dst, language: Optional[str] = None,
         tick: Optional[Callable] = None,
-        stop: Optional[Callable] = None) -> Report:
+        stop: Optional[Callable] = None,
+        ocr: bool = False) -> Report:
     """Screen, remediate and write `dst`. Raises `Refusal` or `Stopped`.
 
     `language` is the course's, stated by the caller and never guessed.
@@ -205,14 +278,28 @@ def remediate_cartridge(
                 if fixer is not None and not info.is_dir():
                     result = fixer(data, language)
                     record = _record(info.filename, kind, result)
+                    if not result.error and kind == "pdf":
+                        if ocr:
+                            result = _with_ocr(result, language, stop)
+                        else:
+                            _report_scans(result)
+                        record = _record(info.filename, kind, result)
                     if result.error:
                         record.outcome = "unreadable"
                         record.note = result.error
                     elif result.changed:
                         # The guarantee, per file: a fix that moved a word
-                        # is dropped and the file ships as it arrived.
-                        was = invariance.text_of(info.filename, data)
-                        now = invariance.text_of(info.filename, result.data)
+                        # is dropped and the file ships as it arrived. A
+                        # recognised text layer is held to the other half of
+                        # the same promise instead: the page looks the same.
+                        if result.proof == "pixels":
+                            was = ocrlayer.fingerprint(data, result.layered)
+                            now = ocrlayer.fingerprint(result.data,
+                                                       result.layered)
+                        else:
+                            was = invariance.text_of(info.filename, data)
+                            now = invariance.text_of(info.filename,
+                                                     result.data)
                         if was is None or was != now:
                             report.text_moved.append(info.filename)
                             record.outcome = "dropped"
@@ -223,7 +310,9 @@ def remediate_cartridge(
                         else:
                             new_data = result.data
                             changed_paths.append(info.filename)
-                            originals_text[info.filename] = was
+                            originals_text[info.filename] = (
+                                ("pixels", result.layered, was)
+                                if result.proof == "pixels" else was)
                     report.files.append(record)
                     results.append(result if record.outcome == "changed"
                                    else remediate.Result(data=data,
@@ -273,9 +362,22 @@ def _verify(src: Path, written: Path, changed: list, originals: dict,
                     continue
                 new = b.getinfo(info.filename)
                 if info.filename in changed_set:
+                    spec = originals.get(info.filename)
+                    if isinstance(spec, tuple):
+                        # A recognised text layer: how the layered pages look
+                        # and the text of the rest, read again from disk.
+                        _tag, layered, was = spec
+                        now = ocrlayer.fingerprint(b.read(info.filename),
+                                                   layered)
+                        if now != was:
+                            report.text_moved_in_output.append(info.filename)
+                        else:
+                            report.verified_chars += len(now[1] or "")
+                            report.verified_pages += len(layered)
+                        continue
                     now = invariance.text_of(info.filename,
                                              b.read(info.filename))
-                    if now != originals.get(info.filename):
+                    if now != spec:
                         report.text_moved_in_output.append(info.filename)
                     else:
                         report.verified_chars += len(now or "")
@@ -311,7 +413,9 @@ def _worklist(files: list) -> list:
         for owed in record.owed:
             entry = by_kind.setdefault(
                 owed["kind"], {"kind": owed["kind"], "count": 0,
-                               "detail": owed["detail"], "files": []})
+                               "detail": _WORKLIST_WORDS.get(owed["kind"],
+                                                             owed["detail"]),
+                               "files": []})
             entry["count"] += owed["count"]
             if len(entry["files"]) < WORKLIST_FILES:
                 entry["files"].append(record.path)

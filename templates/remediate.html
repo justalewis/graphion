@@ -66,6 +66,33 @@
         wrong accent, which is worse than leaving it off.
       </p>
     </div>
+    <div>
+      <label>
+        <input type="checkbox" name="ocr"
+               {% if not shape.ocr_ready %}disabled{% endif %} />
+        Read scanned pages and add a text layer
+      </label>
+      <p class="dim">
+        A scanned page is a picture, so a screen reader finds nothing on
+        it. This reads it and lays the words under the image, invisibly, so
+        the page looks exactly as it did. It needs the course language
+        above, and it is slow: a page takes a couple of seconds.
+      </p>
+      <p class="dim">
+        <strong>Every recognised page still needs proofing.</strong> OCR is
+        confidently wrong: a page scoring 92 percent still read
+        &ldquo;Schoo! of Engineering&rdquo;. The report lists the
+        lowest-confidence pages first, and counts none of them as finished.
+      </p>
+      {% if not shape.ocr_ready %}
+      <p class="dim">
+        Tesseract is not installed on this server, so this is unavailable.
+        Scanned pages are still counted in the report.
+      </p>
+      {% elif shape.ocr_languages %}
+      <p class="dim">Languages available here: {{ shape.ocr_languages | join(', ') }}.</p>
+      {% endif %}
+    </div>
     <div class="action-row">
       <button type="submit" class="button">Remediate it</button>
     </div>

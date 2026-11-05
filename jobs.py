@@ -662,6 +662,7 @@ def _remediate_cartridge(job: dict, progress: Progress) -> None:
         report = repack.remediate_cartridge(
             carts[0], out_dir / "remediated.imscc",
             language=facts.get("language") or None,
+            ocr=bool(facts.get("ocr")),
             tick=lambda done, total, _path: progress.tick(done, total),
             stop=lambda: progress.cancelled)
     except repack.Refusal as exc:

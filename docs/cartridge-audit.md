@@ -496,3 +496,44 @@ paragraphs from font size and position, and an OCR text layer has neither:
 the sizes are synthetic. Reading these scans into Markdown needs an
 OCR-aware path of its own, which is a separate piece of work from adding a
 text layer under the image so a screen reader has something to read.
+
+**R4 is built** (`ocrlayer.py`, behind an option on `/remediate`). It lays a
+recognised text layer under each scanned page, and it does so by overlaying
+Tesseract's text-only output onto the original page rather than rebuilding
+the page from a re-encoded image, so the scan itself is the same bytes it
+arrived as. Measured on a real page of the CPTSC corpus: 2,837 characters
+added, pixels identical, and the file grew by 34 KB.
+
+**Its proof is pixels, not text.** Every other pass proves it changed no
+word by comparing the visible text before and after, which cannot apply
+where the point is that text appears. The right invariant is the other half
+of the same promise: each layered page is rendered before and after and the
+two compared, and a page whose appearance moved is dropped. The check runs
+again on the bytes written to disk, and the summary says "the appearance of
+N scanned page(s) was compared" so that "0 characters compared" cannot be
+read as nothing having been checked.
+
+**Run on the real scanned PDF from these cartridges**
+(`Making_Content_Understandable.pdf`, three pages): all three layered in nine
+seconds, verified, and the page images byte-identical. It also showed a
+concrete miss. Page one reads "ere's a statement", without the H, because
+the first letter is a drop cap that Tesseract did not recognise: the same
+phenomenon that cost two chapters their titles, and the reason every layer
+owes proofing however confident it is.
+
+Four refusals, each tested. No language given means nothing is read, because
+reading Spanish with the English model produces confident nonsense. A
+language whose model is not installed is reported, not approximated. A
+rotated page is skipped and reported, because Tesseract reads it as rendered
+while the layer is placed in unrotated page space and the words would land
+in the wrong places with nothing downstream noticing. And a page whose
+appearance moved is shipped as it arrived.
+
+Scanned pages are reported even with the option off. A remediation report
+that silently omitted them would read as a clean bill of health for a file a
+screen reader cannot read at all. Not in the production image, so the option
+is greyed out there and a request for it is refused at the door rather than
+queued and left to fail an hour later.
+
+**Next:** R6 (the drafting queue), and an OCR-aware path into `pdf_ingest`
+for scanned archives, which is separate work from adding a text layer.

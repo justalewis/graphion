@@ -2923,7 +2923,16 @@ def register_routes(app: Flask):
         course design. The work is a job because a cartridge with its media
         is hundreds of megabytes and minutes of reading.
         """
-        shape = {"max_mb": MAX_CARTRIDGE_BYTES // (1024 * 1024)}
+        import ocr as ocr_module
+        import ocrlayer
+
+        shape = {"max_mb": MAX_CARTRIDGE_BYTES // (1024 * 1024),
+                 # Asked at request time, so the form greys the option out
+                 # where Tesseract is absent, which is production today.
+                 "ocr_ready": ocr_module.available(),
+                 "ocr_languages": sorted(
+                     code for code, name in ocrlayer.LANGUAGES.items()
+                     if name in ocrlayer.installed_languages())}
         if request.method == "GET":
             return render_template("remediate.html", shape=shape)
 
@@ -2942,9 +2951,32 @@ def register_routes(app: Flask):
             flash("A language is a code such as en, es or fr-CA.", "error")
             return redirect(url_for("remediate_upload"))
 
+        want_ocr = request.form.get("ocr") == "on"
+        if want_ocr:
+            # Refused at the door rather than queued and left to fail an hour
+            # later: each of these is known now, and a long job that cannot
+            # do what was asked is the worst place to find out.
+            if not shape["ocr_ready"]:
+                flash("Tesseract is not installed on this server, so scanned "
+                      "pages cannot be read. Untick that option, or run this "
+                      "somewhere it is.", "error")
+                return redirect(url_for("remediate_upload"))
+            if not language:
+                flash("Reading scanned pages needs the course language, and "
+                      "none is guessed: the wrong language model produces "
+                      "confident nonsense.", "error")
+                return redirect(url_for("remediate_upload"))
+            if not ocrlayer.tesseract_language(language):
+                flash(f"The Tesseract model for {language!r} is not "
+                      f"installed here. Installed: "
+                      f"{', '.join(shape['ocr_languages']) or 'none'}.",
+                      "error")
+                return redirect(url_for("remediate_upload"))
+
         name = secure_filename(upload.filename) or "course.imscc"
         job_id = jobs.create("remediate_cartridge", f"Remediate {name}",
-                             {"language": language, "filename": name}, None)
+                             {"language": language, "filename": name,
+                              "ocr": want_ocr}, None)
         try:
             upload.save(jobs.staging_dir(job_id) / name)
         except Exception as exc:

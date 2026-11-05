@@ -93,6 +93,13 @@ class Result:
     changes: list = field(default_factory=list)
     owed: list = field(default_factory=list)
     error: str = ""
+    # How a change to this file is proved harmless. "text" is the rule for
+    # everything here: the visible text is the same before and after. "pixels"
+    # is for a recognised text layer, where text appearing is the point and
+    # the promise is the other half of the same one, that the page looks
+    # identical. `layered` names the pages that carry the layer.
+    proof: str = "text"
+    layered: list = field(default_factory=list)
 
     @property
     def changed(self) -> bool:
