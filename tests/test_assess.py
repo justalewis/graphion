@@ -298,7 +298,11 @@ def test_nothing_is_checked_unless_it_is_asked_for(described, monkeypatch):
     result = assess.assess_pdf(described)
 
     assert result.verapdf is None
-    assert any("pass --validate" in note for note in result.notes)
+    # The note states the finding and names no flag, because the same note
+    # is read on the assessment page, where there is a checkbox instead.
+    assert any("Nothing checked the declaration" in note
+               for note in result.notes)
+    assert not any("--validate" in note for note in result.notes)
 
 
 # ---------- the second checker, over HTML ----------
@@ -316,7 +320,8 @@ def test_a_page_nobody_checked_does_not_read_as_a_clean_page(tmp_path):
 
     assert result.clean is None
     assert not result.checked
-    assert "--validate" in result.pa11y_note
+    assert "Not checked" in result.pa11y_note
+    assert "--validate" not in result.pa11y_note
 
 
 def test_a_checker_that_is_not_installed_does_not_make_a_page_clean(
@@ -947,7 +952,11 @@ def test_the_report_does_not_call_a_file_conformant_on_its_own_say_so(
     text = assess.report([assess.assess_pdf(described)])
 
     assert "declares conformance" in text
-    assert "pass --validate" in text
+    # And says in the same breath that nothing checked it. The wording
+    # names no flag, because the assessment page reads these notes too;
+    # `main()` is what tells a terminal which flag to pass.
+    assert "A declaration is not a pass" in text
+    assert "Nothing checked the declaration above" in text
 
 
 def test_the_summary_says_when_nothing_checked_the_declarations(tmp_path):
@@ -975,7 +984,8 @@ def test_tables_are_not_counted_without_deep(described):
     result = assess.assess_pdf(described)
 
     assert result.tables is None
-    assert any("--deep" in note for note in result.notes)
+    assert any("Tables were not counted" in note for note in result.notes)
+    assert not any("--deep" in note for note in result.notes)
 
 
 def test_deep_counts_tables(described):

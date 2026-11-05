@@ -345,6 +345,27 @@ What is still missing from §3.3 is the other half: these readings are not
 persisted, dated or tied to a content hash, so the pass answers "where does
 this stand today" and cannot yet answer "what changed since the last run."
 
+**And until `/assess` existed it could only be run from a terminal.** The
+module answers the question a journal asks before any agreement exists,
+and the only person who could ask it was one with a shell on the machine:
+`app.py` never imported `assess`. Every other accessibility page here
+reads an article Graphion already owns, filed under a journal and an
+issue, so there was nowhere for a PDF that is not somebody's published
+article to appear. `/assess` takes a batch of them, reports the same
+readings, and writes nothing: the uploads go to a temporary directory
+that goes away with the request.
+
+What it is not is batch remediation. Graphion does not repair a PDF, it
+replaces one: remediation here means ingesting the file, reconstructing
+it as Markdown and rendering a new conformant galley from a template, so
+what a journal gets back is a re-typeset document in Graphion's design
+rather than its own document fixed. For the two archives here that is the
+right trade, because the journals own the design. For an archive somebody
+sends, it is the first thing to say out loud. Taking one in at scale also
+needs a job runner, since ingest is minutes a chapter and the three
+validators are 120 second subprocesses, and a collection that is not a
+journal, which touches the schema; neither is built.
+
 ### 3.5 Tables stop at what a pipe table can express
 
 Confirmed against Pandoc 3.11: the HTML writer emits `<th>` with no `scope`

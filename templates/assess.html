@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+{% block title %}Assess an archive{% endblock %}
+{% block content %}
+
+<section class="card">
+  <h1>Assess an archive</h1>
+  <p class="dim">
+    What remediating a set of PDFs would take, read off the files themselves.
+    Nothing is ingested: no article is created, no database row is written,
+    and the uploads are deleted when this page finishes rendering. Use it on
+    an archive before deciding whether to take it in.
+  </p>
+
+  <form method="post" enctype="multipart/form-data" class="stack">
+    <div>
+      <label for="pdfs"><strong>PDFs</strong></label>
+      <input type="file" id="pdfs" name="pdfs" multiple
+             accept="application/pdf,.pdf" required />
+      <p class="dim">
+        One file or many; up to {{ shape.max_files }} a pass, and
+        {{ shape.max_mb }} MB in total. A whole back catalogue at once is the
+        command line: <code>python assess.py &lt;folder&gt;</code>, which has
+        no cap and can also read a folder of HTML.
+      </p>
+    </div>
+
+    <div>
+      <label>
+        <input type="checkbox" name="deep" {% if deep %}checked{% endif %} />
+        Count tables as well
+      </label>
+      <p class="dim">
+        Reads every page a second time, so it roughly doubles how long a file
+        takes.
+      </p>
+    </div>
+
+    <div>
+      <label>
+        <input type="checkbox" name="validate"
+               {% if not shape.validate_ready %}disabled{% endif %}
+               {% if validate %}checked{% endif %} />
+        Ask verapdf for a verdict
+      </label>
+      <p class="dim">
+        {% if shape.validate_ready %}
+        A file saying it conforms and a checker agreeing are two different
+        facts. verapdf is a JVM process at about thirteen seconds a file, so
+        this pass takes at most {{ shape.max_validate_files }} files.
+        {% else %}
+        verapdf is not on PATH, so no verdict can be taken. What the files
+        declare about themselves is still read. Install it from
+        <a href="https://verapdf.org/">verapdf.org</a>.
+        {% endif %}
+      </p>
+    </div>
+
+    <div class="action-row">
+      <button type="submit" class="button">Read the files</button>
+    </div>
+  </form>
+</section>
+
+{% if assessments %}
+<section class="card">
+  <h2>What the pass found</h2>
+
+  <div class="status-strip">
+    <div class="stat">
+      <span class="num">{{ rollup.readable }}</span>
+      <span class="lbl">file(s) read</span>
+    </div>
+    <div class="stat">
+      <span class="num">{{ rollup.pages }}</span>
+      <span class="lbl">page(s)</span>
+    </div>
+    <div class="stat {% if rollup.figures_owed %}warn{% endif %}">
+      <span class="num">{{ rollup.figures_owed }}</span>
+      <span class="lbl">figure(s) to describe</span>
+    </div>
+    <div class="stat {% if rollup.untagged %}warn{% else %}ok{% endif %}">
+      <span class="num">{{ rollup.untagged }}</span>
+      <span class="lbl">with no structure tree</span>
+    </div>
+  </div>
+
+  <table class="reg-table">
+    <caption class="dim">Every readable file in this pass, added up.</caption>
+    <tbody>
+      <tr>
+        <td class="reg-kind">Read</td>
+        <td class="num"><span class="tally good">{{ rollup.readable }}</span></td>
+        <td>of {{ rollup.files }} uploaded{% if rollup.unreadable %};
+          {{ rollup.unreadable }} would not open{% endif %}</td>
+      </tr>
+      <tr>
+        <td class="reg-kind">Declare conformance</td>
+        <td class="num"><span class="tally {% if rollup.declaring %}good{% else %}unknown{% endif %}">{{ rollup.declaring }}</span></td>
+        <td>tagged, with a PDF/UA part and a title in the XMP packet. Claiming
+          is not passing.</td>
+      </tr>
+      <tr>
+        <td class="reg-kind">Pass verapdf</td>
+        {% if rollup.checked %}
+        <td class="num"><span class="tally {% if rollup.passing == rollup.checked %}good{% else %}bad{% endif %}">{{ rollup.passing }}</span></td>
+        <td>of {{ rollup.checked }} checked.
+          {% if rollup.contradicted %}
+          <strong>{{ rollup.contradicted | length }} declare conformance and
+          do not pass it</strong>, which is the case to read first: a file
+          that states PDF/UA-1 has already been through somebody's pipeline,
+          so what it is short of is usually narrow and nobody has been told.
+          {% endif %}
+        </td>
+        {% else %}
+        <td class="num"><span class="tally unknown">0</span></td>
+        <td>Nothing was checked, so everything above is what the files say
+          about themselves. Tick the verapdf box to take a verdict.</td>
+        {% endif %}
+      </tr>
+      <tr>
+        <td class="reg-kind">Figures to describe</td>
+        <td class="num"><span class="tally {% if rollup.figures_owed %}warn{% else %}good{% endif %}">{{ rollup.figures_owed }}</span></td>
+        <td>of {{ rollup.figures_found }} found. Where a file has a structure
+          tree the tree decides, because it states how many figures it holds
+          and how many carry an alt.</td>
+      </tr>
+      {% if rollup.pages_needing_ocr %}
+      <tr>
+        <td class="reg-kind">Pages needing OCR</td>
+        <td class="num"><span class="tally bad">{{ rollup.pages_needing_ocr }}</span></td>
+        <td>before any of the rest of it can begin.</td>
+      </tr>
+      {% endif %}
+      <tr>
+        <td class="reg-kind">No structure tree</td>
+        <td class="num"><span class="tally {% if rollup.untagged %}warn{% else %}good{% endif %}">{{ rollup.untagged }}</span></td>
+        <td>of {{ rollup.readable }}. For those the reconstruction is inferred
+          rather than read: paragraphs from the first-line indent, heads from
+          type size and centring, emphasis from font names. Every one of
+          those is a judgement that can be wrong, so the pages are read
+          afterwards by somebody.</td>
+      </tr>
+      {% if rollup.tagged %}
+      <tr>
+        <td class="reg-kind">Tree reaches the text</td>
+        <td class="num"><span class="tally {% if rollup.trees_usable %}good{% else %}warn{% endif %}">{{ rollup.trees_usable }}</span></td>
+        <td>of {{ rollup.tagged }} tagged. A tree that covers only a cover
+          page states nothing about the chapter.</td>
+      </tr>
+      {% endif %}
+      {% if rollup.symbol_pages %}
+      <tr>
+        <td class="reg-kind">Symbol type</td>
+        <td class="num"><span class="tally warn">{{ rollup.unmapped_fonts | length }}</span></td>
+        <td>font(s) not mapped yet, over {{ rollup.symbol_pages }} page(s) in
+          {{ rollup.symbol_fonts | length }} font(s){% if rollup.unmapped_fonts %}:
+          {{ rollup.unmapped_fonts | map(attribute='family') | join(', ') }}{% endif %}.
+          A font is one reading somebody does off the page and writes down
+          once, however many characters it sets.</td>
+      </tr>
+      {% endif %}
+      {% if rollup.untagged_links %}
+      <tr>
+        <td class="reg-kind">Untagged links</td>
+        <td class="num"><span class="tally warn">{{ rollup.untagged_links }}</span></td>
+        <td>of {{ rollup.link_annotations }} link annotation(s).</td>
+      </tr>
+      {% endif %}
+      {% if rollup.unreadable_characters %}
+      <tr>
+        <td class="reg-kind">Unreadable characters</td>
+        <td class="num"><span class="tally warn">{{ rollup.unreadable_characters }}</span></td>
+        <td>in the private use area or otherwise meaningless to a screen
+          reader.</td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+
+  <div class="reg-note">
+    <p>
+      How many of these figures set their words as a picture is not in any
+      total here, and it cannot be read off the page: nothing can tell a
+      photograph of a document from a photograph of anything else without
+      looking. That count is what decides whether an archive is finished,
+      and it is the number to go and get by hand.
+    </p>
+  </div>
+</section>
+
+<section class="card">
+  <h2>File by file</h2>
+  {% for a in assessments %}
+  <div class="assess-file">
+    <h3>{{ a.path.name }}</h3>
+    {% if not a.readable %}
+    <p><span class="chip chip-warn">will not open</span> {{ a.error }}</p>
+    {% else %}
+    <p>
+      {% if a.conformant %}
+      <span class="chip chip-ok">declares PDF/UA-{{ a.declared_ua_part }}</span>
+      {% else %}
+      <span class="chip chip-warn">needs work</span>
+      {% endif %}
+      {% if a.checked %}{# `checked` is assess.py's own reader of whether a
+         verdict was reached, so the page cannot disagree with the CLI about
+         what counts as one. #}
+        {% if a.verapdf %}
+        <span class="chip chip-ok">verapdf passes</span>
+        {% else %}
+        <span class="chip chip-warn">verapdf fails {{ a.failed_clause_count }} rule(s)</span>
+        {% endif %}
+      {% endif %}
+      {% if a.contradicted %}
+      <span class="chip chip-warn">declared and not passing</span>
+      {% endif %}
+    </p>
+    <p class="dim">
+      {{ a.pages }} page(s)
+      {%- if a.figures_found %} &middot; {{ a.figures_found }} figure(s),
+      {{ a.undescribed_figures }} to describe{% endif %}
+      {%- if a.tables %} &middot; {{ a.tables }} table(s){% endif %}
+      {%- if a.tree_coverage is not none %} &middot; tree reaches
+      {{ a.tree_coverage | round(1) }}% of the text{% endif %}
+      {%- if a.lang %} &middot; language {{ a.lang }}
+      {%- else %} &middot; no language set{% endif %}
+    </p>
+    {% if a.notes %}
+    <ul>
+      {% for note in a.notes %}<li>{{ note }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+    {% if a.failed_clauses %}
+    <table class="reg-table">
+      <caption class="dim">
+        What verapdf failed it on. A count of failed checks is a size and not
+        a quantity of work: tagging a document answers thousands of them at
+        once.
+      </caption>
+      <thead>
+        <tr><th>Clause</th><th>What it asks</th><th class="num">Instances</th></tr>
+      </thead>
+      <tbody>
+        {% for c in a.failed_clauses %}
+        <tr>
+          <td class="reg-kind">{{ c.clause }}.{{ c.test_number }}</td>
+          <td>{{ c.description }}</td>
+          <td class="num">{{ c.instances }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+    {% endif %}
+  </div>
+  {% endfor %}
+</section>
+{% endif %}
+
+{% endblock %}

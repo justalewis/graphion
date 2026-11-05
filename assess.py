@@ -717,7 +717,7 @@ def _run_pa11y(page: HtmlAssessment, validate: bool) -> None:
     import collections
 
     if not validate:
-        page.pa11y_note = "Not checked; pass --validate to run pa11y over it."
+        page.pa11y_note = "Not checked; pa11y is what would."
         return
     if not validators.pa11y_available():
         page.pa11y_note = "pa11y is not on PATH, so this page was not checked."
@@ -1283,13 +1283,12 @@ def _add_notes(assessment: Assessment) -> None:
         if assessment.failed_clause_count > NAMED_IN_NOTES:
             assessment.notes.append(
                 f"{assessment.failed_clause_count - NAMED_IN_NOTES} further "
-                f"rule(s) are in the readings; pass --json for all of them.")
+                f"rule(s) were found and are not named here.")
     elif assessment.verapdf_note:
         assessment.notes.append(assessment.verapdf_note)
     else:
         assessment.notes.append(
-            "Nothing checked the declaration above; pass --validate to run "
-            "verapdf over it.")
+            "Nothing checked the declaration above; verapdf is what would.")
 
     # What the reconstruction would be built from, which is the same answer
     # either way and has a different consequence. `pdf_ingest` infers for a
@@ -1331,8 +1330,110 @@ def _add_notes(assessment: Assessment) -> None:
 
     if assessment.tables is None:
         assessment.notes.append(
-            "Tables were not counted; pass --deep for that, which reads "
-            "every page a second time.")
+            "Tables were not counted; counting them reads every page a "
+            "second time.")
+
+
+@dataclass
+class Rollup:
+    """Every readable file in one pass, added up.
+
+    `report()` worked these out inline, which was right while a terminal
+    was the only reader of them. A page needs the same numbers as data,
+    and two places adding up the same files is how one count comes to
+    mean two things; `lint.figure_state` and `_carried_description` exist
+    for that reason and this codebase has paid for the lesson three
+    times.
+
+    An unreadable file is counted and then left out of every total. A
+    file pypdf could not open has told you nothing about its figures, and
+    folding a zero in beside a real reading is the kind of claim this
+    module exists to refuse.
+    """
+
+    files: int = 0
+    readable: int = 0
+    unreadable: int = 0
+    pages: int = 0
+
+    # What the files state about themselves.
+    declaring: int = 0
+    tagged: int = 0
+    trees_usable: int = 0
+
+    # What a checker made of that, over the files it reached. Never over
+    # the files it did not.
+    checked: int = 0
+    passing: int = 0
+    contradicted: list = field(default_factory=list)
+
+    # Work remediation would have to produce.
+    figures_found: int = 0
+    figures_owed: int = 0
+    pages_needing_ocr: int = 0
+    cover_pages: int = 0
+    clipping_pages: int = 0
+    link_annotations: int = 0
+    untagged_links: int = 0
+    unreadable_characters: int = 0
+    symbol_pages: int = 0
+    symbol_fonts: list = field(default_factory=list)
+
+    @property
+    def untagged(self) -> int:
+        """Files carrying no tree, so with nothing to check a reading
+        against. For those the reconstruction is inferred from the
+        geometry of the page, which is a judgement that can be wrong."""
+        return self.readable - self.tagged
+
+    @property
+    def unmapped_fonts(self) -> list:
+        """Symbol fonts nobody has read off the page yet, worst first.
+
+        The number a journal is quoted from, because a font is one
+        reading somebody does once, however many characters it sets.
+        """
+        return sorted((f for f in self.symbol_fonts if not f.known),
+                      key=lambda f: -f.characters)
+
+
+def rollup(assessments: list) -> Rollup:
+    """Add up a pass. Reads the assessments and asks the files nothing."""
+    readable = [a for a in assessments if a.readable]
+    checked = [a for a in readable if a.checked]
+
+    # Folded across the pass, because a font is one reading whether it
+    # sets one page or forty.
+    families: dict = {}
+    for assessment in readable:
+        for font in assessment.symbol_fonts:
+            carried = families.setdefault(
+                font.family, SymbolFont(font.family, known=font.known))
+            carried.characters += font.characters
+            carried.pages += font.pages
+
+    return Rollup(
+        files=len(assessments),
+        readable=len(readable),
+        unreadable=len(assessments) - len(readable),
+        pages=sum(a.pages for a in readable),
+        declaring=sum(1 for a in readable if a.conformant),
+        tagged=sum(1 for a in readable if a.tagged),
+        trees_usable=sum(1 for a in readable if a.tree_usable),
+        checked=len(checked),
+        passing=sum(1 for a in checked if a.verapdf),
+        contradicted=[a for a in checked if a.contradicted],
+        figures_found=sum(a.figures_found for a in readable),
+        figures_owed=sum(a.undescribed_figures for a in readable),
+        pages_needing_ocr=sum(a.pages_needing_ocr for a in readable),
+        cover_pages=sum(a.cover_pages for a in readable),
+        clipping_pages=sum(a.clipping_pages for a in readable),
+        link_annotations=sum(a.link_annotations for a in readable),
+        untagged_links=sum(a.untagged_links for a in readable),
+        unreadable_characters=sum(a.unreadable_characters for a in readable),
+        symbol_pages=sum(a.symbol_pages for a in readable),
+        symbol_fonts=sorted(families.values(), key=lambda f: f.family),
+    )
 
 
 def assess_folder(folder: Path, deep: bool = False,
@@ -1429,60 +1530,48 @@ def report(assessments: list, html: tuple = ()) -> str:
         lines.append("")
 
     if len(readable) > 1:
-        lines.append(f"{len(readable)} file(s) read, "
-                     f"{len(assessments) - len(readable)} unreadable.")
-        lines.append(
-            f"  {sum(1 for a in readable if a.conformant)} declare "
-            f"conformance.")
-        checked = [a for a in readable if a.checked]
-        if checked:
+        # Added up by `rollup()`, which the assessment page calls too, so
+        # the terminal and the browser cannot report different totals over
+        # the same files.
+        roll = rollup(assessments)
+        lines.append(f"{roll.readable} file(s) read, "
+                     f"{roll.unreadable} unreadable.")
+        lines.append(f"  {roll.declaring} declare conformance.")
+        if roll.checked:
             lines.append(
-                f"  {sum(1 for a in checked if a.verapdf)} of "
-                f"{len(checked)} checked file(s) pass verapdf.")
-            contradicted = [a for a in checked if a.contradicted]
-            if contradicted:
+                f"  {roll.passing} of "
+                f"{roll.checked} checked file(s) pass verapdf.")
+            if roll.contradicted:
                 lines.append(
-                    f"  {len(contradicted)} declare conformance and do not "
-                    f"pass it: "
-                    + ", ".join(a.path.name for a in contradicted[:6]) + ".")
+                    f"  {len(roll.contradicted)} declare conformance and do "
+                    f"not pass it: "
+                    + ", ".join(a.path.name
+                                for a in roll.contradicted[:6]) + ".")
         else:
             lines.append(
                 "  Nothing was checked; what is above is what each file "
                 "declares about itself. Pass --validate to run verapdf.")
         lines.append(
-            f"  {sum(a.undescribed_figures for a in readable)} figure(s) "
+            f"  {roll.figures_owed} figure(s) "
             f"needing a description, of "
-            f"{sum(a.figures_found for a in readable)} found.")
-        ocr = sum(a.pages_needing_ocr for a in readable)
-        if ocr:
-            lines.append(f"  {ocr} page(s) needing OCR before any of that.")
-        untagged = [a for a in readable if not a.tagged]
-        if untagged:
+            f"{roll.figures_found} found.")
+        if roll.pages_needing_ocr:
+            lines.append(f"  {roll.pages_needing_ocr} page(s) needing OCR "
+                         f"before any of that.")
+        if roll.untagged:
             lines.append(
-                f"  {len(untagged)} of {len(readable)} carry no structure "
+                f"  {roll.untagged} of {roll.readable} carry no structure "
                 f"tree, so for those the reconstruction is inferred rather "
                 f"than read: paragraphs from the first-line indent, heads "
                 f"from type size and centring, emphasis from font names. "
                 f"Every one of those is a judgement that can be wrong, so "
                 f"the pages are read afterwards by somebody.")
-        symbol_pages = sum(a.symbol_pages for a in readable)
-        if symbol_pages:
-            # Folded across the folder, because a font is one reading
-            # whether it sets one page or forty, and the number a journal is
-            # quoted from is how many fonts nobody has mapped yet.
-            families: dict = {}
-            for assessment in readable:
-                for font in assessment.symbol_fonts:
-                    carried = families.setdefault(
-                        font.family, SymbolFont(font.family, known=font.known))
-                    carried.characters += font.characters
-                    carried.pages += font.pages
-            unmapped = sorted((f for f in families.values() if not f.known),
-                              key=lambda f: -f.characters)
+        if roll.symbol_pages:
+            unmapped = roll.unmapped_fonts
             lines.append(
-                f"  {symbol_pages} page(s) set type in a symbol font, across "
-                f"{len(families)} font(s), of which {len(unmapped)} are not "
-                f"mapped yet"
+                f"  {roll.symbol_pages} page(s) set type in a symbol font, "
+                f"across {len(roll.symbol_fonts)} font(s), of which "
+                f"{len(unmapped)} are not mapped yet"
                 + (": " + ", ".join(f.family for f in unmapped[:6])
                    if unmapped else "")
                 + ". A font is one reading somebody does off the page and "
@@ -1603,6 +1692,19 @@ def main() -> int:
                          indent=2))
     else:
         print(report(assessments, tuple(pages)))
+        # Which flag to pass is said here and not in a note, because a note
+        # states a finding about the file and a flag is this surface's way
+        # of answering it. The same notes are read on the assessment page,
+        # where there is a checkbox and no flag to pass, and a page telling
+        # an editor to pass --validate is a page written for somebody else.
+        # On stderr, so a piped report is unchanged.
+        if not args.validate:
+            print("\nNo checker was run. Pass --validate for verapdf over "
+                  "the PDFs and pa11y over any HTML beside them.",
+                  file=sys.stderr)
+        if not args.deep and assessments:
+            print("Tables were not counted. Pass --deep to count them.",
+                  file=sys.stderr)
     return 0
 
 

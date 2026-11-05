@@ -383,6 +383,61 @@ from a pass that leaves the folder alone;
 well as off, because a subprocess is where a file would appear beside the
 one it read.
 
+**And for a year it could only be run from a terminal.** Every
+accessibility page in this app reads an article Graphion already owns,
+filed under a journal and an issue: `/accessibility` opens with
+`SELECT * FROM journals`, and the upload route takes one file, demands a
+journal that exists and refuses it without a short title and short
+authors for the running headers. So the module written precisely to
+answer a stranger's archive had no way in from a browser, and the
+question it exists for could still only be asked by somebody with a
+shell. `/assess` is that way in and deliberately nothing more: a route, a
+template and an upload that takes many files.
+
+It keeps `assess.py`'s contract one level up. The uploads go to a
+`tempfile.TemporaryDirectory` that goes away with the request, inside
+which the reading happens and after which everything is already data, so
+a server does not accumulate a stranger's PDFs any more than a folder
+does. `test_nothing_is_written_where_the_request_could_reach` points
+`tempfile.tempdir` at a scratch directory and asserts it is empty
+afterwards, which is the route's half of
+`test_assessing_a_folder_leaves_it_exactly_as_it_was`.
+
+Three things it had to get right. **`assess.rollup()` is the one adder.**
+`report()` worked the corpus totals out inline, which was right while
+prose was the only output; a page needs them as data, and two places
+adding up the same files is how one count comes to mean two things, which
+is the shape `_carried_description` and `lint.figure_state` are in.
+`report()` calls it now, so the terminal and the browser cannot quote a
+journal different figures for one archive.
+
+**A note is a finding and a flag is a surface.** Three notes in
+`_add_notes` named a command line flag, which is right in a shell and
+nonsense in a browser: an editor who has just ticked a checkbox was told
+to pass `--validate`. The notes state what was found and `main()` prints
+the flags on stderr, where a piped report is unchanged;
+`test_no_note_tells_the_reader_to_pass_a_flag` holds it, because the next
+note somebody writes will want to name one.
+
+**And the larger request body stays on the one route.** A batch needed
+more than `MAX_UPLOAD_BYTES`, and `MAX_CONTENT_LENGTH` is per
+application, so raising it would have handed every upload that writes
+into `content/` six times the headroom it has ever had. The ceiling is
+the larger of the two and a `before_request` holds everything but
+`ASSESS_ENDPOINT` to the smaller one. The exemption is by endpoint name
+rather than by path, so a rename detaches it loudly rather than widening
+the limit in silence, and a test pins the name to a route that exists.
+
+The caps are about what a request can carry rather than about what the
+module can read: 25 files a pass at about two seconds each, 10 with
+verapdf on at about thirteen, against the 300 second gunicorn timeout
+`deploy/entrypoint.sh` configures. A whole back catalogue is still
+`python assess.py <folder>`, which has no cap because nothing is waiting
+on it, and the page says so. Batch ingest, as against batch assessment,
+is a different project: it needs a job runner, because ingest is minutes
+a chapter and the three validators are 120 second subprocesses, and it
+needs a collection that is not a journal.
+
 **`assess.read_html` reads a page the way `assess_pdf` reads a PDF**, and
 reading is not behind `--validate`, because it costs what reading a file
 costs. HTML states itself more plainly: an `<img>` either carries an `alt`

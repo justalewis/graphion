@@ -8,6 +8,12 @@
     articles. A result counts as current only where a run is on record against
     the file now on disk.
   </p>
+  <p class="dim">
+    For an archive this app does not hold,
+    <a href="{{ url_for('assess_archive') }}">assess a batch of PDFs</a>
+    instead. That reads the files and writes nothing, so it answers what
+    remediation would cost before anything is taken in.
+  </p>
 
   {% for s in summaries %}
   <h2 style="margin-top: var(--space-6);">

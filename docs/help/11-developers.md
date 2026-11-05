@@ -182,6 +182,11 @@ app.py:accessibility_run_checks — POST /accessibility/<slug>/run-checks
   → register.record_pdfua                  every rendered galley
     → assess.read_declaration              catalog and XMP, no page parsed
 
+app.py:assess_archive       — GET/POST /assess
+  → tempfile.TemporaryDirectory   the uploads, gone with the request
+  → assess.assess_pdf             per file; no article, no row, no write
+  → assess.rollup                 the same adder report() uses
+
 app.py:article_metadata     — POST /articles/<id>/metadata
   → conversion.write_article_metadata
   → conversion.render_all (auto-render)

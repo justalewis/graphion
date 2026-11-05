@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import re
 import sqlite3
+import tempfile
 import threading
 import time
 from collections import defaultdict
@@ -31,17 +32,43 @@ import standalone_html
 from auth import User, login_manager
 from config import (
     ALLOWED_UPLOAD_EXTENSIONS, CONTENT_DIR, LOGIN_MAX_ATTEMPTS,
-    LOGIN_WINDOW_SECONDS, MAX_UPLOAD_BYTES, SECURE_COOKIES, SECRET_KEY,
+    LOGIN_WINDOW_SECONDS, MAX_ASSESS_BYTES, MAX_ASSESS_FILES,
+    MAX_ASSESS_VALIDATE_FILES, MAX_UPLOAD_BYTES, SECURE_COOKIES, SECRET_KEY,
 )
+
+# The one route allowed the larger request body. Named here rather than
+# matched on the path, so renaming the route cannot silently widen the
+# limit for everything else.
+ASSESS_ENDPOINT = "assess_archive"
 
 
 def create_app() -> Flask:
     app = Flask(__name__)
     app.config["SECRET_KEY"] = SECRET_KEY
-    app.config["MAX_CONTENT_LENGTH"] = MAX_UPLOAD_BYTES
+    # Flask's limit is per application and the assessment route needs a
+    # batch, so the ceiling is the larger of the two and the smaller one
+    # is enforced below for every other route. Setting this to
+    # MAX_ASSESS_BYTES alone would hand the publishing routes a six times
+    # larger body than they have ever accepted.
+    app.config["MAX_CONTENT_LENGTH"] = max(MAX_UPLOAD_BYTES, MAX_ASSESS_BYTES)
     app.config["SESSION_COOKIE_HTTPONLY"] = True
     app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
     app.config["SESSION_COOKIE_SECURE"] = SECURE_COOKIES
+
+    @app.before_request
+    def _hold_publishing_routes_to_the_smaller_limit():
+        """Everything but the assessment route keeps the limit it had.
+
+        `MAX_CONTENT_LENGTH` had to rise for a batch of PDFs to arrive at
+        all, and that config is application wide, so without this every
+        upload that writes into `content/` would quietly have gained the
+        same headroom.
+        """
+        if request.endpoint == ASSESS_ENDPOINT:
+            return None
+        if (request.content_length or 0) > MAX_UPLOAD_BYTES:
+            abort(413)
+        return None
 
     @app.template_filter("from_json")
     def _from_json(s):
@@ -2680,6 +2707,109 @@ def register_routes(app: Flask):
     # is read fresh rather than cached; a cache keyed on mtime would be the
     # weak evidence the register exists to replace. The half worth attacking
     # first is the lookups, which could be one query a journal.
+
+    @app.route("/assess", methods=["GET", "POST"])
+    @login_required
+    def assess_archive():
+        """Read a batch of PDFs and report what remediating them would take.
+
+        The front door for an archive Graphion does not hold. Every other
+        accessibility page here reads an article the app already owns,
+        filed under a journal and an issue, so the question a journal asks
+        first, which is what remediating its back catalogue would cost,
+        could not be answered without first committing to the archive.
+        `assess.py` was written to answer it and had no way in from a
+        browser; this is that way in and nothing more.
+
+        Nothing is ingested. No article directory is made, no database row
+        is written, and the uploads land in a temporary directory that
+        goes away with the request, so a stranger's PDFs do not
+        accumulate on the server either. `assess.py` writes nothing by
+        contract and this route is the same promise one level up.
+        """
+        # Imported here rather than at the top, the way `register` imports
+        # it and the way every other caller of `validators` in this file
+        # does: `assess` pulls pdfplumber in behind it, and one route is
+        # not a reason to put that in the server's start-up.
+        import assess
+        import validators
+
+        validate_ready = validators.verapdf_available()
+        shape = {
+            "max_files": MAX_ASSESS_FILES,
+            "max_validate_files": MAX_ASSESS_VALIDATE_FILES,
+            "max_mb": MAX_ASSESS_BYTES // (1024 * 1024),
+            "validate_ready": validate_ready,
+        }
+        if request.method == "GET":
+            return render_template("assess.html", shape=shape)
+
+        uploads = [f for f in request.files.getlist("pdfs")
+                   if f and f.filename]
+        if not uploads:
+            flash("No files uploaded.", "error")
+            return redirect(url_for("assess_archive"))
+
+        deep = request.form.get("deep") == "on"
+        validate = request.form.get("validate") == "on" and validate_ready
+        # A verdict costs about thirteen seconds a file against about two
+        # for a reading, so asking for one lowers how many files a single
+        # pass will take.
+        cap = MAX_ASSESS_VALIDATE_FILES if validate else MAX_ASSESS_FILES
+
+        def is_pdf(upload) -> bool:
+            return Path(upload.filename).suffix.lower() == ".pdf"
+
+        pdfs = [f for f in uploads if is_pdf(f)]
+        skipped = [f.filename for f in uploads if not is_pdf(f)]
+        over = [f.filename for f in pdfs[cap:]]
+        pdfs = pdfs[:cap]
+
+        if not pdfs:
+            flash("This page reads PDFs; none of those is one.", "error")
+            return redirect(url_for("assess_archive"))
+        if skipped:
+            flash(f"{len(skipped)} file(s) were not PDFs and were left out: "
+                  f"{', '.join(skipped[:6])}.", "error")
+        if over:
+            flash(f"{len(over)} file(s) past the limit of {cap} for this pass "
+                  f"were left out. A whole archive at once is the command "
+                  f"line: python assess.py <folder>.", "error")
+
+        with tempfile.TemporaryDirectory(prefix="graphion-assess-") as tmp:
+            staged = []
+            for upload in pdfs:
+                name = secure_filename(upload.filename) or "upload.pdf"
+                if not name.lower().endswith(".pdf"):
+                    # `secure_filename` can strip a name down to nothing
+                    # recognisable; a reported file with no name at all is
+                    # worse than a placeholder.
+                    name = f"{name or 'upload'}.pdf"
+                dest = Path(tmp) / name
+                # A batch can carry two files of one name from different
+                # folders. Without this the second overwrites the first and
+                # the same bytes are reported twice under one heading.
+                serial = 1
+                while dest.exists():
+                    dest = Path(tmp) / (f"{Path(name).stem}-{serial}"
+                                        f"{Path(name).suffix}")
+                    serial += 1
+                upload.save(dest)
+                staged.append(dest)
+            # Inside the context manager, because reading is the only thing
+            # that needs the files; everything below is already data.
+            assessments = [assess.assess_pdf(path, deep=deep,
+                                             validate=validate)
+                           for path in staged]
+
+        return render_template(
+            "assess.html",
+            shape=shape,
+            assessments=assessments,
+            rollup=assess.rollup(assessments),
+            deep=deep,
+            validate=validate,
+        )
 
     @app.route("/accessibility")
     @login_required

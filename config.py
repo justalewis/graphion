@@ -18,6 +18,26 @@ TYPST_PATH = os.environ.get("TYPST_PATH", "typst")
 MAX_UPLOAD_BYTES = 25 * 1024 * 1024
 ALLOWED_UPLOAD_EXTENSIONS = {".docx", ".md", ".markdown", ".pdf"}
 
+# The assessment front door takes a batch of PDFs rather than one
+# manuscript, so it needs more room than the publishing routes do. Flask's
+# limit is per application, so `app.py` sets MAX_CONTENT_LENGTH to the
+# larger of the two and holds every other route to MAX_UPLOAD_BYTES
+# itself: raising a limit for one route must not quietly raise it for the
+# route that writes into content/.
+MAX_ASSESS_BYTES = 150 * 1024 * 1024
+
+# How many files one browser pass will read. Reading a chapter costs about
+# two seconds, so this is about fifty against the 300 second gunicorn
+# timeout `deploy/entrypoint.sh` configures, which leaves room for the
+# long tail. A whole archive is `python assess.py <folder>`, which has no
+# cap because nothing is waiting on it.
+MAX_ASSESS_FILES = 25
+
+# verapdf is a JVM process at about thirteen seconds a file, so asking for
+# a verdict costs an order of magnitude more than reading does and the cap
+# comes down to match. Ten files is about 130 seconds.
+MAX_ASSESS_VALIDATE_FILES = 10
+
 VERSIONS_KEEP = 5
 
 # Rendered PDFs declare PDF/UA-1 (ISO 14289-1) conformance, which is the

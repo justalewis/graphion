@@ -53,6 +53,37 @@ After install, the article page shows a *Render PDF (WeasyPrint)* button in the 
 
 **Trade-offs**: WeasyPrint = HTML/PDF parity but less typographic refinement (no drop caps, weaker hyphenation, no tagged-PDF accessibility metadata). Typst = print-grade typography but separate template, possible HTML/PDF drift.
 
+## Assessing an archive Graphion does not hold
+
+*Assess* in the top bar, or `/assess`. Upload one PDF or a batch and it
+reports what remediating them would take: how many figures are already
+described and how many are still owed, how many pages would need OCR
+first, whether each file carries a structure tree and how much of the
+text that tree reaches, what each one declares about its own PDF/UA
+conformance, and what sets type in a symbol font. Tick the verapdf box to
+take a verdict as well, which is a different fact from a declaration.
+
+Nothing is ingested. No article is created, no database row is written,
+and the uploads are deleted when the page finishes rendering, so it is
+safe to point at a folder somebody sent before any agreement exists.
+
+Up to 25 files a pass, or 10 with verapdf on, because a browser request
+has to finish. A whole back catalogue at once is the command line, which
+has no cap and also reads HTML:
+
+```bash
+python assess.py path/to/folder --deep --validate
+```
+
+Add `--json` for the same readings as data, or `--recursive` for a tree
+that is already laid out.
+
+One number is deliberately missing, and it is the one that decides
+whether an archive is finished: how many figures set their words as a
+picture, which WCAG 1.4.5 is about. Nothing can tell a photograph of a
+document from a photograph of anything else without looking, so that
+count is got by hand and recorded per article in `images-of-text`.
+
 ## Accessibility validation
 
 ### verapdf — PDF/UA-1 compliance

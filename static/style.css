@@ -842,3 +842,29 @@ pre.diff .hunk { color: var(--muted); background: rgba(120, 100, 60, 0.08); disp
 }
 .of-text-item label { display: block; font-size: var(--text-sm); cursor: pointer; }
 .of-text-item .dim { font-size: var(--text-xs); }
+
+/* The assessment front door. Here rather than in the template, by the rule
+   the register tables already follow: CSS copied per template is CSS that
+   stays wrong in every copy. */
+.assess-file {
+  padding: var(--space-4) 0;
+  border-top: 1px solid var(--rule);
+}
+.assess-file:first-of-type { border-top: none; }
+.assess-file h3 {
+  margin: 0 0 var(--space-2) 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+.assess-file p { margin: var(--space-2) 0; }
+.assess-file ul {
+  margin: var(--space-2) 0 0 0;
+  padding-left: var(--space-5);
+  color: var(--muted);
+  font-size: var(--text-sm);
+}
+.assess-file li { margin-bottom: var(--space-2); }
+.assess-file .reg-table { margin-top: var(--space-4); }
+/* Left, because everything else on the page is, and a browser centres a
+   caption by default. */
+.reg-table caption { text-align: left; padding-bottom: var(--space-2); }
