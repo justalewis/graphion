@@ -211,13 +211,13 @@ class Queue:
 
 
 def image_names(body: str) -> List[str]:
-    """Every image file the body places, in document order."""
-    out = []
-    for m in lint._IMAGE_RE.finditer(body):
-        name = m.group("src").rsplit("/", 1)[-1]
-        if name not in out:
-            out.append(name)
-    return out
+    """Every image file the body places, in document order.
+
+    `lint.image_names` is the reader, because that module owns the pattern
+    and two matchers over the same images is how a figure comes to be read
+    one way and written another.
+    """
+    return lint.image_names(body)
 
 
 def listed_of_text(fm: dict) -> List[str]:

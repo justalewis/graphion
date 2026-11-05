@@ -509,9 +509,22 @@ a week and a month.
 - **Heading hierarchy.** ~~No check for a skipped level.~~ Closed by
   `filters/heading-levels.lua`, which makes it structurally impossible in
   a galley rather than merely reported.
-- **Long descriptions.** A complex figure (a five-stage flowchart, a
-  whiteboard collage) needs more than alt text, and there is no slot for one in
-  the front matter or either template.
+- **Long descriptions.** ~~There is no slot for one.~~ Built:
+  `long-descriptions` in the front matter, keyed by asset name, carried
+  through a re-ingest with the other three fields nothing can derive, and
+  put on the page by `filters/long-description.lua` as a `<details>` in
+  HTML with `aria-describedby`, or a labelled paragraph in the PDF. Visible
+  rather than hidden, because a description sighted readers never see is
+  one nobody proofreads.
+
+  It reports what is written and not what is owed: nothing can tell a
+  complex figure from a simple one, so there is no denominator, and
+  inventing one would be the same inflation a failed-check count already
+  threatened. The derivable failure is the orphan, a description keyed to a
+  figure the article does not place, which reaches nobody while every
+  checker passes, and `check_long_descriptions` warns on that. Writing the
+  descriptions is labour and belongs in §5; a lane in the description queue
+  for it is not built.
 
 ---
 

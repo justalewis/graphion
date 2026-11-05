@@ -407,7 +407,8 @@ def with_description(alt: str, src: str, attrs: str, description: str) -> str:
 # `ingest_volume.py` stamps those, and it stamps them after cleaning for
 # exactly this reason, so carrying them here would make a stale value look
 # like a recovered one.
-CARRIED_FIELDS = ("images-of-text", "teacher-resources", "math-alt")
+CARRIED_FIELDS = ("images-of-text", "teacher-resources", "math-alt",
+                  "long-descriptions")
 
 # A field whose emptiness is a record rather than nothing. An absent
 # `images-of-text` means nobody has looked at the figures; an empty one means
@@ -458,6 +459,13 @@ def carry_editor_fields(front_matter: dict, previous: str) -> tuple:
     goes on carrying alt text either way, because `math_alt.alt_for` falls
     back to a placeholder, so the only mark it leaves is a reader hearing
     that there is a formula instead of hearing the formula.
+
+    `long-descriptions` is the fourth and the same shape again. Alt text
+    says what a figure is; a flowchart, a whiteboard collage or a data plot
+    needs somebody to say what it shows, in what order a listener needs it,
+    and no machine can write that. It is keyed by the figure's asset name,
+    so a lost one leaves the figure with its alt text and a reader with the
+    short answer only.
 
     A field already recovered by this run is left alone, so a page that has
     since started saying something is allowed to.
@@ -1312,6 +1320,7 @@ def render_html(article_path: Path, journal_slug: str, part: str = "chapter") ->
         extra.append(f"--lua-filter={lua_filter}")
     extra.extend(_fig_alt_filter_args())
     extra.extend(_heading_levels_filter_args())
+    extra.extend(_long_description_filter_args())
     extra.extend(_citation_args(article_path, journal_slug))
 
     if css.exists():
@@ -1466,6 +1475,27 @@ def _fig_alt_filter_args() -> list:
     if not FIG_ALT_FILTER.exists():
         return []
     return [f"--lua-filter={FIG_ALT_FILTER}"]
+
+
+LONG_DESCRIPTION_FILTER = BASE_DIR / "filters" / "long-description.lua"
+
+
+def _long_description_filter_args() -> list:
+    """The Pandoc arguments that put a figure's long description on the page.
+
+    Alt text says what a figure is; a flowchart, a collage or a data plot
+    needs somebody to say what it shows, which is prose and will not fit an
+    `alt`. The prose is kept by hand in `long-descriptions`, keyed by the
+    asset name, and carried through a re-ingest by `carry_editor_fields`
+    with the other three fields nothing can derive.
+
+    App level for the reason `math-alt.lua` is, and every path that renders
+    Markdown through Pandoc needs it or the description reaches one galley
+    and not the other, which is how `fig-alt` went unnoticed.
+    """
+    if not LONG_DESCRIPTION_FILTER.exists():
+        return []
+    return [f"--lua-filter={LONG_DESCRIPTION_FILTER}"]
 
 
 HEADING_LEVELS_FILTER = BASE_DIR / "filters" / "heading-levels.lua"
@@ -1701,6 +1731,7 @@ def render_pdf(article_path: Path, journal_slug: str, part: str = "chapter") -> 
     extra.extend(_fig_alt_filter_args())
     extra.extend(_math_alt_filter_args())
     extra.extend(_heading_levels_filter_args())
+    extra.extend(_long_description_filter_args())
     extra.extend(_citation_args(article_path, journal_slug))
     pypandoc.convert_file(
         str(md),
@@ -1896,6 +1927,7 @@ def render_epub(article_path: Path, journal_slug: str) -> Path:
         extra.extend(["--lua-filter", str(fig_filter)])
     extra.extend(_fig_alt_filter_args())
     extra.extend(_heading_levels_filter_args())
+    extra.extend(_long_description_filter_args())
     if css.exists():
         extra.extend(["--css", str(css)])
     # Per-article CSS override: additive after the journal CSS
@@ -2256,7 +2288,8 @@ def _md_to_typst_fragment(md_text: Optional[str]) -> str:
         md_text, to="typst", format="markdown",
         extra_args=(["--wrap=preserve"] + _fig_alt_filter_args()
                     + _math_alt_filter_args()
-                    + _heading_levels_filter_args()),
+                    + _heading_levels_filter_args()
+                    + _long_description_filter_args()),
     )
     return _fill_math_alt(fragment)
 

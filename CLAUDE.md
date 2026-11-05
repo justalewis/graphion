@@ -27,7 +27,7 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (767 functions, 822 cases once the parametrized ones expand: 142 in
+Tests (784 functions, 839 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 64 in `test_assess.py`,
 50 in `test_lint.py`, 46 in `test_ingest_volume.py`, 38 in
 `test_describe.py`, 36 in `test_register.py`, 23 in
@@ -39,12 +39,14 @@ Tests (767 functions, 822 cases once the parametrized ones expand: 142 in
 34 in `test_template_bundles.py`, 12 in `test_validate_galleys.py`,
 9 in `test_pdf_ua.py`, 8 in `test_accessibility_routes.py`,
 37 in `test_reading_order.py`,
+17 in `test_long_descriptions.py`,
 8 in `test_heading_levels.py`, 7 in `test_fig_alt.py`,
 6 in `test_standalone_html.py`,
 5 in `test_validators.py`,
 4 in `test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
 runs without Pandoc; `test_journal_filter.py`, `test_fig_alt.py` and
-`test_heading_levels.py` need it, and `test_math_alt.py` needs it for the
+`test_heading_levels.py` and `test_long_descriptions.py` need it, and
+`test_math_alt.py` needs it for the
 filter round trip alone. All skip where it is absent. `test_assess.py` runs verapdf and pa11y where they
 are on PATH and says less where they are not, which is how the no-write
 contract gets tested against a real subprocess:
@@ -284,6 +286,53 @@ the licence is the field in this archive that least tolerates being rounded
 off. Reading the front matter before a re-ingest and writing it back is what
 a caller has to do for those; `ingest_volume.py` re-reads at line 365, after
 `run_cleanups`, so what it re-applies is whatever ingest produced.
+
+**Alt text says what a figure is; a long description says what it shows.**
+A flowchart, a whiteboard collage or a data plot carries an argument, and
+that will not fit an `alt` and should not: an alt is read aloud with no
+structure and no way back, so a paragraph in one is a paragraph a listener
+cannot navigate. §3.8 of `docs/accessibility-service.md` named the gap and
+there was nowhere to put one.
+
+`long-descriptions` is the slot, keyed by the figure's asset name, which is
+what an editor has in front of them, and `lint.long_descriptions` is the one
+reader of it. It is the fourth entry in `CARRIED_FIELDS` for the reason the
+other three are there: nothing can derive it, the page does not state it,
+and losing it fails no check and changes no galley to look at, leaving the
+figure with its alt text and a reader with the short answer only.
+
+**It reports what is written and not what is owed, and that is the honest
+shape.** Nothing can tell a complex figure from a simple one, so there is
+no denominator: a count of figures owed a long description would be
+invented, which is the inflation a failed-check count already threatened.
+`check_images_of_text` is in the same position for the same reason.
+
+What is derivable is the orphan, and it is the only silent failure here. A
+description keyed to a figure the body does not place reaches nobody: the
+galley renders, the alt text is still there, every checker passes, and the
+prose sits in the front matter read by nothing. A re-ingest that renames an
+asset does it, and so does a typed key, so `check_long_descriptions` warns
+on one and names it.
+
+`filters/long-description.lua` puts it on the page, and it is emitted
+**visibly** on purpose. A description hidden from sighted readers is one
+nobody proofreads, and it rots; one on the page is read, corrected and
+kept. HTML gets a `<details>` with `aria-describedby` tying it to the
+image, so it is reachable from the figure without taking over the page, and
+every other writer gets a plain labelled paragraph, because Typst has no
+disclosure widget and a PDF reader has no way to open one. The filter needs
+no sentinel, unlike `math-alt.lua`, because there is no translation to be
+done twice: Pandoc hands the front matter to a filter as Blocks already.
+The map is dropped from the metadata on the way through, or it lands in the
+EPUB package document and the JATS header for nothing.
+`_long_description_filter_args()` is called from all four render paths, or
+the description reaches one galley and not the other, which is exactly how
+`fig-alt` went unnoticed.
+
+`lint.image_names` is where the body's figures are enumerated now.
+`describe.py` held its own matcher over the same images and calls this
+instead, because two readings of one figure is the failure with no symptom
+and this codebase has paid for it three times.
 
 **Lint checks** follow the same shape in `lint.py`: return `_ok(...)` or
 `_warn(...)`, then register in `DEFAULT_CHECKS` (`lint.py:614`).

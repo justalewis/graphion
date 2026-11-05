@@ -538,6 +538,109 @@ def check_alt_text(article: dict, fm: dict, body: str) -> LintResult:
 _UNDESCRIBED_ALT_RE = re.compile(r"^Undescribed figure from page \d+")
 
 
+def image_names(body: str) -> list:
+    """Every image file the body places, in document order.
+
+    Here rather than in `describe.py`, which used to hold it, because this
+    module owns `_IMAGE_RE` and a second matcher over the same images is
+    how a figure comes to be read one way and written another.
+    `describe.image_names` calls this.
+    """
+    out = []
+    for match in _IMAGE_RE.finditer(body):
+        name = (match.group("src") or "").rsplit("/", 1)[-1]
+        if name and name not in out:
+            out.append(name)
+    return out
+
+
+def long_descriptions(fm: dict) -> dict:
+    """The long descriptions an editor has written, by figure name.
+
+    One reader, for the reason `_carried_description` is one: the lint
+    check, the galley filter and the queue would otherwise each decide for
+    themselves what counts as written, and a description the galley emits
+    and the register does not count is the shape with no symptom.
+
+    Keyed on the asset's own name, so a key written as a path is matched
+    rather than missed, which is how `describe.listed_of_text` reads
+    `images-of-text` and for the same reason: an editor types what is in
+    front of them.
+    """
+    raw = fm.get("long-descriptions") or {}
+    if not isinstance(raw, dict):
+        return {}
+    out = {}
+    for key, value in raw.items():
+        name = str(key).rsplit("/", 1)[-1].strip()
+        text = value if isinstance(value, str) else ""
+        if name and text.strip():
+            out[name] = " ".join(text.split())
+    return out
+
+
+def check_long_descriptions(article: dict, fm: dict, body: str) -> LintResult:
+    """Report the long descriptions an article carries, and the orphans.
+
+    Alt text says what a figure is. A flowchart, a whiteboard collage or a
+    data plot needs somebody to say what it shows and in what order a
+    listener needs it, which is prose and not a field, and no machine can
+    write it. So this counts what has been written and does not report a
+    shortfall: nothing can tell a complex figure from a simple one, so
+    there is no denominator to be short of. That is the same position
+    `check_images_of_text` is in, and inventing a count of figures owed a
+    long description would be the inflation a failed-check count already
+    threatened.
+
+    What is derivable is the orphan, and it is the only silent failure
+    here. A description keyed to a figure the body does not place reaches
+    nobody: the galley renders, the alt text is still there, every checker
+    passes, and the prose an editor wrote sits in the front matter being
+    read by nothing. An asset renamed by a re-ingest does it, and so does
+    a typed key.
+    """
+    written = long_descriptions(fm)
+    names = set(image_names(body))
+    units = {"figures-long-described": len(written),
+             "long-descriptions-orphaned": 0}
+
+    if not written:
+        if not names:
+            return _ok("long-descriptions", "No images in the article.",
+                       units)
+        return _ok(
+            "long-descriptions",
+            f"No long description is written for the {len(names)} "
+            f"figure(s).",
+            units,
+            ["Alt text says what a figure is; a figure carrying an argument "
+             "needs somebody to say what it shows. Nothing can tell which "
+             "figures those are, so this is a count of what is written and "
+             "not of what is owed."],
+        )
+
+    orphans = sorted(name for name in written if name not in names)
+    units["long-descriptions-orphaned"] = len(orphans)
+    if not orphans:
+        return _ok(
+            "long-descriptions",
+            f"{len(written)} of {len(names)} figure(s) carry a long "
+            f"description.",
+            units,
+        )
+    return _warn(
+        "long-descriptions",
+        f"{len(orphans)} long description(s) name a figure the article does "
+        f"not place.",
+        ["A description keyed to a figure that is not here reaches nobody: "
+         "the galley renders, the alt text stays, and the prose sits in the "
+         "front matter unread. A renamed asset does this, and so does a "
+         "typed key.",
+         "Naming: " + ", ".join(orphans[:8])],
+        units,
+    )
+
+
 def check_figure_coverage(article: dict, fm: dict, body: str) -> LintResult:
     """Flag an article that refers to figures it does not contain.
 
@@ -898,6 +1001,7 @@ DEFAULT_CHECKS: list[Callable] = [
     check_alt_text,
     check_math_alt_text,
     check_images_of_text,
+    check_long_descriptions,
     check_figure_coverage,
     check_figure_references,
     check_reading_order,
