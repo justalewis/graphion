@@ -2829,6 +2829,7 @@ def register_routes(app: Flask):
         return render_template("job.html", job=job, journal=journal,
                                items=jobs.items(job),
                                facts=jobs.payload(job),
+                               words=jobs.words(job["kind"]),
                                state_tone=jobs.STATE_TONE,
                                item_tone=jobs.ITEM_TONE,
                                terminal=jobs.TERMINAL)
@@ -3026,7 +3027,49 @@ def register_routes(app: Flask):
             groups=groups,
             kinds=register.KINDS,
             kind_labels=register.KIND_LABELS,
+            # Which external checkers are reachable, so the page can grey
+            # out what it cannot run rather than offering it and failing.
+            tools=_validator_tools(),
+            validating=[job for job in jobs.recent(
+                limit=5, journal_id=journal["id"])
+                if job["kind"] == "validate"],
         )
+
+    @app.route("/accessibility/<slug>/validate", methods=["POST"])
+    @login_required
+    def accessibility_validate(slug):
+        """Queue verapdf, pa11y and epubcheck over a whole journal.
+
+        Each is a subprocess with a 120 second timeout, so a pass over 118
+        articles is an hour at best and a day at worst. That is why
+        `validate_galleys.py` is a script and why the corpus route beside
+        this one runs only the two in-process checks; now that there is a
+        job runner, the pass has somewhere to go.
+        """
+        journal = db.query_one("SELECT * FROM journals WHERE slug = ?",
+                               (slug,))
+        if not journal:
+            abort(404)
+
+        import validate_galleys
+        asked = [k for k in request.form.getlist("kinds")
+                 if k in validate_galleys.TOOLS]
+        if not asked:
+            flash("Pick at least one checker to run.", "error")
+            return redirect(url_for("accessibility_journal", slug=slug))
+
+        facts = {"kinds": asked,
+                 "skip_current": request.form.get("skip_current") == "on"}
+        label = f"{', '.join(asked)} over {journal['name']}"
+        # Nothing to stage: a validate pass reads galleys that are already
+        # in content/.
+        job_id = jobs.create("validate", label, facts, journal["id"],
+                             stage=False)
+        jobs.release(job_id)
+        flash("Queued. Each checker is a subprocess with a two minute "
+              "timeout, so a whole journal takes a while; the job page "
+              "fills in as it goes.", "success")
+        return redirect(url_for("job_detail", job_id=job_id))
 
     @app.route("/accessibility/<slug>/issues/<int:issue_id>")
     @login_required
@@ -3267,10 +3310,10 @@ def register_routes(app: Flask):
         """Run the in-process checks over a whole journal and record each.
 
         Lint reads `article.md` and the declaration check reads the galley's
-        catalog and XMP, so both are cheap enough to run in a request.
-        verapdf and pa11y are subprocesses with a 120s timeout each, so a
-        corpus pass over those belongs in a job runner and they stay
-        per-article until there is one.
+        catalog and XMP, so both are cheap enough to run in a request. The
+        three external checkers are subprocesses with a 120s timeout each,
+        so a corpus pass over those goes through `accessibility_validate`
+        and the job runner instead.
         """
         journal = db.query_one("SELECT id, slug FROM journals WHERE slug = ?", (slug,))
         if not journal:
@@ -3427,6 +3470,24 @@ def register_routes(app: Flask):
     @app.route("/healthz")
     def healthz():
         return {"ok": True}
+
+
+def _validator_tools() -> list:
+    """Which external checkers are reachable, asked when it matters.
+
+    The probes live in `validators` and the labels and install lines in
+    `validate_galleys`, so this assembles rather than deciding: a page
+    keeping its own list would offer a tool the pass then drops, which is
+    the one thing a greyed-out control exists to prevent.
+    """
+    import validate_galleys
+
+    return [{"kind": kind,
+             "label": tool["label"],
+             "ready": bool(tool["available"]()),
+             "install": tool["install"],
+             "reads": tool["reads"]}
+            for kind, tool in validate_galleys.TOOLS.items()]
 
 
 def _issue_label(row: dict, from_issue: bool = False) -> str:

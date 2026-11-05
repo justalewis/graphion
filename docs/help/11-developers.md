@@ -204,6 +204,17 @@ jobs.py:_ingest_batch       — the handler, on the worker thread
   → ingest_volume.ingest_one      per chapter; one failure is recorded,
                                   not raised, so the batch carries on
 
+app.py:accessibility_validate — POST /accessibility/<slug>/validate
+  → jobs.create(stage=False)      nothing to stage; the galleys are in content/
+  → jobs.release
+jobs.py:_validate           — the handler, on the worker thread
+  → validate_galleys.TOOLS        is the tool there, and what to say if not
+  → validate_galleys.to_do        what is in the plan, honouring skip-current
+  → validate_galleys.run_one      hash, run, write the report, record the run
+                                  (a missing tool is named and left out; no
+                                   tool at all raises rather than recording
+                                   a pass that checked nothing)
+
 app.py:article_metadata     — POST /articles/<id>/metadata
   → conversion.write_article_metadata
   → conversion.render_all (auto-render)

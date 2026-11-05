@@ -78,10 +78,10 @@
 </section>
 
 <section class="card">
-  <h2>What happened to each file</h2>
+  <h2>{{ words.heading }}</h2>
   <table class="reg-table" id="job-items">
     <thead>
-      <tr><th>File</th><th>Result</th><th>Detail</th></tr>
+      <tr><th>{{ words.item }}</th><th>Result</th><th>Detail</th></tr>
     </thead>
     <tbody id="job-items-body">
       {% for item in items %}
@@ -95,11 +95,7 @@
       {% endfor %}
     </tbody>
   </table>
-  <div class="reg-note">
-    A chapter that would not open is a finding about that chapter, so the
-    batch carries on past it and names it here rather than stopping. What
-    landed is a draft: nothing is published by ingesting it.
-  </div>
+  {% if words.note %}<div class="reg-note">{{ words.note }}</div>{% endif %}
 </section>
 
 {% if job.state not in terminal %}

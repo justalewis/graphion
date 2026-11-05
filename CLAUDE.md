@@ -27,9 +27,9 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (871 functions, 926 cases once the parametrized ones expand: 142 in
+Tests (886 functions, 941 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 64 in `test_assess.py`,
-35 in `test_jobs.py`, 22 in `test_assess_route.py`,
+50 in `test_jobs.py`, 22 in `test_assess_route.py`,
 50 in `test_lint.py`, 46 in `test_ingest_volume.py`, 38 in
 `test_describe.py`, 42 in `test_register.py`, 23 in
 `test_stated_headings.py`, 14 in `test_structure.py`,
@@ -517,11 +517,39 @@ one manuscript. A rename detaches a name from the exemption, which would
 have that route refusing a batch while every other route silently kept
 the larger limit, so a test pins each name to a route that exists.
 
-Still unbuilt, and the obvious next kind: `validate_galleys.py` as a job,
-which is what would let the corpus route run verapdf, pa11y and
-epubcheck instead of only the two cheap checks. And a collection that is
-not a journal: a stranger's archive currently has to be created as one,
-which `new_journal.py` does from the command line.
+**The second kind is `validate`, which is the pass the script was written
+for.** `/accessibility/<slug>/validate` queues verapdf, pa11y and
+epubcheck over a whole journal, and the handler drives
+`validate_galleys`' own `TOOLS`, `to_do` and `run_one` the way
+`ingest_batch` drives `ingest_volume`. Nothing about validation is
+decided in `app.py` or in `jobs.py`.
+
+Three of the script's rules carry over and each is load-bearing. A tool
+that is not installed is **left out and named**, because the reason for
+refusing is about that one kind's rows; the missing tool is counted in
+the job's total, since a line nobody looks at under a progress count
+reading done is the same as not saying it. A pass where **no** tool is
+installed raises instead, because a pass that checked nothing is not a
+pass and finishing `done` would be that claim one level up. And
+`run_one` returning no level means the galley went missing between the
+plan and the run, which is a render owed and not a check failed, so it
+records `skipped`.
+
+A validate job stages nothing (`create(..., stage=False)`), because its
+input is already in `content/`. The `staging` state still does its work:
+the row is not claimable until `release`.
+
+**The colour of a level is `register`'s answer, not a second one.**
+`register.LEVEL_TONE` is where `Standing.tone` reads it from and where
+`jobs.ITEM_TONE` folds it in, because a validate job's items are register
+levels and two places deciding what a failure looks like is how one of
+them goes quietly wrong. `unrun` is in `ITEM_TONE` and deliberately not
+in `LEVEL_TONE`: it is not a finding, so it reads as unknown rather than
+being given a verdict's colour.
+
+Still unbuilt: a collection that is not a journal. A stranger's archive
+currently has to be created as one, which `new_journal.py` does from the
+command line.
 
 **`assess.read_html` reads a page the way `assess_pdf` reads a PDF**, and
 reading is not behind `--validate`, because it costs what reading a file

@@ -17,14 +17,56 @@
   {{ reg.work_table(rollup.work) }}
 
   <form method="post" action="{{ url_for('accessibility_run_checks', slug=journal['slug']) }}"
-        style="margin-top: var(--space-5);">
+        class="run-checks">
     <button type="submit" class="button">Check every article and record it</button>
-    <span class="dim" style="margin-left: var(--space-3); font-size: var(--text-sm);">
-      Lint, plus what each galley declares about its own conformance. The
-      verapdf and pa11y audits call external tools, so those stay
-      per-article.
+    <span class="dim">
+      Lint, plus what each galley declares about its own conformance. Both
+      read files this app already holds, so they run here and now.
     </span>
   </form>
+
+  <form method="post" action="{{ url_for('accessibility_validate', slug=journal['slug']) }}"
+        class="run-checks">
+    <fieldset>
+      <legend><strong>Run the external checkers as a job</strong></legend>
+      <p class="dim">
+        Each is a subprocess with a two minute timeout, so a whole journal
+        is an hour at best. This queues a job and hands you a page that
+        fills in as it goes; closing it does not stop the run.
+      </p>
+      {% for tool in tools %}
+      <label>
+        <input type="checkbox" name="kinds" value="{{ tool.kind }}"
+               {% if tool.ready %}checked{% else %}disabled{% endif %} />
+        {{ tool.label }} <span class="dim">reads {{ tool.reads }}</span>
+        {%- if not tool.ready -%}
+        <span class="dim">; not installed: {{ tool.install }}</span>
+        {%- endif %}
+      </label>
+      {% endfor %}
+      <label>
+        <input type="checkbox" name="skip_current" checked />
+        Leave out anything already checked against the file now on disk
+      </label>
+      <p class="dim">
+        What makes a second pass cheap and an interrupted one resumable. A
+        run taken against content that has since moved is not current, so
+        it goes back in the plan either way.
+      </p>
+      <div class="action-row">
+        <button type="submit" class="button">Queue the pass</button>
+      </div>
+    </fieldset>
+  </form>
+
+  {% if validating %}
+  <p class="dim">
+    Recent validation passes:
+    {% for job in validating %}
+    <a href="{{ url_for('job_detail', job_id=job.id) }}">{{ job.state }}, {{ job.done }} of {{ job.total }}</a>{% if not loop.last %} &middot; {% endif %}
+    {% endfor %}
+  </p>
+  {% endif %}
 
   {% for g in groups %}
   <h2 class="group-head">

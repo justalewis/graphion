@@ -131,6 +131,20 @@ in that position before you commit to it.
 
 ## Accessibility validation
 
+Per article, from the article page, or across a whole journal from
+Accessibility → *Run the external checkers as a job*. Each checker is a
+subprocess with a two minute timeout, so a journal-wide pass is an hour
+at best and runs as a background job; *Leave out anything already checked
+against the file now on disk* is what makes a second pass cheap and an
+interrupted one resumable.
+
+A checker that is not installed is greyed out on the form, left out of
+the pass, and named on the job page. That is deliberate rather than
+tidy-mindedness: a recorded run is the newest run for its kind, so a pass
+that could not call the tool would write "not checked" over verdicts that
+took an hour to get. If none of the three is installed the pass refuses
+to start.
+
 ### verapdf — PDF/UA-1 compliance
 
 Validates whether `article.pdf` meets the PDF/UA-1 formal accessibility standard. Required by some repositories.

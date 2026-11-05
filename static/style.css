@@ -897,3 +897,22 @@ pre.diff .hunk { color: var(--muted); background: rgba(120, 100, 60, 0.08); disp
 }
 .job-facts { margin-top: var(--space-5); }
 .job-facts summary { cursor: pointer; color: var(--muted); }
+
+/* The two "run the checks" forms on a journal's accessibility page. The
+   inline styles they used to carry were the reason a broken `.tally`
+   selector survived being written into two templates. */
+.run-checks { margin-top: var(--space-5); }
+.run-checks .dim {
+  margin-left: var(--space-3);
+  font-size: var(--text-sm);
+}
+.run-checks fieldset {
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: var(--space-4);
+  margin: 0;
+}
+.run-checks fieldset legend { padding: 0 var(--space-2); }
+.run-checks fieldset label { display: block; margin-top: var(--space-3); }
+.run-checks fieldset .dim { margin-left: 0; }
+.run-checks fieldset p.dim { margin: var(--space-2) 0 0 0; }

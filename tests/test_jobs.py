@@ -469,6 +469,248 @@ def test_a_batch_with_no_journal_fails_rather_than_guessing(workspace,
     assert db.query_all("SELECT id FROM articles") == []
 
 
+# ---------- validate ----------
+
+@pytest.fixture
+def galleys(workspace, journal):
+    """Two articles with all three galleys beside them.
+
+    The files only have to exist and hash: `run_one` is stubbed in these
+    tests, because what is being checked is the pass's own decisions and
+    not verapdf's.
+    """
+    made = []
+    for slug in ("alpha", "beta"):
+        project = workspace / "content" / slug
+        project.mkdir(parents=True)
+        for name in ("article.pdf", "article.html", "article.epub"):
+            (project / name).write_bytes(b"not really a galley, but bytes")
+        article_id = db.execute(
+            "INSERT INTO articles (journal_id, slug, title, project_path) "
+            "VALUES (?, ?, ?, ?)",
+            (journal["id"], slug, slug.title(), str(project)))
+        made.append(article_id)
+    return made
+
+
+@pytest.fixture
+def every_tool_installed(monkeypatch):
+    import validators
+    for probe in ("verapdf_available", "pa11y_available",
+                  "epubcheck_available"):
+        monkeypatch.setattr(validators, probe, lambda: True)
+
+
+def _verdicts(monkeypatch, level="pass"):
+    """Stand in for the three subprocesses, recording what was asked."""
+    import validate_galleys
+    asked = []
+
+    def run_one(article, kind):
+        asked.append((kind, article["slug"]))
+        return level, "0.1s"
+
+    monkeypatch.setattr(validate_galleys, "run_one", run_one)
+    return asked
+
+
+def test_a_validate_pass_runs_each_checker_over_each_galley(
+        workspace, journal, galleys, every_tool_installed, monkeypatch):
+    asked = _verdicts(monkeypatch)
+    job_id = jobs.create("validate", "all three", {"skip_current": False},
+                         journal["id"], stage=False)
+    jobs.release(job_id)
+
+    assert jobs.run_job(job_id) == jobs.DONE
+
+    job = jobs.get(job_id)
+    assert job["total"] == 6
+    assert job["done"] == 6
+    assert sorted(asked) == sorted(
+        [(kind, slug) for slug in ("alpha", "beta")
+         for kind in ("verapdf", "pa11y", "epubcheck")])
+    assert {i["state"] for i in jobs.items(job)} == {"pass"}
+
+
+def test_a_tool_that_is_not_installed_is_left_out_and_named(
+        workspace, journal, galleys, monkeypatch):
+    """`validate_galleys.py` drops a missing kind rather than refusing the
+    pass, because the reason for refusing is about that one kind's rows.
+    The job does the same and says which, counted in the total so the line
+    is not one nobody looks at under a progress bar reading done."""
+    import validators
+    monkeypatch.setattr(validators, "verapdf_available", lambda: True)
+    monkeypatch.setattr(validators, "pa11y_available", lambda: True)
+    monkeypatch.setattr(validators, "epubcheck_available", lambda: False)
+    asked = _verdicts(monkeypatch)
+    job_id = jobs.create("validate", "two of three", {"skip_current": False},
+                         journal["id"], stage=False)
+    jobs.release(job_id)
+
+    jobs.run_job(job_id)
+
+    items = jobs.items(jobs.get(job_id))
+    unrun = [i for i in items if i["state"] == jobs.register.UNRUN]
+    assert len(unrun) == 1
+    assert "not installed" in unrun[0]["detail"]
+    assert "none was overwritten" in unrun[0]["detail"]
+    assert {kind for kind, _slug in asked} == {"verapdf", "pa11y"}
+    assert jobs.get(job_id)["total"] == 5
+
+
+def test_a_pass_with_no_tool_at_all_fails_rather_than_recording_nothing(
+        workspace, journal, galleys, monkeypatch):
+    """A recorded run is the newest run for its kind, so a pass with no
+    tool would write "not checked" over verdicts that cost an hour to get.
+    Finishing `done` having checked nothing would be the same claim one
+    level up."""
+    import validators
+    for probe in ("verapdf_available", "pa11y_available",
+                  "epubcheck_available"):
+        monkeypatch.setattr(validators, probe, lambda: False)
+    job_id = jobs.create("validate", "none", {}, journal["id"], stage=False)
+    jobs.release(job_id)
+
+    assert jobs.run_job(job_id) == jobs.FAILED
+
+    error = jobs.get(job_id)["error"]
+    assert "None of the requested tools is installed" in error
+    assert "verapdf.org" in error
+
+
+def test_the_level_a_checker_reached_is_the_item_state(
+        workspace, journal, galleys, every_tool_installed, monkeypatch):
+    _verdicts(monkeypatch, level="fail")
+    job_id = jobs.create("validate", "failing", {"skip_current": False},
+                         journal["id"], stage=False)
+    jobs.release(job_id)
+
+    jobs.run_job(job_id)
+
+    assert {i["state"] for i in jobs.items(jobs.get(job_id))} == {"fail"}
+
+
+def test_a_galley_that_went_missing_is_skipped_and_not_failed(
+        workspace, journal, galleys, every_tool_installed, monkeypatch):
+    """Owing a render is not failing a check, which is the distinction the
+    register draws between `absent` and `fail` and the reason three of
+    Writing Spaces' articles are not counted as shortfalls."""
+    import validate_galleys
+    monkeypatch.setattr(validate_galleys, "run_one",
+                        lambda article, kind: (None, "no file"))
+    job_id = jobs.create("validate", "gone", {"skip_current": False},
+                         journal["id"], stage=False)
+    jobs.release(job_id)
+
+    jobs.run_job(job_id)
+
+    assert {i["state"] for i in jobs.items(jobs.get(job_id))} == {"skipped"}
+
+
+def test_one_checker_raising_does_not_stop_the_pass(
+        workspace, journal, galleys, every_tool_installed, monkeypatch):
+    import validate_galleys
+    seen = []
+
+    def run_one(article, kind):
+        seen.append(kind)
+        if kind == "pa11y":
+            raise RuntimeError("the node process went away")
+        return "pass", "0.1s"
+
+    monkeypatch.setattr(validate_galleys, "run_one", run_one)
+    job_id = jobs.create("validate", "one bad", {"skip_current": False},
+                         journal["id"], stage=False)
+    jobs.release(job_id)
+
+    assert jobs.run_job(job_id) == jobs.DONE
+
+    states = [i["state"] for i in jobs.items(jobs.get(job_id))]
+    assert states.count("failed") == 2
+    assert states.count("pass") == 4
+
+
+def test_a_validation_pass_can_be_stopped_partway(
+        workspace, journal, galleys, every_tool_installed, monkeypatch):
+    """The one that matters most here: a pass over 118 articles is an hour
+    at best, so being unable to stop it is the difference between usable
+    and not."""
+    import validate_galleys
+    done = []
+
+    def run_one(article, kind):
+        done.append(kind)
+        if len(done) == 2:
+            jobs.cancel(article["job_id"])
+        return "pass", "0.1s"
+
+    job_id = jobs.create("validate", "stoppable", {"skip_current": False},
+                         journal["id"], stage=False)
+    monkeypatch.setattr(
+        validate_galleys, "run_one",
+        lambda article, kind: run_one(dict(article, job_id=job_id), kind))
+    jobs.release(job_id)
+
+    assert jobs.run_job(job_id) == jobs.CANCELLED
+    assert len(done) == 2
+    assert jobs.get(job_id)["done"] == 2
+
+
+def test_a_validate_job_stages_nothing(workspace, journal):
+    """Its input is already in `content/`. A `staged_path` naming a
+    directory that never held anything is a small lie to leave lying
+    around."""
+    job_id = jobs.create("validate", "no staging", {}, journal["id"],
+                         stage=False)
+
+    assert jobs.get(job_id)["staged_path"] is None
+    assert not jobs.staging_dir(job_id).exists()
+    # The `staging` state still does its work regardless of the directory.
+    assert jobs.claim() is None
+
+
+def test_each_kind_has_its_own_words_for_what_its_items_are(workspace,
+                                                            journal):
+    """A validation pass under "what happened to each file", telling the
+    reader that nothing is published by ingesting it, is worse than saying
+    nothing, so the fallback is plainly generic and every registered kind
+    sets its own."""
+    assert set(jobs.KIND_WORDS) == set(jobs._HANDLERS)
+    for kind, said in jobs.KIND_WORDS.items():
+        assert said["heading"] and said["item"] and said["note"]
+    assert jobs.words("no-such-kind") == jobs.DEFAULT_WORDS
+    assert jobs.DEFAULT_WORDS["note"] == ""
+
+
+def test_the_job_page_uses_the_words_for_its_own_kind(client, journal,
+                                                      every_tool_installed,
+                                                      galleys, monkeypatch):
+    _verdicts(monkeypatch)
+    job_id = jobs.create("validate", "a pass", {"skip_current": False},
+                         journal["id"], stage=False)
+    jobs.release(job_id)
+    jobs.run_job(job_id)
+
+    body = client.get(f"/jobs/{job_id}").data.decode("utf-8")
+
+    assert "What each checker found" in body
+    assert "nothing is published by ingesting it" not in body
+
+
+def test_the_colour_of_a_level_is_registers_answer_and_not_a_second_one():
+    """Two places deciding what a failure looks like is how one of them
+    goes quietly wrong, which is why `Standing.tone` lives in `register`
+    at all. A validate job's items are register levels, so they read their
+    colours from the same map."""
+    import register
+
+    for level, tone in register.LEVEL_TONE.items():
+        assert jobs.ITEM_TONE[level] == tone
+    # `unrun` is not a finding, so it is not given a verdict's colour.
+    assert register.UNRUN not in register.LEVEL_TONE
+    assert jobs.ITEM_TONE[register.UNRUN] == "unknown"
+
+
 # ---------- the routes ----------
 
 @pytest.fixture
@@ -622,6 +864,54 @@ def test_the_ingest_route_is_allowed_the_larger_body(client, journal,
         content_type="multipart/form-data")
 
     assert response.status_code == 302
+
+
+def test_queueing_a_validation_pass(client, journal, every_tool_installed):
+    response = client.post("/accessibility/demo/validate",
+                           data={"kinds": ["verapdf", "pa11y"],
+                                 "skip_current": "on"})
+
+    assert response.status_code == 302
+    job = jobs.recent()[0]
+    assert job["kind"] == "validate"
+    assert job["state"] == jobs.QUEUED
+    assert jobs.payload(job)["kinds"] == ["verapdf", "pa11y"]
+    assert jobs.payload(job)["skip_current"] is True
+
+
+def test_picking_no_checker_says_so(client, journal):
+    response = client.post("/accessibility/demo/validate", data={},
+                           follow_redirects=True)
+
+    assert b"Pick at least one checker" in response.data
+    assert jobs.recent() == []
+
+
+def test_a_checker_name_the_pass_does_not_know_is_dropped(client, journal,
+                                                          every_tool_installed):
+    """The form posts names, so the names are checked against the ones
+    `validate_galleys` actually has rather than passed through."""
+    response = client.post("/accessibility/demo/validate",
+                           data={"kinds": ["verapdf", "made-up"]})
+
+    assert response.status_code == 302
+    assert jobs.payload(jobs.recent()[0])["kinds"] == ["verapdf"]
+
+
+def test_the_page_greys_out_a_checker_that_is_not_installed(client, journal,
+                                                            monkeypatch):
+    """The convention the rest of the app follows, and here it has teeth:
+    the pass drops a missing tool, so offering it would be the page and
+    the job disagreeing about what is about to happen."""
+    import validators
+    monkeypatch.setattr(validators, "verapdf_available", lambda: True)
+    monkeypatch.setattr(validators, "pa11y_available", lambda: False)
+    monkeypatch.setattr(validators, "epubcheck_available", lambda: False)
+
+    body = client.get("/accessibility/demo").data.decode("utf-8")
+
+    assert "npm install -g pa11y" in body
+    assert "disabled" in body
 
 
 def test_the_single_file_routes_still_keep_the_smaller_limit(client,

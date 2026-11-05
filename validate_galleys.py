@@ -9,11 +9,17 @@ not the end of one, which this codebase knows better than most: six volumes
 bound galleys that each declared conformance into issues that were not
 tagged at all.
 
-This is a script rather than a route because of what the two tools cost.
-Each is a subprocess with a 120 second timeout, so a pass over 118 articles
-is a wall-clock hour at best and most of a day at worst, which is not a
+This is a script rather than a route because of what the tools cost. Each
+is a subprocess with a 120 second timeout, so a pass over 118 articles is
+a wall-clock hour at best and most of a day at worst, which is not a
 request. The corpus route in `app.py` runs only the two in-process checks
 for the same reason.
+
+It is also reachable from the browser now, as a job rather than a
+request: `/accessibility/<slug>/validate` queues one and `jobs._validate`
+drives `TOOLS`, `to_do` and `run_one` below. The decisions stay here.
+Two callers of one pass is the point; two passes would be two sets of
+rules about what counts as a result, and the rules are the hard part.
 
 What it does not do is manufacture a result it does not have. A tool that
 is not installed stops the run before anything is written, and the reason

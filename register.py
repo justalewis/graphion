@@ -122,6 +122,13 @@ UNRUN = "unrun"
 # verdict: it is not worse than a failure, it is not a finding at all.
 _SEVERITY = {"fail": 0, "warn": 1, "pass": 2, UNRUN: 3}
 
+# How a level is coloured, in one place. `Standing.tone` reads it through
+# `settled`, so a stale pass is still grey there; a caller that has just
+# taken the run itself, as the validate job has, reads it directly. `unrun`
+# is deliberately absent: it is not a finding, so it falls through to the
+# default rather than being given a colour of its own.
+LEVEL_TONE = {"pass": "good", "warn": "warn", "fail": "bad"}
+
 
 def _worst(levels: Iterable[str]) -> Optional[str]:
     present = [lv for lv in levels if lv in _SEVERITY]
@@ -461,8 +468,7 @@ class Standing:
         not current reads as unknown, whatever an older run said about it."""
         if not self.settled:
             return "unknown"
-        return {"pass": "good", "warn": "warn", "fail": "bad"}.get(
-            self.level or "", "unknown")
+        return LEVEL_TONE.get(self.level or "", "unknown")
 
     @property
     def label(self) -> str:

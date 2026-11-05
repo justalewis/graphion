@@ -52,6 +52,7 @@ from pathlib import Path
 from typing import Callable, Optional
 
 import db
+import register
 from config import JOBS_DIR
 
 # States. `interrupted` and `cancelled` are deliberately not `failed`: the
@@ -79,14 +80,54 @@ STATE_TONE = {
 }
 
 # Per-item states, which are the handler's to choose. `ingest_one` already
-# returns these three words, so the names are its names rather than a second
-# vocabulary over the top of them.
+# returns the first three words and a validate job's items are register
+# levels, so both vocabularies are their own module's rather than a third
+# one written over the top of them. The colours for a level come from
+# `register.LEVEL_TONE` for the same reason `Standing.tone` lives there: two
+# places deciding what a failure looks like is how one of them goes quietly
+# wrong. `unrun` is here and not there because it is not a finding, so it
+# reads as unknown rather than as a verdict.
 ITEM_TONE = {
     "ingested": "good",
     "replaced": "good",
     "skipped": "unknown",
     "failed": "bad",
+    register.UNRUN: "unknown",
+    **register.LEVEL_TONE,
 }
+
+# What the job page calls a kind's items. Here beside the handlers rather
+# than as a switch in the template, because a kind that does not set these
+# is a kind somebody forgot, and the fallback should read as plainly
+# generic rather than as another kind's words: a validation pass under the
+# heading "what happened to each file", telling the reader that nothing is
+# published by ingesting it, is worse than saying nothing.
+KIND_WORDS = {
+    "ingest_batch": {
+        "heading": "What happened to each file",
+        "item": "File",
+        "note": "A chapter that would not open is a finding about that "
+                "chapter, so the batch carries on past it and names it "
+                "here rather than stopping. What landed is a draft: "
+                "nothing is published by ingesting it.",
+    },
+    "validate": {
+        "heading": "What each checker found",
+        "item": "Check",
+        "note": "Each verdict is recorded against a hash of the file the "
+                "checker read, so it stops counting as current if that "
+                "file changes. A checker that is not installed is named "
+                "above and nothing was recorded for it, because a missing "
+                "tool is not a result and would have written over one.",
+    },
+}
+
+DEFAULT_WORDS = {"heading": "What happened", "item": "Item", "note": ""}
+
+
+def words(kind: str) -> dict:
+    return KIND_WORDS.get(kind, DEFAULT_WORDS)
+
 
 # Set False in tests. A daemon thread that outlives an assertion is the
 # usual way a test suite becomes intermittent, and every handler here is
@@ -115,7 +156,7 @@ def staging_dir(job_id: int) -> Path:
 
 
 def create(kind: str, label: str, payload: Optional[dict] = None,
-           journal_id: Optional[int] = None) -> int:
+           journal_id: Optional[int] = None, stage: bool = True) -> int:
     """Open a job and make somewhere to stage its input. Returns the id.
 
     The row comes first because the id is what names the staging
@@ -132,9 +173,14 @@ def create(kind: str, label: str, payload: Optional[dict] = None,
         "items_json) VALUES (?, ?, ?, ?, ?, '[]')",
         (kind, label, STAGING, journal_id, json.dumps(payload or {})),
     )
-    staging_dir(job_id).mkdir(parents=True, exist_ok=True)
-    db.execute("UPDATE jobs SET staged_path = ? WHERE id = ?",
-               (str(staging_dir(job_id)), job_id))
+    # `stage=False` for a job whose input is already in `content/`, which a
+    # validate pass is. A `staged_path` naming a directory that never held
+    # anything is a small lie to leave lying around, and the `staging`
+    # state still does its work: the row is not claimable until `release`.
+    if stage:
+        staging_dir(job_id).mkdir(parents=True, exist_ok=True)
+        db.execute("UPDATE jobs SET staged_path = ? WHERE id = ?",
+                   (str(staging_dir(job_id)), job_id))
     return job_id
 
 
@@ -467,3 +513,79 @@ def _ingest_batch(job: dict, progress: Progress) -> None:
                           f"{type(exc).__name__}: {exc}")
             continue
         progress.step(chapter.pdf.name, state, detail)
+
+
+@handler("validate")
+def _validate(job: dict, progress: Progress) -> None:
+    """verapdf, pa11y and epubcheck over a journal, recorded as it goes.
+
+    This is the pass `validate_galleys.py` exists for, and the reason it
+    was a script: each tool is a subprocess with a 120 second timeout, so
+    118 articles is an hour at best. `app.py`'s corpus route has run only
+    lint and the declaration since it was written, with a comment saying
+    these belonged in a job runner.
+
+    The script's own decisions are the script's. `TOOLS` says whether a
+    tool is there and what to say when it is not, `to_do` says what is in
+    the plan, and `run_one` hashes the file before the tool reads it,
+    writes the report beside the galley and records the run. Nothing about
+    validation is decided here.
+    """
+    import validate_galleys
+
+    facts = payload(job)
+    journal = db.query_one("SELECT * FROM journals WHERE id = ?",
+                           (job["journal_id"],))
+    if journal is None:
+        raise ValueError("The journal this pass was for no longer exists.")
+
+    asked = [k for k in facts.get("kinds") or validate_galleys.KINDS
+             if k in validate_galleys.TOOLS]
+    ready = [k for k in asked if validate_galleys.TOOLS[k]["available"]()]
+    missing = [k for k in asked if k not in ready]
+
+    if not ready:
+        # The same answer `validate_galleys.main()` gives, and for the same
+        # reason: a recorded run is the newest run for its kind, so a pass
+        # with no tool would write "not checked" over verdicts that cost an
+        # hour to get. A pass that could check nothing is not a pass.
+        raise ValueError(
+            "None of the requested tools is installed, so nothing was "
+            "checked and nothing was recorded. "
+            + "; ".join(f"{validate_galleys.TOOLS[k]['label']}: "
+                        f"{validate_galleys.TOOLS[k]['install']}"
+                        for k in asked))
+
+    skip_current = bool(facts.get("skip_current", True))
+    articles = validate_galleys.articles_for(journal["slug"])
+    plan = [(article, kind)
+            for article in articles
+            for kind in ready
+            if validate_galleys.to_do(article, kind, skip_current)]
+
+    # Counted in the total, because a tool that is not installed is
+    # something that happened to this pass and the first thing a reader
+    # needs off the page. Left out of the total it would be a line nobody
+    # looks at under a progress count that says everything is done.
+    progress.plan(len(plan) + len(missing))
+    for kind in missing:
+        tool = validate_galleys.TOOLS[kind]
+        progress.step(tool["label"], register.UNRUN,
+                      f"not installed, so no {kind} verdict was recorded "
+                      f"and none was overwritten: {tool['install']}")
+
+    for article, kind in plan:
+        if progress.cancelled:
+            return
+        try:
+            level, note = validate_galleys.run_one(article, kind)
+        except Exception as exc:
+            progress.step(f"{kind}: {article['slug']}", "failed",
+                          f"{type(exc).__name__}: {exc}")
+            continue
+        if level is None:
+            # `run_one` says "no file" where the galley went between the
+            # plan and the run. Owing a render is not failing a check.
+            progress.step(f"{kind}: {article['slug']}", "skipped", note)
+            continue
+        progress.step(f"{kind}: {article['slug']}", level, note)
