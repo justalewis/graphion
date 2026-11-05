@@ -23,6 +23,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+import conversion
 import epub_a11y
 
 pandoc = pytest.mark.skipif(
@@ -244,3 +245,72 @@ def test_the_epub_carries_the_figures_it_claims_to_have(tmp_path):
     found = epub_a11y.read_claim(out)
     assert "visual" in found["schema:accessMode"]
     assert "alternativeText" in found["schema:accessibilityFeature"]
+
+
+# ---------- a container may not reach outside itself ----------
+
+def test_a_remote_import_is_taken_out_for_the_epub():
+    """Both bundles import EB Garamond from Google Fonts, which is right
+    for the HTML galley and invalid in a container: epubcheck reports
+    RSC-006, "Remote resource reference is not allowed in this context".
+    Found by the fifth register kind on its first run, because the HTML
+    galley fetches the font and the PDF never sees this stylesheet.
+    """
+    css = ("@import url('https://fonts.googleapis.com/css2?family=X');\n"
+           "body { color: #141414; }\n")
+
+    out, removed = conversion.stylesheet_for_epub(css)
+
+    assert removed == 1
+    assert "fonts.googleapis" not in out
+    assert "body { color: #141414; }" in out
+
+
+def test_a_relative_import_is_left_alone():
+    """It names a file Pandoc carries into the container, so removing it
+    would take a stylesheet the EPUB actually has."""
+    css = "@import url('fonts.css');\nbody { color: #000; }\n"
+
+    out, removed = conversion.stylesheet_for_epub(css)
+
+    assert removed == 0
+    assert "fonts.css" in out
+
+
+def test_a_remote_font_face_is_not_touched():
+    """A different rule, which these bundles do not use. Reaching for one
+    nobody has written is how a cleanup pass starts removing what nobody
+    asked it to."""
+    css = ("@font-face { font-family: X; src: url(https://e.com/x.woff2); }\n"
+           "body { color: #000; }\n")
+
+    out, removed = conversion.stylesheet_for_epub(css)
+
+    assert removed == 0
+    assert "e.com/x.woff2" in out
+
+
+def test_nothing_else_in_the_stylesheet_moves():
+    """The count of rules is the cheap check that a pattern meant for one
+    line has not eaten a block."""
+    for bundle in sorted(Path("content/journals").glob("*/template")):
+        css_path = bundle / "article.css"
+        if not css_path.exists():
+            continue
+        css = css_path.read_text(encoding="utf-8")
+        out, _removed = conversion.stylesheet_for_epub(css)
+        assert out.count("{") == css.count("{"), bundle.parent.name
+
+
+def test_both_bundles_currently_carry_one():
+    """A measured fact rather than an assumption: every EPUB either
+    journal produced was invalid for this until it was stripped."""
+    found = {}
+    for bundle in sorted(Path("content/journals").glob("*/template")):
+        css_path = bundle / "article.css"
+        if css_path.exists():
+            _out, removed = conversion.stylesheet_for_epub(
+                css_path.read_text(encoding="utf-8"))
+            found[bundle.parent.name] = removed
+    assert found, "no bundles found"
+    assert all(n >= 1 for n in found.values()), found

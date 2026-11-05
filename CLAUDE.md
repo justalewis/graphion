@@ -27,7 +27,7 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (803 functions, 858 cases once the parametrized ones expand: 142 in
+Tests (808 functions, 863 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 64 in `test_assess.py`,
 50 in `test_lint.py`, 46 in `test_ingest_volume.py`, 38 in
 `test_describe.py`, 42 in `test_register.py`, 23 in
@@ -35,7 +35,7 @@ Tests (803 functions, 858 cases once the parametrized ones expand: 142 in
 29 in `test_teacher_resources.py`,
 29 in `test_metadata_roundtrip.py`, 26 in `test_pdf_tags.py`,
 24 in `test_math_alt.py`,
-18 in `test_acr.py`, 14 in `test_epub_a11y.py`,
+18 in `test_acr.py`, 19 in `test_epub_a11y.py`,
 34 in `test_template_bundles.py`, 15 in `test_validate_galleys.py`,
 9 in `test_pdf_ua.py`, 8 in `test_accessibility_routes.py`,
 37 in `test_reading_order.py`,
@@ -683,6 +683,28 @@ download and wrong at three: epubcheck is a separate install, and verapdf
 and pa11y should not wait on it. The reason for refusing is about one
 kind's rows, so writing none of them answers it, and the run says which
 tool it could not reach.
+
+**It found two real defects on its first run, and that is the argument for
+it.** A stylesheet may not reach outside the container, and both bundles
+import EB Garamond from Google Fonts: epubcheck reports RSC-006 on it, so
+every EPUB either journal has ever produced was invalid. The bundle's own
+`@import` is right for the HTML galley, which fetches the font, and the PDF
+never sees the stylesheet, so neither of the other two checks could see
+this. `conversion.stylesheet_for_epub` ships a copy without the remote
+rules, written to `.epub.css` beside the article so the bundle is never
+edited, and only an `@import` of an absolute URL goes: a relative one names
+a file Pandoc carries in, and a remote `@font-face` is a rule these bundles
+do not use.
+
+The second is open. A footnote reference in an article's **abstract**
+becomes a dangling fragment, because Pandoc puts the abstract on the EPUB's
+title page and the note's definition in the body, so `#fn1` names nothing
+in the file that links to it (RSC-012). It resolves in the single-file HTML
+galley, which is why nothing had seen it. `8-diab` and `12-laflen` both
+carry an abstract reference. The fix is a judgement rather than a line:
+stripping the marker for the EPUB loses nothing where the note is also
+referenced in the body, and loses the whole note where it is not, because
+Pandoc drops a definition nothing points at.
 
 Nothing in this archive has an EPUB except one chapter, because the EPUB
 renders on demand and none had been rendered. So the kind reads 117

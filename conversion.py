@@ -1894,6 +1894,34 @@ def render_pdf_weasy(article_path: Path, journal_slug: str) -> Path:
     return out
 
 
+# A stylesheet reaching outside the container, which an EPUB may not do.
+# Both bundles import EB Garamond from Google Fonts, which is right for the
+# HTML galley and invalid in an EPUB: epubcheck reports RSC-006, "Remote
+# resource reference is not allowed in this context", and a reading system
+# offline falls back to whatever it has anyway. The bundle's own `@import`
+# is left alone; what ships in the container is a copy without it.
+#
+# Found by the fifth register kind on its first run, which is what it is
+# for. The HTML galley fetches the font and the PDF never sees this
+# stylesheet, so neither of the other two checks could have seen it.
+_REMOTE_IMPORT_RE = re.compile(
+    r"^[ \t]*@import\s+url\(\s*['\"]?https?://[^)]*\)\s*;[ \t]*\r?\n?",
+    re.M | re.I)
+
+
+def stylesheet_for_epub(css: str) -> tuple:
+    """A stylesheet with its remote imports removed, and how many went.
+
+    Only an `@import` of an absolute http or https URL. A relative import
+    names a file Pandoc carries into the container, and a `@font-face`
+    whose `src` is remote is a different rule this does not touch: the
+    bundles do not use one, and reaching for a rule nobody has written is
+    how a cleanup pass starts removing what nobody asked it to.
+    """
+    out, count = _REMOTE_IMPORT_RE.subn("", css or "")
+    return out, count
+
+
 def render_epub(article_path: Path, journal_slug: str) -> Path:
     """Render an EPUB3 via Pandoc from the cleaned Markdown.
 
@@ -1929,7 +1957,17 @@ def render_epub(article_path: Path, journal_slug: str) -> Path:
     extra.extend(_heading_levels_filter_args())
     extra.extend(_long_description_filter_args())
     if css.exists():
-        extra.extend(["--css", str(css)])
+        # A copy without the remote imports, because a container may not
+        # reach outside itself. Written beside the article where the other
+        # render intermediates live, so the bundle is never edited.
+        cleaned, removed = stylesheet_for_epub(
+            css.read_text(encoding="utf-8", errors="replace"))
+        if removed:
+            local = article_path / ".epub.css"
+            local.write_text(cleaned, encoding="utf-8")
+            extra.extend(["--css", str(local)])
+        else:
+            extra.extend(["--css", str(css)])
     # Per-article CSS override: additive after the journal CSS
     override_css = article_path / "article-override.css"
     if override_css.exists():

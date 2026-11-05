@@ -16,12 +16,16 @@ content/**/article.typ
 content/**/.chapter.md
 content/**/.teacher.md
 content/**/.teacher.typ
+# The EPUB's own copy of the journal stylesheet, without the remote
+# imports a container may not carry; see conversion.stylesheet_for_epub.
+content/**/.epub.css
 content/**/teacher-resources.pdf
 content/**/teacher-resources.html
 content/**/article.epub
 content/**/conversion.log
 content/**/verapdf-report.json
 content/**/pa11y-report.json
+content/**/epubcheck-report.json
 content/**/.versions/
 content/**/source.docx
 content/**/source.pdf
