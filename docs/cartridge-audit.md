@@ -469,5 +469,30 @@ renames it, so every reference to it inside the cartridge would point at a
 name that no longer exists. A remediation that broke the links it was
 trying to make usable would be worse than the gap.
 
-**Next:** R6 (the drafting queue). R4 (OCR) still waits for a folder of
-scans and a tesseract install.
+**Next:** R6 (the drafting queue).
+
+**R4, now measurable.** Tesseract 5.4.0 (the UB-Mannheim build, Apache-2.0,
+installed per user and not on PATH) is on the development machine, with
+`TESSERACT_PATH` as the override `ocr.py` reads, so the pass can be built
+against real scans. Five pages from the CPTSC corpus, which is scanned
+throughout, gave this.
+
+OCR is good and cheap on those pages: mean word confidence 90 to 95 percent
+and one to two seconds a page, so a whole archive is a job and not a
+request. Resolution is not the lever: 150 dpi read as well as 300 on every
+page tried.
+
+**A high average hides visible errors, and that decides the design.** The
+page that scored 92 percent read "Schoo! of Engineering", "Alr Force
+[Institute" and "(Dick, | don't". So a confidence threshold cannot separate
+the pages that are done from the pages that owe proofing, which is what
+this section assumed it could. Recording per-page confidence is still
+worth doing, since a page far below the rest is worth looking at first,
+but every OCR layer owes proofing and the report must say so rather than
+counting a high-confidence page as finished.
+
+**And OCR cannot feed `pdf_ingest` as it stands.** Ingest finds headings and
+paragraphs from font size and position, and an OCR text layer has neither:
+the sizes are synthetic. Reading these scans into Markdown needs an
+OCR-aware path of its own, which is a separate piece of work from adding a
+text layer under the image so a screen reader has something to read.

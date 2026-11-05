@@ -14,14 +14,34 @@ Requires:
 """
 from __future__ import annotations
 
+import os
 import shutil
 import subprocess
 from pathlib import Path
 from typing import List, Optional
 
+# Where to find the binary when it is not on PATH, resolved the way
+# `PANDOC_PATH` and `EPUBCHECK_PATH` are. The Windows installer from
+# UB-Mannheim puts it under %LOCALAPPDATA%\Programs\Tesseract-OCR and does
+# not add that to PATH, so without this the probe below reads "absent" for a
+# tool that is installed, and everything that depends on it quietly degrades.
+TESSERACT_ENV = "TESSERACT_PATH"
+
+
+def tesseract_binary() -> Optional[str]:
+    """The binary to run, from the override first and PATH second.
+
+    Returns the path `shutil.which` found rather than the bare name, because
+    on Windows a launcher is not something `CreateProcess` runs from the name.
+    """
+    named = os.environ.get(TESSERACT_ENV)
+    if named and Path(named).is_file():
+        return named
+    return shutil.which("tesseract")
+
 
 def tesseract_binary_available() -> bool:
-    return shutil.which("tesseract") is not None
+    return tesseract_binary() is not None
 
 
 def python_binding_available() -> bool:
@@ -45,6 +65,7 @@ def ocr_image(image_path: Path) -> Optional[str]:
         return None
     import pytesseract
     from PIL import Image
+    pytesseract.pytesseract.tesseract_cmd = tesseract_binary()
     img = Image.open(image_path)
     return pytesseract.image_to_string(img)
 
@@ -90,6 +111,8 @@ def ocr_to_markdown_table(image_path: Path) -> Optional[str]:
 
 
 __all__ = [
+    "TESSERACT_ENV",
+    "tesseract_binary",
     "tesseract_binary_available",
     "python_binding_available",
     "available",
