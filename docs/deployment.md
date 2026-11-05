@@ -289,27 +289,19 @@ finds `soffice` for the optional DOCX-normalize pass.
 as a picture: an editing aid used on one article at a time rather than
 anything a corpus pass needs. `ocr.available()` greys the button out.
 
-### pa11y needs more memory than this machine has
+### The machine is on 2 GB because of pa11y
 
-This is the one thing to watch. `fly.toml` is `shared-cpu-1x` with
-`memory = "1gb"`. Chromium wants several hundred megabytes, and it runs
-beside gunicorn, pdfplumber, Typst and the LibreOffice layer. An OOM kills
-the single machine, which takes the whole app down rather than only the
-check.
+`fly.toml` is `shared-cpu-1x` with `memory = "2gb"`. It ran on 1 GB until
+the checkers went into the image. pa11y drives headless Chromium, which
+wants several hundred megabytes and runs beside gunicorn, pdfplumber,
+Typst and the LibreOffice layer; on 1 GB an OOM would kill the single
+machine and take the whole app down rather than only the check. The
+second gigabyte is roughly another $3 a month and buys a validation pass
+over a whole journal that cannot knock the app over.
 
-Nothing launches Chromium until somebody asks for a pa11y run, so the risk
-is confined to that. But before running a validation pass over a whole
-journal in production, raise it:
-
-```toml
-[[vm]]
-  size = "shared-cpu-1x"
-  memory = "2gb"
-```
-
-That is roughly another $3 a month. It is left at 1 GB until somebody
-decides to spend it, rather than being raised quietly as part of adding
-the tools.
+If you ever drop it back to 1 GB, the thing to know is that nothing
+launches Chromium until somebody asks for a pa11y run, so the app will
+look fine until the first validation pass and then fall over mid-run.
 
 Two container flags go with Chromium and are not precautions.
 `--no-sandbox` is passed because Chromium refuses to start as root and the
@@ -319,11 +311,16 @@ without it. `validators.pa11y_needs_no_sandbox()` decides by asking
 whether the process is root, so a developer's machine does not drop the
 sandbox for no reason; `GRAPHION_PA11Y_NO_SANDBOX` forces it either way.
 
-The JVM heap is capped at 512 MB through `JAVA_TOOL_OPTIONS`, for the same
-reason: sized for the machine rather than for the tools' appetite. It
-prints a "Picked up JAVA_TOOL_OPTIONS" line to stderr on every run, which
-disturbs neither tool, since verapdf is read from stdout and epubcheck
-writes its report to a file.
+The JVM heap is capped at 512 MB through `JAVA_TOOL_OPTIONS`. That was
+sized for the 1 GB machine and has been left alone: verapdf and epubcheck
+read one file at a time and have not wanted more, and a cap that holds is
+worth keeping whatever headroom sits above it. Raise it only if a large
+galley starts failing with a heap error, which would show up as a
+`fail` in the register rather than as an OOM.
+
+It prints a "Picked up JAVA_TOOL_OPTIONS" line to stderr on every run,
+which disturbs neither tool, since verapdf is read from stdout and
+epubcheck writes its report to a file.
 
 Pandoc **is** installed (pinned by `PANDOC_VERSION` in the Dockerfile, since
 Debian bookworm ships 2.17 and the app needs 3+). Typst arrives via `typst-py`.

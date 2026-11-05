@@ -34,6 +34,12 @@ primary_region = "ord"
   source = "graphion_data"
   destination = "/data"
 
+# 2 GB rather than the 1 GB this ran on until the three external checkers
+# went into the image. pa11y drives headless Chromium, which wants several
+# hundred megabytes, and it runs beside gunicorn, pdfplumber, Typst and the
+# LibreOffice layer. On 1 GB an OOM would kill the single machine and take
+# the whole app down rather than only the check, which is a poor trade for
+# a few dollars a month. See docs/deployment.md.
 [[vm]]
   size = "shared-cpu-1x"
-  memory = "1gb"
+  memory = "2gb"

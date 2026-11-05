@@ -2297,13 +2297,15 @@ Production runs on Fly.io at a public `.fly.dev` hostname; see
   Docker gives a container 64 MB of `/dev/shm` and Chromium crashes
   partway through a page without it.
 
-  **And pa11y wants more memory than the machine has.** `fly.toml` is 1 GB
-  and Chromium wants several hundred megabytes beside gunicorn, Typst and
-  LibreOffice; an OOM takes the whole app down, not just the check.
-  Nothing launches Chromium until somebody asks for a pa11y run, so it is
-  left at 1 GB rather than raised quietly; `docs/deployment.md` says what
-  to change and roughly what it costs. The JVM heap is capped at 512 MB
-  through `JAVA_TOOL_OPTIONS` for the same reason.
+  **And pa11y is why `fly.toml` says 2 GB.** It ran on 1 GB until the
+  checkers went in; Chromium wants several hundred megabytes beside
+  gunicorn, Typst and LibreOffice, and an OOM takes the whole app down
+  rather than only the check. Nothing launches Chromium until somebody
+  asks for a pa11y run, so 1 GB looks fine right up to the first
+  validation pass, which is the shape of failure the second gigabyte
+  buys off. The JVM heap is capped at 512 MB through `JAVA_TOOL_OPTIONS`
+  for the same reason, and that cap is still sized for the smaller
+  machine.
 
 Shell scripts and the Dockerfile must keep LF endings (`.gitattributes` pins
 this). A CRLF shebang makes the container fail to start.
