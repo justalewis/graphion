@@ -13,6 +13,7 @@ below are about what must not be claimed: alternative text for a figure
 nobody described, sufficiency for a page of words set as a picture, and
 conformance for either.
 """
+import re
 import shutil
 import subprocess
 import sys
@@ -314,3 +315,99 @@ def test_both_bundles_currently_carry_one():
             found[bundle.parent.name] = removed
     assert found, "no bundles found"
     assert all(n >= 1 for n in found.values()), found
+
+
+# ---------- a footnote reference in the abstract ----------
+
+def test_a_reference_the_body_also_makes_is_simply_dropped():
+    """Pandoc renders the abstract onto the EPUB's own title page, so a
+    reference in it links to a definition that is not in the file linking
+    to it: epubcheck reports RSC-012. It resolves in the single-file HTML
+    galley, which is why nothing had seen it. Where the body refers to the
+    same note, the marker comes off and the reader meets the note where it
+    is printed. `8-diab` is that case.
+    """
+    abstract = "Students circulate inaccessible documents.[^1] This essay."
+    body = "Prose that refers to it too.[^1]\n\n[^1]: The note.\n"
+
+    out, new_body, notes = conversion.abstract_for_epub(abstract, body)
+
+    assert "[^1]" not in out
+    assert new_body == body, "the body needed no change"
+    assert notes and "still reachable" in notes[0]
+
+
+def test_a_reference_only_the_abstract_makes_moves_into_the_body():
+    """Taking the marker off alone would leave the definition pointed at
+    by nothing, and Pandoc drops such a definition with a warning and no
+    output, so the note would be gone from the book."""
+    abstract = "A summary.[^1]"
+    body = "The first paragraph.\n\n# A Head\n\n[^1]: The note.\n"
+
+    out, new_body, notes = conversion.abstract_for_epub(abstract, body)
+
+    assert "[^1]" not in out
+    assert "The first paragraph.[^1]" in new_body
+    assert len(re.findall(r"\[\^1\](?!:)", new_body)) == 1
+    assert notes and "moves to the end of the first paragraph" in notes[0]
+
+
+def test_the_definition_is_not_folded_into_the_abstract():
+    """Folding the prose in was tried first and is wrong for the case it
+    fires on: `12-laflen`'s only abstract reference is the licence notice,
+    so the abstract came out ending "...visit
+    http://writingspaces.org/terms-of-use.)" in parentheses. A licence
+    belongs in a note the galley carries, not inside the summary of the
+    argument.
+    """
+    abstract = "A summary.[^1]"
+    body = ("The first paragraph.\n\n"
+            "[^1]: This work is licensed under the Creative Commons "
+            "Attribution-NonCommercial-NoDerivatives 4.0 International "
+            "License.\n")
+
+    out, _new_body, _notes = conversion.abstract_for_epub(abstract, body)
+
+    assert "Creative Commons" not in out
+    assert out == "A summary."
+
+
+def test_a_marker_is_not_hung_on_a_heading_or_an_image():
+    """Each is a poor place for one: the first prints it inside a heading,
+    and a definition would end up pointing at itself."""
+    abstract = "A summary.[^1]"
+    body = ("# A Head\n\n![A figure.](assets/f.jpg)\n\n> A quotation.\n\n"
+            "Real prose at last.\n\n[^1]: The note.\n")
+
+    _out, new_body, _notes = conversion.abstract_for_epub(abstract, body)
+
+    assert "Real prose at last.[^1]" in new_body
+    assert "# A Head[^1]" not in new_body
+
+
+def test_an_abstract_with_no_reference_is_left_exactly_alone():
+    abstract = "A summary with no notes in it."
+    body = "Prose.\n"
+
+    out, new_body, notes = conversion.abstract_for_epub(abstract, body)
+
+    assert out == abstract
+    assert new_body == body
+    assert notes == []
+
+
+def test_both_affected_chapters_come_out_with_nothing_to_report():
+    """The two the archive actually holds. Over them the abstract loses its
+    marker and the note stays reachable, which is what makes the container
+    valid without losing the note."""
+    for slug in ("8-diab", "12-laflen"):
+        d = Path("content/journals/writing-spaces/issues/v5-n1-2023"
+                 "/articles") / slug
+        if not (d / "article.md").exists():
+            pytest.skip(f"{slug} is not in this checkout")
+        fm, body = conversion.read_article_metadata(d)
+        out, new_body, notes = conversion.abstract_for_epub(
+            str(fm.get("abstract") or ""), body)
+        assert notes, f"{slug} should have had a reference to resolve"
+        assert "[^" not in out, slug
+        assert len(re.findall(r"\[\^1\](?!:)", new_body)) >= 1, slug

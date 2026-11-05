@@ -1894,6 +1894,102 @@ def render_pdf_weasy(article_path: Path, journal_slug: str) -> Path:
     return out
 
 
+def _definition_text(body: str, name: str) -> str:
+    """The prose of one footnote definition, joined onto a line."""
+    pattern = re.compile(
+        r"^\[\^" + re.escape(name) + r"\]:[ \t]*(.*?)(?=\n\[\^|\n\n|\Z)",
+        re.M | re.S)
+    found = pattern.search(body or "")
+    return " ".join(found.group(1).split()) if found else ""
+
+
+def _first_prose_block(body: str) -> Optional[int]:
+    """The index of the first block of the body that is running prose.
+
+    A heading, an image, a table, a block quotation and a footnote
+    definition are each a poor place to hang a marker: the first prints it
+    inside a heading, and the last would point a note at itself.
+    """
+    blocks = (body or "").split("\n\n")
+    for index, block in enumerate(blocks):
+        text = block.strip()
+        if not text:
+            continue
+        if text.startswith(("#", "!", ">", "|", "[^", "---", ":::")):
+            continue
+        return index
+    return None
+
+
+def abstract_for_epub(abstract: str, body: str) -> tuple:
+    """An abstract and body whose footnote references survive a container.
+
+    Pandoc renders the abstract onto the EPUB's own title page and the body
+    into its own files, so a footnote reference in the abstract links to a
+    definition that is not in the file linking to it: epubcheck reports
+    RSC-012, "Fragment identifier is not defined". It resolves in the
+    single-file HTML galley, which is why nothing had seen it, and
+    `8-diab` and `12-laflen` both carry one.
+
+    Which way a reference goes depends on whether the body refers to the
+    same note. Where it does, as in `8-diab`, the marker comes off the
+    abstract and the reader meets the note where it is printed.
+
+    Where the abstract is the only reference, taking the marker off alone
+    would leave the definition pointed at by nothing, and Pandoc drops such
+    a definition with a warning and no output, so the note would be gone
+    from the book. So the reference moves into the body instead, onto the
+    end of its first paragraph, which puts it in the same file as the
+    definition and keeps the note a note.
+
+    Folding the definition's prose into the abstract was tried first and is
+    wrong for the case it fires on. `12-laflen`'s only abstract reference
+    is the licence notice, so the abstract came out ending "...visit
+    http://writingspaces.org/terms-of-use.)" in parentheses. A licence
+    belongs in a note the galley carries, not inside the summary of the
+    argument.
+
+    Returns `(abstract, body, notes)`. The notes are said out loud by the
+    caller, because a galley whose abstract reads differently from another
+    galley's is something an editor has to know.
+    """
+    text = abstract or ""
+    body = body or ""
+    refs = _FOOTNOTE_REF_RE.findall(text)
+    if not refs:
+        return text, body, []
+
+    notes = []
+    for name in dict.fromkeys(refs):
+        marker = f"[^{name}]"
+        elsewhere = [n for n in _FOOTNOTE_REF_RE.findall(body) if n == name]
+        text = text.replace(marker, "")
+        if elsewhere:
+            notes.append(
+                f"Took the reference to note {name} out of the abstract for "
+                f"the EPUB, where the abstract is a file of its own and the "
+                f"note is not; the body refers to it {len(elsewhere)} "
+                f"time(s), so it is still reachable.")
+            continue
+        at = _first_prose_block(body)
+        if at is None:
+            notes.append(
+                f"Took the reference to note {name} out of the abstract for "
+                f"the EPUB; the body has no paragraph to move it to, so the "
+                f"note may be dropped.")
+            continue
+        blocks = body.split("\n\n")
+        blocks[at] = blocks[at].rstrip() + marker
+        body = "\n\n".join(blocks)
+        notes.append(
+            f"Note {name} was referred to only from the abstract, which is "
+            f"its own file in a container, so for the EPUB the reference "
+            f"moves to the end of the first paragraph; taking the marker "
+            f"off alone would leave the definition unreferenced and Pandoc "
+            f"drops one of those.")
+    return " ".join(text.split()), body, notes
+
+
 # A stylesheet reaching outside the container, which an EPUB may not do.
 # Both bundles import EB Garamond from Google Fonts, which is right for the
 # HTML galley and invalid in an EPUB: epubcheck reports RSC-006, "Remote
@@ -1933,6 +2029,26 @@ def render_epub(article_path: Path, journal_slug: str) -> Path:
     _repair_markdown_quirks_in_file(article_path / "article.md")
     md = article_path / "article.md"
     out = article_path / "article.epub"
+    # The abstract becomes a file of its own in a container, so a footnote
+    # reference in it links out of the file that holds it. Rewritten into
+    # an intermediate rather than into `article.md`, which stays the one
+    # canonical copy, the way `.chapter.md` and `.teacher.md` do.
+    _fm_now, _body_now = read_article_metadata(article_path)
+    _fixed, _body_fixed, _abstract_notes = abstract_for_epub(
+        str(_fm_now.get("abstract") or ""), _body_now)
+    if _abstract_notes:
+        import yaml
+
+        _fm_now = dict(_fm_now)
+        _fm_now["abstract"] = _fixed
+        _front = yaml.safe_dump(
+            _fm_now, sort_keys=False, allow_unicode=True, width=10_000,
+        )
+        md = article_path / ".epub.md"
+        md.write_text(f"---\n{_front}---\n\n{_body_fixed.strip()}\n",
+                      encoding="utf-8")
+        _append_log(article_path, "EPUB abstract",
+                    "\n".join(f"  - {n}" for n in _abstract_notes))
     tpl = template_dir(journal_slug)
     css = tpl / "article.css"
 

@@ -444,10 +444,18 @@ a week and a month.
   `dcterms:conformsTo` and `a11y:certifiedBy` claims into the package
   document and `register.CHECKED_FILE` had no EPUB entry, so four kinds
   were recorded and none of them opened one. `epubcheck` is the fifth.
-  Over this archive it reads 117 `absent` and one `never`, because the
-  EPUB renders on demand and one has now been rendered: `absent` is a
-  render owed, `never` is a file nothing has checked. epubcheck itself is
-  not installed here, so no verdict has been taken.
+  It found two real defects on its first run, both invisible to the other
+  checks. A Google Fonts `@import` in **both** bundles made every EPUB
+  either journal had ever produced invalid (RSC-006), and a footnote
+  reference in an article's abstract dangled across the container's files
+  (RSC-012), which the single-file HTML galley resolves. Both are fixed;
+  the two chapters that have EPUBs now validate with no errors and no
+  warnings, and `12-laflen` keeps the licence note that the first attempt
+  at the second fix would have folded into its abstract.
+
+  116 of 118 still read `absent`, because the EPUB renders on demand:
+  `absent` is a render owed, not a failure. Rendering the rest is the
+  obvious next pass, and it is where more of this would turn up.
 - **Reading order in the tagged PDF.** ~~Nothing checks the result.~~
   `structure.reading_order` now states the order the source holds and
   `lint.check_reading_order` reports where the reconstruction runs

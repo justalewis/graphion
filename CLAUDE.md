@@ -27,7 +27,7 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (808 functions, 863 cases once the parametrized ones expand: 142 in
+Tests (814 functions, 869 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 64 in `test_assess.py`,
 50 in `test_lint.py`, 46 in `test_ingest_volume.py`, 38 in
 `test_describe.py`, 42 in `test_register.py`, 23 in
@@ -35,7 +35,7 @@ Tests (808 functions, 863 cases once the parametrized ones expand: 142 in
 29 in `test_teacher_resources.py`,
 29 in `test_metadata_roundtrip.py`, 26 in `test_pdf_tags.py`,
 24 in `test_math_alt.py`,
-18 in `test_acr.py`, 19 in `test_epub_a11y.py`,
+18 in `test_acr.py`, 25 in `test_epub_a11y.py`,
 34 in `test_template_bundles.py`, 15 in `test_validate_galleys.py`,
 9 in `test_pdf_ua.py`, 8 in `test_accessibility_routes.py`,
 37 in `test_reading_order.py`,
@@ -696,15 +696,39 @@ edited, and only an `@import` of an absolute URL goes: a relative one names
 a file Pandoc carries in, and a remote `@font-face` is a rule these bundles
 do not use.
 
-The second is open. A footnote reference in an article's **abstract**
-becomes a dangling fragment, because Pandoc puts the abstract on the EPUB's
-title page and the note's definition in the body, so `#fn1` names nothing
-in the file that links to it (RSC-012). It resolves in the single-file HTML
+The second was a footnote reference in an article's **abstract**, which
+becomes a dangling fragment: Pandoc puts the abstract on the EPUB's title
+page and the note's definition in the body, so `#fn1` names nothing in the
+file that links to it (RSC-012). It resolves in the single-file HTML
 galley, which is why nothing had seen it. `8-diab` and `12-laflen` both
-carry an abstract reference. The fix is a judgement rather than a line:
-stripping the marker for the EPUB loses nothing where the note is also
-referenced in the body, and loses the whole note where it is not, because
-Pandoc drops a definition nothing points at.
+carry one.
+
+`abstract_for_epub` resolves it, and which way depends on whether the body
+refers to the same note. Where it does, the marker comes off the abstract
+and the reader meets the note where it is printed. Where the abstract is
+the only reference, the marker **moves** to the end of the body's first
+paragraph, because taking it off alone would leave the definition pointed
+at by nothing and Pandoc drops such a definition with a warning and no
+output: the note would be gone from the book.
+
+Folding the definition's prose into the abstract was tried first and is
+wrong for the case it fires on. `12-laflen`'s only abstract reference is
+the licence notice, so the abstract came out ending "...visit
+http://writingspaces.org/terms-of-use.)" in parentheses. A licence belongs
+in a note the galley carries, not inside the summary of the argument, and
+the licence is the field in this archive that least tolerates being
+rounded off. The marker is also kept off a heading, an image, a quotation
+and a definition, since the first prints it inside a heading and the last
+would point a note at itself.
+
+Written into `.epub.md` rather than into `article.md`, which stays the one
+canonical copy the way `.chapter.md` and `.teacher.md` do, and the moves
+go into `conversion.log` under "EPUB abstract", because a galley whose
+abstract reads differently from another galley's is something an editor
+has to know.
+
+**Both chapters now validate with no errors and no warnings**, and
+`12-laflen` keeps its licence note.
 
 Nothing in this archive has an EPUB except one chapter, because the EPUB
 renders on demand and none had been rendered. So the kind reads 117
