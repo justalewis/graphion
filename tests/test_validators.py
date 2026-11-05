@@ -241,3 +241,59 @@ def test_a_missing_tool_is_reported_and_not_guessed_at(monkeypatch):
     passed, report = validators.run_epubcheck(Path("nowhere.epub"))
     assert passed is False
     assert "epubcheck" in report["error"]
+
+
+def test_a_jar_is_run_through_the_jvm(tmp_path, monkeypatch):
+    """The W3C's own release is a jar with its `lib/` beside it and nothing
+    to put on PATH, so supporting only a launcher would have had the probe
+    say no on a machine where the tool was sitting installed."""
+    jar = tmp_path / "epubcheck.jar"
+    jar.write_bytes(b"PK\x03\x04 pretend")
+    epub = tmp_path / "article.epub"
+    epub.write_bytes(b"PK\x03\x04 pretend")
+    monkeypatch.setenv(validators.EPUBCHECK_ENV, str(jar))
+    monkeypatch.setattr(validators.shutil, "which",
+                        lambda name: r"C:\java\bin\java.exe"
+                        if name == "java" else None)
+    ran = _Wrote({"messages": []})
+    monkeypatch.setattr(validators.subprocess, "run", ran)
+
+    passed, _report = validators.run_epubcheck(epub)
+
+    assert ran.argv[0].endswith("java.exe")
+    assert ran.argv[1] == "-jar"
+    assert ran.argv[2] == str(jar)
+    assert passed is True
+
+
+def test_a_launcher_is_run_directly(tmp_path, monkeypatch):
+    launcher = tmp_path / "epubcheck.bat"
+    launcher.write_text("rem", encoding="utf-8")
+    epub = tmp_path / "article.epub"
+    epub.write_bytes(b"PK\x03\x04 pretend")
+    monkeypatch.setenv(validators.EPUBCHECK_ENV, str(launcher))
+    ran = _Wrote({"messages": []})
+    monkeypatch.setattr(validators.subprocess, "run", ran)
+
+    validators.run_epubcheck(epub)
+
+    assert ran.argv[0] == str(launcher)
+    assert "-jar" not in ran.argv
+
+
+def test_a_jar_with_no_java_is_a_tool_that_is_not_installed(tmp_path,
+                                                            monkeypatch):
+    """The probe gates the call, so a yes it cannot honour turns into a
+    crash per article rather than a notice. That is the pairing
+    `run_verapdf` warns about, and it cost 115 of them once."""
+    jar = tmp_path / "epubcheck.jar"
+    jar.write_bytes(b"PK\x03\x04 pretend")
+    monkeypatch.setenv(validators.EPUBCHECK_ENV, str(jar))
+    monkeypatch.setattr(validators.shutil, "which", lambda name: None)
+
+    assert not validators.epubcheck_available()
+
+    passed, report = validators.run_epubcheck(tmp_path / "article.epub")
+
+    assert passed is False
+    assert "java" in report["error"]

@@ -108,23 +108,58 @@ __all__ = [
 # document, and until this existed nothing read the file back: the register
 # carried four kinds and none of them opened an EPUB.
 #
-# Distributed as a jar with a launcher beside it, so the path is resolved
-# the way `PANDOC_PATH` is, and called by the path `shutil.which` returned
-# for the reason `run_verapdf` explains: on Windows the launcher is
-# `epubcheck.bat` and `CreateProcess` will not run it from the bare name.
+# Resolved the way `PANDOC_PATH` is, and called by the path rather than the
+# name for the reason `run_verapdf` explains: a launcher is `epubcheck.bat`
+# on Windows and `CreateProcess` will not run it from the bare name.
 EPUBCHECK_ENV = "EPUBCHECK_PATH"
 
 
 def epubcheck_binary() -> Optional[str]:
-    """Where epubcheck is, or None."""
+    """Where epubcheck is, or None.
+
+    Two shapes, because the tool comes in two. Some distributions put an
+    `epubcheck` launcher on PATH; the W3C's own release is a jar with its
+    `lib/` beside it and nothing to put on PATH at all, so
+    `EPUBCHECK_PATH` may name either and `epubcheck_argv` decides how to
+    call what it finds. Supporting only the launcher would have meant the
+    probe saying no on a machine where the tool was sitting installed.
+    """
     named = os.environ.get(EPUBCHECK_ENV)
     if named and Path(named).exists():
         return named
     return shutil.which("epubcheck")
 
 
+def epubcheck_argv(target: str, epub_path: Path, report: Path) -> list:
+    """How to call what `epubcheck_binary` found.
+
+    A jar is run through the JVM; a launcher is run directly. The jar needs
+    its `lib/` where the release put it, so the path is passed as given
+    rather than copied anywhere.
+    """
+    argv = []
+    if str(target).lower().endswith(".jar"):
+        java = shutil.which("java") or "java"
+        argv = [java, "-jar", str(target)]
+    else:
+        argv = [str(target)]
+    return argv + [str(epub_path), "--json", str(report), "--quiet"]
+
+
 def epubcheck_available() -> bool:
-    return epubcheck_binary() is not None
+    """Whether epubcheck can actually be called, not merely found.
+
+    A jar with no JVM to run it is a tool that is not installed, and
+    answering yes there is the pairing `run_verapdf` warns about: the probe
+    gates the call, so a yes it cannot honour turns into a crash per
+    article rather than a notice.
+    """
+    target = epubcheck_binary()
+    if target is None:
+        return False
+    if str(target).lower().endswith(".jar"):
+        return shutil.which("java") is not None
+    return True
 
 
 def run_epubcheck(epub_path: Path) -> Tuple[bool, Dict]:
@@ -141,11 +176,15 @@ def run_epubcheck(epub_path: Path) -> Tuple[bool, Dict]:
     writes its progress there and the JSON would arrive mixed in with it.
     """
     if not epubcheck_available():
-        return False, {
-            "error": "epubcheck not on PATH; see "
-                     "https://www.w3.org/publishing/epubcheck/",
-            "passed": False,
-        }
+        target = epubcheck_binary()
+        if target and str(target).lower().endswith(".jar"):
+            error = (f"epubcheck is at {target} but no java was found to run "
+                     f"it; install a JRE or put java on PATH")
+        else:
+            error = ("epubcheck not on PATH; see "
+                     "https://www.w3.org/publishing/epubcheck/, or point "
+                     f"{EPUBCHECK_ENV} at the launcher or the jar")
+        return False, {"error": error, "passed": False}
     if not Path(epub_path).exists():
         return False, {"error": "EPUB not found", "passed": False}
 
@@ -154,7 +193,7 @@ def run_epubcheck(epub_path: Path) -> Tuple[bool, Dict]:
         out = Path(workspace) / "epubcheck.json"
         try:
             result = subprocess.run(
-                [binary, str(epub_path), "--json", str(out), "--quiet"],
+                epubcheck_argv(binary, Path(epub_path), out),
                 capture_output=True, text=True, timeout=120,
             )
         except subprocess.TimeoutExpired:
@@ -188,5 +227,6 @@ __all__ = [
     "verapdf_available", "run_verapdf",
     "pa11y_available", "run_pa11y",
     "epubcheck_available", "run_epubcheck", "epubcheck_binary",
+    "epubcheck_argv",
     "EPUBCHECK_ENV",
 ]

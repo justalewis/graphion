@@ -27,7 +27,7 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (800 functions, 855 cases once the parametrized ones expand: 142 in
+Tests (803 functions, 858 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 64 in `test_assess.py`,
 50 in `test_lint.py`, 46 in `test_ingest_volume.py`, 38 in
 `test_describe.py`, 42 in `test_register.py`, 23 in
@@ -42,7 +42,7 @@ Tests (800 functions, 855 cases once the parametrized ones expand: 142 in
 17 in `test_long_descriptions.py`,
 8 in `test_heading_levels.py`, 7 in `test_fig_alt.py`,
 6 in `test_standalone_html.py`,
-12 in `test_validators.py`,
+15 in `test_validators.py`,
 4 in `test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
 runs without Pandoc; `test_journal_filter.py`, `test_fig_alt.py` and
 `test_heading_levels.py` and `test_long_descriptions.py` need it, and
