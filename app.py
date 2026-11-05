@@ -1847,6 +1847,51 @@ def register_routes(app: Flask):
             ), "warning")
         return redirect(url_for("article_home", article_id=article_id))
 
+    @app.route("/articles/<int:article_id>/validate-epub", methods=["POST"])
+    @login_required
+    def article_validate_epub(article_id):
+        """Run epubcheck over article.epub.
+
+        The fifth register kind. `epub_a11y` writes real
+        `dcterms:conformsTo` and `a11y:certifiedBy` claims into the package
+        document, and nothing read the file back; a false accessibility
+        claim is worse than a missing one, because it tells a reader the
+        book will work for them.
+        """
+        import validators
+        article = db.query_one("SELECT project_path FROM articles WHERE id = ?", (article_id,))
+        if not article:
+            abort(404)
+        epub = Path(article["project_path"]) / "article.epub"
+        if not epub.exists():
+            flash("No article.epub to audit. Render the EPUB first.", "error")
+            return redirect(url_for("article_home", article_id=article_id))
+        if not validators.epubcheck_available():
+            # Asked before the call for the reason `validate_galleys.py`
+            # refuses a kind: a run that cannot reach the tool would write
+            # "not checked" over whatever a real one had left.
+            flash("epubcheck is not installed; see "
+                  "https://www.w3.org/publishing/epubcheck/ or set "
+                  "EPUBCHECK_PATH. Nothing was recorded.", "warning")
+            return redirect(url_for("article_home", article_id=article_id))
+        content_hash = register.hash_for(article["project_path"], "epubcheck")
+        passed, report = validators.run_epubcheck(epub)
+        (Path(article["project_path"]) / "epubcheck-report.json").write_text(
+            __import__("json").dumps(report, indent=2), encoding="utf-8",
+        )
+        register.record_epubcheck(article_id, article["project_path"], passed,
+                                  report, content_hash=content_hash)
+        counts = report.get("severity_counts") or {}
+        if passed:
+            warned = counts.get("WARNING", 0)
+            flash(f"epubcheck found no errors"
+                  f"{f'; {warned} warning(s)' if warned else ''}.", "success")
+        else:
+            errors = counts.get("ERROR", 0) + counts.get("FATAL", 0)
+            flash(f"epubcheck reports {errors} error(s) in the container.",
+                  "warning")
+        return redirect(url_for("article_home", article_id=article_id))
+
     @app.route("/articles/<int:article_id>/stylize", methods=["POST"])
     @login_required
     def article_stylize(article_id):

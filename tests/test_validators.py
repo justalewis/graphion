@@ -114,3 +114,130 @@ def test_a_timeout_comes_back_as_a_result_not_an_exception(tmp_path,
 
     assert passed is False
     assert "timed out" in report["error"]
+
+
+# ---------- epubcheck, the fifth kind ----------
+
+class _Wrote:
+    """A run that writes epubcheck's JSON report where it was asked to."""
+
+    def __init__(self, payload, returncode=0):
+        self.argv = None
+        self._payload = payload
+        self._returncode = returncode
+
+    def __call__(self, argv, **kwargs):
+        import json
+
+        self.argv = argv
+        target = Path(argv[argv.index("--json") + 1])
+        target.write_text(json.dumps(self._payload), encoding="utf-8")
+        return subprocess.CompletedProcess(argv, self._returncode,
+                                           stdout="", stderr="")
+
+
+def test_epubcheck_is_called_by_the_path_that_was_resolved(tmp_path,
+                                                           monkeypatch):
+    """The third tool is a Java launcher too, so it meets the same wall:
+    `epubcheck.bat` is found through PATHEXT and will not run from the bare
+    name."""
+    epub = tmp_path / "article.epub"
+    epub.write_bytes(b"PK\x03\x04 pretend")
+    resolved = r"C:\Users\someone\epubcheck\epubcheck.bat"
+    monkeypatch.setattr(validators.shutil, "which", lambda name: resolved)
+    monkeypatch.delenv(validators.EPUBCHECK_ENV, raising=False)
+    ran = _Wrote({"messages": []})
+    monkeypatch.setattr(validators.subprocess, "run", ran)
+
+    passed, report = validators.run_epubcheck(epub)
+
+    assert ran.argv[0] == resolved
+    assert ran.argv[0] != "epubcheck"
+    assert passed is True
+    assert report["passed"] is True
+
+
+def test_an_error_in_the_container_is_a_failure(tmp_path, monkeypatch):
+    epub = tmp_path / "article.epub"
+    epub.write_bytes(b"PK\x03\x04 pretend")
+    monkeypatch.setattr(validators.shutil, "which", lambda n: "epubcheck")
+    monkeypatch.delenv(validators.EPUBCHECK_ENV, raising=False)
+    monkeypatch.setattr(validators.subprocess, "run", _Wrote(
+        {"messages": [{"severity": "ERROR", "message": "mimetype deflated"}]}))
+
+    passed, report = validators.run_epubcheck(epub)
+
+    assert passed is False
+    assert report["severity_counts"]["ERROR"] == 1
+
+
+def test_warnings_without_errors_pass(tmp_path, monkeypatch):
+    """epubcheck warns about what a reading system tolerates, so a warning
+    is not the container failing."""
+    epub = tmp_path / "article.epub"
+    epub.write_bytes(b"PK\x03\x04 pretend")
+    monkeypatch.setattr(validators.shutil, "which", lambda n: "epubcheck")
+    monkeypatch.delenv(validators.EPUBCHECK_ENV, raising=False)
+    monkeypatch.setattr(validators.subprocess, "run", _Wrote(
+        {"messages": [{"severity": "WARNING", "message": "unused resource"}]}))
+
+    passed, report = validators.run_epubcheck(epub)
+
+    assert passed is True
+    assert report["severity_counts"]["WARNING"] == 1
+
+
+def test_the_verdict_is_read_off_the_report_not_the_exit_code(tmp_path,
+                                                              monkeypatch):
+    """A checker exits non-zero both for a file that does not conform and
+    for one it could not open, and only the first is about the document.
+    `assess.read_declaration` reads verapdf the same way and for the same
+    reason."""
+    epub = tmp_path / "article.epub"
+    epub.write_bytes(b"PK\x03\x04 pretend")
+    monkeypatch.setattr(validators.shutil, "which", lambda n: "epubcheck")
+    monkeypatch.delenv(validators.EPUBCHECK_ENV, raising=False)
+    monkeypatch.setattr(validators.subprocess, "run",
+                        _Wrote({"messages": []}, returncode=1))
+
+    passed, _report = validators.run_epubcheck(epub)
+
+    assert passed is True
+
+
+def test_an_unreadable_report_is_not_a_verdict(tmp_path, monkeypatch):
+    epub = tmp_path / "article.epub"
+    epub.write_bytes(b"PK\x03\x04 pretend")
+    monkeypatch.setattr(validators.shutil, "which", lambda n: "epubcheck")
+    monkeypatch.delenv(validators.EPUBCHECK_ENV, raising=False)
+
+    def wrote_nothing(argv, **kwargs):
+        return subprocess.CompletedProcess(argv, 1, stdout="boom", stderr="")
+
+    monkeypatch.setattr(validators.subprocess, "run", wrote_nothing)
+
+    passed, report = validators.run_epubcheck(epub)
+
+    assert passed is False
+    assert report["error"]
+
+
+def test_the_env_override_wins_over_the_path(tmp_path, monkeypatch):
+    """Distributed as a jar with a launcher beside it, so it is often not on
+    PATH at all; `PANDOC_PATH` is the precedent."""
+    launcher = tmp_path / "epubcheck.bat"
+    launcher.write_text("rem", encoding="utf-8")
+    monkeypatch.setenv(validators.EPUBCHECK_ENV, str(launcher))
+    monkeypatch.setattr(validators.shutil, "which", lambda n: "somewhere-else")
+
+    assert validators.epubcheck_binary() == str(launcher)
+
+
+def test_a_missing_tool_is_reported_and_not_guessed_at(monkeypatch):
+    monkeypatch.delenv(validators.EPUBCHECK_ENV, raising=False)
+    monkeypatch.setattr(validators.shutil, "which", lambda n: None)
+
+    assert not validators.epubcheck_available()
+    passed, report = validators.run_epubcheck(Path("nowhere.epub"))
+    assert passed is False
+    assert "epubcheck" in report["error"]

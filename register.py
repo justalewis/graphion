@@ -60,15 +60,17 @@ CHECKED_FILE = {
     "pdfua": "article.pdf",
     "verapdf": "article.pdf",
     "pa11y": "article.html",
+    "epubcheck": "article.epub",
 }
 
-KINDS = ("lint", "pdfua", "verapdf", "pa11y")
+KINDS = ("lint", "pdfua", "verapdf", "pa11y", "epubcheck")
 
 KIND_LABELS = {
     "lint": "Lint",
     "pdfua": "PDF/UA declared",
     "verapdf": "PDF/UA audited (verapdf)",
     "pa11y": "HTML audit (pa11y)",
+    "epubcheck": "EPUB audit (epubcheck)",
 }
 
 # What ISO 14289-1 requires a conforming file to say about itself, read off
@@ -310,6 +312,52 @@ def record_verapdf(article_id: int, project_path, passed: bool,
     else:
         finding = Finding("verapdf", "fail", "verapdf reports the galley is not PDF/UA-1.")
     return record(article_id, "verapdf", [finding], content_hash)
+
+
+def record_epubcheck(article_id: int, project_path, passed: bool,
+                     report: dict,
+                     content_hash: Optional[str] = None) -> Optional[str]:
+    """Record what the W3C's own validator makes of the container.
+
+    The fifth kind, and it closes an asymmetry rather than adding a number.
+    `epub_a11y.stamp` writes real `dcterms:conformsTo` and
+    `a11y:certifiedBy` claims into the package document, replacing the block
+    Pandoc asserts whether or not a figure carries a description, and
+    nothing read the file back: the register had four kinds and none of
+    them opened an EPUB. A false accessibility claim is worse than a
+    missing one, because it tells a reader the book will work for them.
+
+    `absent` where no EPUB has been rendered, which is not a failure and
+    not a pass, by the rule the three galley kinds already follow: this
+    archive has rendered none, so every article reads that way until one
+    is. Warnings without errors are a pass, because epubcheck warns about
+    what a reading system tolerates, and the counts go on the record either
+    way so the row says what it saw.
+    """
+    content_hash = content_hash or hash_for(project_path, "epubcheck")
+    if content_hash is None:
+        return None
+    report = report or {}
+    error = report.get("error")
+    counts = report.get("severity_counts") or {}
+    if error:
+        # The tool could not speak, which is neither the container failing
+        # nor passing. `UNRUN` keeps it out of the answered count, for the
+        # reason `record_verapdf` explains.
+        finding = Finding("epubcheck", UNRUN, f"Not checked: {error}")
+    elif passed:
+        warnings = counts.get("WARNING", 0)
+        summary = "epubcheck reports no errors."
+        if warnings:
+            summary = (f"epubcheck reports no errors and {warnings} "
+                       f"warning(s).")
+        finding = Finding("epubcheck", "pass", summary)
+    else:
+        errors = counts.get("ERROR", 0) + counts.get("FATAL", 0)
+        finding = Finding("epubcheck", "fail",
+                          f"epubcheck reports {errors} error(s) in the "
+                          f"container.")
+    return record(article_id, "epubcheck", [finding], content_hash)
 
 
 def record_pa11y(article_id: int, project_path, passed: bool,
@@ -681,6 +729,6 @@ __all__ = [
     "Finding", "Recorded", "Standing", "KindRollup", "Rollup",
     "WorkRow", "WORK_ROWS", "Work",
     "hash_bytes", "hash_file", "hash_for",
-    "record", "record_lint", "record_pdfua", "record_verapdf", "record_pa11y",
+    "record", "record_lint", "record_pdfua", "record_verapdf", "record_pa11y", "record_epubcheck",
     "latest_run", "standing", "rollup",
 ]

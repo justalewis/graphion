@@ -628,3 +628,75 @@ def test_an_empty_journal_rolls_up_to_nothing(store):
 
     assert roll.articles == 0
     assert all(k.total == 0 for k in roll.kinds.values())
+
+
+# ---------- the fifth kind ----------
+
+def test_an_epub_that_was_never_rendered_is_absent_not_failing(article):
+    """`article.epub` is rendered on demand and this archive has rendered
+    one, so 117 of its articles owe a render rather than failing a check.
+    That is the distinction the three galley kinds already draw."""
+    st = register.standing(article["id"], article["project_path"])["epubcheck"]
+
+    assert st.state == "absent"
+    assert st.level != "fail"
+
+
+def test_the_fifth_kind_reads_the_epub(store):
+    """`epub_a11y` writes real `dcterms:conformsTo` and `a11y:certifiedBy`
+    claims into the package document, and until this kind existed nothing
+    read the file back: the register carried four and none opened an EPUB.
+    A false accessibility claim is worse than a missing one."""
+    art = _add_article(store, "with-epub",
+                       files=("article.md", "article.epub"))
+
+    register.record_epubcheck(art["id"], art["project_path"], True,
+                              {"messages": [], "severity_counts": {}})
+    st = register.standing(art["id"], art["project_path"])["epubcheck"]
+
+    assert st.state == "current"
+    assert st.level == "pass"
+
+
+def test_epubcheck_warnings_alone_are_a_pass(store):
+    """It warns about what a reading system tolerates."""
+    art = _add_article(store, "warned", files=("article.md", "article.epub"))
+
+    register.record_epubcheck(art["id"], art["project_path"], True,
+                              {"severity_counts": {"WARNING": 3}})
+    st = register.standing(art["id"], art["project_path"])["epubcheck"]
+
+    assert st.level == "pass"
+    assert "3 warning" in st.findings[0].summary
+
+
+def test_an_error_in_the_container_is_recorded_as_a_failure(store):
+    art = _add_article(store, "broken", files=("article.md", "article.epub"))
+
+    register.record_epubcheck(art["id"], art["project_path"], False,
+                              {"severity_counts": {"ERROR": 2}})
+    st = register.standing(art["id"], art["project_path"])["epubcheck"]
+
+    assert st.level == "fail"
+    assert "2 error" in st.findings[0].summary
+
+
+def test_epubcheck_missing_is_unrun_and_not_an_answer(store):
+    """The rule `record_verapdf` already follows: a laptop without the tool
+    has told you something about the laptop, and a pass over an archive
+    would otherwise report every article as checked."""
+    art = _add_article(store, "unchecked",
+                       files=("article.md", "article.epub"))
+
+    register.record_epubcheck(art["id"], art["project_path"], False,
+                              {"error": "epubcheck not on PATH"})
+    st = register.standing(art["id"], art["project_path"])["epubcheck"]
+
+    assert st.level == register.UNRUN
+    assert st.settled is False
+
+
+def test_the_kind_reads_the_epub_and_nothing_else(article):
+    assert register.CHECKED_FILE["epubcheck"] == "article.epub"
+    assert "epubcheck" in register.KINDS
+    assert register.KIND_LABELS["epubcheck"]

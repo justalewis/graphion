@@ -27,22 +27,22 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (784 functions, 839 cases once the parametrized ones expand: 142 in
+Tests (800 functions, 855 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 64 in `test_assess.py`,
 50 in `test_lint.py`, 46 in `test_ingest_volume.py`, 38 in
-`test_describe.py`, 36 in `test_register.py`, 23 in
+`test_describe.py`, 42 in `test_register.py`, 23 in
 `test_stated_headings.py`, 14 in `test_structure.py`,
 29 in `test_teacher_resources.py`,
 29 in `test_metadata_roundtrip.py`, 26 in `test_pdf_tags.py`,
 24 in `test_math_alt.py`,
 18 in `test_acr.py`, 14 in `test_epub_a11y.py`,
-34 in `test_template_bundles.py`, 12 in `test_validate_galleys.py`,
+34 in `test_template_bundles.py`, 15 in `test_validate_galleys.py`,
 9 in `test_pdf_ua.py`, 8 in `test_accessibility_routes.py`,
 37 in `test_reading_order.py`,
 17 in `test_long_descriptions.py`,
 8 in `test_heading_levels.py`, 7 in `test_fig_alt.py`,
 6 in `test_standalone_html.py`,
-5 in `test_validators.py`,
+12 in `test_validators.py`,
 4 in `test_journal_filter.py`, 3 in `test_preprocessors.py`). Most of the suite
 runs without Pandoc; `test_journal_filter.py`, `test_fig_alt.py` and
 `test_heading_levels.py` and `test_long_descriptions.py` need it, and
@@ -655,6 +655,43 @@ the weak evidence this exists to replace. Two kinds read `article.pdf`, so
 corpus route runs the two in-process checks, lint and the declaration:
 verapdf and pa11y are subprocesses with a 120s timeout each, so a pass over
 118 articles belongs in a job runner rather than in a request.
+
+**The fifth kind opens the EPUB, which nothing did.** `epub_a11y.stamp`
+replaces Pandoc's accessibility block with values worked out from the
+article, and writes `dcterms:conformsTo` with `a11y:certifiedBy` naming who
+says so, only where the article's own checks bear it. Those are real claims
+about what a reader can do with the book, and the register carried four
+kinds and not one of them opened an EPUB: a false accessibility claim is
+worse than a missing one, because it tells a reader the book will work for
+them and they find out afterwards.
+
+`epubcheck` is that kind, reading `article.epub` through
+`validators.run_epubcheck`. Three things it does the way the others
+learned to. The verdict is read off the report and not the exit code, for
+the reason `assess.read_declaration` reads verapdf that way: a checker
+exits non-zero both for a file that does not conform and for one it could
+not open, and only the first is about the document. Warnings without errors
+are a pass, because epubcheck warns about what a reading system tolerates.
+And the tool is called by the path `shutil.which` returned, since the
+launcher is `epubcheck.bat` on Windows and `CreateProcess` will not run it
+from the name; it is a jar with a launcher beside it, so `EPUBCHECK_PATH`
+overrides, the way `PANDOC_PATH` does.
+
+**`validate_galleys.py` now leaves a kind out rather than refusing the
+pass.** Refusing outright was right while the two tools came from the same
+download and wrong at three: epubcheck is a separate install, and verapdf
+and pa11y should not wait on it. The reason for refusing is about one
+kind's rows, so writing none of them answers it, and the run says which
+tool it could not reach.
+
+Nothing in this archive has an EPUB except one chapter, because the EPUB
+renders on demand and none had been rendered. So the kind reads 117
+`absent` and one `never`, which is the distinction worth having: `absent`
+is a render owed, `never` is a file nothing has checked. Rendering that one
+also confirmed the container is sound, with `mimetype` first and stored,
+both figures carried by `--resource-path`, and `epub_a11y`'s claims
+accurate: `alternativeText` asserted because both figures are described,
+and no `dcterms:conformsTo` because one of them sets text as a picture.
 
 **A level says whether, and a journal asks how much first.**
 `lint.LintResult` carries `units`, the count behind its summary, and

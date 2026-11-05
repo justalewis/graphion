@@ -46,7 +46,7 @@ import db
 import register
 import validators
 
-KINDS = ("verapdf", "pa11y")
+KINDS = ("verapdf", "pa11y", "epubcheck")
 
 # The tool behind each kind, how to ask whether it is there, and what to say
 # when it is not. The install lines are the ones in `validators.py`; they are
@@ -67,6 +67,15 @@ TOOLS = {
         "install": "npm install -g pa11y",
         "reads": "article.html",
         "report": "pa11y-report.json",
+    },
+    "epubcheck": {
+        "label": "epubcheck",
+        "available": lambda: validators.epubcheck_available(),
+        "install": ("download from https://www.w3.org/publishing/epubcheck/ "
+                    "and put `epubcheck` on PATH, or point EPUBCHECK_PATH "
+                    "at it"),
+        "reads": "article.epub",
+        "report": "epubcheck-report.json",
     },
 }
 
@@ -121,6 +130,8 @@ def run_one(article: dict, kind: str) -> tuple:
     started = time.time()
     if kind == "verapdf":
         passed, payload = validators.run_verapdf(target)
+    elif kind == "epubcheck":
+        passed, payload = validators.run_epubcheck(target)
     else:
         passed, payload = validators.run_pa11y(target)
     elapsed = time.time() - started
@@ -131,6 +142,9 @@ def run_one(article: dict, kind: str) -> tuple:
     if kind == "verapdf":
         register.record_verapdf(article["id"], project, passed, payload,
                                 content_hash=content_hash)
+    elif kind == "epubcheck":
+        register.record_epubcheck(article["id"], project, passed, payload,
+                                  content_hash=content_hash)
     else:
         register.record_pa11y(article["id"], project, passed, payload,
                               content_hash=content_hash)
@@ -141,11 +155,11 @@ def run_one(article: dict, kind: str) -> tuple:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Run verapdf and pa11y over a journal's galleys and "
-                    "record each run in the accessibility register.")
+        description="Run verapdf, pa11y and epubcheck over a journal's "
+                    "galleys and record each run in the register.")
     parser.add_argument("journal", help="journal slug, e.g. writing-spaces")
     parser.add_argument("--only", choices=KINDS,
-                        help="run one of the two rather than both")
+                        help="run one of the three rather than all")
     parser.add_argument("--skip-current", action="store_true",
                         help="leave out an article whose run is already on "
                              "record against the file now on disk, which is "
@@ -173,12 +187,23 @@ def main() -> int:
     if missing and not args.dry_run:
         for kind in missing:
             tool = TOOLS[kind]
-            print(f"{tool['label']} is not on PATH: {tool['install']}",
+            print(f"{tool['label']} is not on PATH, so nothing is recorded "
+                  f"for it: {tool['install']}", file=sys.stderr)
+        print("A run that cannot call the tool would record \"not checked\" "
+              "over whatever a real run had left, and that row would then be "
+              "the current answer, so the kind is left out rather than "
+              "written.", file=sys.stderr)
+        # Left out per kind rather than refused outright. The reason above
+        # is about one kind's rows, so it is answered by writing none of
+        # them; stopping the whole pass protects nothing further and makes
+        # every installed tool wait on the least installed one. Three kinds
+        # is where that started to matter: epubcheck is a separate download
+        # and verapdf and pa11y should not be held up by it.
+        kinds = [k for k in kinds if k not in missing]
+        if not kinds:
+            print("None of the requested tools is installed; nothing to do.",
                   file=sys.stderr)
-        print("Nothing written. A run that cannot call the tool would record "
-              "\"not checked\" over whatever a real run had left, and that "
-              "row would then be the current answer.", file=sys.stderr)
-        return 1
+            return 1
 
     articles = articles_for(args.journal)
     plan = []
@@ -199,7 +224,7 @@ def main() -> int:
     for kind in kinds:
         n = sum(1 for _a, k, _r in plan if k == kind)
         state = "ready" if TOOLS[kind]["available"]() else "NOT INSTALLED"
-        print(f"  {TOOLS[kind]['label']:8s} {n:4d} queued  [{state}]")
+        print(f"  {TOOLS[kind]['label']:9s} {n:4d} queued  [{state}]")
     # Counted while planning rather than subtracted from the whole journal,
     # which reported every article past a `--limit` as left out.
     if left_out:
@@ -209,7 +234,7 @@ def main() -> int:
 
     if args.dry_run:
         for article, kind, reason in plan[:40]:
-            print(f"    {kind:8s} {article['slug'][:48]:48s} {reason}")
+            print(f"    {kind:9s} {article['slug'][:48]:48s} {reason}")
         if len(plan) > 40:
             print(f"    ... and {len(plan) - 40} more")
         print("Dry run; nothing written.")
@@ -223,18 +248,18 @@ def main() -> int:
             level, note = run_one(article, kind)
         except Exception as exc:
             failures += 1
-            print(f"  [{index}/{len(plan)}] {kind:8s} {article['slug'][:48]:48s} "
+            print(f"  [{index}/{len(plan)}] {kind:9s} {article['slug'][:48]:48s} "
                   f"ERROR {type(exc).__name__}: {exc}")
             if args.stop_on_error:
                 return 1
             continue
         counts[(kind, level)] = counts.get((kind, level), 0) + 1
-        print(f"  [{index}/{len(plan)}] {kind:8s} {article['slug'][:48]:48s} "
+        print(f"  [{index}/{len(plan)}] {kind:9s} {article['slug'][:48]:48s} "
               f"{level or 'skipped':8s} {note}")
 
     print(f"\nDone in {time.time() - started:.0f}s.")
     for (kind, level), n in sorted(counts.items(), key=lambda kv: str(kv[0])):
-        print(f"  {kind:8s} {str(level):8s} {n}")
+        print(f"  {kind:9s} {str(level):8s} {n}")
     if failures:
         print(f"  {failures} raised and were left unrecorded")
     print("The accessibility page reads these as soon as they are written; "

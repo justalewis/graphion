@@ -215,3 +215,40 @@ def test_the_report_lands_beside_the_galley(store, monkeypatch):
 def test_an_unknown_journal_is_refused(store, monkeypatch, capsys):
     assert _run(monkeypatch, "no-such-journal") == 2
     assert "No journal" in capsys.readouterr().err
+
+
+# ---------- a third tool, and one missing tool ----------
+
+def test_the_three_kinds_each_name_their_file_and_report():
+    for kind in validate_galleys.KINDS:
+        tool = validate_galleys.TOOLS[kind]
+        assert tool["reads"]
+        assert tool["report"].endswith(".json")
+        assert tool["install"]
+        assert register.CHECKED_FILE[kind] == tool["reads"]
+
+
+def test_epubcheck_is_one_of_them():
+    """`epub_a11y` writes real conformance claims into the package
+    document, and the register carried four kinds and none that opened an
+    EPUB."""
+    assert "epubcheck" in validate_galleys.KINDS
+    assert validate_galleys.TOOLS["epubcheck"]["reads"] == "article.epub"
+
+
+def test_a_missing_tool_takes_its_own_kind_out_and_not_the_pass(
+        monkeypatch, capsys):
+    """It used to refuse outright, which was right while there were two
+    tools from the same download and wrong at three: epubcheck is a
+    separate install and verapdf and pa11y should not wait on it. The
+    reason for refusing is about one kind's rows, so writing none of them
+    answers it.
+    """
+    monkeypatch.setattr(validators, "verapdf_available", lambda: True)
+    monkeypatch.setattr(validators, "pa11y_available", lambda: True)
+    monkeypatch.setattr(validators, "epubcheck_available", lambda: False)
+
+    kinds = [k for k in validate_galleys.KINDS if validate_galleys.TOOLS[k]["available"]()]
+
+    assert kinds == ["verapdf", "pa11y"]
+    assert "epubcheck" not in kinds

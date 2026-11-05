@@ -434,9 +434,20 @@ a week and a month.
 - **Contrast (1.4.3, 1.4.11).** A property of each journal's `article.css`.
   Nothing checks it, and `pa11y` would only catch it if run, which is
   optional.
-- **The validators are optional and advisory.** `verapdf_available()` and
-  `pa11y_available()` grey out the UI when the tools are absent. For a service
-  they are not optional; they are the evidence.
+- **The validators are optional and advisory.** `verapdf_available()`,
+  `pa11y_available()` and `epubcheck_available()` grey out the UI when the
+  tools are absent. For a service they are not optional; they are the
+  evidence. `validate_galleys.py` now drops a kind whose tool is missing
+  rather than refusing the whole pass, which refusing was right for while
+  two tools came from one download and wrong at three.
+- **Nothing validated the EPUB** (fixed). `epub_a11y` writes real
+  `dcterms:conformsTo` and `a11y:certifiedBy` claims into the package
+  document and `register.CHECKED_FILE` had no EPUB entry, so four kinds
+  were recorded and none of them opened one. `epubcheck` is the fifth.
+  Over this archive it reads 117 `absent` and one `never`, because the
+  EPUB renders on demand and one has now been rendered: `absent` is a
+  render owed, `never` is a file nothing has checked. epubcheck itself is
+  not installed here, so no verdict has been taken.
 - **Reading order in the tagged PDF.** ~~Nothing checks the result.~~
   `structure.reading_order` now states the order the source holds and
   `lint.check_reading_order` reports where the reconstruction runs
