@@ -27,7 +27,7 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (915 functions, 974 cases once the parametrized ones expand: 142 in
+Tests (925 functions, 999 cases once the parametrized ones expand: 151 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 64 in `test_assess.py`,
 50 in `test_jobs.py`, 29 in `test_collections.py`,
 22 in `test_assess_route.py`,
@@ -1430,6 +1430,47 @@ happens before `learn_layout`, so the cover's own type cannot vote on what
 the body size is, and before `build_vocabulary`, so
 "Cataloging-in-Publication" is never a word the chapter knows. Volumes 4 to 6
 set no such page and are untouched.
+
+**The largest type on an opening page is not always the title, and
+`is_initial` is the one test for that.** A dropped initial is set far
+larger than anything else on the page: `The Informed Writer` sets its at
+51pt against a 20pt chapter title and a 10pt body. Reading the largest
+type as the title gave two of its chapters the titles "B" and "O", left
+the real title to come through as a body heading, and stranded the rest
+of the opening sentence beside it as "y making explicit the sources of
+your ideas". The chapter published no title and a heading it should not
+have had.
+
+It is tested on the text and not on the size, because the size does not
+separate the two shapes this takes. That initial is 5.1 times the body
+and `classify` calls it a `dropcap`; the stray capital on the Graff
+chapter's opening page is 16pt against a 14.5pt title, which no size rule
+tells from a title at all. What both have in common is one letter on the
+line. A digit is deliberately not caught, because a chapter number set on
+its own line is part of the title block and `extract_front_matter` reads
+it off the front of the joined title.
+
+**Three things follow from taking it out, and each was a separate
+defect.** An initial ends the front matter, because a dropped initial is
+the page saying the body starts here: without that, the prose it opens
+read as the overview and the first sentence went into `abstract`. An
+initial on a line of its own is joined to the paragraph below it, through
+the same `split_dropcap` that already decides whether a space belongs, so
+"B" and "y making explicit" become "By making explicit" while "A" and
+"few semesters" become "A few". And the lines set beside it stop reading
+as a block quotation, since they are indented to clear the initial and
+that is indistinguishable from a quotation's inset by position alone.
+A single-letter line that is too small to be an initial is dropped and
+recorded in `report["stray_initials"]`, kept apart from `declined_heads`
+because one list holding both would make the count mean two things.
+
+**None of this could have been found here.** Neither LiCS nor Writing
+Spaces sets an initial that pdfplumber hands back on a line of its own,
+so no fixture and no corpus pass over this archive would ever have fired
+it; it took running the pipeline over a third publisher. Measured the
+other way round as well: re-ingesting ten Writing Spaces chapters with
+the change in place produced identical word counts, heading counts and
+titles, and no title in the 137 articles held here is a single character.
 
 **A footnote is not always numbered.** The series marks the licence note on a
 chapter's opening page with an asterisk, which falls past `_NOTE_RE` and was

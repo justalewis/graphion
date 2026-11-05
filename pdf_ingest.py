@@ -26,7 +26,7 @@ from __future__ import annotations
 
 import re
 import statistics
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Iterable, Optional
 
@@ -1042,6 +1042,10 @@ def assemble(lines: list, layout: Layout, vocab: set, compounds: set,
     """
     blocks = []
     declined: list = []
+    # Kept apart from `declined_heads`, which means a stated heading that
+    # read as a sentence. A stray capital is not that, and one list holding
+    # both would make the count mean two things.
+    stray_initials: list = []
     buffer: list = []
     kind = None
     had_dropcap = False
@@ -1093,8 +1097,36 @@ def assemble(lines: list, layout: Layout, vocab: set, compounds: set,
         buffer = []
         kind = None
 
+    pending_initial: Optional[str] = None
     for line in lines:
         this = classify(line, layout)
+
+        # A dropped initial usually arrives flattened into the line beside
+        # it, which is the shape `split_dropcap` was written for. It does
+        # not always: `The Informed Writer` sets its initial far enough out
+        # that pdfplumber gives it a line of its own, and then the letter
+        # is a paragraph and the sentence it opens is missing its first
+        # character. Joined back on, the same `split_dropcap` decides
+        # whether a space belongs, so "B" and "y making explicit" become
+        # "By making explicit" and "A" and "few semesters" become "A few".
+        if pending_initial is not None:
+            if this in ("body", "quote"):
+                line = replace(line, text=pending_initial + line.text,
+                               dropcap=True)
+                this = "body"
+            pending_initial = None
+        if this == "dropcap" and is_initial(line):
+            pending_initial = line.plain.strip()
+            continue
+
+        # A heading is never one letter either. The Graff chapter prints a
+        # stray 16pt capital beside its title, which is too small to read
+        # as a dropped initial and too large to read as body, so it merged
+        # into the heading below it and published "FOUR H".
+        if this in ("head", "title") and is_initial(line):
+            stray_initials.append(line.plain.strip())
+            continue
+
         if dropcap_run:
             if line.x0 > layout.body_left + INDENT_MIN:
                 # Lines set beside a dropped initial are indented to clear
@@ -1202,6 +1234,7 @@ def assemble(lines: list, layout: Layout, vocab: set, compounds: set,
     flush()
     if report is not None:
         report["declined_heads"] = declined
+        report["stray_initials"] = stray_initials
     return blocks
 
 
@@ -1312,6 +1345,24 @@ def blocks_to_markdown(blocks: list, abstract: str = "") -> str:
 # ---------- front matter ----------
 
 
+def is_initial(line: Line) -> bool:
+    """Whether a line is a single letter, which no title ever is.
+
+    A dropped initial, a decorative capital, or whatever the stray 16pt
+    "H" on the Graff chapter's opening page is. What they have in common
+    is not their size, which ranges from 1.6 to 5.1 times the body across
+    the two books that have one, but that there is one letter on the
+    line. Measured over the 137 chapters held here, no real title is a
+    single character, so nothing is lost by refusing them all.
+
+    A digit is deliberately not caught: a chapter number set on its own
+    line is part of the title block, and `extract_front_matter` reads it
+    off the front of the joined title.
+    """
+    text = line.plain.strip()
+    return len(text) == 1 and text.isalpha()
+
+
 def extract_front_matter(first_page_lines: list, layout: Layout) -> tuple:
     """Pull the title, chapter number, byline and Overview off page one.
 
@@ -1326,8 +1377,26 @@ def extract_front_matter(first_page_lines: list, layout: Layout) -> tuple:
     if not first_page_lines:
         return fm, [], set(), ["No text found on the first page."]
 
-    biggest = max(l.size for l in first_page_lines)
-    title_lines = [l for l in first_page_lines if l.size >= biggest - 2.5
+    # A title is never one letter, and the largest type on an opening page
+    # often is. `The Informed Writer` sets its dropped initial at 51pt
+    # against a 20pt chapter title, so reading the largest type as the
+    # title gave two of its chapters the titles "B" and "O" with the rest
+    # of the opening sentence left beside them: "y making explicit the
+    # sources of your ideas". The real title then came through as a body
+    # heading, so the chapter published no title at all and a heading it
+    # should not have had.
+    #
+    # Tested on the text rather than on the size, because the size does
+    # not separate the two shapes this takes. That initial is 5.1 times
+    # the body and `classify` would call it a dropcap, but the stray
+    # capital opening the Graff chapter is 16pt against a 14.5pt title and
+    # a 10pt body, which no size rule tells from a title; both are one
+    # letter. Lines left out here are not consumed, so a real dropped
+    # initial still reaches `assemble`, which has known what to do with
+    # one since before this.
+    candidates = [l for l in first_page_lines if not is_initial(l)]
+    biggest = max((l.size for l in candidates), default=0.0)
+    title_lines = [l for l in candidates if l.size >= biggest - 2.5
                    and l.size > layout.body_size + HEAD_SIZE_DELTA]
     if title_lines:
         raw = " ".join(l.plain.strip() for l in title_lines)
@@ -1389,6 +1458,15 @@ def extract_front_matter(first_page_lines: list, layout: Layout) -> tuple:
                 continue
             kind = classify(line, layout)
             if kind in ("head", "title"):
+                break
+            if kind == "dropcap" or is_initial(line):
+                # A dropped initial is the page saying the body starts
+                # here, which is what it is for, so nothing after it is
+                # front matter. Before this, taking the drop cap out of
+                # the title let the prose it opens read as the overview
+                # instead: `The Informed Writer` put "y making explicit
+                # the sources of your ideas" in the abstract and left the
+                # "B" standing alone above the body.
                 break
             if kind in ("body", "quote"):
                 if overview and starts_paragraph(line, layout):

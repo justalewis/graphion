@@ -1732,3 +1732,162 @@ def test_a_numbered_marker_is_escaped_after_its_digits():
     for text in ("1. A note.", "* The licence."):
         once = pdf_ingest.escape_list_marker(text)
         assert pdf_ingest.escape_list_marker(once) == once
+
+
+# ---------- dropped initials ----------
+#
+# Found by running the pipeline over a third publisher rather than over
+# this archive. Neither LiCS nor Writing Spaces sets a dropped initial
+# that pdfplumber hands back on a line of its own, so nothing here would
+# ever have surfaced it: `The Informed Writer` sets its initial at 51pt
+# against a 20pt chapter title, and the largest type on the page being
+# the title gave two of its chapters the titles "B" and "O".
+
+
+def test_a_single_letter_is_an_initial_and_a_title_is_not():
+    assert pdf_ingest.is_initial(_line("B", size=51.0))
+    assert pdf_ingest.is_initial(_line("O ", size=51.0))
+    assert not pdf_ingest.is_initial(_line("By making explicit", size=11.0))
+    assert not pdf_ingest.is_initial(_line("", size=11.0))
+
+
+def test_a_lone_digit_is_not_an_initial():
+    """A chapter number set on its own line is part of the title block,
+    and `extract_front_matter` reads it off the front of the joined
+    title. Catching digits here would throw the number away."""
+    assert not pdf_ingest.is_initial(_line("9", size=20.0))
+
+
+def test_the_title_is_not_the_dropped_initial():
+    """51pt against a 20pt title, measured off the page this came from.
+    The old rule took the largest type, so the title was "B" and the real
+    title came through as a body heading: the chapter published no title
+    and a heading it should not have had."""
+    lines = [
+        _line("B ", size=51.0, top=60.0, page=1),
+        _line("11 A GUIDE TO REFERENCE AND DOCUMENTATION",
+              size=20.0, top=70.0, page=1),
+        _line("y making explicit the sources of your ideas",
+              size=11.0, top=120.0, page=1, x0=90.0),
+    ]
+
+    fm, _overview, _consumed, _notes = pdf_ingest.extract_front_matter(
+        lines, LAYOUT)
+
+    assert fm["title"] == "A GUIDE TO REFERENCE AND DOCUMENTATION"
+    assert fm["chapter-number"] == 11
+
+
+def test_a_stray_capital_too_small_to_be_an_initial_is_still_not_a_title():
+    """The size does not separate the two shapes. The Graff chapter prints
+    a 16pt capital beside a 14.5pt title over a 10pt body, which no size
+    rule tells from a title; what both have in common is one letter."""
+    lines = [
+        _line("H", size=16.0, top=60.0, page=1),
+        _line("“yes / no / okay, but”", size=14.5, top=70.0, page=1),
+        _line("Three Ways to Respond", size=14.0, top=84.0, page=1),
+    ]
+
+    fm, _overview, _consumed, _notes = pdf_ingest.extract_front_matter(
+        lines, LAYOUT)
+
+    assert fm["title"] == "“yes / no / okay, but” Three Ways to Respond"
+
+
+def test_an_initial_ends_the_front_matter_rather_than_opening_an_overview():
+    """A dropped initial is the page saying the body starts here, which is
+    what it is for. Without this, taking the initial out of the title let
+    the prose it opens read as the overview, so the opening sentence went
+    into the abstract and the letter was left standing above the body."""
+    lines = [
+        _line("B ", size=51.0, top=60.0, page=1),
+        _line("11 A GUIDE TO REFERENCE AND DOCUMENTATION",
+              size=20.0, top=70.0, page=1),
+        _line("y making explicit the sources of your ideas",
+              size=11.0, top=120.0, page=1, x0=90.0),
+    ]
+
+    _fm, overview, _consumed, _notes = pdf_ingest.extract_front_matter(
+        lines, LAYOUT)
+
+    assert overview == []
+
+
+def test_an_initial_on_its_own_line_is_joined_to_the_paragraph_it_opens():
+    """`split_dropcap` was written for the commoner shape, where the ink
+    flattens into the line beside it. Set far enough out, the initial gets
+    a line of its own, and then the letter is a paragraph and the sentence
+    it opens is missing its first character."""
+    lines = [
+        _line("B ", size=51.0, top=60.0),
+        _line("y making explicit the sources of your ideas",
+              size=11.0, top=120.0, x0=90.0),
+    ]
+
+    blocks = pdf_ingest.assemble(lines, LAYOUT, {"by", "making"}, set())
+
+    assert blocks == [("body", "By making explicit the sources of your ideas")]
+
+
+def test_the_vocabulary_still_decides_whether_a_space_belongs():
+    """The same decision `split_dropcap` already makes: "B" and "y making"
+    is one word and "A" and "few semesters" is two, and only the
+    document's own vocabulary says which."""
+    lines = [
+        _line("A ", size=51.0, top=60.0),
+        _line("few semesters back", size=11.0, top=120.0, x0=90.0),
+    ]
+
+    blocks = pdf_ingest.assemble(lines, LAYOUT, {"few", "semesters"}, set())
+
+    assert blocks == [("body", "A few semesters back")]
+
+
+def test_lines_set_beside_a_rejoined_initial_are_not_a_quotation():
+    """They are indented to clear the initial, which on position alone is
+    a block quotation's inset. Before the rejoin the paragraph came out as
+    a quote with its first letter missing."""
+    lines = [
+        _line("B ", size=51.0, top=60.0),
+        _line("y making explicit the sources of your ideas",
+              size=11.0, top=120.0, x0=90.0),
+        _line("and information, you let the reader know",
+              size=11.0, top=134.0, x0=90.0),
+    ]
+
+    kinds = [kind for kind, _text in
+             pdf_ingest.assemble(lines, LAYOUT, {"by"}, set())]
+
+    assert kinds == ["body"]
+    assert "quote" not in kinds
+
+
+def test_a_stray_single_letter_head_is_dropped_and_said_out_loud():
+    """A heading is never one letter. The Graff capital is too small to
+    read as an initial and too large to read as body, so it merged into
+    the heading below it and published "FOUR H"."""
+    lines = [
+        _line("H", size=16.0, top=60.0),
+        _line("FOUR", size=14.0, top=74.0),
+        _line("The first three chapters of this book", size=11.0, top=120.0),
+    ]
+    report: dict = {}
+
+    blocks = pdf_ingest.assemble(lines, LAYOUT, set(), set(), report=report)
+
+    assert ("head", "FOUR") in blocks
+    assert report["stray_initials"] == ["H"]
+    assert not any("H" == text for _kind, text in blocks)
+
+
+def test_stray_initials_are_counted_apart_from_declined_heads():
+    """One list holding both would make the count mean two things.
+    `declined_heads` is a stated heading that read as a sentence, which a
+    stray capital is not."""
+    report: dict = {}
+
+    pdf_ingest.assemble([_line("H", size=16.0), _line("Body text here.")],
+                        LAYOUT, set(), set(), report=report)
+
+    assert report["stray_initials"] == ["H"]
+    assert report["declined_heads"] == []
