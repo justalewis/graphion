@@ -286,3 +286,220 @@ def summarise(results) -> dict:
         for gap in result.owed:
             owed[gap.kind] = owed.get(gap.kind, 0) + gap.count
     return {"changed": changed, "owed": owed}
+
+
+# ---------- PDFs ----------
+#
+# R3. Stamping only: `/Lang`, `dc:title`, `/DisplayDocTitle` and
+# `/MarkInfo`, with every byte of ink unchanged. Tagging an untagged PDF
+# is reconstruction and produces a document that looks different from the
+# one the author uploaded; see section 10 of docs/cartridge-audit.md for
+# why that is offered separately and never silently.
+
+# Where a title may already be. ISO 14289-1 clause 5 reads `dc:title` in
+# the XMP packet; `/Title` in the Info dictionary is a different entry and
+# does not satisfy it. 520 of the 1,030 readable PDFs across these
+# cartridges carry an Info title and only 340 carry an XMP one, so for 180
+# of them the document already states its title and merely states it in
+# the wrong place. Moving it is relocation, not authorship.
+_DC = "http://purl.org/dc/elements/1.1/"
+_RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+_XML_NS = "http://www.w3.org/XML/1998/namespace"
+
+# What a converter writes into `/Title` when it has nothing to say, which
+# is most of what is there. Of the nine distinct Info titles across these
+# cartridges that carry one and no XMP title, seven are
+# "Microsoft Word - <filename>", one is a DOI, and one is a real title.
+# Moving those seven would make a screen reader announce "Microsoft Word
+# - research 2.docx" as the name of the document, which is worse than the
+# silence it replaces: it satisfies the checker and tells the reader
+# something false.
+#
+# Same shape as `assess.PLACEHOLDER_ALTS`, and found the same way, by
+# reading what is actually in the files rather than by imagining what
+# might be.
+_NOT_A_TITLE = re.compile(
+    r"^\s*(microsoft\s+word\s*-|microsoft\s+powerpoint\s*-|doi:|untitled\s*$"
+    r"|print\s*$|document\d*\s*$)", re.IGNORECASE)
+
+# A bare filename, whatever produced it.
+_FILENAME = re.compile(
+    r"\.(docx?|pdf|rtf|pptx?|indd|qxd|pages|odt|txt)\s*$", re.IGNORECASE)
+
+
+def looks_like_a_title(text: str) -> bool:
+    """Whether a document's stated title is one.
+
+    Conservative on purpose. A title that is wrong is published metadata
+    read aloud to somebody; a title left absent is a gap this pass
+    already reports and somebody can fill.
+    """
+    text = (text or "").strip()
+    if len(text) < 3:
+        return False
+    if _NOT_A_TITLE.search(text):
+        return False
+    return not _FILENAME.search(text)
+
+
+def _xmp_with_title(packet: bytes, title: str) -> Optional[bytes]:
+    """Put `dc:title` into an existing XMP packet, keeping the rest.
+
+    `pdf_tags._xmp_packet` builds a whole packet, which is right when it
+    is writing a bound issue Graphion rendered itself and wrong here: a
+    stranger's PDF carries its own producer, creator, rights and dates in
+    that packet, and replacing it wholesale would throw them away to add
+    one field. So the packet is edited rather than rebuilt.
+
+    Returns None where the packet cannot be parsed, which leaves the file
+    alone rather than guessing at its metadata.
+    """
+    from lxml import etree
+
+    try:
+        root = etree.fromstring(packet)
+    except Exception:
+        return None
+    rdf = root if root.tag == f"{{{_RDF}}}RDF" else root.find(f".//{{{_RDF}}}RDF")
+    if rdf is None:
+        return None
+
+    existing = rdf.find(f".//{{{_DC}}}title")
+    if existing is not None:
+        return None  # it already says something; not ours to overwrite
+
+    # The prefixes have to be bound on the element being added, or lxml
+    # invents `ns0:` and `pdf_tags.declared_title` reads nothing back: the
+    # field is there, nothing can find it, and the stamp reports success.
+    description = etree.SubElement(
+        rdf, f"{{{_RDF}}}Description", nsmap={"rdf": _RDF, "dc": _DC})
+    description.set(f"{{{_RDF}}}about", "")
+    holder = etree.SubElement(description, f"{{{_DC}}}title")
+    alt = etree.SubElement(holder, f"{{{_RDF}}}Alt")
+    item = etree.SubElement(alt, f"{{{_RDF}}}li")
+    item.set(f"{{{_XML_NS}}}lang", "x-default")
+    item.text = title
+    return etree.tostring(root, encoding="utf-8")
+
+
+def fix_pdf(data: bytes, language: Optional[str] = None) -> Result:
+    """Stamp one PDF's declarations. Changes no ink and no text.
+
+    `language` is the course's, stated by the caller, never guessed, for
+    the reason `fix_html` does not guess it either.
+    """
+    import io
+
+    import pypdf
+
+    try:
+        reader = pypdf.PdfReader(io.BytesIO(data))
+        root = reader.trailer["/Root"]
+    except Exception as exc:
+        return Result(data=data, error=f"could not be opened: {exc}")
+
+    changes: list = []
+    owed: list = []
+
+    info_title = ""
+    try:
+        info_title = str((reader.metadata or {}).get("/Title") or "").strip()
+    except Exception:
+        info_title = ""
+
+    import pdf_tags
+    packet = pdf_tags.xmp_packet_text(reader)
+    xmp_title = pdf_tags.declared_title(packet) if packet else ""
+    tagged = "/StructTreeRoot" in root
+
+    writer = pypdf.PdfWriter(clone_from=reader)
+    new_root = writer._root_object
+    touched = False
+
+    if language and not root.get("/Lang"):
+        new_root[pypdf.generic.NameObject("/Lang")] = \
+            pypdf.generic.create_string_object(language)
+        changes.append(Change(kind="lang", count=1,
+                              detail=f"set /Lang to \"{language}\""))
+        touched = True
+    elif not language and not root.get("/Lang"):
+        owed.append(Owed(kind="no-language", count=1,
+                         detail="states no document language and none was "
+                                "given for the course"))
+
+    if info_title and not looks_like_a_title(info_title):
+        owed.append(Owed(
+            kind="title-is-not-a-title", count=1,
+            detail=(f"states its title as {info_title[:60]!r}, which is a "
+                    f"converter's filename rather than a title, so it was "
+                    f"not moved into dc:title")))
+        info_title = ""
+
+    if info_title and not xmp_title:
+        if packet:
+            # A packet of their own: edit it, because it carries their
+            # producer, creator, rights and dates and this is adding one
+            # field, not replacing a record.
+            rewritten = _xmp_with_title(packet.encode("utf-8"), info_title)
+        else:
+            # No packet at all, which is the commoner case by a long way:
+            # of 301 real PDFs sampled, only 2 had one holding no title.
+            # There is nothing to preserve, so `pdf_tags` builds the whole
+            # thing, which is what it was written for. `ua_part` is None
+            # and always will be from here: stamping cannot make a file
+            # conformant and must not say it did.
+            import pdf_tags as _tags
+            producer = str((reader.metadata or {}).get("/Producer") or "")
+            creator = str((reader.metadata or {}).get("/Creator") or "")
+            rewritten = _tags._xmp_packet(info_title, language or "",
+                                          producer, creator, None)
+        if rewritten is not None:
+            from pypdf.generic import DecodedStreamObject, NameObject
+            stream = DecodedStreamObject()
+            stream.set_data(rewritten)
+            # Clause 7.1-8 asks for both, and a metadata stream without
+            # them is a metadata stream a checker does not count.
+            stream[NameObject("/Type")] = NameObject("/Metadata")
+            stream[NameObject("/Subtype")] = NameObject("/XML")
+            new_root[NameObject("/Metadata")] = writer._add_object(stream)
+            changes.append(Change(
+                kind="xmp-title", count=1,
+                detail="moved the document's own /Title into dc:title, "
+                       "which is the field clause 5 reads"))
+            touched = True
+
+    title_anywhere = bool(info_title or xmp_title)
+    if title_anywhere:
+        prefs = new_root.get("/ViewerPreferences")
+        shows = bool(prefs and prefs.get("/DisplayDocTitle"))
+        if not shows:
+            from pypdf.generic import BooleanObject, DictionaryObject, NameObject
+            prefs = prefs if prefs is not None else DictionaryObject()
+            prefs[NameObject("/DisplayDocTitle")] = BooleanObject(True)
+            new_root[NameObject("/ViewerPreferences")] = prefs
+            changes.append(Change(
+                kind="display-doc-title", count=1,
+                detail="a reader now shows the title rather than the "
+                       "filename (WCAG 2.4.2)"))
+            touched = True
+    else:
+        owed.append(Owed(
+            kind="no-title", count=1,
+            detail="carries no title in either the Info dictionary or the "
+                   "XMP packet. A title is text somebody has to write, and "
+                   "a filename is not one."))
+
+    if not tagged:
+        owed.append(Owed(
+            kind="untagged", count=1,
+            detail="has no structure tree, so stamping cannot make it "
+                   "conformant. Tagging means reconstructing the document, "
+                   "which produces a file that looks different from the one "
+                   "the author uploaded."))
+
+    if not touched:
+        return Result(data=data, owed=owed)
+
+    out = io.BytesIO()
+    writer.write(out)
+    return Result(data=out.getvalue(), changes=changes, owed=owed)

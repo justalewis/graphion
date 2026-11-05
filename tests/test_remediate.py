@@ -318,3 +318,154 @@ def test_an_em_dash_in_the_authors_prose_is_not_mangled():
         "p.html", remediate.fix_html(CURLY, language="en").data)
 
     assert "—" in after
+
+
+# ---------- PDFs ----------
+
+def _pdf(title=None, lang=None, pages=1):
+    """A minimal PDF, optionally stating a title or a language."""
+    import io
+    import pypdf
+    writer = pypdf.PdfWriter()
+    for _ in range(pages):
+        writer.add_blank_page(width=200, height=200)
+    if title is not None:
+        writer.add_metadata({"/Title": title})
+    if lang is not None:
+        writer._root_object[pypdf.generic.NameObject("/Lang")] = \
+            pypdf.generic.create_string_object(lang)
+    out = io.BytesIO()
+    writer.write(out)
+    return out.getvalue()
+
+
+def _root_of(data):
+    import io
+    import pypdf
+    return pypdf.PdfReader(io.BytesIO(data)).trailer["/Root"]
+
+
+@pytest.mark.parametrize("junk", [
+    "Microsoft Word - research 2.docx",
+    "Microsoft Word - Progress Report Structure.docx",
+    "Microsoft PowerPoint - week one.pptx",
+    "doi:10.1016/j.annemergmed.2007.09.037",
+    "Untitled",
+    "report.pdf",
+    "",
+])
+def test_a_converters_filename_is_not_a_title(junk):
+    """Of the nine distinct Info titles across these cartridges that have
+    one and no XMP title, seven are "Microsoft Word - <filename>" and one
+    is a DOI. Moving those would make a screen reader announce "Microsoft
+    Word - research 2.docx" as the name of the document, which is worse
+    than the silence it replaces: it satisfies the checker and tells the
+    reader something false."""
+    assert not remediate.looks_like_a_title(junk)
+
+
+@pytest.mark.parametrize("real", [
+    "Gill - AAA Contribution",
+    "Annoying Ways People Use Sources",
+    "A Guide to Reference and Documentation",
+])
+def test_a_real_title_is_moved(real):
+    assert remediate.looks_like_a_title(real)
+
+
+def test_a_junk_title_is_reported_rather_than_written():
+    result = remediate.fix_pdf(_pdf(title="Microsoft Word - notes.docx"),
+                               language="en")
+
+    assert result.owes("title-is-not-a-title").count == 1
+    assert result.of_kind("xmp-title") is None
+    # And it must not turn on DisplayDocTitle either, or the reader shows
+    # the filename in its title bar, which is the failure 2.4.2 names.
+    assert result.of_kind("display-doc-title") is None
+
+
+def test_a_stated_language_is_written_into_the_catalog():
+    result = remediate.fix_pdf(_pdf(), language="en")
+
+    assert result.of_kind("lang").count == 1
+    assert _root_of(result.data)["/Lang"] == "en"
+
+
+def test_a_language_the_document_already_states_is_left_alone():
+    result = remediate.fix_pdf(_pdf(lang="es"), language="en")
+
+    assert result.of_kind("lang") is None
+    assert _root_of(result.data)["/Lang"] == "es"
+
+
+def test_a_real_title_reaches_dc_title_and_reads_back():
+    """The whole point of moving it. An earlier version wrote the field
+    with an lxml-invented `ns0:` prefix, so it was there, nothing could
+    find it, and the stamp reported success."""
+    import io
+    import pypdf
+    import pdf_tags
+
+    result = remediate.fix_pdf(_pdf(title="Gill - AAA Contribution"),
+                               language="en")
+
+    assert result.of_kind("xmp-title").count == 1
+    reader = pypdf.PdfReader(io.BytesIO(result.data))
+    assert pdf_tags.declared_title(pdf_tags.xmp_packet_text(reader)) == \
+        "Gill - AAA Contribution"
+
+
+def test_stamping_never_claims_conformance():
+    """A stamp cannot make a file conformant, so it must not say it did.
+    `pdfuaid:part` is what an audit reads to decide the document claims
+    PDF/UA, and this writes it never."""
+    import io
+    import pypdf
+    import pdf_tags
+
+    result = remediate.fix_pdf(_pdf(title="A Real Title"), language="en")
+
+    reader = pypdf.PdfReader(io.BytesIO(result.data))
+    assert pdf_tags.declared_ua_part(pdf_tags.xmp_packet_text(reader)) is None
+
+
+def test_an_untagged_file_is_reported_as_needing_more_than_a_stamp():
+    result = remediate.fix_pdf(_pdf(title="A Real Title"), language="en")
+
+    owed = result.owes("untagged")
+    assert owed.count == 1
+    assert "reconstructing" in owed.detail
+
+
+def test_a_file_with_no_title_anywhere_is_reported():
+    result = remediate.fix_pdf(_pdf(), language="en")
+
+    assert result.owes("no-title").count == 1
+    assert result.of_kind("display-doc-title") is None
+
+
+def test_a_pdf_that_will_not_open_is_left_exactly_as_it_arrived():
+    rubbish = b"not a pdf at all"
+
+    result = remediate.fix_pdf(rubbish, language="en")
+
+    assert result.data == rubbish
+    assert result.error
+    assert not result.changed
+
+
+def test_stamping_is_idempotent():
+    once = remediate.fix_pdf(_pdf(title="A Real Title"), language="en")
+    twice = remediate.fix_pdf(once.data, language="en")
+
+    assert not twice.changed
+
+
+def test_stamping_moves_no_text():
+    """Metadata only; no content stream is touched. The guarantee holds
+    for PDFs exactly as it does for pages."""
+    data = _pdf(title="A Real Title")
+
+    after = remediate.fix_pdf(data, language="en").data
+
+    assert invariance.text_of("x.pdf", data) == invariance.text_of("x.pdf", after)

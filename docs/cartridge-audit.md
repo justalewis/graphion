@@ -363,3 +363,64 @@ Numbered on from the audit stages above.
 **R0, R1 and R3 are the first thing worth sending anybody**: a cartridge
 screened for student data, whose PDFs now declare what they are, with a
 proof that not a word moved.
+
+---
+
+## 14. Where this stands
+
+Updated 5 November 2026. Written after building R0 to R3, so the numbers
+below are measured rather than estimated.
+
+**Built:** R0 and R1 in `cartridge.py` and `invariance.py`; R2 and R3 in
+`remediate.py`. Nothing yet writes a cartridge back out, which is R7.
+
+**R0 found student work on its first run**, which is the argument for
+its position in the order. Four of the 35 cartridges here carried caption
+transcripts of four students, one introducing herself by name, inside
+`course_settings/media_tracks.xml`. Not a `.vtt`, not under a path naming
+submissions, so a screen written over filenames called all 35 clean. They
+have since been stripped; 33 remain and 32 screen clear.
+
+**R1 caught two bugs that would have shipped**, both only after the unit
+tests passed and the real archive was read.
+
+lxml's HTML serialiser removes the `<meta http-equiv="Content-Type">` a
+page arrived with and writes nothing in its place, so the output was
+UTF-8 bytes with no declaration and the next reader fell back to
+Latin-1: every curly quotation mark in the course became mojibake. It
+failed 1,960 of 2,532 real pages. That is corruption of the deliverable,
+not a reporting problem.
+
+And lxml invents an `ns0:` prefix for a `dc:title` added to an existing
+XMP packet unless the namespace map is bound on the element, so the field
+was written, nothing could read it back, and the stamp reported success.
+
+**R2 over 2,532 real pages:** 2,446 `lang` written, 421 `scope` set,
+1,099 headings moved to close skips. 164 headerless tables and 201
+untitled iframes reported rather than guessed at. Zero words moved, zero
+pages non-idempotent, zero unparsed.
+
+**R3 over the PDFs:** `/Lang`, `/DisplayDocTitle` and `dc:title` stamped
+in place, with the structure tree, the ink and the rest of the XMP packet
+untouched. Of 1,030 readable PDFs, 477 are tagged, 520 carry an Info
+title, 340 a `dc:title`, 157 a `/Lang` and 7 declare PDF/UA.
+
+One finding there changed the design. **An Info `/Title` is usually not a
+title.** Of the nine distinct ones across these cartridges that have an
+Info title and no XMP title, seven are "Microsoft Word - <filename>" and
+one is a DOI. Moving those would make a screen reader announce
+"Microsoft Word - research 2.docx" as the document's name, so
+`remediate.looks_like_a_title` turns them down and the gap is reported
+instead. The same shape as `assess.PLACEHOLDER_ALTS`, found the same way.
+
+**And a second one worth keeping.** `filters/heading-levels.lua` forces a
+galley's outline to start at level 1, because a galley is a whole
+document. A Canvas page is not: Canvas renders the page title as the
+`<h1>` itself, and across these 2,532 pages the first body heading is
+`h2` on 1,574 and `h1` on only 210. Applying the galley rule would have
+put a second `h1` on most pages in the archive. R2 keeps the author's
+base level and closes only the skips below it.
+
+**Next:** R4 (OCR), R5 (Office documents, 777 files and the largest
+remaining), R6 (the drafting queue), R7 (repack, change log and
+worklist).
