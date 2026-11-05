@@ -84,6 +84,25 @@ picture, which WCAG 1.4.5 is about. Nothing can tell a photograph of a
 document from a photograph of anything else without looking, so that
 count is got by hand and recorded per article in `images-of-text`.
 
+## Working on an archive you did not publish
+
+Dashboard → *Start a journal or a collection*, and pick **Collection**. A
+collection is somebody else's back catalogue, taken in to be read and
+remediated rather than published.
+
+It behaves like a journal in every way that matters: batch ingest, the
+accessibility register, the description queue, the conformance report,
+every output format. What it does not get is the CrossRef deposit and the
+OJS push, because those say the DOIs are yours under your prefix and the
+content belongs in your own workflow. Those links are not shown and the
+routes refuse.
+
+Worth saying to whoever sent you the archive: Graphion does not repair
+their PDF, it replaces it. Remediation here means reading the file,
+reconstructing it as Markdown and rendering a new conformant galley from
+a template, so what comes back is their content re-typeset rather than
+their file fixed.
+
 ## Taking a batch of PDFs in
 
 Journal page → *Ingest a batch of PDFs*, or

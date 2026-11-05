@@ -2,11 +2,26 @@
 {% block title %}{{ journal['name'] }} | Graphion{% endblock %}
 {% block content %}
 <section class="card">
-  <h1>{{ journal['name'] }}</h1>
-  <p class="dim">slug: <code>{{ journal['slug'] }}</code> &middot; ISSN: {{ journal['issn'] or '—' }}</p>
+  <h1>{{ journal['name'] }}
+    {% if is_collection(journal) %}<span class="badge">collection</span>{% endif %}
+  </h1>
+  <p class="dim">
+    slug: <code>{{ journal['slug'] }}</code>
+    {%- if is_collection(journal) %}
+    &middot; an archive taken in to be read and remediated, so it is
+    <strong>not deposited</strong>
+    {%- else %}
+    &middot; ISSN: {{ journal['issn'] or 'none recorded' }}
+    {%- endif %}
+  </p>
   <p>
+    {% if is_collection(journal) %}
+    <a class="button" href="{{ url_for('journal_ingest_batch', slug=journal['slug']) }}">Ingest a batch of PDFs</a>
+    <a class="button ghost" href="{{ url_for('upload_article', slug=journal['slug']) }}">Upload one file</a>
+    {% else %}
     <a class="button" href="{{ url_for('upload_article', slug=journal['slug']) }}">Upload new DOCX</a>
     <a class="button ghost" href="{{ url_for('journal_ingest_batch', slug=journal['slug']) }}">Ingest a batch of PDFs</a>
+    {% endif %}
     <a class="button ghost" href="{{ url_for('issue_new', slug=journal['slug']) }}">New issue</a>
     <a class="button ghost" href="{{ url_for('journal_settings', slug=journal['slug']) }}">Settings</a>
   </p>

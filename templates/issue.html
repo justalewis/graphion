@@ -17,7 +17,9 @@
       <button type="submit" class="button ghost">{% if articles|selectattr('kind', 'equalto', 'editorial')|list %}Edit editors' introduction{% else %}Create editors' introduction{% endif %}</button>
     </form>
     <a class="button ghost" href="{{ url_for('issue_pdf', issue_id=issue['id']) }}" target="_blank">View issue PDF</a>
+    {% if not is_collection(journal) %}
     <a class="button ghost" href="{{ url_for('issue_crossref_xml', issue_id=issue['id']) }}">Download CrossRef XML</a>
+    {% endif %}
   </nav>
 </section>
 

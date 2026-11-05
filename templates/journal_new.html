@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Start a journal or a collection{% endblock %}
+{% block content %}
+
+<section class="card narrow">
+  <h1>Start a journal or a collection</h1>
+  <p class="dim">
+    Both hold articles, render galleys from a template bundle, and work
+    with the accessibility register, the description queue and the
+    conformance report. The difference is whether the content is yours to
+    publish.
+  </p>
+
+  <form method="post" class="stack">
+    <fieldset>
+      <legend><strong>Which is this</strong></legend>
+      <label>
+        <input type="radio" name="kind" value="journal"
+               {% if (posted and posted.kind != 'collection') or not posted %}checked{% endif %} />
+        <strong>Journal</strong>; something you publish
+      </label>
+      <p class="dim">
+        Gets an ISSN, CrossRef deposit XML and the OJS push, because the
+        DOIs are yours to register and the content is yours to put into
+        your own workflow.
+      </p>
+      <label>
+        <input type="radio" name="kind" value="collection"
+               {% if posted and posted.kind == 'collection' %}checked{% endif %} />
+        <strong>Collection</strong>; somebody else's archive, taken in to
+        be read and remediated
+      </label>
+      <p class="dim">
+        Everything above except the depositing. A CrossRef deposit says
+        these DOIs are yours under your prefix and an OJS push puts the
+        content into your own journal, so neither is offered and both
+        routes refuse. Ingest, rendering, the register, the descriptions
+        and the conformance report all work on it unchanged.
+      </p>
+    </fieldset>
+
+    <div>
+      <label for="name"><strong>Name</strong></label>
+      <input type="text" id="name" name="name" required
+             value="{{ posted.name if posted else '' }}"
+             placeholder="Modern Hispanic Review Journal" />
+    </div>
+
+    <div>
+      <label for="slug">Slug</label>
+      <input type="text" id="slug" name="slug" pattern="[a-z0-9][a-z0-9-]*"
+             value="{{ posted.slug if posted else '' }}"
+             placeholder="made from the name if you leave this empty" />
+      <p class="dim">
+        Lowercase letters, digits and dashes. It is the URL and the folder
+        name under <code>content/journals/</code>, and it does not change
+        afterwards.
+      </p>
+    </div>
+
+    <div>
+      <label for="short_name">Short name</label>
+      <input type="text" id="short_name" name="short_name"
+             value="{{ posted.short_name if posted else '' }}"
+             placeholder="initials of the name if you leave this empty" />
+      <p class="dim">What the running head on a galley has room for.</p>
+    </div>
+
+    <div>
+      <label for="issn">ISSN</label>
+      <input type="text" id="issn" name="issn"
+             value="{{ posted.issn if posted else '' }}"
+             placeholder="2326-5620" />
+      <p class="dim">
+        Journals only. An ISSN identifies a serial you publish, so it is
+        ignored for a collection.
+      </p>
+    </div>
+
+    <div>
+      <label for="starter">Copy the template bundle from</label>
+      <select id="starter" name="starter">
+        {% for s in shape.starters %}
+        <option value="{{ s.slug }}"
+                {% if s.slug == shape.default_starter %}selected{% endif %}>{{ s.name }}</option>
+        {% endfor %}
+      </select>
+      <p class="dim">
+        The CSS, the Pandoc and Typst templates, the Lua filters and the
+        CSL stylesheet, copied to
+        <code>content/journals/&lt;slug&gt;/template/</code>. Both bundles
+        here carry the accessible markup, so either is a sound starting
+        point; edit the copy in git rather than on the volume, since a
+        deploy replaces what is there.
+      </p>
+    </div>
+
+    <div class="action-row">
+      <button type="submit" class="button">Create it</button>
+      <a class="button ghost" href="{{ url_for('dashboard') }}">Cancel</a>
+    </div>
+  </form>
+</section>
+
+{% endblock %}

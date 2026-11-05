@@ -145,14 +145,32 @@ CSL stylesheet, wordmark image, **Claude style guide**) under
 `content/journals/<slug>/template/`. The LiCS bundle ships as a
 working example.
 
-To add a new journal:
+To add a new journal, use **Start a journal or a collection** on the
+dashboard, or:
 
 ```bash
 python new_journal.py <slug> "Full Journal Name"
 ```
 
-This creates the template directory by copying the LiCS starter, then
-inserts a row in the `journals` table. You then customize via:
+A **collection** is the same thing for an archive you did not publish:
+somebody else's back catalogue, taken in to be read and remediated.
+
+```bash
+python new_journal.py <slug> "Full Name" --collection
+```
+
+It holds articles, renders galleys from a template bundle, and works with
+batch ingest, the accessibility register, the description queue and the
+conformance report exactly as a journal does. What it does not get is the
+CrossRef deposit and the OJS push, because those assert that the DOIs are
+yours under your prefix and that the content belongs in your own
+workflow, which is not a claim to make about an archive somebody sent you
+to assess. Those routes refuse for a collection and the pages do not
+offer them.
+
+Either way this creates the template directory by copying the LiCS
+starter, then inserts a row in the `journals` table. You then customize
+via:
 
 - **Journal Settings** in the web UI (editorial team, board, mission,
   CrossRef config, header label template, wordmark upload)

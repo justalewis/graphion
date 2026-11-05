@@ -194,6 +194,12 @@ app.py:assess_archive       — GET/POST /assess
   → assess.assess_pdf             per file; no article, no row, no write
   → assess.rollup                 the same adder report() uses
 
+app.py:journal_new          — GET/POST /journals/new
+  → new_journal.scaffold          row + template bundle, or ScaffoldError;
+                                  checks everything before writing anything
+  (kind 'journal' or 'collection'; read it back with new_journal.kind_of,
+   never off the column, since a row older than it reads NULL)
+
 app.py:journal_ingest_batch — GET/POST /journals/<slug>/ingest
   → jobs.create                   row in `staging`; the worker cannot take it
   → (files saved into jobs.staging_dir)

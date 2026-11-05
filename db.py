@@ -179,6 +179,14 @@ def _apply_migrations():
             ("ojs_url", "TEXT"),
             ("ojs_api_token", "TEXT"),
             ("ojs_context_id", "TEXT"),
+            # 'journal' or 'collection'. A collection is somebody else's
+            # archive, taken in to be read and remediated rather than
+            # published, which is the same row minus the routes that assert
+            # the content is yours to deposit. `new_journal.kind_of()` is
+            # the one reader; do not test this column directly, because a
+            # row written before the column reads NULL and would then be
+            # neither kind.
+            ("kind", "TEXT DEFAULT 'journal'"),
         ],
         "articles": [
             ("kind", "TEXT DEFAULT 'article'"),

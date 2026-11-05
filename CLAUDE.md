@@ -27,9 +27,10 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (886 functions, 941 cases once the parametrized ones expand: 142 in
+Tests (915 functions, 974 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 64 in `test_assess.py`,
-50 in `test_jobs.py`, 22 in `test_assess_route.py`,
+50 in `test_jobs.py`, 29 in `test_collections.py`,
+22 in `test_assess_route.py`,
 50 in `test_lint.py`, 46 in `test_ingest_volume.py`, 38 in
 `test_describe.py`, 42 in `test_register.py`, 23 in
 `test_stated_headings.py`, 14 in `test_structure.py`,
@@ -547,9 +548,52 @@ them goes quietly wrong. `unrun` is in `ITEM_TONE` and deliberately not
 in `LEVEL_TONE`: it is not a finding, so it reads as unknown rather than
 being given a verdict's colour.
 
-Still unbuilt: a collection that is not a journal. A stranger's archive
-currently has to be created as one, which `new_journal.py` does from the
-command line.
+**A collection is a journal row saying less, and the smallness is the
+argument.** Somebody else's archive, taken in to be read and remediated
+rather than published, is the same work almost all the way down: it holds
+articles, it renders galleys from a template bundle, and the register,
+the description queue and the conformance report all read it unchanged.
+A separate table would have been a copy of `journals` with two columns
+missing and a second class of thing to keep working, so it is
+`journals.kind`, additive, defaulting to `'journal'`.
+
+Remediation here is re-publication rather than repair, which is why a
+collection genuinely needs a template bundle the way a journal does. That
+is also the thing to say out loud to anybody sending an archive: what
+comes back is their content re-typeset in a Graphion template, not their
+file fixed.
+
+**What it refuses is depositing, and that is not cosmetic.** A CrossRef
+deposit asserts that these DOIs are yours under your prefix and an OJS
+push puts the content into your own journal's workflow. Doing either for
+an archive somebody sent you to assess is a claim about ownership, and
+the sort that is hard to take back once a registry holds it. So
+`/crossref` leaves collections out rather than listing them as not ready,
+since a row reading "missing: crossref_prefix" invites somebody to go and
+supply one; the settings page drops those fields and says why; the
+article and issue pages drop the links; and the five routes themselves
+refuse, because a rule enforced only in a template is a rule a bookmark
+walks past. JATS stays, because it describes an article rather than
+claiming it.
+
+**`new_journal.kind_of()` is the one reader.** A row written before the
+column reads NULL, and a template or a query testing `kind` directly
+would call that neither kind, which drops a real journal out of the
+CrossRef page with nothing on the page to say so. `is_collection` and
+`kind_label` are Jinja globals for the same reason: every template asks
+the same function rather than each one deciding.
+
+**And `new_journal.scaffold()` exists because the script was the
+barrier.** Every other thing a stranger's archive needs had a page, and
+the first step, starting the thing those pages hang off, needed a shell
+on the machine, which is most of why this app stayed pointed at the two
+archives it was written for. The whole body was inside `main()`;
+`scaffold()` is that body with `print` and `sys.exit` replaced by a
+return value and `ScaffoldError`, and `main()` now calls it. It checks
+everything before it writes anything, so a refused scaffold leaves no
+half-made bundle and no row. The rules stay in the module, the way
+`ingest_volume`'s and `validate_galleys`' do, so a journal started from
+the form and one started from a terminal are the same journal.
 
 **`assess.read_html` reads a page the way `assess_pdf` reads a PDF**, and
 reading is not behind `--validate`, because it costs what reading a file

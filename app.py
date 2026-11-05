@@ -73,6 +73,15 @@ def create_app() -> Flask:
             abort(413)
         return None
 
+    # What a journal row is, available to every template without each
+    # route having to pass it, and read through `new_journal.kind_of` so
+    # there is one answer: a row written before the column reads NULL, and
+    # a template testing the column directly would call it neither kind.
+    import new_journal
+    app.jinja_env.globals["is_collection"] = new_journal.is_collection
+    app.jinja_env.globals["kind_label"] = (
+        lambda journal: new_journal.KIND_LABELS[new_journal.kind_of(journal)])
+
     @app.template_filter("from_json")
     def _from_json(s):
         import json
@@ -215,6 +224,62 @@ def register_routes(app: Flask):
         return render_template("dashboard.html", journals=journals, recent=recent, recent_issues=recent_issues)
 
     # ---------- journal ----------
+
+    @app.route("/journals/new", methods=["GET", "POST"])
+    @login_required
+    def journal_new():
+        """Start a journal, or a collection, from the browser.
+
+        `new_journal.py` was the only way to do this, which is most of why
+        this app stayed pointed at the two archives it was written for:
+        every other thing a stranger's archive needs had a page, and the
+        first step needed a shell on the machine.
+
+        The decisions stay in `new_journal.scaffold`, the way ingest's
+        stay in `ingest_volume` and the validators' in
+        `validate_galleys`, so a journal started here and one started from
+        a terminal are the same journal.
+        """
+        import new_journal
+
+        starters = db.query_all("SELECT slug, name FROM journals ORDER BY name")
+        shape = {"starters": [dict(s) for s in starters],
+                 "default_starter": new_journal.STARTER_JOURNAL_SLUG,
+                 "kinds": new_journal.KINDS,
+                 "kind_labels": new_journal.KIND_LABELS}
+        if request.method == "GET":
+            return render_template("journal_new.html", shape=shape)
+
+        kind = request.form.get("kind") or new_journal.JOURNAL
+        name = (request.form.get("name") or "").strip()
+        slug = (request.form.get("slug") or "").strip().lower()
+        if not slug and name:
+            slug = slugify(name)
+        starter = request.form.get("starter") or new_journal.STARTER_JOURNAL_SLUG
+        # An ISSN identifies a serial you publish, so it is not offered for
+        # a collection and is not read back if one is posted anyway.
+        issn = ((request.form.get("issn") or "").strip()
+                if kind == new_journal.JOURNAL else None)
+
+        try:
+            made = new_journal.scaffold(
+                slug, name, issn=issn or None,
+                short_name=(request.form.get("short_name") or "").strip() or None,
+                starter=starter, kind=kind)
+        except new_journal.ScaffoldError as exc:
+            flash(str(exc), "error")
+            return render_template("journal_new.html", shape=shape,
+                                   posted=request.form)
+
+        if made["kind"] == new_journal.COLLECTION:
+            flash(f"Created {made['name']}. A collection is not deposited, "
+                  f"so the CrossRef and OJS routes do not apply to it; "
+                  f"everything else does. Take the archive in from here.",
+                  "success")
+            return redirect(url_for("journal_ingest_batch", slug=made["slug"]))
+        flash(f"Created {made['name']}. The template bundle was copied from "
+              f"{starter}; edit it in git, not on the volume.", "success")
+        return redirect(url_for("journal_settings", slug=made["slug"]))
 
     @app.route("/journals/<slug>/settings", methods=["GET", "POST"])
     @login_required
@@ -422,7 +487,9 @@ def register_routes(app: Flask):
             "ORDER BY updated_at DESC",
             (issue["journal_id"],),
         )
-        return render_template("issue.html", issue=issue, articles=articles, unfiled=unfiled)
+        return render_template("issue.html", issue=issue, articles=articles,
+                               unfiled=unfiled,
+                               journal=_journal_of_issue(issue_id))
 
     @app.route("/issues/<int:issue_id>/metadata", methods=["GET", "POST"])
     @login_required
@@ -997,6 +1064,10 @@ def register_routes(app: Flask):
         return render_template(
             "article.html",
             article=article,
+            # The row itself, so the page can ask what this belongs to
+            # rather than reading a kind column off a joined alias: a
+            # collection is not deposited and the links have to know.
+            journal=_journal_of_article(article_id),
             log_text=log_text,
             rendered_html=rendered_html,
             rendered_pdf=rendered_pdf,
@@ -1622,7 +1693,15 @@ def register_routes(app: Flask):
     @app.route("/crossref")
     @login_required
     def crossref_home():
-        journal_rows = db.query_all("SELECT * FROM journals ORDER BY name")
+        import new_journal
+
+        # Collections are left out rather than shown as not ready: they are
+        # not short of a prefix, they are not deposited at all, and a row
+        # saying "missing: crossref_prefix" invites somebody to go and
+        # supply one.
+        journal_rows = [row for row
+                        in db.query_all("SELECT * FROM journals ORDER BY name")
+                        if not new_journal.is_collection(row)]
         journals = []
         for jr in journal_rows:
             j = dict(jr)
@@ -1672,6 +1751,7 @@ def register_routes(app: Flask):
     @app.route("/articles/<int:article_id>/crossref.xml")
     @login_required
     def article_crossref_xml(article_id):
+        _refuse_deposit_for_a_collection(_journal_of_article(article_id))
         try:
             xml = crossref.build_article_deposit_xml(
                 article_id, base_url=request.host_url.rstrip("/")
@@ -1691,6 +1771,7 @@ def register_routes(app: Flask):
     @app.route("/issues/<int:issue_id>/crossref.xml")
     @login_required
     def issue_crossref_xml(issue_id):
+        _refuse_deposit_for_a_collection(_journal_of_issue(issue_id))
         try:
             xml = crossref.build_issue_deposit_xml(
                 issue_id, base_url=request.host_url.rstrip("/")
@@ -2294,6 +2375,7 @@ def register_routes(app: Flask):
         """
         import zipfile
         import io
+        _refuse_deposit_for_a_collection(_journal_of_article(article_id))
         article = db.query_one(
             "SELECT a.*, j.slug AS journal_slug FROM articles a "
             "JOIN journals j ON a.journal_id = j.id WHERE a.id = ?",
@@ -2362,6 +2444,7 @@ def register_routes(app: Flask):
         journal = db.query_one("SELECT * FROM journals WHERE id = ?", (article["journal_id"],))
         if not journal:
             abort(404)
+        _refuse_deposit_for_a_collection(journal)
         journal = dict(journal)
 
         apath = Path(article["project_path"])
@@ -3470,6 +3553,42 @@ def register_routes(app: Flask):
     @app.route("/healthz")
     def healthz():
         return {"ok": True}
+
+
+def _journal_of_article(article_id: int):
+    return db.query_one(
+        "SELECT j.* FROM journals j JOIN articles a ON a.journal_id = j.id "
+        "WHERE a.id = ?", (article_id,))
+
+
+def _journal_of_issue(issue_id: int):
+    return db.query_one(
+        "SELECT j.* FROM journals j JOIN issues i ON i.journal_id = j.id "
+        "WHERE i.id = ?", (issue_id,))
+
+
+def _refuse_deposit_for_a_collection(journal) -> None:
+    """A collection is not deposited, and that is not a cosmetic rule.
+
+    A CrossRef deposit asserts that these DOIs are yours under your
+    prefix, and an OJS push puts the content into your own journal's
+    workflow. Doing either for an archive somebody sent you to assess is a
+    claim about ownership rather than a convenience, and it is the kind of
+    claim that is hard to take back once a registry has it.
+
+    The pages do not offer these for a collection either. This is what
+    stops a bookmark, a guessed URL or a stale tab, which is where a rule
+    only enforced in a template gets through.
+    """
+    import new_journal
+
+    if journal is not None and new_journal.is_collection(journal):
+        abort(404, description=(
+            f"{journal['name']} is a collection rather than a journal, so "
+            f"it is not deposited. A CrossRef deposit says these DOIs are "
+            f"yours under your prefix and an OJS push puts the content "
+            f"into your own workflow; neither is offered for an archive "
+            f"taken in to be remediated."))
 
 
 def _validator_tools() -> list:

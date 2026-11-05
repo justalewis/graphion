@@ -139,6 +139,10 @@
       <span class="help-text">Articles are grouped by their <code>section</code> field in the ToC. Default if blank: <code>ARTICLES</code> only.</span>
     </label>
 
+    {# A collection is not deposited, so there is nothing here for it to
+       fill in. Leaving these visible invites somebody to supply a prefix
+       for an archive that is not theirs to register. #}
+    {% if not is_collection(journal) %}
     <div class="section-divider">
       <h2>CrossRef</h2>
     </div>
@@ -176,6 +180,18 @@
         <span class="help-text">Only needed on multi-journal installs where OJS can't infer the context from the URL.</span>
       </label>
     </div>
+    {% else %}
+    <div class="section-divider">
+      <h2>Depositing</h2>
+      <p class="help-text">
+        This is a collection, so the CrossRef and OJS settings are not
+        shown and both routes refuse for it. A deposit says these DOIs are
+        yours under your prefix and an OJS push puts the content into your
+        own workflow; neither is a claim to make about an archive taken in
+        to be remediated. Everything else on this page applies.
+      </p>
+    </div>
+    {% endif %}
 
     <div class="section-divider"></div>
     <div>

@@ -2,22 +2,34 @@
 {% block title %}Dashboard | Graphion{% endblock %}
 {% block content %}
 <section class="card">
-  <h1>Journals</h1>
+  <h1>Journals and collections</h1>
   {% if journals %}
   <ul class="journal-list">
     {% for j in journals %}
     <li class="journal-row">
       <div>
         <a href="{{ url_for('journal_home', slug=j['slug']) }}"><strong>{{ j['name'] }}</strong></a>
+        {% if is_collection(j) %}
+        <span class="badge">collection</span>
+        {% else %}
         <span class="dim">{{ j['issn'] or '' }}</span>
+        {% endif %}
       </div>
+      {% if is_collection(j) %}
+      <a class="button ghost small" href="{{ url_for('journal_ingest_batch', slug=j['slug']) }}">Ingest PDFs</a>
+      {% else %}
       <a class="button ghost small" href="{{ url_for('upload_article', slug=j['slug']) }}">Upload DOCX</a>
+      {% endif %}
     </li>
     {% endfor %}
   </ul>
   {% else %}
-  <p class="dim">No journals registered. Run <code>python seed.py</code>.</p>
+  <p class="dim">Nothing registered yet. Run <code>python seed.py</code>, or
+    <a href="{{ url_for('journal_new') }}">start one here</a>.</p>
   {% endif %}
+  <p class="action-row">
+    <a class="button ghost" href="{{ url_for('journal_new') }}">Start a journal or a collection</a>
+  </p>
 </section>
 
 <section class="card">
