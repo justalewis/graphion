@@ -27,44 +27,47 @@ import jats
 import lint
 import ojs_client
 import acr
+import jobs
 import register
 import standalone_html
 from auth import User, login_manager
 from config import (
     ALLOWED_UPLOAD_EXTENSIONS, CONTENT_DIR, LOGIN_MAX_ATTEMPTS,
-    LOGIN_WINDOW_SECONDS, MAX_ASSESS_BYTES, MAX_ASSESS_FILES,
-    MAX_ASSESS_VALIDATE_FILES, MAX_UPLOAD_BYTES, SECURE_COOKIES, SECRET_KEY,
+    LOGIN_WINDOW_SECONDS, MAX_ASSESS_FILES, MAX_ASSESS_VALIDATE_FILES,
+    MAX_BATCH_BYTES, MAX_INGEST_FILES, MAX_UPLOAD_BYTES, SECURE_COOKIES,
+    SECRET_KEY,
 )
 
-# The one route allowed the larger request body. Named here rather than
-# matched on the path, so renaming the route cannot silently widen the
-# limit for everything else.
-ASSESS_ENDPOINT = "assess_archive"
+# The routes allowed the larger request body, which are the two that take a
+# batch of files rather than one manuscript. Named here rather than matched
+# on the path, so renaming a route cannot silently widen the limit for
+# everything else; a test pins each name to a route that exists.
+BATCH_ENDPOINTS = frozenset({"assess_archive", "journal_ingest_batch"})
 
 
 def create_app() -> Flask:
     app = Flask(__name__)
     app.config["SECRET_KEY"] = SECRET_KEY
-    # Flask's limit is per application and the assessment route needs a
-    # batch, so the ceiling is the larger of the two and the smaller one
-    # is enforced below for every other route. Setting this to
-    # MAX_ASSESS_BYTES alone would hand the publishing routes a six times
-    # larger body than they have ever accepted.
-    app.config["MAX_CONTENT_LENGTH"] = max(MAX_UPLOAD_BYTES, MAX_ASSESS_BYTES)
+    # Flask's limit is per application and two routes take a batch, so the
+    # ceiling is the larger of the two limits and the smaller one is
+    # enforced below for every other route. Setting this to MAX_BATCH_BYTES
+    # alone would hand every upload that writes into content/ twelve times
+    # the body it has ever accepted.
+    app.config["MAX_CONTENT_LENGTH"] = max(MAX_UPLOAD_BYTES, MAX_BATCH_BYTES)
     app.config["SESSION_COOKIE_HTTPONLY"] = True
     app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
     app.config["SESSION_COOKIE_SECURE"] = SECURE_COOKIES
 
     @app.before_request
-    def _hold_publishing_routes_to_the_smaller_limit():
-        """Everything but the assessment route keeps the limit it had.
+    def _hold_single_file_routes_to_the_smaller_limit():
+        """Every route but the two batch ones keeps the limit it had.
 
         `MAX_CONTENT_LENGTH` had to rise for a batch of PDFs to arrive at
         all, and that config is application wide, so without this every
-        upload that writes into `content/` would quietly have gained the
+        upload that takes one manuscript would quietly have gained the
         same headroom.
         """
-        if request.endpoint == ASSESS_ENDPOINT:
+        if request.endpoint in BATCH_ENDPOINTS:
             return None
         if (request.content_length or 0) > MAX_UPLOAD_BYTES:
             abort(413)
@@ -81,6 +84,10 @@ def create_app() -> Flask:
             return []
 
     db.init_db()
+    # A row left reading `running` with nothing advancing it is a batch the
+    # process died under, and the flattering reading of that is work still
+    # in hand. One query, so it belongs at start-up rather than on a page.
+    jobs.recover()
     login_manager.init_app(app)
 
     register_routes(app)
@@ -2708,6 +2715,160 @@ def register_routes(app: Flask):
     # weak evidence the register exists to replace. The half worth attacking
     # first is the lookups, which could be one query a journal.
 
+    @app.route("/journals/<slug>/ingest", methods=["GET", "POST"])
+    @login_required
+    def journal_ingest_batch(slug):
+        """Take a folder of chapter PDFs in, as a job rather than a request.
+
+        `ingest_volume.py` has done this from a terminal since the archive
+        was first taken in, and that is where it had to stay: a chapter is
+        minutes of pdfplumber, so twenty-five of them is most of an
+        afternoon and no request survives it. The upload is staged, a job
+        is queued, and the page says where to watch it.
+
+        Everything about what each file is, which of them is the collected
+        volume, what repeats across the batch and is therefore the series'
+        own mark, and how a chapter becomes an article is
+        `ingest_volume`'s. This route decides nothing about any of it.
+        """
+        journal = db.query_one("SELECT * FROM journals WHERE slug = ?",
+                               (slug,))
+        if not journal:
+            abort(404)
+        shape = {"max_files": MAX_INGEST_FILES,
+                 "max_mb": MAX_BATCH_BYTES // (1024 * 1024)}
+        if request.method == "GET":
+            return render_template("ingest_batch.html", journal=journal,
+                                   shape=shape,
+                                   running=jobs.recent(
+                                       limit=8, journal_id=journal["id"]))
+
+        uploads = [f for f in request.files.getlist("pdfs")
+                   if f and f.filename
+                   and Path(f.filename).suffix.lower() == ".pdf"]
+        if not uploads:
+            flash("No PDFs uploaded; this takes a folder of chapter PDFs.",
+                  "error")
+            return redirect(request.url)
+        if len(uploads) > MAX_INGEST_FILES:
+            flash(f"{len(uploads)} files is past the limit of "
+                  f"{MAX_INGEST_FILES} for one batch.", "error")
+            return redirect(request.url)
+
+        def number(field_name):
+            raw = (request.form.get(field_name) or "").strip()
+            try:
+                return int(raw)
+            except ValueError:
+                return None
+
+        keep_own_license = request.form.get("keep_license") == "on"
+        facts = {
+            "volume": number("volume"),
+            "year": number("year"),
+            "volume_title": (request.form.get("volume_title") or "").strip(),
+            "replace": request.form.get("replace") == "on",
+            "teacher_mode": ("inline"
+                             if request.form.get("teacher_mode") == "inline"
+                             else "separate"),
+        }
+        if not keep_own_license:
+            facts["license"] = (request.form.get("license") or "").strip()
+            facts["license_url"] = (request.form.get("license_url")
+                                    or "").strip()
+
+        label = f"{len(uploads)} chapter(s) into {journal['name']}"
+        job_id = jobs.create("ingest_batch", label, facts, journal["id"])
+        staged = jobs.staging_dir(job_id)
+        try:
+            for upload in uploads:
+                name = secure_filename(upload.filename) or "chapter.pdf"
+                if not name.lower().endswith(".pdf"):
+                    name = f"{name}.pdf"
+                dest = staged / name
+                # `ingest_volume.plan` reads a chapter's number and author
+                # off its filename, so two files of one name are two
+                # different chapters and the second must not land on the
+                # first.
+                serial = 1
+                while dest.exists():
+                    dest = staged / (f"{Path(name).stem}-{serial}"
+                                     f"{Path(name).suffix}")
+                    serial += 1
+                upload.save(dest)
+        except Exception as exc:
+            jobs.abandon(job_id, f"Staging failed: {type(exc).__name__}: {exc}")
+            flash(f"The upload could not be staged: {exc}", "error")
+            return redirect(request.url)
+
+        # Released only once every file is on disk. Queuing first is the
+        # obvious order and it is a race: the worker claims immediately.
+        jobs.release(job_id, total=len(uploads))
+        flash(f"Queued {len(uploads)} chapter(s). This runs in the "
+              f"background; nothing is lost if you close the page.",
+              "success")
+        return redirect(url_for("job_detail", job_id=job_id))
+
+    @app.route("/jobs")
+    @login_required
+    def jobs_home():
+        return render_template("jobs.html", rows=jobs.recent(limit=50),
+                               state_tone=jobs.STATE_TONE,
+                               terminal=jobs.TERMINAL)
+
+    @app.route("/jobs/<int:job_id>")
+    @login_required
+    def job_detail(job_id):
+        job = jobs.get(job_id)
+        if job is None:
+            abort(404)
+        journal = None
+        if job["journal_id"]:
+            journal = db.query_one("SELECT slug, name FROM journals "
+                                   "WHERE id = ?", (job["journal_id"],))
+        return render_template("job.html", job=job, journal=journal,
+                               items=jobs.items(job),
+                               facts=jobs.payload(job),
+                               state_tone=jobs.STATE_TONE,
+                               item_tone=jobs.ITEM_TONE,
+                               terminal=jobs.TERMINAL)
+
+    @app.route("/jobs/<int:job_id>/state")
+    @login_required
+    def job_state(job_id):
+        """What the job page polls, so it can update without reloading.
+
+        A `<meta http-equiv="refresh">` would have been fewer lines and is
+        the wrong thing in this app of all apps: it reloads under the
+        reader, moves focus back to the top and cannot be turned off, which
+        is WCAG 2.2.1. This hands back the counts and the page writes them
+        into the text it already has.
+        """
+        job = jobs.get(job_id)
+        if job is None:
+            abort(404)
+        return jsonify({
+            "state": job["state"],
+            "done": job["done"],
+            "total": job["total"],
+            "finished": job["state"] in jobs.TERMINAL,
+            "items": jobs.items(job),
+            "error": job["error"],
+        })
+
+    @app.route("/jobs/<int:job_id>/cancel", methods=["POST"])
+    @login_required
+    def job_cancel(job_id):
+        job = jobs.get(job_id)
+        if job is None:
+            abort(404)
+        if jobs.cancel(job_id):
+            flash("Asked the job to stop. A chapter already being read "
+                  "finishes first; nothing after it is started.", "success")
+        else:
+            flash("That job has already finished.", "error")
+        return redirect(url_for("job_detail", job_id=job_id))
+
     @app.route("/assess", methods=["GET", "POST"])
     @login_required
     def assess_archive():
@@ -2738,7 +2899,7 @@ def register_routes(app: Flask):
         shape = {
             "max_files": MAX_ASSESS_FILES,
             "max_validate_files": MAX_ASSESS_VALIDATE_FILES,
-            "max_mb": MAX_ASSESS_BYTES // (1024 * 1024),
+            "max_mb": MAX_BATCH_BYTES // (1024 * 1024),
             "validate_ready": validate_ready,
         }
         if request.method == "GET":

@@ -868,3 +868,32 @@ pre.diff .hunk { color: var(--muted); background: rgba(120, 100, 60, 0.08); disp
 /* Left, because everything else on the page is, and a browser centres a
    caption by default. */
 .reg-table caption { text-align: left; padding-bottom: var(--space-2); }
+
+/* Jobs: the batch ingest form and the job page. Here rather than in the
+   three templates that draw them, by the rule the register tables follow. */
+.stack fieldset {
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: var(--space-4);
+  margin: 0;
+}
+.stack fieldset legend { padding: 0 var(--space-2); }
+.stack fieldset label { display: block; margin-top: var(--space-3); }
+.stack fieldset p.dim { margin-top: var(--space-2); }
+.field-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: baseline;
+}
+.field-row label { margin-top: 0; }
+.field-row input { width: 8rem; }
+.job-error {
+  white-space: pre-wrap;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  margin: var(--space-3) 0 0 0;
+  overflow-x: auto;
+}
+.job-facts { margin-top: var(--space-5); }
+.job-facts summary { cursor: pointer; color: var(--muted); }

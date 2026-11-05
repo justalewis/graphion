@@ -84,6 +84,51 @@ picture, which WCAG 1.4.5 is about. Nothing can tell a photograph of a
 document from a photograph of anything else without looking, so that
 count is got by hand and recorded per article in `images-of-text`.
 
+## Taking a batch of PDFs in
+
+Journal page → *Ingest a batch of PDFs*, or
+`/journals/<slug>/ingest`. One PDF per chapter. Each is read, cleaned and
+filed as a draft article, exactly as `ingest_volume.py` does it from a
+terminal.
+
+A chapter takes a few minutes, so this runs as a background job rather
+than in the page: you get a job page to watch, and closing it does not
+stop the run. *Jobs* in the top bar lists them. One job runs at a time
+and the rest wait.
+
+What the batch decides for itself:
+
+- **Order** comes from the filename where it carries a chapter number
+  (`19Irvin.pdf`). Where it does not, chapters sort by name and you set
+  the order afterwards.
+- **A collected volume** sitting beside its chapters is recognised by its
+  length and left out, so a folder downloaded whole does not ingest the
+  book as a 300 page article.
+- **Repeated images** across the batch are read as the series' own mark
+  rather than as figures.
+
+What you decide:
+
+- **Licence.** The default keeps whatever each chapter's own pages carry,
+  and for an archive you did not publish it is the only safe choice. Only
+  stamp one licence over a batch when you know the whole batch shares it:
+  volume 1 of Writing Spaces does not, and one value across that run
+  published the stricter terms over twelve chapters that permit
+  derivatives.
+- **Replace.** Off by default. A re-ingest rebuilds the body from the
+  PDF, so alt text, long descriptions and the carried front matter fields
+  ride through but anything else typed since the first ingest does not,
+  and `.versions/` keeps only the last five.
+
+Everything lands as a draft. Nothing is published by ingesting it, and
+nothing is rendered until you ask. A chapter that will not open is
+recorded on the job page by name and the rest of the batch carries on.
+
+This is inference, not reading: where a PDF carries no structure tree,
+the paragraphs, headings and emphasis come off the geometry of the page.
+Run *Assess an archive* first if you want to know how much of a batch is
+in that position before you commit to it.
+
 ## Accessibility validation
 
 ### verapdf — PDF/UA-1 compliance

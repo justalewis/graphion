@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% block title %}{{ job.label }}{% endblock %}
+{% block content %}
+
+<section class="card">
+  <p class="crumbs">
+    <a href="{{ url_for('jobs_home') }}">Jobs</a>
+    {% if journal %}<span class="sep">/</span>
+    <a href="{{ url_for('journal_home', slug=journal.slug) }}">{{ journal.name }}</a>{% endif %}
+  </p>
+
+  <h1>{{ job.label }}</h1>
+
+  {# aria-live, so the count reaching a screen reader does not depend on
+     the reader happening to be looking at it, and polite so it waits for a
+     gap rather than interrupting. #}
+  <div class="status-strip" id="job-status" aria-live="polite">
+    <div class="stat">
+      <span class="num" id="job-state">{{ job.state }}</span>
+      <span class="lbl">state</span>
+    </div>
+    <div class="stat">
+      <span class="num" id="job-done">{{ job.done }}</span>
+      <span class="lbl">of <span id="job-total">{{ job.total }}</span> done</span>
+    </div>
+    <div class="stat dim">
+      <span class="num">{{ job.kind }}</span>
+      <span class="lbl">kind</span>
+    </div>
+  </div>
+
+  <p class="dim ran-at">
+    Queued {{ job.created_at }}{% if job.started_at %}; started
+    {{ job.started_at }}{% endif %}{% if job.finished_at %}; finished
+    {{ job.finished_at }}{% endif %}.
+  </p>
+
+  <div id="job-live-note">
+    {% if job.state not in terminal %}
+    <p class="dim">
+      This runs in the background, so closing the page does not stop it.
+      The counts above update on their own;
+      <a href="{{ url_for('job_detail', job_id=job.id) }}">reload</a> if
+      you would rather refresh by hand.
+    </p>
+    {% endif %}
+  </div>
+
+  {% if job.error %}
+  <div class="reg-note">
+    <strong>{{ job.state }}.</strong>
+    <pre class="job-error">{{ job.error }}</pre>
+  </div>
+  {% endif %}
+
+  {% if job.state not in terminal %}
+  <form method="post" action="{{ url_for('job_cancel', job_id=job.id) }}"
+        class="action-row">
+    <button type="submit" class="button ghost">Stop after the current item</button>
+  </form>
+  {% endif %}
+
+  {% if facts %}
+  <details class="job-facts">
+    <summary>What this batch was asked to do</summary>
+    <table class="reg-table">
+      <tbody>
+        {% for key, value in facts.items() %}
+        <tr>
+          <td class="reg-kind">{{ key.replace('_', ' ') }}</td>
+          <td>{{ value if value not in (None, '') else 'not set' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </details>
+  {% endif %}
+</section>
+
+<section class="card">
+  <h2>What happened to each file</h2>
+  <table class="reg-table" id="job-items">
+    <thead>
+      <tr><th>File</th><th>Result</th><th>Detail</th></tr>
+    </thead>
+    <tbody id="job-items-body">
+      {% for item in items %}
+      <tr>
+        <td class="reg-kind">{{ item.name }}</td>
+        <td><span class="tally {{ item_tone.get(item.state, 'unknown') }}">{{ item.state }}</span></td>
+        <td>{{ item.detail }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="3" class="dim">Nothing yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="reg-note">
+    A chapter that would not open is a finding about that chapter, so the
+    batch carries on past it and names it here rather than stopping. What
+    landed is a draft: nothing is published by ingesting it.
+  </div>
+</section>
+
+{% if job.state not in terminal %}
+<script>
+// Vanilla, and a poll rather than a meta refresh: a page that reloads
+// under the reader moves focus back to the top and cannot be turned off,
+// which is the thing this app exists to stop other people shipping.
+(function () {
+  var url = {{ url_for('job_state', job_id=job.id) | tojson }};
+  var tone = {{ item_tone | tojson }};
+  var timer = null;
+
+  function text(id, value) {
+    var node = document.getElementById(id);
+    if (node && node.textContent !== String(value)) {
+      node.textContent = value;
+    }
+  }
+
+  function draw(data) {
+    text('job-state', data.state);
+    text('job-done', data.done);
+    text('job-total', data.total);
+
+    var body = document.getElementById('job-items-body');
+    if (body && data.items.length) {
+      body.replaceChildren();
+      data.items.forEach(function (item) {
+        var row = document.createElement('tr');
+        var name = document.createElement('td');
+        name.className = 'reg-kind';
+        name.textContent = item.name;
+        var state = document.createElement('td');
+        var chip = document.createElement('span');
+        chip.className = 'tally ' + (tone[item.state] || 'unknown');
+        chip.textContent = item.state;
+        state.appendChild(chip);
+        var detail = document.createElement('td');
+        detail.textContent = item.detail;
+        row.append(name, state, detail);
+        body.appendChild(row);
+      });
+    }
+
+    if (data.finished) {
+      window.clearInterval(timer);
+      // Reloaded once at the end rather than rebuilding the parts of the
+      // page that only exist while a job is running: the cancel button,
+      // the error block and this script itself.
+      window.location.reload();
+    }
+  }
+
+  function poll() {
+    fetch(url, {credentials: 'same-origin'})
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) { if (data) { draw(data); } })
+      .catch(function () { /* a page left open overnight is not an error */ });
+  }
+
+  timer = window.setInterval(poll, 3000);
+  poll();
+})();
+</script>
+{% endif %}
+
+{% endblock %}

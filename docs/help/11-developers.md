@@ -23,6 +23,13 @@ Graphion/
   crossref.py         ← CrossRef deposit XML emitter, DOI assignment,
                         BibTeX parsing for structured citations.
   jats.py             ← JATS XML emitter.
+  jobs.py             ← Work that does not fit in a request: a row, a
+                        staging directory under DATA_DIR, and a handler,
+                        worked by one daemon thread. Owns no pipeline of
+                        its own; `ingest_batch` drives ingest_volume's
+                        own plan/furniture/ingest_one, so a batch from
+                        the browser and one from the command line are
+                        the same ingest. Behind /jobs.
   lint.py             ← Composable per-article validation checks.
   register.py         ← What was checked, when, and against which bytes.
                         Each run is stored against a hash of the file the
@@ -186,6 +193,16 @@ app.py:assess_archive       — GET/POST /assess
   → tempfile.TemporaryDirectory   the uploads, gone with the request
   → assess.assess_pdf             per file; no article, no row, no write
   → assess.rollup                 the same adder report() uses
+
+app.py:journal_ingest_batch — GET/POST /journals/<slug>/ingest
+  → jobs.create                   row in `staging`; the worker cannot take it
+  → (files saved into jobs.staging_dir)
+  → jobs.release                  `queued`, and the worker is woken
+jobs.py:_ingest_batch       — the handler, on the worker thread
+  → ingest_volume.plan            what each file is, and in what order
+  → ingest_volume.volume_furniture  images repeating across the batch
+  → ingest_volume.ingest_one      per chapter; one failure is recorded,
+                                  not raised, so the batch carries on
 
 app.py:article_metadata     — POST /articles/<id>/metadata
   → conversion.write_article_metadata

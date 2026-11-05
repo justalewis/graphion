@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block title %}Ingest a batch into {{ journal.name }}{% endblock %}
+{% block content %}
+
+<section class="card">
+  <h1>Ingest a batch into {{ journal.name }}</h1>
+  <p class="dim">
+    One PDF per chapter. Each is read, cleaned and filed as a draft article,
+    the same way <code>ingest_volume.py</code> does it from a terminal. A
+    chapter takes a few minutes, so this runs as a background job: you can
+    close the page and come back to it.
+  </p>
+  <p class="dim">
+    This is destructive to anything it replaces, and it is inference. Where
+    a PDF carries no structure tree the paragraphs, headings and emphasis
+    are read off the geometry of the page, and every one of those is a
+    judgement that can be wrong. Check what comes out.
+  </p>
+
+  <form method="post" enctype="multipart/form-data" class="stack">
+    <div>
+      <label for="pdfs"><strong>Chapter PDFs</strong></label>
+      <input type="file" id="pdfs" name="pdfs" multiple
+             accept="application/pdf,.pdf" required />
+      <p class="dim">
+        Up to {{ shape.max_files }} files, {{ shape.max_mb }} MB in total. A
+        collected volume sitting beside its chapters is recognised by its
+        length and left out. Chapter order comes from the filename where it
+        carries a number; where it does not, the chapters sort by name and
+        you can set the order afterwards.
+      </p>
+    </div>
+
+    <fieldset>
+      <legend><strong>What this batch is</strong></legend>
+      <div class="field-row">
+        <label for="volume">Volume</label>
+        <input type="number" id="volume" name="volume" min="1" step="1" />
+        <label for="year">Year</label>
+        <input type="number" id="year" name="year" min="1800" step="1" />
+      </div>
+      <label for="volume_title">Volume title</label>
+      <input type="text" id="volume_title" name="volume_title"
+             placeholder="left alone if empty" />
+      <p class="dim">
+        Stamped into every chapter's front matter. Leave them empty for an
+        archive that is not organised by volume.
+      </p>
+    </fieldset>
+
+    <fieldset>
+      <legend><strong>Licence</strong></legend>
+      <label>
+        <input type="checkbox" name="keep_license" checked />
+        Keep whatever each chapter's own pages carry
+      </label>
+      <p class="dim">
+        The default, and for an archive you did not publish it is the only
+        safe one. A chapter prints its own terms on its opening page and
+        ingest recovers them; stamping one licence across a batch overwrites
+        that. Volume 1 of Writing Spaces is the reason this is a choice:
+        twelve of its chapters permit derivatives and five do not, so one
+        value across the run published the wrong terms over twelve of them.
+      </p>
+      <label for="license">Or stamp these terms over every chapter</label>
+      <input type="text" id="license" name="license"
+             placeholder="e.g. Creative Commons BY-NC-ND 4.0" />
+      <label for="license_url">Licence URL</label>
+      <input type="url" id="license_url" name="license_url"
+             placeholder="https://creativecommons.org/licenses/..." />
+      <p class="dim">
+        Only used when the box above is unticked. The jurisdiction is part
+        of the URL; a 3.0 United States licence is not a 4.0 International
+        one.
+      </p>
+    </fieldset>
+
+    <fieldset>
+      <legend><strong>How to handle what is already here</strong></legend>
+      <label>
+        <input type="checkbox" name="replace" />
+        Re-ingest chapters this journal already holds
+      </label>
+      <p class="dim">
+        Off by default. A re-ingest rebuilds the body from the PDF, so any
+        alt text, long description or metadata typed since the first ingest
+        is rewritten unless the pipeline carries it. Descriptions and the
+        four carried fields are carried; anything else is not, and
+        <code>.versions/</code> keeps only the last five.
+      </p>
+      <label>
+        <input type="checkbox" name="teacher_mode" value="inline" />
+        Keep Teacher Resources inside the chapter
+      </label>
+      <p class="dim">
+        By default a chapter with a Teacher Resources section renders it as
+        a second galley. Tick this to leave it in the chapter.
+      </p>
+    </fieldset>
+
+    <div class="action-row">
+      <button type="submit" class="button">Queue the batch</button>
+      <a class="button ghost" href="{{ url_for('journal_home', slug=journal.slug) }}">Back to the journal</a>
+    </div>
+  </form>
+</section>
+
+{% if running %}
+<section class="card">
+  <h2>Recent batches for this journal</h2>
+  <table class="reg-table">
+    <thead>
+      <tr><th>Job</th><th>State</th><th class="num">Done</th><th>Started</th></tr>
+    </thead>
+    <tbody>
+      {% for row in running %}
+      <tr>
+        <td><a href="{{ url_for('job_detail', job_id=row.id) }}">{{ row.label }}</a></td>
+        <td>{{ row.state }}</td>
+        <td class="num">{{ row.done }} / {{ row.total }}</td>
+        <td class="ran-at">{{ row.started_at or row.created_at }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endif %}
+
+{% endblock %}

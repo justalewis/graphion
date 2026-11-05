@@ -18,13 +18,12 @@ TYPST_PATH = os.environ.get("TYPST_PATH", "typst")
 MAX_UPLOAD_BYTES = 25 * 1024 * 1024
 ALLOWED_UPLOAD_EXTENSIONS = {".docx", ".md", ".markdown", ".pdf"}
 
-# The assessment front door takes a batch of PDFs rather than one
-# manuscript, so it needs more room than the publishing routes do. Flask's
-# limit is per application, so `app.py` sets MAX_CONTENT_LENGTH to the
-# larger of the two and holds every other route to MAX_UPLOAD_BYTES
-# itself: raising a limit for one route must not quietly raise it for the
-# route that writes into content/.
-MAX_ASSESS_BYTES = 150 * 1024 * 1024
+# Two routes take a batch of files rather than one manuscript, so they need
+# more room than a route that takes a single one. Flask's limit is per
+# application, so `app.py` sets MAX_CONTENT_LENGTH to the larger of the two
+# and holds every route but those to MAX_UPLOAD_BYTES itself: raising a
+# limit for a batch must not quietly raise it everywhere.
+MAX_BATCH_BYTES = 300 * 1024 * 1024
 
 # How many files one browser pass will read. Reading a chapter costs about
 # two seconds, so this is about fifty against the 300 second gunicorn
@@ -37,6 +36,19 @@ MAX_ASSESS_FILES = 25
 # a verdict costs an order of magnitude more than reading does and the cap
 # comes down to match. Ten files is about 130 seconds.
 MAX_ASSESS_VALIDATE_FILES = 10
+
+# Batch ingest has no such ceiling, because it does not happen in the
+# request: the upload is staged and a job reads it. This is a sanity bound
+# on one upload rather than a timing one, and a volume of this series runs
+# to about 25 chapters.
+MAX_INGEST_FILES = 200
+
+# Where a batch waits between being uploaded and being read. Under DATA_DIR
+# rather than CONTENT_DIR because it is input and not content: `content/`
+# is meant to stay legible to a successor editor, and a queue of raw
+# uploads is not that. On Fly.io DATA_DIR is the mounted volume, so a
+# queued batch survives a restart.
+JOBS_DIR = DATA_DIR / "jobs"
 
 VERSIONS_KEEP = 5
 

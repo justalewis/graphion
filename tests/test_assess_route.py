@@ -346,15 +346,16 @@ def test_two_files_of_one_name_are_both_read(client, real_pdf):
 
 # ---------- the larger request body stays on this one route ----------
 
-def test_the_endpoint_named_as_exempt_is_one_that_exists(client):
+def test_this_route_is_one_of_the_two_allowed_a_batch(client):
     """The exemption is by endpoint name rather than by path, so a rename
-    would detach it. If that name stops resolving, every other route
-    silently keeps the larger limit and this route starts refusing a
-    batch, so the pairing is pinned."""
+    would detach it. If that name stops resolving, this route starts
+    refusing a batch while every other route silently keeps the larger
+    limit, and neither half of that is visible."""
     import app as app_module
     application = client.application
 
-    assert app_module.ASSESS_ENDPOINT in application.view_functions
+    assert "assess_archive" in app_module.BATCH_ENDPOINTS
+    assert "assess_archive" in application.view_functions
 
 
 def test_the_publishing_routes_keep_the_smaller_limit(client, monkeypatch):

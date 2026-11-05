@@ -6,6 +6,7 @@
   <p class="dim">slug: <code>{{ journal['slug'] }}</code> &middot; ISSN: {{ journal['issn'] or '—' }}</p>
   <p>
     <a class="button" href="{{ url_for('upload_article', slug=journal['slug']) }}">Upload new DOCX</a>
+    <a class="button ghost" href="{{ url_for('journal_ingest_batch', slug=journal['slug']) }}">Ingest a batch of PDFs</a>
     <a class="button ghost" href="{{ url_for('issue_new', slug=journal['slug']) }}">New issue</a>
     <a class="button ghost" href="{{ url_for('journal_settings', slug=journal['slug']) }}">Settings</a>
   </p>

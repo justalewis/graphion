@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Jobs{% endblock %}
+{% block content %}
+
+<section class="card">
+  <h1>Jobs</h1>
+  <p class="dim">
+    Work that does not fit in a request: ingesting a chapter is minutes and
+    each validator is a subprocess with a two minute timeout, so a batch of
+    either runs here instead of on a page. One job runs at a time and the
+    rest wait.
+  </p>
+
+  <table class="reg-table">
+    <thead>
+      <tr>
+        <th>Job</th>
+        <th>Kind</th>
+        <th>State</th>
+        <th class="num">Done</th>
+        <th>Queued</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr>
+        <td><a href="{{ url_for('job_detail', job_id=row.id) }}">{{ row.label }}</a></td>
+        <td class="reg-kind">{{ row.kind }}</td>
+        <td><span class="tally {{ state_tone.get(row.state, 'unknown') }}">{{ row.state }}</span></td>
+        <td class="num">{{ row.done }} / {{ row.total }}</td>
+        <td class="ran-at">{{ row.created_at }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="dim">Nothing has been queued yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="reg-note">
+    <p>
+      <strong>interrupted</strong> is not <strong>failed</strong>: it means
+      the process stopped while the job was running, so what the job had
+      already finished stands and the rest was never attempted. A row
+      reading <strong>running</strong> that nothing is advancing would be
+      the flattering version of the same thing, which is why it is never
+      left that way.
+    </p>
+    <p>
+      The staged upload is deleted when a job reaches an end, whichever end
+      it reaches. What a batch produced is in the journal, as drafts.
+    </p>
+  </div>
+</section>
+
+{% endblock %}

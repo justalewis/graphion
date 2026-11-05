@@ -27,9 +27,9 @@ python seed.py     # first run only; prompts for admin username + password
 python app.py      # http://127.0.0.1:5050
 ```
 
-Tests (836 functions, 891 cases once the parametrized ones expand: 142 in
+Tests (871 functions, 926 cases once the parametrized ones expand: 142 in
 `test_pdf_ingest.py`, 96 in `test_cleanups.py`, 64 in `test_assess.py`,
-22 in `test_assess_route.py`,
+35 in `test_jobs.py`, 22 in `test_assess_route.py`,
 50 in `test_lint.py`, 46 in `test_ingest_volume.py`, 38 in
 `test_describe.py`, 42 in `test_register.py`, 23 in
 `test_stated_headings.py`, 14 in `test_structure.py`,
@@ -434,10 +434,94 @@ module can read: 25 files a pass at about two seconds each, 10 with
 verapdf on at about thirteen, against the 300 second gunicorn timeout
 `deploy/entrypoint.sh` configures. A whole back catalogue is still
 `python assess.py <folder>`, which has no cap because nothing is waiting
-on it, and the page says so. Batch ingest, as against batch assessment,
-is a different project: it needs a job runner, because ingest is minutes
-a chapter and the three validators are 120 second subprocesses, and it
-needs a collection that is not a journal.
+on it, and the page says so.
+
+**`jobs.py` is the job runner, and what it mostly has to get right is
+not throughput.** Everything slow here has been a script for one reason:
+a chapter is minutes of pdfplumber and each validator is a subprocess
+with a 120 second timeout, so `ingest_volume.py` and
+`validate_galleys.py` are commands and the corpus route runs only the two
+in-process checks. That is the right trade for one editor with a terminal
+and it is the whole barrier for anybody else, because the work a journal
+most wants done is exactly the work nobody could ask for from a browser.
+
+A job is a row, a staging directory and a handler. **The handler drives
+`ingest_volume.plan`, `volume_furniture` and `ingest_one` rather than
+reimplementing any of them**, which is the point of it being a job and
+not a second pipeline: a batch taken in from a browser and one taken in
+from the command line are the same ingest, not two that have to be kept
+in step. `app.py` decides nothing about what a chapter is.
+
+What it has to get right is telling the truth about what happened, and
+each of these is a failure with no symptom.
+
+**A `staging` state exists because queuing and then saving is a race.** A
+batch of twenty-five is seconds of saving and `claim()` is immediate, so
+the obvious order has the worker reading a directory that is still
+filling up and ingesting part of a volume as the whole of one. `create()`
+opens the row in `staging`, `release()` hands it over, and `claim()` only
+ever looks for `queued`. A `staging` row found at start-up is dropped
+rather than queued, since there is nothing to resume.
+
+**`interrupted` is not `failed`, and `running` is not either.** A process
+that dies mid-batch leaves a row saying `running` with nothing to advance
+it, and the flattering reading of that is a batch still going, so
+`recover()` runs at app start and renames it. Folding it into `failed`
+would read as a pipeline that breaks on its own; leaving it as `running`
+is the same lie the register exists to stop. `cancelled` is separate for
+the same reason: somebody stopped it, which is not the job going wrong.
+
+**Progress is written on every step and not at the end.** Holding the
+list in memory is cheaper and loses everything the job had learned if the
+process dies, which is exactly the run worth knowing about. A step is a
+chapter and a chapter is minutes, so the write is free.
+
+**One failed item does not stop the batch.** One unopenable PDF in
+twenty-five is a finding about that PDF, and stopping there costs the
+other twenty-four an afternoon. Each item carries its own state, which is
+`ingest_one`'s own vocabulary rather than a second one over the top.
+
+**One worker, which is the assumption this app already makes.**
+`deploy/entrypoint.sh` configures a single gunicorn worker and the login
+limiter counts in-process on that basis. The worker is one daemon thread
+waiting on an event rather than polling, with a timeout on the wait so a
+wake-up that arrived between the claim and the wait cannot strand a job.
+`claim()` is still a conditional update, so two of them would take two
+jobs, but nothing else here is safe to run twice and the limiter would be
+wrong first; raising `GUNICORN_WORKERS` means replacing both.
+
+**The staged upload lives under `DATA_DIR`, not `CONTENT_DIR`.** It is
+input, and `content/` is meant to stay legible to a successor editor,
+which a queue of raw uploads is not. It is deleted when the job reaches
+an end, whichever end, because it is a copy of what somebody already has
+and what came of reading it is in `content/`.
+
+**The licence is not pre-filled, and that is deliberate.** The CLI
+defaults to the Writing Spaces terms, which is right for the archive it
+was written for and wrong for anything else; the form defaults to keeping
+whatever each chapter's own pages carry, and writes neither key when it
+is told to. Volume 1 is why: twelve of its chapters permit derivatives
+and five do not, so one value stamped across the run published the
+stricter terms over twelve of them.
+
+**The job page polls; it does not refresh.** A
+`<meta http-equiv="refresh">` is fewer lines and reloads under the
+reader, moves focus to the top and cannot be turned off, which is WCAG
+2.2.1. `/jobs/<id>/state` hands back the counts and twenty lines of
+vanilla JS write them into the text already on the page, inside an
+`aria-live="polite"` region so the count reaches a screen reader without
+taking the page over.
+
+`BATCH_ENDPOINTS` is now the two routes that take many files rather than
+one manuscript. A rename detaches a name from the exemption, which would
+have that route refusing a batch while every other route silently kept
+the larger limit, so a test pins each name to a route that exists.
+
+Still unbuilt, and the obvious next kind: `validate_galleys.py` as a job,
+which is what would let the corpus route run verapdf, pa11y and
+epubcheck instead of only the two cheap checks. And a collection that is
+not a journal: a stranger's archive currently has to be created as one,
+which `new_journal.py` does from the command line.
 
 **`assess.read_html` reads a page the way `assess_pdf` reads a PDF**, and
 reading is not behind `--validate`, because it costs what reading a file
@@ -1992,6 +2076,11 @@ Anything touching Claude (`stylize.py`, `llm_cleanup.py`) requires
   nothing. `/assess` is its only route and the only page here that is not
   scoped to a journal; everything else reads an article already filed
   under one.
+- `jobs.py` is work that does not fit in a request: a row, a staging
+  directory under `DATA_DIR` and a handler, worked by one daemon thread.
+  It owns no pipeline of its own. `ingest_batch` drives `ingest_volume`'s
+  `plan`, `volume_furniture` and `ingest_one`, so a batch from the
+  browser and one from the command line are the same ingest.
 - `describe.py` (422) is the description queue behind
   `/accessibility/<slug>/describe`. It owns no judgement of its own: a
   figure's state comes from `lint.figure_state` and a description is
@@ -2055,6 +2144,19 @@ Production runs on Fly.io at a public `.fly.dev` hostname; see
   so they assume the single gunicorn worker that `deploy/entrypoint.sh`
   configures. Do not raise `GUNICORN_WORKERS` without replacing the limiter,
   and do not add an unauthenticated route without thinking about exposure.
+
+- **The job worker is a thread in that same process**, so it shares the
+  assumption. `jobs.recover()` runs in `create_app()`, which means each worker
+  would run it, and each would start a thread; `jobs.claim()` is a conditional
+  update so two of them would take two jobs rather than one, but nothing else
+  in `jobs.py` is safe to run twice. Raising `GUNICORN_WORKERS` means
+  replacing the limiter and moving the worker out of the web process.
+
+- **`data/jobs/` is staged input, not content.** It holds an upload between
+  arriving and being read, it is removed when the job ends, and
+  `deploy/backup.py` correctly does not archive it: the files are a copy of
+  what the sender already has, and what came of reading them is in `content/`.
+  It is on the volume so a queued batch survives a restart.
 
 Shell scripts and the Dockerfile must keep LF endings (`.gitattributes` pins
 this). A CRLF shebang makes the container fail to start.

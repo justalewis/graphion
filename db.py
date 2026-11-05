@@ -93,6 +93,32 @@ CREATE TABLE IF NOT EXISTS check_runs (
     ran_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Work that does not fit in a request. Ingesting a chapter is minutes and
+-- each validator is a 120 second subprocess, so a batch of either is a job
+-- rather than a page load. A new table, so it goes here as
+-- `CREATE TABLE IF NOT EXISTS` the way `check_runs` did; `_apply_migrations`
+-- adds columns to tables that already exist.
+--
+-- `journal_id` cascades on purpose: a deleted journal takes the record of
+-- what was run against it, by the rule `check_runs` already follows.
+CREATE TABLE IF NOT EXISTS jobs (
+    id INTEGER PRIMARY KEY,
+    kind TEXT NOT NULL,
+    label TEXT NOT NULL,
+    state TEXT NOT NULL DEFAULT 'queued',
+    journal_id INTEGER REFERENCES journals(id) ON DELETE CASCADE,
+    payload_json TEXT,
+    items_json TEXT,
+    done INTEGER NOT NULL DEFAULT 0,
+    total INTEGER NOT NULL DEFAULT 0,
+    error TEXT,
+    cancel_requested INTEGER NOT NULL DEFAULT 0,
+    staged_path TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    started_at TIMESTAMP,
+    finished_at TIMESTAMP
+);
+
 CREATE INDEX IF NOT EXISTS idx_articles_journal ON articles(journal_id);
 CREATE INDEX IF NOT EXISTS idx_articles_issue ON articles(issue_id);
 CREATE INDEX IF NOT EXISTS idx_authors_article ON authors(article_id);
@@ -100,6 +126,7 @@ CREATE INDEX IF NOT EXISTS idx_conversions_article ON conversions(article_id);
 CREATE INDEX IF NOT EXISTS idx_check_runs_article ON check_runs(article_id);
 CREATE INDEX IF NOT EXISTS idx_check_runs_lookup
     ON check_runs(article_id, kind, check_name, ran_at);
+CREATE INDEX IF NOT EXISTS idx_jobs_state ON jobs(state, id);
 """
 
 

@@ -1,0 +1,469 @@
+"""Work that does not fit in a request.
+
+Everything slow in this app has been a script for that reason. Ingesting a
+chapter is minutes of pdfplumber, and each of the three validators is a
+subprocess with a 120 second timeout, so `ingest_volume.py` and
+`validate_galleys.py` are commands and the corpus route in `app.py` runs
+only the two in-process checks. That is the right trade for a single
+editor with a terminal and the wrong one for anybody else: the work a
+journal most wants done is exactly the work that cannot be asked for from
+a browser.
+
+A job is a row, a staging directory and a handler. The row is the record,
+so a batch survives the request that asked for it and a restart that
+interrupts it; the staging directory is where an upload waits, under
+`DATA_DIR` rather than `CONTENT_DIR` because it is input and not content;
+and the handler is ordinary code that already existed. `ingest_batch`
+drives `ingest_volume.plan`, `volume_furniture` and `ingest_one`, which is
+the point: a batch taken in from the browser and one taken in from the
+command line are the same ingest, not two that have to be kept in step.
+
+**One worker, which is the assumption this app already makes.**
+`deploy/entrypoint.sh` configures a single gunicorn worker and the login
+limiter in `app.py` counts in-process on that basis. The worker here is one
+daemon thread in that process, waiting on an event rather than polling.
+`claim()` is still written as a conditional update, so two of them would
+take different jobs rather than the same one, but nothing else in this file
+is safe to run twice and the limiter would be wrong first; raising
+`GUNICORN_WORKERS` means replacing both.
+
+**A job that was interrupted says so rather than looking finished.** A
+process that dies mid-batch leaves a row reading `running` and nothing to
+advance it, and the flattering reading of that is a batch still going. So
+`recover()` runs at app start and marks any such row `interrupted`, with
+the items it had already recorded intact. That is the same rule the
+register runs on: a result that is not current does not count, and a state
+nobody can vouch for is not a success.
+
+**The parts that fail are named and the rest of the batch continues.** One
+unopenable PDF in twenty-five is a finding about that PDF, and stopping the
+run on it would cost the other twenty-four an hour. Each item records its
+own state, so the job page is a list of what happened rather than one
+verdict.
+"""
+from __future__ import annotations
+
+import json
+import shutil
+import threading
+import traceback
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Callable, Optional
+
+import db
+from config import JOBS_DIR
+
+# States. `interrupted` and `cancelled` are deliberately not `failed`: the
+# first says the process died under it and the second says somebody stopped
+# it, and neither is the job having gone wrong. Folding them into `failed`
+# would read as a pipeline that breaks on its own.
+STAGING = "staging"
+QUEUED = "queued"
+RUNNING = "running"
+DONE = "done"
+FAILED = "failed"
+CANCELLED = "cancelled"
+INTERRUPTED = "interrupted"
+
+TERMINAL = frozenset({DONE, FAILED, CANCELLED, INTERRUPTED})
+
+STATE_TONE = {
+    STAGING: "unknown",
+    QUEUED: "unknown",
+    RUNNING: "warn",
+    DONE: "good",
+    FAILED: "bad",
+    CANCELLED: "unknown",
+    INTERRUPTED: "bad",
+}
+
+# Per-item states, which are the handler's to choose. `ingest_one` already
+# returns these three words, so the names are its names rather than a second
+# vocabulary over the top of them.
+ITEM_TONE = {
+    "ingested": "good",
+    "replaced": "good",
+    "skipped": "unknown",
+    "failed": "bad",
+}
+
+# Set False in tests. A daemon thread that outlives an assertion is the
+# usual way a test suite becomes intermittent, and every handler here is
+# callable directly through `run_job`, which is what the tests use.
+WORKER_ENABLED = True
+
+_HANDLERS: dict = {}
+_worker: Optional[threading.Thread] = None
+_worker_lock = threading.Lock()
+_wake = threading.Event()
+_stopping = threading.Event()
+
+
+def handler(kind: str) -> Callable:
+    """Register the callable that runs one kind of job."""
+    def register(fn):
+        _HANDLERS[kind] = fn
+        return fn
+    return register
+
+
+# ---------- the row ----------
+
+def staging_dir(job_id: int) -> Path:
+    return Path(JOBS_DIR) / str(job_id)
+
+
+def create(kind: str, label: str, payload: Optional[dict] = None,
+           journal_id: Optional[int] = None) -> int:
+    """Open a job and make somewhere to stage its input. Returns the id.
+
+    The row comes first because the id is what names the staging
+    directory, and it opens in `staging` rather than `queued` so the
+    worker cannot take it while the upload is still arriving. Enqueuing
+    and then saving the files is the obvious order and it is a race: a
+    batch of twenty-five is seconds of saving, and `claim()` is immediate.
+    `release()` is what hands it over.
+    """
+    if kind not in _HANDLERS:
+        raise ValueError(f"No handler registered for job kind {kind!r}")
+    job_id = db.execute(
+        "INSERT INTO jobs (kind, label, state, journal_id, payload_json, "
+        "items_json) VALUES (?, ?, ?, ?, ?, '[]')",
+        (kind, label, STAGING, journal_id, json.dumps(payload or {})),
+    )
+    staging_dir(job_id).mkdir(parents=True, exist_ok=True)
+    db.execute("UPDATE jobs SET staged_path = ? WHERE id = ?",
+               (str(staging_dir(job_id)), job_id))
+    return job_id
+
+
+def release(job_id: int, total: int = 0) -> None:
+    """Hand a staged job to the worker."""
+    db.execute("UPDATE jobs SET state = ?, total = ? WHERE id = ? "
+               "AND state = ?", (QUEUED, total, job_id, STAGING))
+    start_worker()
+    _wake.set()
+
+
+def abandon(job_id: int, reason: str) -> None:
+    """Drop a job that never got as far as being queued."""
+    _finish(job_id, CANCELLED, reason)
+
+
+def get(job_id: int) -> Optional[dict]:
+    row = db.query_one("SELECT * FROM jobs WHERE id = ?", (job_id,))
+    return dict(row) if row else None
+
+
+def recent(limit: int = 50, journal_id: Optional[int] = None) -> list:
+    if journal_id is None:
+        rows = db.query_all(
+            "SELECT * FROM jobs ORDER BY id DESC LIMIT ?", (limit,))
+    else:
+        rows = db.query_all(
+            "SELECT * FROM jobs WHERE journal_id = ? ORDER BY id DESC "
+            "LIMIT ?", (journal_id, limit))
+    return [dict(r) for r in rows]
+
+
+def items(job: dict) -> list:
+    """What happened to each part of the batch, oldest first."""
+    try:
+        return json.loads(job.get("items_json") or "[]")
+    except (TypeError, ValueError):
+        return []
+
+
+def payload(job: dict) -> dict:
+    try:
+        return json.loads(job.get("payload_json") or "{}")
+    except (TypeError, ValueError):
+        return {}
+
+
+def cancel(job_id: int) -> bool:
+    """Ask a job to stop between items.
+
+    A queued job stops now, because nothing has started. A running one is
+    asked rather than killed: a chapter halfway through ingest has files on
+    disk and a row that does not match them yet, and the only safe place to
+    stop is between two of them.
+    """
+    job = get(job_id)
+    if job is None or job["state"] in TERMINAL:
+        return False
+    if job["state"] in (QUEUED, STAGING):
+        _finish(job_id, CANCELLED)
+        return True
+    db.execute("UPDATE jobs SET cancel_requested = 1 WHERE id = ?", (job_id,))
+    return True
+
+
+def cancelled(job_id: int) -> bool:
+    row = db.query_one("SELECT cancel_requested FROM jobs WHERE id = ?",
+                       (job_id,))
+    return bool(row and row["cancel_requested"])
+
+
+# ---------- progress ----------
+
+@dataclass
+class Progress:
+    """What a handler writes to as it goes.
+
+    Every step is a write, which is affordable because a step is a chapter
+    and a chapter is minutes. The alternative, holding the list in memory
+    and writing once at the end, loses everything the job had learned if
+    the process dies, which is exactly the run worth knowing about.
+    """
+
+    job_id: int
+    _items: list = field(default_factory=list)
+
+    def plan(self, total: int) -> None:
+        db.execute("UPDATE jobs SET total = ? WHERE id = ?",
+                   (total, self.job_id))
+
+    def step(self, name: str, state: str, detail: str = "") -> None:
+        self._items.append({"name": name, "state": state, "detail": detail})
+        db.execute(
+            "UPDATE jobs SET items_json = ?, done = ? WHERE id = ?",
+            (json.dumps(self._items), len(self._items), self.job_id),
+        )
+
+    @property
+    def cancelled(self) -> bool:
+        """Re-read, because the asking happens in another thread."""
+        return cancelled(self.job_id)
+
+    def counts(self) -> dict:
+        out: dict = {}
+        for item in self._items:
+            out[item["state"]] = out.get(item["state"], 0) + 1
+        return out
+
+
+# ---------- running ----------
+
+def _finish(job_id: int, state: str, error: str = "") -> None:
+    db.execute(
+        "UPDATE jobs SET state = ?, error = ?, "
+        "finished_at = CURRENT_TIMESTAMP WHERE id = ?",
+        (state, error or None, job_id),
+    )
+    if state in TERMINAL:
+        _clear_staging(job_id)
+
+
+def _clear_staging(job_id: int) -> None:
+    """The uploads go when the job does.
+
+    They are a copy of what somebody already has, and the result of reading
+    them is in `content/`, so keeping them would be a second archive nobody
+    is maintaining. A failure to remove is not a failure of the job.
+    """
+    try:
+        shutil.rmtree(staging_dir(job_id), ignore_errors=True)
+    except OSError:
+        pass
+
+
+def claim() -> Optional[dict]:
+    """Take the oldest queued job, or None.
+
+    Written as a conditional update rather than a read followed by a write,
+    so that two workers would take two jobs rather than both taking one.
+    """
+    row = db.query_one(
+        "SELECT id FROM jobs WHERE state = ? ORDER BY id LIMIT 1", (QUEUED,))
+    if row is None:
+        return None
+    with db.cursor() as cur:
+        cur.execute(
+            "UPDATE jobs SET state = ?, started_at = CURRENT_TIMESTAMP "
+            "WHERE id = ? AND state = ?",
+            (RUNNING, row["id"], QUEUED),
+        )
+        if cur.rowcount == 0:
+            return None
+    return get(row["id"])
+
+
+def run_job(job_id: int) -> str:
+    """Run one job to its end and return the state it reached.
+
+    Synchronous and callable on its own, which is what the tests use: a
+    handler is ordinary code and should not need a thread to be exercised.
+    """
+    job = get(job_id)
+    if job is None:
+        raise ValueError(f"No job {job_id}")
+    if job["state"] == QUEUED:
+        db.execute("UPDATE jobs SET state = ?, started_at = CURRENT_TIMESTAMP "
+                   "WHERE id = ?", (RUNNING, job_id))
+        job = get(job_id)
+
+    progress = Progress(job_id=job_id)
+    try:
+        _HANDLERS[job["kind"]](job, progress)
+    except Exception as exc:
+        # The traceback goes in the row rather than only to a log nobody
+        # serves, which is the mistake `conversion.log` already makes: it is
+        # written on every ingest and no route shows it.
+        _finish(job_id, FAILED,
+                f"{type(exc).__name__}: {exc}\n\n{traceback.format_exc()}")
+        return FAILED
+    state = CANCELLED if cancelled(job_id) else DONE
+    _finish(job_id, state)
+    return state
+
+
+def recover() -> int:
+    """Mark jobs the process died under, and return how many.
+
+    A row left reading `running` with nothing advancing it is the state
+    that reads as work still in hand when it is work that stopped. Called
+    at app start, where it is one query.
+    """
+    rows = db.query_all("SELECT id FROM jobs WHERE state = ?", (RUNNING,))
+    for row in rows:
+        _finish(row["id"], INTERRUPTED,
+                "The process stopped while this was running. What is listed "
+                "below is what it had finished; the rest was not attempted.")
+    # A `staging` row is an upload that never finished arriving, so there is
+    # nothing to resume and nothing to report: it is dropped rather than
+    # queued, because running a half-saved batch would ingest some of a
+    # volume and call it the whole of one.
+    half = db.query_all("SELECT id FROM jobs WHERE state = ?", (STAGING,))
+    for row in half:
+        _finish(row["id"], CANCELLED,
+                "The upload did not finish, so this batch was never queued.")
+    if db.query_one("SELECT id FROM jobs WHERE state = ? LIMIT 1", (QUEUED,)):
+        start_worker()
+        _wake.set()
+    return len(rows) + len(half)
+
+
+def _loop() -> None:
+    while not _stopping.is_set():
+        try:
+            job = claim()
+        except Exception:
+            # A transient lock is not a reason for the queue to stop being
+            # worked. Letting this out ends the thread and strands every
+            # job behind it, which looks from the page like work that never
+            # started rather than a worker that died.
+            job = None
+        if job is None:
+            # Waiting on the event rather than polling, and with a timeout
+            # rather than without: a wake-up that arrived while this thread
+            # was between the claim and the wait would otherwise leave a
+            # queued job sitting until something else woke it.
+            _wake.wait(timeout=30)
+            _wake.clear()
+            continue
+        try:
+            run_job(job["id"])
+        except Exception:
+            # `run_job` records its own failures; this is the one above it,
+            # where the recording itself went wrong.
+            try:
+                _finish(job["id"], FAILED, traceback.format_exc())
+            except Exception:
+                pass
+
+
+def start_worker() -> Optional[threading.Thread]:
+    """Start the worker if it is not already running. Idempotent."""
+    global _worker
+    if not WORKER_ENABLED:
+        return None
+    with _worker_lock:
+        _stopping.clear()
+        if _worker is not None and _worker.is_alive():
+            return _worker
+        _worker = threading.Thread(target=_loop, name="graphion-jobs",
+                                   daemon=True)
+        _worker.start()
+        return _worker
+
+
+def stop_worker(timeout: float = 5.0) -> None:
+    """Ask the worker to stop after the job it is on. For tests.
+
+    A daemon thread outliving the test that started it is the usual way a
+    suite becomes intermittent, and this one holds a database path that the
+    next test has moved.
+    """
+    global _worker
+    _stopping.set()
+    _wake.set()
+    worker = _worker
+    if worker is not None and worker.is_alive():
+        worker.join(timeout)
+    _worker = None
+
+
+# ---------- the kinds ----------
+
+@handler("ingest_batch")
+def _ingest_batch(job: dict, progress: Progress) -> None:
+    """A folder of chapter PDFs, through the ingest the CLI already runs.
+
+    `ingest_volume.plan` reads what each file is from its name, drops the
+    collected volume that every one of these folders ships beside its
+    chapters, and orders them; `volume_furniture` finds the images that
+    repeat across the batch and are therefore the series' own mark rather
+    than figures; `ingest_one` does the rest. None of that is reimplemented
+    here, because a batch taken in from a browser and one taken in from a
+    terminal being the same ingest is the whole reason this is a job and
+    not a second pipeline.
+    """
+    import ingest_volume
+
+    staged = Path(job["staged_path"])
+    facts = payload(job)
+    journal = db.query_one("SELECT * FROM journals WHERE id = ?",
+                           (job["journal_id"],))
+    if journal is None:
+        raise ValueError("The journal this batch was for no longer exists.")
+    journal = dict(journal)
+
+    chapters = ingest_volume.plan(staged, {}, facts.get("volume"))
+    progress.plan(len(chapters))
+    if not chapters:
+        return
+
+    furniture = ingest_volume.volume_furniture(chapters)
+    by_source = ingest_volume.existing_sources(journal["id"])
+
+    defaults = {"volume-title": facts.get("volume_title") or None,
+                "volume": facts.get("volume"),
+                "year": facts.get("year")}
+    if facts.get("license"):
+        # A volume's terms are a property of the volume, so these overwrite
+        # whatever a chapter's own pages carried rather than filling a gap.
+        # Left out entirely where the form said to keep each chapter's own,
+        # which is the one case volume 1 of this series needs.
+        defaults["license"] = facts["license"]
+        defaults["license-url"] = facts.get("license_url")
+
+    for chapter in chapters:
+        if progress.cancelled:
+            return
+        if chapter.skip:
+            progress.step(chapter.pdf.name, "skipped",
+                          chapter.note or "not ingested")
+            continue
+        try:
+            state, detail = ingest_volume.ingest_one(
+                chapter, journal, defaults, bool(facts.get("replace")),
+                by_source, facts.get("teacher_mode", "separate"), furniture)
+        except Exception as exc:
+            # One unopenable chapter is a finding about that chapter.
+            # Stopping here would cost the rest of the batch its run.
+            progress.step(chapter.pdf.name, "failed",
+                          f"{type(exc).__name__}: {exc}")
+            continue
+        progress.step(chapter.pdf.name, state, detail)

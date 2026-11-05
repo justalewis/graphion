@@ -60,3 +60,6 @@ _dropbox/
 .DS_Store
 .vscode/
 .idea/
+
+# Staged uploads waiting for a job to read them. Input, not content.
+data/jobs/
