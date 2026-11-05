@@ -2,6 +2,10 @@ flask>=3.0
 flask-login>=0.6.3
 pypandoc>=1.13
 python-docx>=1.1
+# python-pptx builds the decks the Office tests audit and edit. The app itself
+# reads and writes slide XML directly and never imports it, so this is only
+# needed to run the suite.
+python-pptx>=0.6
 pyyaml>=6.0
 mistune>=3.0
 lxml>=5.0
