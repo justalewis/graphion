@@ -501,6 +501,24 @@ are reported even when the option is off. Tesseract is optional here
 (`TESSERACT_PATH`, `ocr.available()`), absent from the production image, and
 the route refuses a request for it at the door when it cannot run.
 
+**Pictures a course owes are described by their author, never by this tool.**
+`pictures.py` finds them (web pages, Word, PowerPoint), the job page links to
+a queue under `/jobs/<id>/describe`, and an `apply_descriptions` job writes
+the author's decisions into a new cartridge. It writes only what a person
+typed: a machine description is present, so no checker flags it, and it is
+often wrong. A drafting service would also send the author's images to an
+outside company, so it is not built and needs its own consent step.
+
+It edits one attribute. A web page goes through `remediate.serialise_html`;
+a Word or PowerPoint file is a zip inside the cartridge and is **not**
+round-tripped through a library, which can drop comments and tracked changes.
+The one XML part is edited as text, each picture found again by its own `id`
+and `name`, and every other part keeps its bytes. `serialise_html` keeps the
+meta charset and the doctype, decided from the source bytes and never from
+lxml, which reports an implied doctype for a page that has none. Verification
+reopens the written file: untouched members by CRC, edited ones by text,
+untouched Office parts by CRC.
+
 **`jobs.py` is the job runner, and what it mostly has to get right is
 not throughput.** Everything slow here has been a script for one reason:
 a chapter is minutes of pdfplumber and each validator is a subprocess

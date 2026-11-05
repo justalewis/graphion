@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}Describe picture {{ picture.pid + 1 }} of {{ total }}{% endblock %}
+{% block content %}
+
+<section class="card">
+  <p class="crumbs">
+    <a href="{{ url_for('describe_queue_page', job_id=job.id) }}">All the pictures</a>
+  </p>
+  <h1>Picture {{ picture.pid + 1 }} of {{ total }}</h1>
+  <p class="dim">
+    In <code>{{ picture.member }}</code>
+    {%- if picture.label %}, called {{ picture.label }}{% endif %}.
+  </p>
+
+  <div class="desc-split">
+    <div class="desc-image">
+      {% if has_preview %}
+      <img src="{{ url_for('describe_picture_image', job_id=job.id, pid=picture.pid) }}"
+           alt="The picture you are describing" style="max-width:100%; height:auto" />
+      {% else %}
+      <p class="dim">
+        This picture cannot be shown from here.
+        {% if picture.src %}It lives outside the cartridge, at
+        <code>{{ picture.src[:90] }}</code>.{% else %}It is not an image
+        format a browser can be trusted to draw from a file somebody else
+        sent.{% endif %}
+        Open it in the course to describe it.
+      </p>
+      {% endif %}
+    </div>
+
+    <div style="flex: 1 1 46%; min-width: 280px;">
+      {% if picture.heading or picture.nearby %}
+      <h2>Where it sits</h2>
+      {% if picture.heading %}<p><strong>Under:</strong> {{ picture.heading }}</p>{% endif %}
+      {% if picture.nearby %}<p><strong>Near:</strong> {{ picture.nearby }}</p>{% endif %}
+      {% endif %}
+
+      <h2>What it says now</h2>
+      {% if picture.state == 'machine-written' %}
+      <p><span class="chip chip-warn">machine-written</span>
+        &ldquo;{{ picture.current|replace('&#xA;', ' ')|replace('\n', ' ') }}&rdquo;</p>
+      <p class="dim">
+        Microsoft wrote this, nobody checked it, and it is often wrong. No
+        checker flags it because it is there. Read it against the picture,
+        then keep it, replace it or mark the picture decorative.
+      </p>
+      {% elif picture.current %}
+      <p><span class="chip chip-warn">a filename or placeholder</span>
+        {{ picture.current[:120] }}</p>
+      <p class="dim">That is what a screen reader announces today.</p>
+      {% else %}
+      <p><span class="chip chip-warn">nothing</span></p>
+      <p class="dim">A screen reader announces only that a picture is there.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <form method="post" class="stack" style="margin-top: var(--space-5);">
+    <fieldset>
+      <legend><strong>What should happen to this picture</strong></legend>
+      {% set chosen = (shown.action if shown else (decision.action if decision else 'describe')) %}
+      <label>
+        <input type="radio" name="action" value="describe" {% if chosen == 'describe' %}checked{% endif %} />
+        Describe it
+      </label>
+      <label for="text">What does it show?</label>
+      <p class="dim" id="text-hint">One line, in plain words. It is read aloud with no way back.</p>
+      <textarea id="text" name="text" rows="3" maxlength="{{ max_length }}"
+                aria-describedby="text-hint" style="width:100%">{{ shown.text if shown else (decision.text if decision else '') }}</textarea>
+      <label>
+        <input type="radio" name="action" value="decorative" {% if chosen == 'decorative' %}checked{% endif %} />
+        It carries nothing a reader needs
+      </label>
+      <p class="dim">
+        A border, a divider or a flourish. Marking it decorative tells a
+        screen reader to skip it, which is a claim about the picture and is
+        yours to make.
+      </p>
+      {% if picture.state == 'machine-written' %}
+      <label>
+        <input type="radio" name="action" value="keep" {% if chosen == 'keep' %}checked{% endif %} />
+        The machine-written text is right, keep it
+      </label>
+      {% endif %}
+      <label>
+        <input type="radio" name="action" value="skip" {% if chosen == 'skip' %}checked{% endif %} />
+        Not now
+      </label>
+    </fieldset>
+    <div class="action-row">
+      <button type="submit" class="button">Save and go to the next</button>
+      <a class="button ghost" href="{{ url_for('describe_queue_page', job_id=job.id) }}">Back to the list</a>
+    </div>
+  </form>
+</section>
+
+{% endblock %}

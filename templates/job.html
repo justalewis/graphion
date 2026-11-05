@@ -60,6 +60,18 @@
   </form>
   {% endif %}
 
+  {% if queue %}
+  <div class="reg-note" id="job-queue">
+    <strong>Pictures to describe</strong>
+    <p>
+      {{ queue.total }} picture(s) in this course need a description from
+      its author, and {{ queue.pending }} are still waiting. Nothing is
+      written for you: you see each picture and write what it shows.
+    </p>
+    <p><a class="button" href="{{ url_for('describe_queue_page', job_id=job.id) }}">Describe the pictures</a></p>
+  </div>
+  {% endif %}
+
   {% if downloads %}
   <div class="reg-note" id="job-downloads">
     <strong>Results</strong>

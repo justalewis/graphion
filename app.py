@@ -2993,7 +2993,10 @@ def register_routes(app: Flask):
     # way to ask for a file that is not one of these.
     RESULT_FILES = {"cartridge": ("remediated.imscc", "application/zip"),
                     "report": ("report.md", "text/markdown"),
-                    "report-json": ("report.json", "application/json")}
+                    "report-json": ("report.json", "application/json"),
+                    "described": ("described.imscc", "application/zip"),
+                    "described-report": ("described-report.md",
+                                         "text/markdown")}
 
     @app.route("/jobs/<int:job_id>/download/<which>")
     @login_required
@@ -3038,6 +3041,7 @@ def register_routes(app: Flask):
                                items=jobs.items(job),
                                facts=jobs.payload(job),
                                words=jobs.words(job["kind"]),
+                               queue=_queue_summary(job),
                                downloads=[
                                    (key, name) for key, (name, _m)
                                    in RESULT_FILES.items()
@@ -3081,6 +3085,132 @@ def register_routes(app: Flask):
         else:
             flash("That job has already finished.", "error")
         return redirect(url_for("job_detail", job_id=job_id))
+
+    # ---------- describing pictures ----------
+
+    def _queue(job_id):
+        """The remediation a queue belongs to, or a 404.
+
+        Every route below goes through here, so none of them can be pointed
+        at a job that is not a finished remediation or at one whose results
+        have been deleted.
+        """
+        import pictures as picture_queue
+
+        job = jobs.get(job_id)
+        if job is None or job["kind"] != "remediate_cartridge":
+            abort(404)
+        folder = jobs.results_dir(job_id)
+        owed = picture_queue.load_pictures(folder)
+        if owed is None:
+            abort(404)
+        return job, folder, owed, picture_queue.load_decisions(folder)
+
+    def _queue_summary(job):
+        """What the job page says about the queue, or None."""
+        import pictures as picture_queue
+
+        if job["kind"] != "remediate_cartridge":
+            return None
+        folder = jobs.results_dir(job["id"])
+        owed = picture_queue.load_pictures(folder)
+        if not owed:
+            return None
+        decisions = picture_queue.load_decisions(folder)
+        return {"total": len(owed),
+                "pending": len(picture_queue.pending(owed, decisions))}
+
+    @app.route("/jobs/<int:job_id>/describe")
+    @login_required
+    def describe_queue_page(job_id):
+        import pictures as picture_queue
+
+        job, _folder, owed, decisions = _queue(job_id)
+        left = picture_queue.pending(owed, decisions)
+        written = [d for d in decisions.values()
+                   if d.action in (picture_queue.DESCRIBE,
+                                   picture_queue.DECORATIVE)]
+        return render_template(
+            "describe_job.html", job=job, owed=owed, decisions=decisions,
+            left=left, next_pid=left[0].pid if left else None,
+            writable=len(written))
+
+    @app.route("/jobs/<int:job_id>/describe/<int:pid>", methods=["GET", "POST"])
+    @login_required
+    def describe_picture_page(job_id, pid):
+        import pictures as picture_queue
+
+        job, folder, owed, decisions = _queue(job_id)
+        picture = next((p for p in owed if p.pid == pid), None)
+        if picture is None:
+            abort(404)
+        shown = request.form if request.method == "POST" else None
+        if request.method == "POST":
+            action = request.form.get("action", "")
+            try:
+                decision = picture_queue.validate_decision(
+                    picture, action, request.form.get("text", ""))
+            except ValueError as exc:
+                flash(str(exc), "error")
+            else:
+                decisions[pid] = decision
+                picture_queue.save_decisions(folder, decisions)
+                later = [p for p in picture_queue.pending(owed, decisions)
+                         if p.pid > pid] or picture_queue.pending(
+                             owed, decisions)
+                if later:
+                    return redirect(url_for("describe_picture_page",
+                                            job_id=job_id, pid=later[0].pid))
+                return redirect(url_for("describe_queue_page", job_id=job_id))
+        has_preview = bool(
+            (picture.asset or picture.asset_part)
+            and Path(picture.asset or picture.asset_part).suffix.lower()
+            in picture_queue.RASTER_TYPES)
+        return render_template(
+            "describe_picture.html", job=job, picture=picture,
+            decision=decisions.get(pid), shown=shown,
+            has_preview=has_preview, total=len(owed),
+            max_length=picture_queue.MAX_DESCRIPTION)
+
+    @app.route("/jobs/<int:job_id>/describe/<int:pid>/image")
+    @login_required
+    def describe_picture_image(job_id, pid):
+        import pictures as picture_queue
+        from flask import Response
+
+        _job, folder, owed, _decisions = _queue(job_id)
+        picture = next((p for p in owed if p.pid == pid), None)
+        found = (picture_queue.read_preview(folder / "remediated.imscc",
+                                            picture) if picture else None)
+        if found is None:
+            abort(404)
+        data, mimetype = found
+        # This is a file somebody else sent, served from this origin, so it is
+        # told not to be anything but the image it claims to be.
+        return Response(data, mimetype=mimetype, headers={
+            "X-Content-Type-Options": "nosniff",
+            "Content-Security-Policy": "default-src 'none'; sandbox",
+            "Cache-Control": "private, max-age=300"})
+
+    @app.route("/jobs/<int:job_id>/describe/apply", methods=["POST"])
+    @login_required
+    def describe_apply(job_id):
+        import pictures as picture_queue
+
+        _job, _folder, _owed, decisions = _queue(job_id)
+        if not any(d.action in (picture_queue.DESCRIBE,
+                                picture_queue.DECORATIVE)
+                   for d in decisions.values()):
+            flash("Nothing has been described yet, so there is nothing to "
+                  "write.", "error")
+            return redirect(url_for("describe_queue_page", job_id=job_id))
+        new_id = jobs.create("apply_descriptions",
+                             "Write descriptions into the cartridge",
+                             {"source_job": job_id}, None, stage=False)
+        jobs.release(new_id)
+        flash("Queued. Only what you wrote is added, and the text of every "
+              "file is checked afterwards.", "success")
+        return redirect(url_for("job_detail", job_id=new_id))
 
     @app.route("/assess", methods=["GET", "POST"])
     @login_required

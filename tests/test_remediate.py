@@ -469,3 +469,36 @@ def test_stamping_moves_no_text():
     after = remediate.fix_pdf(data, language="en").data
 
     assert invariance.text_of("x.pdf", data) == invariance.text_of("x.pdf", after)
+
+
+# ---------- the doctype ----------
+
+def test_a_doctype_survives_the_fix():
+    """lxml drops it unless asked, which puts the page into the browser's
+    quirks mode: layout changes and no word does, so the invariance check
+    cannot see it. 86 of the 2,532 real pages carry one."""
+    page = (b"<!DOCTYPE html>\n<html><head><title>T</title></head>"
+            b"<body><h2>A</h2><h4>B</h4></body></html>")
+
+    result = remediate.fix_html(page, language="en")
+
+    assert result.changed
+    assert result.data.upper().startswith(b"<!DOCTYPE HTML")
+
+
+def test_a_page_with_no_doctype_does_not_gain_one():
+    """Canvas pages carry none, and adding one would switch them out of
+    quirks mode, which is a change to how every one of them lays out."""
+    result = remediate.fix_html(_page("<h2>A</h2><h4>B</h4>"), language="en")
+
+    assert b"DOCTYPE" not in result.data.upper()
+
+
+def test_a_legacy_doctype_is_kept_exactly():
+    page = (b'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" '
+            b'"http://www.w3.org/TR/html4/strict.dtd">\n<html><body>'
+            b"<h2>A</h2><h4>B</h4></body></html>")
+
+    result = remediate.fix_html(page, language="en")
+
+    assert b"-//W3C//DTD HTML 4.01//EN" in result.data

@@ -131,6 +131,15 @@ KIND_WORDS["remediate_cartridge"] = {
             "owed needs a person, and is listed in the report.",
 }
 
+KIND_WORDS["apply_descriptions"] = {
+    "heading": "What was written",
+    "item": "Step",
+    "note": "Only what the author typed was written, and only into the one "
+            "attribute that holds a picture's description. Every edited "
+            "file's text was compared before and after, and every other "
+            "part of an edited Word or PowerPoint file kept its bytes.",
+}
+
 DEFAULT_WORDS = {"heading": "What happened", "item": "Item", "note": ""}
 
 
@@ -677,6 +686,16 @@ def _remediate_cartridge(job: dict, progress: Progress) -> None:
     (out_dir / "report.md").write_text(repack.render_markdown(report),
                                        encoding="utf-8")
     progress.tick(report.members, report.members)
+    owed_pictures = []
+    try:
+        import pictures
+        owed_pictures = pictures.find_pictures(out_dir / "remediated.imscc")
+        pictures.save_pictures(out_dir, owed_pictures)
+    except Exception as exc:
+        # A queue that cannot be built must not cost the cartridge its
+        # result: the remediation itself is done and verified.
+        progress.step("Pictures to describe", "warn",
+                      f"could not be listed: {type(exc).__name__}: {exc}")
     progress.step("Screened for student work", "pass",
                   "Nothing was found, so the cartridge was processed.")
     progress.step(
@@ -685,6 +704,55 @@ def _remediate_cartridge(job: dict, progress: Progress) -> None:
         report.summary())
     for kind, count in sorted(report.totals_changed.items()):
         progress.step(f"Fixed: {kind}", "pass", f"{count}")
+    if owed_pictures:
+        progress.step(
+            "Pictures to describe", "warn",
+            f"{len(owed_pictures)} picture(s) need a description or a "
+            f"decision from the author. They can be done from this page.")
     for item in report.worklist:
         progress.step(f"Still owed: {item['kind']}", "warn",
                       f"{item['count']}. {item['detail']}")
+
+
+@handler("apply_descriptions")
+def _apply_descriptions(job: dict, progress: Progress) -> None:
+    """Write an author's descriptions into a copy of a remediated cartridge.
+
+    Reads the queue the remediation left (`pictures.json`) and the author's
+    decisions (`descriptions.json`) from that job's results, and writes a new
+    cartridge beside them. Nothing is drafted here: only words a person typed
+    are written, which is the whole point of the queue.
+    """
+    import pictures
+
+    facts = payload(job)
+    source = results_dir(int(facts["source_job"]))
+    cartridge_path = source / "remediated.imscc"
+    if not cartridge_path.is_file():
+        raise ValueError("The remediated cartridge these descriptions were "
+                         "for is no longer on the server.")
+    owed = pictures.load_pictures(source) or []
+    decisions = pictures.load_decisions(source)
+    out_dir = results_dir(job["id"])
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    try:
+        report = pictures.apply_descriptions(
+            cartridge_path, out_dir / "described.imscc", owed, decisions,
+            tick=lambda done, total, _path: progress.tick(done, total),
+            stop=lambda: progress.cancelled)
+    except pictures.Refusal as exc:
+        shutil.rmtree(out_dir, ignore_errors=True)
+        raise Refusal(str(exc))
+    except pictures.Stopped:
+        shutil.rmtree(out_dir, ignore_errors=True)
+        return
+
+    (out_dir / "described-report.md").write_text(
+        pictures.render_markdown(report, owed, decisions), encoding="utf-8")
+    progress.tick(report.members, report.members)
+    progress.step("Descriptions written",
+                  "pass" if not report.failed else "warn", report.summary())
+    for failure in report.failed:
+        progress.step(f"Could not write: {failure['member']}", "fail",
+                      failure["reason"])

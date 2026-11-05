@@ -329,7 +329,33 @@ def test_the_note_carries_the_denominator_and_what_it_could_not_read():
 def test_formats_holding_text_that_cannot_be_read_are_named():
     """So the proof says what it does not cover instead of implying it
     covered everything."""
-    pairs = [("a.html", b""), ("b.pptx", b""), ("c.doc", b""),
+    pairs = [("a.html", b""), ("b.ppt", b""), ("c.doc", b""),
              ("d.png", b"")]
 
-    assert sorted(invariance.unreadable(pairs)) == ["b.pptx", "c.doc"]
+    assert sorted(invariance.unreadable(pairs)) == ["b.ppt", "c.doc"]
+
+
+def test_a_presentation_is_readable_now():
+    """It was not, which left every deck outside the proof that no word
+    moved. Slide text and speaker notes are read at the XML level."""
+    import io, zipfile
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w") as z:
+        z.writestr("ppt/slides/slide1.xml",
+                   '<p:sld xmlns:p="http://schemas.openxmlformats.org/'
+                   'presentationml/2006/main" xmlns:a="http://schemas.'
+                   'openxmlformats.org/drawingml/2006/main"><a:t>Week one'
+                   '</a:t><a:t>Reading</a:t></p:sld>')
+        z.writestr("ppt/notesSlides/notesSlide1.xml",
+                   '<p:notes xmlns:p="http://schemas.openxmlformats.org/'
+                   'presentationml/2006/main" xmlns:a="http://schemas.'
+                   'openxmlformats.org/drawingml/2006/main"><a:t>Say hello'
+                   '</a:t></p:notes>')
+
+    text = invariance.text_of("deck.pptx", buf.getvalue())
+
+    # Parts are read in name order, which only has to be deterministic:
+    # the same function runs on both sides of every comparison.
+    assert sorted(text.split(" ")) == sorted("Week one Reading Say hello".split(" "))
+    assert "Say hello" in text and "Week one Reading" in text
+    assert ".pptx" in invariance.READABLE

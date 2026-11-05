@@ -537,3 +537,64 @@ queued and left to fail an hour later.
 
 **Next:** R6 (the drafting queue), and an OCR-aware path into `pdf_ingest`
 for scanned archives, which is separate work from adding a text layer.
+
+**R6 is built** (`pictures.py`, the queue under a remediation's job page).
+After a remediation finishes, the job page links to the pictures the course
+still owes, and the author writes what each shows, marks it decorative, keeps
+a machine-written description they have read, or skips it. A second job then
+writes those decisions into a new copy of the cartridge and leaves the
+remediated one as it was.
+
+**Nothing is drafted, on purpose.** The queue writes only what a person
+typed. A description produced by a machine is present, so no checker flags
+it, and it is often wrong; one real file reads "A diagram of a diagram of a
+diagram". An optional drafting service would also send the author's images
+to an outside company, which is their decision and not a default, so if one
+is ever built it needs a consent step of its own.
+
+**The finder agreed with three independent measurements it was never tuned
+to.** Before it existed: 62 pictures in web pages, 13 in Word and 110 in
+PowerPoint owed a real description across the real cartridges, plus 35
+machine-written in Word. The finder reported exactly those, and 201 of the
+220 can be shown as a preview. The picture a web page owes is mostly a
+filename standing in for a description (`repetition.png`), and `alt=""` is
+read as the author's own claim that the picture is decorative, not as a gap.
+
+**It edits one attribute and leaves every other byte alone.** A web page is
+parsed and written back by the serialiser the other fixes use. A Word or
+PowerPoint file is a zip inside the cartridge, and round-tripping it through
+a library can silently drop comments, tracked changes and objects the library
+does not model, so the one XML part that holds the picture is edited as text
+and every other part keeps its bytes. Measured on real files: inside a Word
+file only `word/document.xml` changed, inside a deck only slide parts, and
+`python-docx` and `python-pptx`, which this module does not use, open the
+results and read the authors' words back. On a real 195-file course, writing
+one description changed exactly one member, and only its `alt`.
+
+Each picture is found again by its own `id` and `name`, so a file that does
+not look the way the finder saw it is left alone and reported. Replacements
+are applied from the end of the part so one does not shift the next. Nothing
+ships whose text moved, and the written cartridge is reopened and checked
+again: every untouched member by CRC, every edited one by text, and every
+untouched part inside an edited Office file by CRC.
+
+**Three bugs, each found by running it.** The write-verification refused to
+ship the first real run, because a web page's set of edited parts held an
+empty string, which is truthy, so it tried to open HTML as a zip; it
+refused rather than trust a file it could not check. A picture alone in its
+paragraph, which is how Canvas writes most of them, gave the author no
+context, so it now falls back to the nearest paragraph above that says
+something. And checking the serialiser before reusing it found a defect in
+R2: `fix_html` silently dropped the `<!DOCTYPE>`, which 86 of the real pages
+carry and which puts a page into quirks mode, invisible to a check on text.
+lxml reports an *implied* HTML 4.0 doctype for a page that has none, so
+passing its answer through would have added one to every Canvas page; the
+source bytes decide.
+
+Previews are served from the cartridge, so only raster formats are shown, an
+SVG never is, and the response carries `nosniff` and a sandboxing
+Content-Security-Policy. `invariance` can now read a `.pptx`, which it could
+not, so a deck is inside the proof that no word moved.
+
+**Next:** an OCR-aware path into `pdf_ingest` for scanned archives, and the
+optional drafting service if wanted, with its consent step.

@@ -47,7 +47,7 @@ _SPACE = re.compile(r"\s+")
 
 # What this can read. Anything else is counted as unread rather than as
 # unchanged; see the module docstring.
-READABLE = {".html", ".htm", ".xhtml", ".pdf", ".docx"}
+READABLE = {".html", ".htm", ".xhtml", ".pdf", ".docx", ".pptx"}
 
 
 def normalise(text: str) -> str:
@@ -101,10 +101,35 @@ def _docx_text(data: bytes) -> str:
     return " ".join(parts)
 
 
+def _pptx_text(data: bytes) -> str:
+    """Every run of text on every slide and every set of speaker notes.
+
+    Read at the XML level rather than through python-pptx, which models
+    shapes and so misses text in the corners of a deck: grouped shapes,
+    tables inside placeholders, and notes. The same extractor runs on both
+    sides of a comparison, so what it needs is to be consistent, not to be
+    the best reader.
+    """
+    import zipfile
+
+    from lxml import etree
+
+    a_t = "{http://schemas.openxmlformats.org/drawingml/2006/main}t"
+    out = []
+    with zipfile.ZipFile(io.BytesIO(data)) as z:
+        parts = sorted(n for n in z.namelist()
+                       if re.fullmatch(r"ppt/(slides|notesSlides)/[^/]+\.xml", n))
+        for name in parts:
+            root = etree.fromstring(z.read(name))
+            out.extend(el.text or "" for el in root.iter(a_t))
+    return " ".join(out)
+
+
 _READERS = {
     ".html": _html_text, ".htm": _html_text, ".xhtml": _html_text,
     ".pdf": _pdf_text,
     ".docx": _docx_text,
+    ".pptx": _pptx_text,
 }
 
 
@@ -207,7 +232,7 @@ def unreadable(files) -> list:
         suffix = Path(path).suffix.lower()
         if suffix in READABLE:
             continue
-        if suffix in (".pptx", ".ppt", ".doc", ".rtf", ".odt", ".txt", ".md"):
+        if suffix in (".ppt", ".doc", ".rtf", ".odt", ".txt", ".md"):
             out.append(path)
     return out
 
@@ -239,6 +264,6 @@ def fingerprint_cartridge(cart) -> tuple:
     """
     pairs = [(m.path, cart.read(m.path)) for m in cart.members()
              if Path(m.path).suffix.lower() in READABLE
-             or Path(m.path).suffix.lower() in (".pptx", ".ppt", ".doc",
+             or Path(m.path).suffix.lower() in (".ppt", ".doc",
                                                 ".rtf", ".odt")]
     return fingerprint(pairs), unreadable(pairs)

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Describe the pictures{% endblock %}
+{% block content %}
+
+<section class="card">
+  <p class="crumbs">
+    <a href="{{ url_for('jobs_home') }}">Jobs</a><span class="sep">/</span>
+    <a href="{{ url_for('job_detail', job_id=job.id) }}">{{ job.label }}</a>
+  </p>
+  <h1>Describe the pictures</h1>
+  <p class="dim">
+    {{ owed|length }} picture(s) in this course need a description from its
+    author. A description is words about the author's own material, so none
+    is written for you: you see each picture and say what it shows.
+  </p>
+
+  <div class="status-strip">
+    <div class="stat {% if left %}warn{% else %}ok{% endif %}">
+      <span class="num">{{ left|length }}</span>
+      <span class="lbl">still waiting</span>
+    </div>
+    <div class="stat">
+      <span class="num">{{ writable }}</span>
+      <span class="lbl">ready to write</span>
+    </div>
+    <div class="stat dim">
+      <span class="num">{{ owed|length }}</span>
+      <span class="lbl">in all</span>
+    </div>
+  </div>
+
+  <div class="action-row">
+    {% if next_pid is not none %}
+    <a class="button" href="{{ url_for('describe_picture_page', job_id=job.id, pid=next_pid) }}">Describe the next one</a>
+    {% endif %}
+    <form method="post" action="{{ url_for('describe_apply', job_id=job.id) }}" style="display:inline">
+      <button type="submit" class="button {% if next_pid is not none %}ghost{% endif %}"
+              {% if not writable %}disabled{% endif %}>
+        Write {{ writable }} decision(s) into a new cartridge
+      </button>
+    </form>
+  </div>
+  <p class="dim">
+    Writing makes a new copy of the remediated cartridge and leaves this one
+    as it is. Only what you typed is added, into the one attribute that holds
+    a picture's description, and the text of every edited file is compared
+    before and after.
+  </p>
+</section>
+
+<section class="card">
+  <h2>Every picture</h2>
+  <table class="reg-table">
+    <thead>
+      <tr><th>File</th><th>Kind</th><th>Now</th><th>Your decision</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for p in owed %}
+      {% set d = decisions.get(p.pid) %}
+      <tr>
+        <td class="reg-kind">{{ p.member.split('/')[-1] }}{% if p.label %} <span class="dim">({{ p.label }})</span>{% endif %}</td>
+        <td>{{ {'page': 'web page', 'docx': 'Word', 'pptx': 'PowerPoint'}[p.kind] }}</td>
+        <td>
+          {% if p.state == 'machine-written' %}machine-written text
+          {% elif p.current %}<span class="dim">{{ p.current[:40] }}</span>
+          {% else %}none{% endif %}
+        </td>
+        <td>
+          {% if not d or d.action == 'skip' %}<span class="tally warn">waiting</span>
+          {% elif d.action == 'describe' %}<span class="tally good">described</span>
+          {% elif d.action == 'decorative' %}<span class="tally good">decorative</span>
+          {% elif d.action == 'keep' %}<span class="tally good">kept as it is</span>{% endif %}
+        </td>
+        <td><a href="{{ url_for('describe_picture_page', job_id=job.id, pid=p.pid) }}">{% if d and d.action != 'skip' %}Change{% else %}Describe{% endif %}</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+{% endblock %}

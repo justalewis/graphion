@@ -236,6 +236,37 @@ def _report_only(tree) -> list:
     return owed
 
 
+def serialise_html(tree, source: bytes) -> bytes:
+    """Write a parsed page back out, keeping what it arrived with.
+
+    Two things lxml drops unless asked, and both are invisible to a check on
+    the page's text, which is why they survived the first version of this.
+
+    The `<meta http-equiv="Content-Type">` is removed and nothing replaces
+    it, so UTF-8 bytes reach the next reader with no declaration and every
+    curly quotation mark becomes mojibake. That one failed 1,960 of 2,532 real
+    pages the moment the invariance harness was pointed at them.
+
+    And the `<!DOCTYPE>` is dropped, which puts the page into the browser's
+    quirks mode: layout changes and no word does. 86 of the 2,532 real pages
+    carry one. Found by checking before reusing this for image descriptions,
+    not by anything that was failing.
+    """
+    from lxml import html as lxml_html
+
+    # Whether the page had one is read from its own bytes, never from lxml.
+    # The parser reports an *implied* HTML 4.0 doctype for a page that has
+    # none, so passing `docinfo.doctype` through would add one to every
+    # Canvas page and flip all of them out of quirks mode, which is a worse
+    # change than the one being fixed.
+    doctype = None
+    if re.search(rb"<!DOCTYPE", source[:2048], re.IGNORECASE):
+        doctype = tree.getroottree().docinfo.doctype or None
+    return lxml_html.tostring(tree, encoding="utf-8", method="html",
+                              include_meta_content_type=True,
+                              doctype=doctype)
+
+
 def fix_html(data: bytes, language: Optional[str] = None) -> Result:
     """Apply every mechanical fix to one page. Returns the new bytes.
 
@@ -279,9 +310,7 @@ def fix_html(data: bytes, language: Optional[str] = None) -> Result:
     # That is not a reporting problem, it is corruption of the deliverable,
     # and it would have shipped. The invariance harness caught it on 1,960
     # of 2,532 real pages, which is what building that first was for.
-    out = lxml_html.tostring(tree, encoding="utf-8", method="html",
-                             include_meta_content_type=True)
-    return Result(data=out, changes=changes, owed=owed)
+    return Result(data=serialise_html(tree, data), changes=changes, owed=owed)
 
 
 def summarise(results) -> dict:
