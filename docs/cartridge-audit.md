@@ -184,3 +184,182 @@ actually needed, and is mostly assembly of readers that already work.
 
 Stage 5 is the one to do next if the audience is instructors rather than
 compliance, because link rot is what they will act on the same afternoon.
+
+---
+
+# Remediating somebody else's cartridge
+
+Added 5 November 2026. The audience is not the person who wrote the
+course: it is an instructor at another institution who sends an export
+and gets one back. That changes almost every decision below, and it is
+the same argument `accessibility-service.md` makes for journals.
+
+Measured over all 35 cartridges on this machine, as a sense of what
+arrives: **1,199 PDFs**, 495 `.docx`, 208 legacy `.doc`, 74 `.pptx`,
+1,126 images, 2,642 HTML pages, 31 media files and **0 caption tracks**.
+PDFs are the payload by a distance, which is convenient, because PDF
+machinery is the best-developed thing in this repository.
+
+## 7. Full accessibility, honestly
+
+Not automatically, and the line is sharp enough to write down.
+
+**Everything mechanical can be fixed without asking anybody.** A missing
+language attribute, a table header with no `scope`, a heading level that
+skips, an untitled frame, a PDF with no `/Lang`, no `dc:title`, no
+`/DisplayDocTitle`. These are failures of markup, not of authorship, and
+over an archive they are most of the failure count: one plain typeset
+chapter of Writing Spaces fails 1,462 verapdf checks across 11 rules, and
+tagging answers most of them at once.
+
+**Everything that requires writing words about the content cannot.** Alt
+text, a long description, a caption track, a table summary, replacing
+"click here" with something meaningful. Those can be drafted and must be
+reviewed, which is what `undescribed_alt` and the description queue
+already exist for: a machine-written description that is wrong is worse
+than a marked gap, because it passes every checker and tells a reader
+something false.
+
+Working for somebody else makes that stricter rather than looser.
+**Nobody here knows what the author meant.** A description of a figure in
+a discipline you do not teach is a guess in a confident voice, and it
+goes out under their name on their course. So drafts come back as drafts.
+
+The promise is: **every mechanically fixable failure fixed, every
+content-requiring gap drafted for the author to accept or rewrite, and
+everything unfixable named.**
+
+## 8. The guarantee is the product
+
+"It will not change a word of your course" is what makes an instructor
+willing to send you their work at all. It is worth more than a promise,
+so make it a test.
+
+**The invariant: the visible text of every page, document and slide is
+identical before and after.** Extract it, normalise whitespace, compare.
+Any pass that changes a word fails the run. Everything remediation adds
+lives in an attribute, in metadata, or in structure, never in the prose.
+
+That is the same shape as
+`test_assessing_a_folder_leaves_it_exactly_as_it_was`, and it is built
+**first**, before any fixing pass, so every pass is held to it from its
+first commit.
+
+Report it on the way out, too: *3,412 blocks of text compared, 0
+changed*. An instructor who can see that number does not have to take
+anybody's word for it.
+
+Two honest footnotes. Normalising `<h3>` to `<h2>` keeps every word and
+changes how the page looks, so appearance is not covered by the invariant
+and is reported separately. And alt text added where there was none adds
+no visible text, so it satisfies the invariant while still needing the
+author's review.
+
+## 9. Student data comes before any of it
+
+A Canvas export can carry more than course design. Discussion topics can
+contain replies, and a full export is not the same thing as a content
+export. Taking in somebody else's course means taking in whatever they
+included, and if that is student names, posts or grades, it is FERPA
+material sitting on your disk.
+
+So the first pass over an incoming cartridge is a **screen**: look for
+submissions, gradebook data, user ids and discussion replies, and stop
+with a plain message naming what was found. Do not audit it, do not
+remediate it, do not keep it. Ask for a content-only export instead.
+
+This belongs before Stage 0 of the audit, not somewhere in the middle. It
+is the one failure here that is not about accessibility at all, and the
+most expensive to get wrong.
+
+## 10. PDFs, and the fork that matters most
+
+Of the 1,199, each needs one of two completely different things.
+
+**Metadata and declarations can be stamped in place.** `/Lang`,
+`dc:title` in the XMP packet, `/DisplayDocTitle`, `/MarkInfo`. Every byte
+of ink is unchanged and `pdf_tags.py` already reads and writes XMP
+packets. Cheap, safe, and it clears several clauses per file.
+
+**A structure tree cannot.** Tagging an untagged PDF means working out
+what its paragraphs, headings, lists and tables are, and that is
+reconstruction: `pdf_ingest` reading the geometry, then a fresh render.
+The result is a new document that looks different from the one the
+instructor uploaded.
+
+For somebody else's teaching material that is usually the wrong trade,
+and it must never happen silently. Offer both, default to stamping, and
+where a file can only be fixed by rebuilding, say so and let the author
+choose. A third-party publisher PDF they hold no right to re-typeset is a
+reason on its own.
+
+## 11. OCR
+
+A scanned PDF has no text layer, so a screen reader finds nothing at all.
+OCR adds one underneath the image. The page looks identical, so this
+satisfies the invariant in section 8 and is the highest-value single fix
+available for a scanned reading.
+
+It is also the one most likely to produce confident nonsense. Tesseract
+on a clean 300dpi scan is excellent and on a third-generation photocopy
+it is not, and nothing downstream can tell which happened: the text layer
+exists either way and every checker passes. So confidence is recorded per
+page, pages below a threshold are listed as owing proofing, and the
+report counts them apart from the ones that are done. `ocr.py` and the
+Tesseract probe already exist; Tesseract is not in the production image.
+
+## 12. What you hand back
+
+Not a Canvas API integration. You will not hold credentials for a course
+at another institution, and asking for them is asking for the keys to
+their gradebook. The deliverable is files and a report, the way `/assess`
+already works for a stranger's PDFs.
+
+Three things go back:
+
+1. **The remediated cartridge**, with the manifest intact.
+2. **A change log**, file by file, naming every change made and every
+   change declined with its reason. This is what makes the work auditable
+   by somebody who was not there.
+3. **A worklist of what is still owed**: drafted alt text for the author
+   to accept or rewrite, uncaptioned media, OCR pages needing proofing,
+   and anything that would have required rebuilding.
+
+And a warning, prominently: **re-importing this into a live course does
+not replace anything.** Canvas creates new pages with new ids and orphans
+every assignment, module item and gradebook column pointing at the old
+ones. A remediated cartridge is right for a fresh shell, a Commons
+package, an archival copy, or a course handed on. For a course being
+taught, the changes have to be applied item by item by somebody with
+access, and that is the author.
+
+## 13. Stages
+
+Numbered on from the audit stages above.
+
+- **R0: the student data screen.** Before anything else. Small, and the
+  only one here that is not negotiable.
+- **R1: the invariance harness.** Text extraction, normalisation and the
+  before/after assertion over HTML, PDF, DOCX and PPTX, with the
+  comparison count reported. Small, and the whole guarantee rests on it.
+- **R2: HTML mechanical.** `lang`, table `scope` and header promotion,
+  heading level normalisation, `role="presentation"` on layout tables.
+  `filters/heading-levels.lua` already solves the level problem for
+  galleys and the logic ports. Small to medium.
+- **R3: PDF stamping.** `/Lang`, `dc:title`, `/DisplayDocTitle`,
+  `/MarkInfo`, in place. `pdf_tags` already writes XMP. Small, and it
+  touches 1,199 files.
+- **R4: OCR.** Tesseract over pages with no text layer, confidence
+  recorded, proofing owed. Medium. Needs Tesseract in the image.
+- **R5: Office documents.** `python-docx` and `python-pptx` for alt text,
+  heading styles, table headers and slide titles; legacy `.doc` converts
+  through the LibreOffice already in the image. 777 files across these
+  cartridges, so larger than it looks. Medium to large.
+- **R6: the drafting queue.** Route every undescribed image into the
+  existing description queue, and make its output something an author can
+  accept or rewrite rather than something already applied. Medium.
+- **R7: repack, change log and worklist.** Medium.
+
+**R0, R1 and R3 are the first thing worth sending anybody**: a cartridge
+screened for student data, whose PDFs now declare what they are, with a
+proof that not a word moved.
